@@ -89,6 +89,10 @@ Permite hasta 12 pistas PCM WAV mono, 24 kHz, 16 bits, desplazamiento temporal `
 - La salida MP4 integrada requiere `HFC_NATIVE_MP4=ON`. Para el modo `browser`, sigue siendo necesario un navegador.
 - Se utiliza `nlohmann/json` (MIT) y `stb_image` (dominio público/MIT) que HyperFrames ya incluía; **no añadimos dependencias externas de ejecución**.
 
+## Mejoras de gráficos v2
+
+La nueva demostración editorial está en `examples/json-showcase-v2/showcase-v2.json` (cuatro escenas de seis segundos). El motor incluye además los tipos **glow**, **ring** y **grid**, además de `radius` y `strokeWidth` en tarjetas `rect` y propiedades de sombra tipográfica `shadowColor`, `shadowOpacity`, `shadowX` y `shadowY`. Los cambios no requieren nuevas bibliotecas. Véase [GRAPHICS_V2.md](GRAPHICS_V2.md).
+
 ## Validación y compilación cruzada
 
 ```bash

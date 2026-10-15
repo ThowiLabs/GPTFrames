@@ -160,6 +160,10 @@ See [docs/ROADMAP.md](docs/ROADMAP.md) and [SECURITY.md](SECURITY.md).
 
 
 
+## Showcase visual v2
+
+Nueva demostración con cuatro escenas de 24 segundos, iluminación procedimental, retículas, anillos, bordes redondeados, tipografía con sombras y una composición gráfica más cuidada. Cambia `examples/json-showcase-v2/showcase-v2.json` para personalizarlo sin recompilar. Documentación: [docs/GRAPHICS_V2.md](docs/GRAPHICS_V2.md).
+
 ## Compositor JSON: videos configurables sin recompilar
 
 Esta rama incorpora un **formato de proyecto JSON** con escenas, capas de texto/imágenes/formas, keyframes, máscaras de transición (fade/wipe/iris/slide), interpolaciones y hasta 12 pistas WAV. Permite cambiar textos, imágenes, colores, posiciones, tiempos y animaciones sin modificar C++.

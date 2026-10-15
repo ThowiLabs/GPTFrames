@@ -27,7 +27,8 @@ struct Layer {
  Color color{240,247,252},stroke{240,247,252};
  Pose base;
  int fontSize=62;bool bold=true,underline=false;
- double from=0,duration=0,strokeWidth=0;
+ double from=0,duration=0,strokeWidth=0,radius=0;
+ Color shadowColor{0,0,0}; double shadowOpacity=0,shadowX=5,shadowY=8;
  std::vector<Key> keys;
  std::shared_ptr<Image> image;
 };
@@ -156,12 +157,17 @@ inline Config load(const std::string&filename){
    if(!l.is_object())throw std::runtime_error("Capa inválida");
    Layer layer;
    layer.type=str(l,"type");
-   static const std::set<std::string> types={"rect","ellipse","text","image","line"};
+   static const std::set<std::string> types={"rect","ellipse","text","image","line","ring","glow","grid"};
    if(!types.count(layer.type))throw std::runtime_error("Capa desconocida: "+layer.type);
    layer.base=readPose(l,layer.base);
    layer.color=colorField(l,"color",layer.color);
    layer.stroke=colorField(l,"stroke",layer.color);
    layer.strokeWidth=num(l,"strokeWidth",0,0,100);
+   layer.radius=num(l,"radius",0,0,500);
+   layer.shadowColor=colorField(l,"shadowColor",{0,0,0});
+   layer.shadowOpacity=num(l,"shadowOpacity",0,0,1);
+   layer.shadowX=num(l,"shadowX",5,-150,150);
+   layer.shadowY=num(l,"shadowY",8,-150,150);
    layer.from=num(l,"start",0,0,s.duration);
    layer.duration=num(l,"duration",s.duration-layer.from,.01,s.duration);
    if(layer.from+layer.duration>s.duration+.001)throw std::runtime_error("Capa excede duración de escena");
@@ -262,6 +268,48 @@ inline void backdrop(const Scene&s){
   for(int x=0;x<W;++x){auto i=(size_t(y)*W+x)*3;pixels[i]=c.b;pixels[i+1]=c.g;pixels[i+2]=c.r;}
  }
 }
+inline double coverage(double d){return std::clamp(d+.7,0.,1.);}
+inline double shapeAlpha(const Layer&l,double u,double v,double w,double h) {
+ if(l.type=="glow"){
+  double rx=(u-w*.5)/(w*.5),ry=(v-h*.5)/(h*.5);
+  double d=rx*rx+ry*ry;
+  if(d>=1.)return 0.;
+  double k=1-d;
+  return k*k*k;
+ }
+ if(l.type=="ring"){
+  double rx=(u-w*.5)/(w*.5),ry=(v-h*.5)/(h*.5);
+  double d=std::sqrt(rx*rx+ry*ry);
+  double width=std::max(1.,l.strokeWidth)/std::min(w,h)*2.;
+  return coverage((1-std::abs(d-(1-width*.5))/std::max(.001,width*.5))*.75*std::min(w,h)/2);
+ }
+ if(l.type=="ellipse"){
+  double nx=(u-w/2)/(w/2),ny=(v-h/2)/(h/2);
+  return coverage((1-std::sqrt(nx*nx+ny*ny))*std::min(w,h)/2);
+ }
+ if(l.type=="line"){
+  double distance=l.strokeWidth*.5-std::abs(v-h*.5);
+  return coverage(distance)*coverage(std::min(u,w-u));
+ }
+ if(l.type=="grid"){
+  double pitch=std::max(10.,l.strokeWidth);
+  double du=std::abs(std::remainder(u,pitch)),dv=std::abs(std::remainder(v,pitch));
+  return coverage(.1-std::min(du,dv));
+ }
+ double outer=std::min(std::min(u,w-u),std::min(v,h-v));
+ if(l.type=="rect" && l.radius>0){
+  double r=std::min({l.radius,w/2,h/2});
+  double qx=std::abs(u-w/2)-(w/2-r),qy=std::abs(v-h/2)-(h/2-r);
+  double d=std::hypot(std::max(qx,0.),std::max(qy,0.))+std::min(std::max(qx,qy),0.)-r;
+  outer=-d;
+ }
+ double alpha=coverage(outer);
+ if(l.type=="rect"&&l.strokeWidth>0){
+  double inside=outer-l.strokeWidth;
+  alpha*=1.-coverage(inside);
+ }
+ return alpha;
+}
 inline void drawPixels(const Layer& l,const Pose& p) {
  const double w=p.w*p.scale,h=p.h*p.scale;
  if(w<.5||h<.5||p.opacity<.001)return;
@@ -273,19 +321,7 @@ inline void drawPixels(const Layer& l,const Pose& p) {
  for(int y=y0;y<y1;y++)for(int x=x0;x<x1;x++){
   double dx=x+.5-cx,dy=y+.5-cy;
   double u=cs*dx+sn*dy+w/2,v=-sn*dx+cs*dy+h/2;
-  double aa=0;
-  if(l.type=="rect"||l.type=="image"){
-   double edge=std::min(std::min(u,w-u),std::min(v,h-v));
-   aa=std::clamp(edge+.5,0.,1.);
-  }else if(l.type=="ellipse"){
-   double nx=(u-w/2)/(w/2),ny=(v-h/2)/(h/2);
-   double dist=(1-std::sqrt(nx*nx+ny*ny))*std::min(w,h)/2;
-   aa=std::clamp(dist+.5,0.,1.);
-  }else if(l.type=="line"){
-   double dyline=v-h/2;
-   aa=std::clamp(l.strokeWidth/2-std::abs(dyline)+.5,0.,1.);
-   aa*=std::clamp(std::min(u,w-u)+.5,0.,1.);
-  }
+  double aa=shapeAlpha(l,u,v,w,h);
   if(aa<=0)continue;
   if(l.type=="image"){
    const auto& img=*l.image;
@@ -307,6 +343,9 @@ inline void drawText(FontPainter&font,const Layer&l,const Pose&p){
   auto end=l.text.find('\n',pos);
   if(end==std::string::npos)end=l.text.size();
   std::string line=l.text.substr(pos,end-pos);
+  if(l.shadowOpacity>0){
+   font.draw(int(std::round(p.x+l.shadowX)),int(std::round(y+l.shadowY)),line,sz,{l.shadowColor.r,l.shadowColor.g,l.shadowColor.b},l.bold,int(p.w*p.scale),float(p.opacity*l.shadowOpacity));
+  }
   font.draw(int(std::round(p.x)),y,line,sz,{l.color.r,l.color.g,l.color.b},l.bold,int(p.w*p.scale),float(p.opacity));
   if(l.underline){
    int width=std::min(int(font.measure(line,sz,l.bold)),int(p.w*p.scale));

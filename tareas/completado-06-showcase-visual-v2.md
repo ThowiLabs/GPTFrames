@@ -1,0 +1,12 @@
+# Corregir showcase visual
+- [x] Examinar salida visual y código fuente.
+- [x] Separar limitaciones de ejemplo versus motor.
+- [x] Añadir glow, ring, grid, rounded rect, borde y sombra tipográfica.
+- [x] Reparar interpolación bilineal de imagen.
+- [x] Componer cuatro escenas editoriales y música WAV propia.
+- [x] Eliminar solapamiento de gráfica y pie de página.
+- [x] Verificar 24 s/576 frames H264/AAC y decodificación.
+- [x] Pruebas JSON v1, JSON v2 y Remix.
+- [x] Compilar Linux y Windows x64 desde Linux.
+- [x] Documentar y entregar MP4, ZIP y página de reproducción.
+- [ ] Ejecutar el binario en Windows real.
