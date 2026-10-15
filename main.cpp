@@ -8,6 +8,8 @@
 #include <cstdint>
 #include <cstring>
 #include <fstream>
+#include <future>
+#include <thread>
 #include <iostream>
 #include <limits>
 #include <map>
@@ -17,10 +19,11 @@
 #include "html_composition.hpp"
 #include "browser_detection.hpp"
 using namespace std;
-constexpr int W=720,H=1280,SR=24000;
+int W=720,H=1280;
+constexpr int SR=24000;
 using U=uint32_t;
 struct RGB{unsigned char r,g,b;};
-vector<unsigned char> pixels(W*H*3);
+thread_local vector<unsigned char> pixels(W*H*3);
 void p32(ostream&o,U v){for(int i=0;i<4;i++)o.put(char(v>>(8*i)));}
 void p16(ostream&o,int v){o.put(char(v));o.put(char(v>>8));}
 void four(ostream&o,const char*s){o.write(s,4);}
@@ -98,6 +101,7 @@ void text(int x,int y,string s,int scale,RGB c){for(char ch:s){if(ch==' '){x+=sc
 #endif
 #include "remix/remix_renderer.hpp"
 #include "compositor/json_project.hpp"
+#include "compositor/quality_checks.hpp"
 #include "voice/neo_bridge.hpp"
 vector<int16_t> loadAudio(const string&dir,const vector<hf::Scene>&scenes,int seconds){
  vector<int16_t> result(size_t(seconds)*SR,0);
@@ -165,8 +169,17 @@ int main(int argc,char**argv){try{
  }
  if(argc>=4 && string(argv[1])=="--project"){
    string mode=argv[2],filename=argv[3];
-   if(mode!="validate"&&mode!="frame"&&mode!="render")throw runtime_error("Modo project: validate, frame, render");
+   if(mode!="validate"&&mode!="lint"&&mode!="frame"&&mode!="render")throw runtime_error("Modo project: validate, lint, frame, render");
    const auto config=project::load(filename);
+   // Cada proyecto usa sus dimensiones nativas; los modos clásicos conservan 720x1280.
+   W=config.width; H=config.height;
+   project::designWidth=config.width;project::designHeight=config.height;
+   pixels.assign(static_cast<size_t>(W)*H*3,0);
+   if(mode=="lint"){
+    if(argc!=4)throw runtime_error("Uso: --project lint proyecto.json");
+    cout<<gptframes_quality::report(config).dump(2)<<"\n";
+    return 0;
+   }
    if(mode=="validate"){
     if(argc!=4)throw runtime_error("Uso: --project validate proyecto.json");
     cout<<"Proyecto válido: "<<config.scenes.size()<<" escenas, "<<config.duration<<"s, "
@@ -187,16 +200,35 @@ int main(int argc,char**argv){try{
       throw runtime_error("No se pudo guardar PNG");
     cout<<"Proyecto frame: "<<argv[4]<<" ("<<sec<<"s)\n";return 0;
    }
-   if(argc!=5&&argc!=6)throw runtime_error("Uso: --project render proyecto.json salida.mp4 [duracion]");
+   // Output size is independent from the project's editable design coordinates.
+   // This makes previews genuinely faster than first rasterizing Full HD.
+   if(argc!=5&&argc!=6&&argc!=7&&argc!=8)
+    throw runtime_error("Uso: --project render proyecto.json salida.mp4 [duracion] [--size 848x480]");
 #ifndef HFC_WITH_NATIVE_MP4
    throw runtime_error("Render MP4 requiere HFC_NATIVE_MP4=ON");
 #else
    double duration=config.duration;
-   if(argc==6){
-    size_t used=0;
-    duration=stod(argv[5],&used);
-    if(used!=strlen(argv[5])||!isfinite(duration)||duration<=0||duration>config.duration)
+   int at=5;
+   if(at<argc && string(argv[at])!="--size"){
+    size_t used=0;duration=stod(argv[at],&used);
+    if(used!=strlen(argv[at])||!isfinite(duration)||duration<=0||duration>config.duration)
       throw runtime_error("Duración del render fuera de rango");
+    ++at;
+   }
+   if(at<argc){
+    if(at+2!=argc||string(argv[at])!="--size")
+      throw runtime_error("Uso: --size 848x480");
+    string spec=argv[at+1];
+    auto sep=spec.find('x');
+    if(sep==string::npos||spec.find('x',sep+1)!=string::npos)
+      throw runtime_error("Resolución esperada anchoXalto");
+    const auto a=spec.substr(0,sep),b=spec.substr(sep+1);
+    if(a.empty()||b.empty()||!all_of(a.begin(),a.end(),::isdigit)||!all_of(b.begin(),b.end(),::isdigit))
+      throw runtime_error("Resolución debe contener sólo dígitos");
+    W=stoi(a);H=stoi(b);
+    if(W<256||W>config.width||H<144||H>config.height||W%16||H%2||
+       std::abs(double(W)/H-double(config.width)/config.height)>.02)
+      throw runtime_error("Resolución inválida o proporción distinta");
    }
    const int count=int(std::ceil(duration*config.fps-0.00001));
    const string outputPath=argv[4];
@@ -204,13 +236,28 @@ int main(int argc,char**argv){try{
      throw runtime_error("La salida del proyecto requiere .mp4");
    auto audio=project::sound(config);
    audio.resize(size_t(std::ceil(duration*SR)),0);
-   NativeMp4Writer writer(outputPath.c_str(),config.width,config.height,config.fps);
-   vector<unsigned char> scaled;
-   for(int i=0;i<count;i++){
-    project::frame(config,std::min(config.duration-1e-6,double(i)/config.fps));
-    if(config.width!=W||config.height!=H)scaled=output::resize(pixels,W,H,config.width,config.height);
-    writer.addVideo((config.width==W&&config.height==H)?pixels:scaled);
-    if(i%std::max(1,config.fps*4)==0)cerr<<"JSON project "<<i<<"/"<<count<<"\n";
+   NativeMp4Writer writer(outputPath.c_str(),W,H,config.fps);
+   // Render CPU frames concurrently into thread-local buffers. The MP4
+   // writer stays single-threaded and receives frames in timestamp order.
+   // Limit concurrency so 1080p jobs fit safely inside small sandboxes.
+   const unsigned parallelism=std::min(3u,std::max(1u,std::thread::hardware_concurrency()));
+   for(int batch=0;batch<count;batch+=int(parallelism)){
+    std::vector<std::future<std::vector<unsigned char>>> rendered;
+    const int end=std::min(count,batch+int(parallelism));
+    rendered.reserve(size_t(end-batch));
+    for(int i=batch;i<end;i++){
+     rendered.emplace_back(std::async(std::launch::async,[&config,i](){
+      pixels.assign(size_t(W)*H*3,0);
+      project::frame(config,std::min(config.duration-1e-6,double(i)/config.fps));
+      return std::move(pixels);
+     }));
+    }
+    for(int i=batch;i<end;i++){
+     auto buffer=rendered[size_t(i-batch)].get();
+     writer.addVideo(buffer);
+     if(i%std::max(1,config.fps*4)==0)
+      cerr<<"JSON project "<<i<<"/"<<count<<"\n";
+    }
    }
    writer.addAudio(audio);
    cout<<"Proyecto JSON renderizado: "<<outputPath<<" ("<<duration<<"s, "<<config.fps<<"fps)\n";

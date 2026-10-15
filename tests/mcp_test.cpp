@@ -78,12 +78,14 @@ int main(int argc, char** argv) {
         require(r && (*r)["result"]["serverInfo"]["name"] == "gptframes", "Wrong server");
         require((*r)["result"]["protocolVersion"] == "2025-06-18", "Wrong protocol");
     });
-    test("all eight tool contracts preserved", [&] {
+    test("all native tool contracts preserved", [&] {
         const auto r = service.rpc(request(2, "tools/list"));
         std::set<std::string> names;
         for (const auto& t : (*r)["result"]["tools"]) names.insert(t["name"].get<std::string>());
         require(names == std::set<std::string>{"list_projects", "create_project", "validate_project", "preview_frame",
-                "render_video", "synthesize_voice", "search_images", "download_commons_image"}, "Tool mismatch");
+                "render_video", "synthesize_voice", "search_images", "download_commons_image",
+                "list_voice_models", "review_layout", "start_render", "render_status", "cancel_render",
+                "read_project", "save_project"}, "Tool mismatch");
     });
     test("unknown method and invalid params", [&] {
         require((*service.rpc(request(3, "shutdown")))["error"]["code"] == -32601, "Unknown method accepted");
@@ -106,6 +108,24 @@ int main(int argc, char** argv) {
         require(Json::parse(read_file(config.projects / "ejemplo/project.json"))["scenes"].size() == 4, "Wrong template");
         rejects([&] { service.run_tool("create_project", {{"name", "ejemplo"}}); });
         require(service.run_tool("list_projects", Json::object())["projects"] == Json::array({"ejemplo"}), "Wrong project list");
+    });
+    test("editable project ETags and pre-save validation", [&] {
+        const auto current=service.run_tool("read_project",{{"project","ejemplo"}});
+        auto document=current["document"];
+        document["scenes"][0]["background"]="#082033";
+        auto saved=service.run_tool("save_project",{{"project","ejemplo"},
+            {"etag",current["etag"]},{"document",document}});
+        require(saved["validated"]==true && saved["etag"]!=current["etag"],"Valid edit rejected");
+        rejects([&]{service.run_tool("save_project",{{"project","ejemplo"},
+            {"etag",current["etag"]},{"document",document}});});
+        auto invalid=document;
+        invalid["canvas"]["height"]=999;
+        rejects([&]{service.run_tool("save_project",{{"project","ejemplo"},
+            {"etag",saved["etag"]},{"document",invalid}});});
+        auto reread=service.run_tool("read_project",{{"project","ejemplo"}});
+        require(reread["etag"]==saved["etag"],"Invalid save overwrote valid project");
+        rejects([&]{service.run_tool("save_project",{{"project","ejemplo"},
+            {"etag",saved["etag"]},{"document",Json::array()}});});
     });
     test("validate with real native compositor", [&] {
         const auto r = service.run_tool("validate_project", {{"project", "ejemplo"}});

@@ -1,6 +1,7 @@
 #pragma once
 #include "media.hpp"
 #include "process.hpp"
+#include "render_jobs.hpp"
 #include "tools.hpp"
 #include "../voice/neo_bridge.hpp"
 #include <optional>
@@ -30,6 +31,7 @@ class Service {
     Config config_;
     MediaClient media_;
     std::mutex mutex_;
+    RenderQueue render_queue_;
     std::pair<fs::path, fs::path> project(const Json& name) const {
         const auto base = config_.projects / slug(name);
         if (!fs::is_directory(base) || fs::is_symlink(base) || fs::canonical(base).parent_path() != fs::weakly_canonical(config_.projects))
@@ -85,7 +87,9 @@ class Service {
     }
 public:
     explicit Service(Config config, MediaClient media = MediaClient{})
-        : config_(std::move(config)), media_(std::move(media)) {}
+        : config_(std::move(config)), media_(std::move(media)),
+          render_queue_(config_.projects.parent_path(),config_.engine) {}
+    RenderQueue& render_jobs(){return render_queue_;}
     const Config& config() const { return config_; }
     Json run_tool(const std::string& name, const Json& args) {
         validate_arguments(name, args);
@@ -103,9 +107,64 @@ public:
             return {{"projects", names}};
         }
         if (name == "create_project") return create(slug(args.at("name")));
+        if (name == "render_status") return render_queue_.status(args.at("job_id").get<std::string>());
+        if (name == "cancel_render") return render_queue_.cancel(args.at("job_id").get<std::string>());
+        if (name == "list_voice_models") {
+            std::vector<std::string> models;
+            if(fs::is_directory(config_.models))for(const auto& entry:fs::directory_iterator(config_.models)){
+                if(!entry.is_regular_file()||entry.is_symlink())continue;
+                auto ext=entry.path().extension().string();
+                if(ext==".neo"||ext==".onnx")models.push_back(entry.path().filename().u8string());
+            }
+            std::sort(models.begin(),models.end());
+            if(models.size()>100)models.resize(100);
+            return {{"models",models}};
+        }
         if (name == "search_images")
             return {{"results", media_.search(args.at("query").get<std::string>(), args.value("provider", "wikimedia"), args.value("limit", 6))}};
         const auto [base, file] = project(args.at("project"));
+        if(name=="review_layout"){
+            const auto result=engine({"--project","lint",file.u8string()},90);
+            return Json::parse(result);
+        }
+        if(name=="start_render"){
+            // Fail before queueing if the configured HTTPS origin is not ready.
+            auto origin=environment("GPTFRAMES_PUBLIC_URL");
+            if(origin.empty()){
+                const auto origin_file=environment("GPTFRAMES_PUBLIC_URL_FILE");
+                if(!origin_file.empty()&&fs::is_regular_file(fs::u8path(origin_file)))
+                    origin=trim(read_file(fs::u8path(origin_file),512));
+            }
+            if(origin.rfind("https://",0)!=0||origin.size()>250)
+                throw std::runtime_error("Configure a public HTTPS origin before starting remote render");
+            engine({"--project","validate",file.u8string()},90);
+            return render_queue_.start(base.filename().u8string(),file,args.value("seconds",0.0),origin);
+        }
+        if(name=="read_project"){
+            const auto raw=read_file(file);
+            return {{"project",base.filename().u8string()},
+                    {"etag",oauth_digest(raw)},{"document",Json::parse(raw)}};
+        }
+        if(name=="save_project"){
+            const auto raw=read_file(file);
+            const auto expected=args.at("etag").get<std::string>();
+            if(expected.size()!=43||oauth_digest(raw)!=expected)
+                throw std::runtime_error("Project changed; read_project again before saving.");
+            const auto document=args.at("document");
+            if(!document.is_object())throw std::invalid_argument("document must be JSON object");
+            const auto content=document.dump(2)+"\n";
+            if(content.size()>max_message_bytes)throw std::invalid_argument("Project exceeds 1 MB");
+            const auto candidate=base/(".validate-"+oauth_random_token()+".json");
+            struct Cleanup {
+                fs::path path;
+                ~Cleanup(){std::error_code ec;fs::remove(path,ec);}
+            } cleanup{candidate};
+            atomic_write(candidate,content,false);
+            engine({"--project","validate",candidate.u8string()},90);
+            atomic_write(file,content);
+            return {{"project",base.filename().u8string()},
+                    {"etag",oauth_digest(content)},{"validated",true}};
+        }
         if (name == "download_commons_image") {
             const auto directory = base / "assets";
             safe_directory(base, directory);

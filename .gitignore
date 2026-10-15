@@ -32,6 +32,7 @@ dist/
 .cache/
 
 third_party/_sources
+third_party/_install/
 
 # Keep user compositions outside the engine repository
 samples/

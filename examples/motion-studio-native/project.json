@@ -1,0 +1,236 @@
+{
+  "version": 1,
+  "canvas": {
+    "width": 1024,
+    "height": 576
+  },
+  "fps": 24,
+  "scenes": [
+    {
+      "start": 0,
+      "duration": 4,
+      "background": "#0A1729",
+      "layers": [
+        {
+          "type": "text",
+          "text": "01 / MOTION STUDIO",
+          "x": 62,
+          "y": 45,
+          "width": 500,
+          "height": 52,
+          "fontSize": 24,
+          "color": "#6BB5FF"
+        },
+        {
+          "type": "text",
+          "text": "EL TELÉFONO SE VERIFICA",
+          "x": 355,
+          "y": 173,
+          "width": 500,
+          "height": 52,
+          "fontSize": 38,
+          "color": "#E7F6FF"
+        },
+        {
+          "type": "symbol",
+          "symbol": "phone",
+          "x": 75,
+          "y": 115,
+          "width": 280,
+          "height": 310,
+          "color": "#61E3CA",
+          "animateSeconds": 1.5,
+          "animation": {
+            "type": "fade-in",
+            "speed": 3
+          }
+        },
+        {
+          "type": "text",
+          "text": "Palomita dibujada por fotograma",
+          "x": 355,
+          "y": 250,
+          "width": 500,
+          "height": 52,
+          "fontSize": 25,
+          "color": "#E7F6FF"
+        }
+      ]
+    },
+    {
+      "start": 4,
+      "duration": 4,
+      "background": "#0A1729",
+      "transition": {
+        "type": "wipe",
+        "duration": 0.35
+      },
+      "layers": [
+        {
+          "type": "text",
+          "text": "02 / TRANSICIÓN ANIMADA",
+          "x": 62,
+          "y": 45,
+          "width": 500,
+          "height": 52,
+          "fontSize": 24,
+          "color": "#FFCA7C"
+        },
+        {
+          "type": "symbol",
+          "symbol": "lock",
+          "x": 75,
+          "y": 105,
+          "width": 280,
+          "height": 310,
+          "color": "#FFCA7C",
+          "animateSeconds": 1.5,
+          "animation": {
+            "type": "fade-in",
+            "speed": 3
+          }
+        },
+        {
+          "type": "text",
+          "text": "EL CANDADO SE CIERRA",
+          "x": 355,
+          "y": 173,
+          "width": 500,
+          "height": 52,
+          "fontSize": 37,
+          "color": "#E7F6FF"
+        },
+        {
+          "type": "text",
+          "text": "Objetos animados sin navegador",
+          "x": 355,
+          "y": 250,
+          "width": 500,
+          "height": 52,
+          "fontSize": 25,
+          "color": "#E7F6FF"
+        }
+      ]
+    },
+    {
+      "start": 8,
+      "duration": 4,
+      "background": "#0A1729",
+      "transition": {
+        "type": "iris",
+        "duration": 0.35
+      },
+      "layers": [
+        {
+          "type": "text",
+          "text": "03 / PERSONAJES Y CROMA",
+          "x": 62,
+          "y": 45,
+          "width": 500,
+          "height": 52,
+          "fontSize": 24,
+          "color": "#FF8594"
+        },
+        {
+          "type": "symbol",
+          "symbol": "angry-person",
+          "x": 68,
+          "y": 132,
+          "width": 280,
+          "height": 310,
+          "color": "#FF8594",
+          "animateSeconds": 1.5,
+          "animation": {
+            "type": "fade-in",
+            "speed": 3
+          }
+        },
+        {
+          "type": "image",
+          "src": "assets/sample-green.png",
+          "x": 405,
+          "y": 167,
+          "width": 260,
+          "height": 240,
+          "chromaKey": {
+            "color": "#00FF00",
+            "tolerance": 0.14,
+            "softness": 0.08
+          }
+        },
+        {
+          "type": "text",
+          "text": "CROMA NATIVO",
+          "x": 663,
+          "y": 198,
+          "width": 300,
+          "height": 52,
+          "fontSize": 28,
+          "color": "#61E3CA"
+        },
+        {
+          "type": "text",
+          "text": "El verde desaparece",
+          "x": 665,
+          "y": 265,
+          "width": 300,
+          "height": 52,
+          "fontSize": 22,
+          "color": "#FFFFFF"
+        }
+      ]
+    },
+    {
+      "start": 12,
+      "duration": 4,
+      "background": "#0A1729",
+      "transition": {
+        "type": "fade",
+        "duration": 0.3
+      },
+      "layers": [
+        {
+          "type": "text",
+          "text": "04 / LOTTIE NATIVO",
+          "x": 65,
+          "y": 55,
+          "width": 440,
+          "height": 45,
+          "fontSize": 27,
+          "color": "#61E3CA"
+        },
+        {
+          "type": "text",
+          "text": "VECTOR ANIMADO",
+          "x": 560,
+          "y": 190,
+          "width": 415,
+          "height": 60,
+          "fontSize": 35,
+          "color": "#FFFFFF"
+        },
+        {
+          "type": "text",
+          "text": "ThorVG CPU sin navegador",
+          "x": 560,
+          "y": 265,
+          "width": 415,
+          "height": 48,
+          "fontSize": 22,
+          "color": "#B0C6D7"
+        },
+        {
+          "type": "lottie",
+          "src": "assets/moving-orb.json",
+          "x": 80,
+          "y": 110,
+          "width": 440,
+          "height": 390,
+          "rate": 1,
+          "loop": true
+        }
+      ]
+    }
+  ],
+  "audio": []
+}

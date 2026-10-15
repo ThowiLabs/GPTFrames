@@ -1,0 +1,338 @@
+{
+  "version": 1,
+  "canvas": {
+    "width": 1920,
+    "height": 1080
+  },
+  "fps": 24,
+  "scenes": [
+    {
+      "start": 0,
+      "duration": 4,
+      "background": "#071623",
+      "gradient": "#122A40",
+      "camera": {
+        "startX": 0,
+        "endX": -8,
+        "startY": 0,
+        "endY": -12,
+        "startZoom": 1,
+        "endZoom": 1.035,
+        "duration": 4,
+        "easing": "easeInOut"
+      },
+      "layers": [
+        {
+          "type": "text",
+          "text": "DISEÑO QUE SE ALINEA SOLO",
+          "fontSize": 114,
+          "color": "#F0F8FF",
+          "x": 88,
+          "y": 75,
+          "width": 1600,
+          "height": 152,
+          "bold": true
+        },
+        {
+          "type": "text",
+          "text": "Sin calcular coordenadas de cada elemento.",
+          "fontSize": 36,
+          "color": "#A6C2D6",
+          "x": 92,
+          "y": 220,
+          "width": 1500,
+          "height": 80
+        },
+        {
+          "type": "group",
+          "x": 118,
+          "y": 365,
+          "width": 750,
+          "height": 490,
+          "layout": "auto",
+          "direction": "overlay",
+          "align": "center",
+          "justify": "center",
+          "children": [
+            {
+              "type": "rect",
+              "width": 700,
+              "height": 460,
+              "color": "#17374C",
+              "radius": 40
+            },
+            {
+              "type": "ring",
+              "width": 290,
+              "height": 290,
+              "color": "#FFC777",
+              "strokeWidth": 24,
+              "animation": {
+                "type": "pulse",
+                "amplitude": 0.015,
+                "speed": 0.7
+              }
+            },
+            {
+              "type": "text",
+              "text": "!",
+              "fontSize": 135,
+              "color": "#FFC777",
+              "width": 220,
+              "height": 220,
+              "wrap": false
+            }
+          ]
+        },
+        {
+          "type": "group",
+          "x": 970,
+          "y": 390,
+          "width": 730,
+          "height": 395,
+          "direction": "column",
+          "padding": 30,
+          "gap": 10,
+          "align": "stretch",
+          "justify": "center",
+          "children": [
+            {
+              "type": "rect",
+              "width": 600,
+              "height": 62,
+              "color": "#24415A",
+              "radius": 16
+            },
+            {
+              "type": "text",
+              "text": "Contenedores con hijos",
+              "fontSize": 43,
+              "color": "#E3F4F9",
+              "height": 62
+            },
+            {
+              "type": "text",
+              "text": "Alineación automática",
+              "fontSize": 39,
+              "color": "#5DE1CA",
+              "height": 62
+            },
+            {
+              "type": "text",
+              "text": "Márgenes, relleno y separación",
+              "fontSize": 32,
+              "color": "#AAC6D5",
+              "height": 62
+            }
+          ]
+        },
+        {
+          "type": "text",
+          "text": "GPTFRAMES  /  PROFESSIONAL STUDIO",
+          "fontSize": 22,
+          "color": "#80A7B9",
+          "x": 100,
+          "y": 989,
+          "width": 1600,
+          "height": 36
+        }
+      ]
+    },
+    {
+      "start": 4,
+      "duration": 4,
+      "background": "#0C1728",
+      "gradient": "#1B2740",
+      "transition": {
+        "type": "fade",
+        "duration": 0.6
+      },
+      "layers": [
+        {
+          "type": "text",
+          "text": "DISTRIBUCIÓN AUTOMÁTICA",
+          "fontSize": 83,
+          "color": "#F0F8FF",
+          "x": 100,
+          "y": 85,
+          "width": 1620,
+          "height": 110
+        },
+        {
+          "type": "text",
+          "text": "Tres tarjetas. Una sola regla de diseño.",
+          "fontSize": 36,
+          "color": "#A9BCD0",
+          "x": 105,
+          "y": 218,
+          "width": 1450,
+          "height": 90
+        },
+        {
+          "type": "group",
+          "x": 116,
+          "y": 360,
+          "width": 1688,
+          "height": 440,
+          "direction": "row",
+          "padding": 8,
+          "gap": 35,
+          "align": "center",
+          "justify": "space-between",
+          "children": [
+            {
+              "type": "group",
+              "width": 520,
+              "height": 400,
+              "direction": "overlay",
+              "align": "center",
+              "children": [
+                {
+                  "type": "rect",
+                  "width": 520,
+                  "height": 400,
+                  "color": "#183A50",
+                  "radius": 26
+                },
+                {
+                  "type": "text",
+                  "text": "PERMISOS",
+                  "fontSize": 66,
+                  "color": "#5DE1CA",
+                  "width": 460,
+                  "height": 130,
+                  "animation": {
+                    "type": "float",
+                    "amplitude": 6,
+                    "speed": 0.3
+                  }
+                }
+              ]
+            },
+            {
+              "type": "group",
+              "width": 520,
+              "height": 400,
+              "direction": "overlay",
+              "align": "center",
+              "children": [
+                {
+                  "type": "rect",
+                  "width": 520,
+                  "height": 400,
+                  "color": "#29364D",
+                  "radius": 26
+                },
+                {
+                  "type": "text",
+                  "text": "SEGURIDAD",
+                  "fontSize": 62,
+                  "color": "#FFC777",
+                  "width": 470,
+                  "height": 130,
+                  "animation": {
+                    "type": "float",
+                    "amplitude": 7,
+                    "speed": 0.35
+                  }
+                }
+              ]
+            },
+            {
+              "type": "group",
+              "width": 520,
+              "height": 400,
+              "direction": "overlay",
+              "align": "center",
+              "children": [
+                {
+                  "type": "rect",
+                  "width": 520,
+                  "height": 400,
+                  "color": "#213451",
+                  "radius": 26
+                },
+                {
+                  "type": "text",
+                  "text": "CALIDAD",
+                  "fontSize": 70,
+                  "color": "#AFADFF",
+                  "width": 460,
+                  "height": 130,
+                  "animation": {
+                    "type": "float",
+                    "amplitude": 5,
+                    "speed": 0.4
+                  }
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "start": 8,
+      "duration": 4,
+      "background": "#0A1F30",
+      "gradient": "#13283F",
+      "transition": {
+        "type": "wipe",
+        "duration": 0.6
+      },
+      "layers": [
+        {
+          "type": "group",
+          "x": 140,
+          "y": 165,
+          "width": 1620,
+          "height": 750,
+          "direction": "column",
+          "padding": 55,
+          "gap": 30,
+          "align": "stretch",
+          "justify": "center",
+          "children": [
+            {
+              "type": "text",
+              "text": "COMPONER ≠ PONER COORDENADAS",
+              "fontSize": 64,
+              "color": "#EDF8FF",
+              "height": 118,
+              "wrap": true,
+              "animation": {
+                "type": "float",
+                "amplitude": 4,
+                "speed": 0.27
+              }
+            },
+            {
+              "type": "text",
+              "text": "Texto adaptable, elementos centrados y animaciones continuas.",
+              "fontSize": 38,
+              "color": "#8BDACA",
+              "height": 110,
+              "wrap": true
+            },
+            {
+              "type": "rect",
+              "width": 1420,
+              "height": 15,
+              "color": "#FFC777",
+              "radius": 8
+            },
+            {
+              "type": "text",
+              "text": "Motor de video nativo en C++ · sin dependencias de render externas.",
+              "fontSize": 32,
+              "color": "#A6BFD0",
+              "height": 104,
+              "wrap": true
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "audio": []
+}

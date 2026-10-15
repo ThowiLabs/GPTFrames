@@ -5,12 +5,12 @@ GPTFrames is a C++17 video compositor with a native C++ MCP service, controlled 
 ## Components
 
 - Renderer: JSON scene composition, keyframes, text, PNG/JPEG, shapes, transitions, optional Chromium HTML/CSS/JavaScript capture, AVI and native H.264/AAC MP4.
-- MCP: the compiled gptframes-mcp executable connects ChatGPT through HTTPS and a PIN window. Its eight tool names are preserved; public access uses OAuth.
+- MCP: the compiled gptframes-mcp executable connects ChatGPT through HTTPS and a PIN window. Existing tools are preserved; new tools provide professional layout reviews, installed voice discovery and asynchronous renders with private viewer URLs.
 - Media clients: C++ with libcurl HTTPS on Linux and system WinHTTP on Windows. Commons downloads retain author, source and license sidecars; Openverse remains discovery-only.
 - Voice: the pinned Neo-TTS submodule builds its native NEO_LITE_ONLY inference path. No interpreter is required.
 - Build utilities and regression fixtures: C++ executables. CMake automatically embeds local fonts using a host C++ compiler, including during cross-compilation.
 
-The engine and service use C/C++ libraries. Browser compositions remain HTML/CSS/JavaScript executed inside the installed browser under the C++ controller. Shell files only orchestrate builds and test commands. There are no project-owned .py files or interpreter calls in build/test scripts.
+The Professional Studio branch adds nested auto-layout, anchored/centered text, procedural motion, camera moves, design linting, and protected render-job progress/player pages. See [Professional Studio](docs/PROFESSIONAL_STUDIO.md).\n\nThe engine and service use C/C++ libraries. Browser compositions remain HTML/CSS/JavaScript executed inside the installed browser under the C++ controller. Shell files only orchestrate builds and test commands. There are no project-owned .py files or interpreter calls in build/test scripts.
 
 ## Build
 
@@ -73,7 +73,7 @@ The bridge executes Neo Lite directly and validates/resamples its PCM output to 
     bash tests/smoke-linux.sh
     sh tests/browser-integration.sh build/native-linux/hyperframes-cpp-native
 
-Unit and transport tests are compiled C++. The fixture generator is also C++. Network access is mocked in regression tests; live provider checks can be performed separately. Browser tests report a skip if no compatible browser is installed. ffprobe, when present, is an optional test probe.
+Unit and transport tests are compiled C++. They now also cover auto-layout, job recovery, cancellation and private browser playback. The fixture generator is also C++. Network access is mocked in regression tests; live provider checks can be performed separately. Browser tests report a skip if no compatible browser is installed. ffprobe, when present, is an optional test probe.
 
 ## Windows
 

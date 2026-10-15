@@ -2,6 +2,8 @@
 #include "common.hpp"
 #include <cstdio>
 #include <thread>
+#include <atomic>
+#include <functional>
 #ifdef _WIN32
 #include <io.h>
 #else
@@ -19,6 +21,7 @@ namespace gptframes::mcp {
 struct ProcessResult {
     int exit_code = -1;
     bool timed_out = false;
+    bool cancelled = false;
     std::string output;
 };
 inline void append_bounded(std::string& output, const char* data, std::size_t length) {
@@ -52,7 +55,9 @@ inline std::wstring windows_argument(const std::string& s) {
 }
 #endif
 inline ProcessResult run_process(const std::vector<std::string>& arguments, int timeout_seconds = 75,
-                                 const std::string& input = {}) {
+                                 const std::string& input = {},
+                                 const std::function<void(const std::string&)>& on_output = {},
+                                 const std::atomic_bool* cancel = nullptr) {
     if (arguments.empty() || arguments.front().empty() || timeout_seconds < 1)
         throw std::invalid_argument("Proceso no valido");
     for (const auto& a : arguments) if (a.find('\0') != std::string::npos)
@@ -106,14 +111,16 @@ inline ProcessResult run_process(const std::vector<std::string>& arguments, int 
         if (PeekNamedPipe(read_end.value, nullptr, 0, nullptr, &available, nullptr) && available) {
             char block[4096]; DWORD received = 0;
             if (ReadFile(read_end.value, block, std::min<DWORD>(sizeof(block), available), &received, nullptr))
-                append_bounded(result.output, block, received);
+                { append_bounded(result.output, block, received);
+                  if(on_output)on_output(std::string(block,received)); }
         } else {
             if (!finished) finished = WaitForSingleObject(process.hProcess, 0) == WAIT_OBJECT_0;
             if (finished) break;
         }
-        if (std::chrono::steady_clock::now() >= deadline) {
-            result.timed_out = true;
-            TerminateJobObject(job.value, 124);
+        if ((cancel && cancel->load()) || std::chrono::steady_clock::now() >= deadline) {
+            result.cancelled = cancel && cancel->load();
+            result.timed_out = !result.cancelled;
+            TerminateJobObject(job.value, result.cancelled ? 130 : 124);
             WaitForSingleObject(process.hProcess, INFINITE);
             break;
         }
@@ -121,7 +128,7 @@ inline ProcessResult run_process(const std::vector<std::string>& arguments, int 
     }
     DWORD code = 0;
     GetExitCodeProcess(process.hProcess, &code);
-    result.exit_code = result.timed_out ? 124 : static_cast<int>(code);
+    result.exit_code = result.cancelled ? 130 : result.timed_out ? 124 : static_cast<int>(code);
 #else
     struct Descriptor {
         int value = -1;
@@ -168,7 +175,8 @@ inline ProcessResult run_process(const std::vector<std::string>& arguments, int 
         for (int blocks = 0; blocks < 16; ++blocks) {
             count = read(read_end.value, block, sizeof(block));
             if (count <= 0) break;
-            append_bounded(result.output, block, static_cast<std::size_t>(count));
+            { append_bounded(result.output, block, static_cast<std::size_t>(count));
+              if(on_output)on_output(std::string(block,static_cast<std::size_t>(count))); }
         }
         if (count == 0) eof = true;
         if (count < 0 && errno != EAGAIN && errno != EWOULDBLOCK && errno != EINTR) eof = true;
@@ -181,8 +189,9 @@ inline ProcessResult run_process(const std::vector<std::string>& arguments, int 
             }
         }
         if (finished && eof) break;
-        if (std::chrono::steady_clock::now() >= deadline) {
-            result.timed_out = true;
+        if ((cancel && cancel->load()) || std::chrono::steady_clock::now() >= deadline) {
+            result.cancelled = cancel && cancel->load();
+            result.timed_out = !result.cancelled;
             kill(-child, SIGKILL);
             if (!finished) while (waitpid(child, &status, 0) < 0 && errno == EINTR) {}
             break;
@@ -192,7 +201,7 @@ inline ProcessResult run_process(const std::vector<std::string>& arguments, int 
     }
     // Kill any descendants that outlived the requested program.
     kill(-child, SIGKILL);
-    result.exit_code = result.timed_out ? 124 :
+    result.exit_code = result.cancelled ? 130 : result.timed_out ? 124 :
         WIFEXITED(status) ? WEXITSTATUS(status) : WIFSIGNALED(status) ? 128 + WTERMSIG(status) : -1;
 #endif
     return result;

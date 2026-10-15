@@ -1,6 +1,7 @@
 #pragma once
 #include "service.hpp"
 #include "oauth.hpp"
+#include "render_http_routes.hpp"
 #include <regex>
 
 namespace gptframes::mcp {
@@ -27,6 +28,7 @@ inline void configure_http(httplib::Server& server, Service& service, const std:
         response.set_content(R"({"name":"GPTFrames","connection":"ChatGPT OAuth","mcp":"/mcp"})", "application/json");
         response.set_header("Cache-Control", "no-store");
     });
+    configure_render_http(server,service,oauth);
     for (const auto* route : {"/.well-known/oauth-protected-resource", "/.well-known/oauth-protected-resource/mcp"})
         server.Get(route, [oauth](const httplib::Request& request, httplib::Response& response) { oauth->handle("resource", request, response); });
     server.Get("/.well-known/oauth-authorization-server",

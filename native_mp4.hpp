@@ -61,8 +61,10 @@ class NativeMp4Writer {
  }
  public:
  NativeMp4Writer(const char* path,int w,int h,int fps):width_(w),height_(h),fps_(fps){
-  if(w%16||h%16||w<16||h<16||fps<1||fps>60)
-   throw std::invalid_argument("H264 requires 16-pixel-aligned width and height and 1..60 FPS");
+  // minih264 admite dimensiones pares; internamente rellena macrobloques y
+  // anuncia el recorte correcto en el SPS al usar const_input_flag=1.
+  if(w%2||h%2||w<16||h<16||fps<1||fps>60)
+   throw std::invalid_argument("H264 requires even width and height and 1..60 FPS");
   file_=std::fopen(path,"wb");if(!file_)throw std::runtime_error("Unable to open MP4 output");
   mux_=MP4E_open(0,0,file_,writeCallback);
   if(!mux_)throw std::runtime_error("Unable to create MP4 muxer");
