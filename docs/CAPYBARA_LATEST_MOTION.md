@@ -15,3 +15,8 @@ El acceso a la Biblioteca de audio de YouTube redirigió desde este sandbox a in
 La versión anterior consistía principalmente en capturas estáticas con acercamiento. Ahora `make_motion_layers.py` separa títulos, imágenes, tarjetas, logos, ventajas, riesgos, decisiones y **filas individuales de la tabla** como PNG de fondo transparente. `render_motion.py` calcula en cada fotograma desplazamiento horizontal y vertical, opacidades/fades y parallax sobre fondo en movimiento; además `make_captions.py` añade subtítulos con aparición y desaparición gradual alineados por capítulo.
 
 Conservar 1920×1080 a 24fps, 243 segundos (4:03), Go/Rust/C++ y el veredicto cualitativo. Son efectos FFmpeg sobre el pipeline HTML/Chromium de GPTFrames, no se afirma haber reformado todavía el framebuffer C++ nativo, que sigue vertical.
+
+## Resultado de pruebas
+El MP4 completo fue inspeccionado con ffprobe: duración 243.000000 s, 1920×1080, 24/1 fps, 5832 cuadros H.264 y AAC. FFmpeg decodificó todo el audio/video con salida de errores vacía. La nueva edición ocupa 49,363,606 bytes. Se revisaron visualmente la escena introductoria con subtítulos y la tabla con sus siete filas completas.
+
+Ruta del archivo final: examples/go-rust-cpp-1080p/output/motion/GPTFrames-Go-Rust-Cpp-Capybara-latest-MOTION-1080p.mp4. Página demo temporal: https://9409cf3846cd3d9be6.gradio.live/v2/ . La infraestructura y las credenciales no se publican desde este sitio estático.

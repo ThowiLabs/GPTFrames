@@ -14,3 +14,10 @@ Checkpoint y ONNX/.neo en examples/go-rust-cpp-1080p/voice/latest, ignorados en 
 Primera compilación faltaba libminizip-dev, zlib1g-dev y libcurl4-openssl-dev, instaladas. Para ejecutar export-onnx es imprescindible cwd third_party/neo-tts donde están assets/piper-medium.graph.pb.gz y assets/piper-medium.weights.tsv. Export ONNX correcto 63,516,077 bytes/350 tensores. Neo Compiler generó .neo de 31,365,501 bytes con firma estructural válida. La síntesis de una frase desde último .neo pasó.
 # Pendientes
 Finalizar inferencia de todos capítulos, mezclar voz, terminar render v2, ffprobe/ffmpeg QA, publicar sitio temporal con descarga, subir commit GitHub de rama feature. Esperar pista autorizada desde YouTube Studio si se solicita con música; no entrar a cookies de Google ajenas.
+
+# Validación final y entrega
+Checkpoint SHA-256 documentado en examples/go-rust-cpp-1080p/latest-capybara-provenance.json. Neo TTS exportó ONNX 63,516,077 bytes, Neo Compiler creó NEO 31,365,501 bytes, estructura y firma verificadas. Neo Lite sintetizó las 13 narraciones con el último NEO, mezcla sin música WAV mono 24k duración 243s, media -17.7dB máximo -0.4dB. Capturas HTML Chromium separadas en capas y animadas mediante FFmpeg con deslizamientos x/y, transparencia y subtítulos ASS; tabla con cinco grupos, siete filas presentes y legibles, revisada en screenshot escena 11.
+
+MP4 final `examples/go-rust-cpp-1080p/output/motion/GPTFrames-Go-Rust-Cpp-Capybara-latest-MOTION-1080p.mp4`, 49,363,606 bytes, 1920x1080, H264 AAC, 24fps, 5832 frames, 243.000000 segundos. ffmpeg decodificación completa sin errores. Enlace temporal de descarga https://9409cf3846cd3d9be6.gradio.live/v2/GPTFrames-Go-Rust-Cpp-Capybara-latest-MOTION-1080p.mp4 y página /v2/. Adelanto de 34 segundos en /v2/ADELANTO-Capybara-268-motion-34s.mp4.
+
+La música anterior está ausente y no fue reemplazada por terceros: no existe sesión autorizada para descargar pistas de YouTube Studio. El mezclador acepta pista descargada oficialmente con su licencia, sin rerenderizar escenas. Verificar condiciones de uso fuera de YouTube antes de publicar.
