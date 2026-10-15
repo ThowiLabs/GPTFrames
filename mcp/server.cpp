@@ -23,7 +23,7 @@ gptframes::mcp::fs::path executable_path(const char* argument) {
 int main(int argc, char** argv) {
     using namespace gptframes::mcp;
     try {
-        std::string transport = "stdio";
+        std::string transport = "http";
         int port = 8769;
         fs::path root = fs::u8path(GPTFRAMES_DEFAULT_ROOT);
         const auto executable = executable_path(argv[0]);
@@ -35,8 +35,8 @@ int main(int argc, char** argv) {
                 std::cout << "GPTFrames MCP C++ 0.2.0\n"
                           << "Usage: gptframes-mcp [--transport stdio|http] [--port 8769] [--root PROJECT_ROOT]\n"
                           << "Environment: GPTFRAMES_ROOT, GPTFRAMES_PROJECTS, GPTFRAMES_MODELS,\n"
-                          << "GPTFRAMES_ENGINE, GPTFRAMES_NEO_LITE, GPTFRAMES_MCP_TOKEN,\n"
-                          << "GPTFRAMES_ALLOWED_ORIGINS\n";
+                          << "GPTFRAMES_ENGINE, GPTFRAMES_NEO_LITE, GPTFRAMES_OAUTH_PIN_FILE,\n"
+                          << "GPTFRAMES_PUBLIC_URL, GPTFRAMES_PUBLIC_URL_FILE, GPTFRAMES_OAUTH_STATE\n";
                 return 0;
             }
             const auto equal = option.find('=');
@@ -58,7 +58,8 @@ int main(int argc, char** argv) {
         if (transport == "stdio") { serve_stdio(service); return 0; }
         if (transport != "http") throw std::invalid_argument("Transporte admitido: stdio o http");
         httplib::Server server;
-        configure_http(server, service, environment("GPTFRAMES_MCP_TOKEN"));
+        auto oauth = std::make_shared<OAuth>(OAuthConfig::from_environment(service.config().root));
+        configure_http(server, service, oauth);
         if (!server.listen("127.0.0.1", port)) throw std::runtime_error("No se pudo iniciar HTTP en loopback");
         return 0;
     } catch (const std::exception& error) {

@@ -166,7 +166,7 @@ public:
         }
         throw std::invalid_argument("Herramienta no reconocida");
     }
-    std::optional<Json> rpc(const Json& request) {
+    std::optional<Json> rpc(const Json& request, const std::string& transport_version = "2025-06-18") {
         const bool valid_id = request.is_object() && (!request.contains("id") || request["id"].is_null() ||
                               request["id"].is_string() || request["id"].is_number_integer());
         if (!request.is_object() || request.value("jsonrpc", Json{}) != "2.0" ||
@@ -175,9 +175,24 @@ public:
         if (!request.contains("id")) return std::nullopt;
         Json response{{"jsonrpc", "2.0"}, {"id", request["id"]}};
         const auto method = request["method"].get<std::string>();
-        if (method == "initialize")
-            response["result"] = {{"protocolVersion", "2025-06-18"}, {"capabilities", {{"tools", {{"listChanged", false}}}}},
+        const bool modern = transport_version == "2026-07-28";
+        if (method == "server/discover" && modern)
+            response["result"] = {{"resultType", "complete"},
+                {"supportedVersions", Json::array({"2026-07-28", "2025-11-25", "2025-06-18"})},
+                {"capabilities", {{"tools", {{"listChanged", false}}}}},
+                {"_meta", {{"io.modelcontextprotocol/serverInfo", {{"name", "gptframes"}, {"title", "GPTFrames"}, {"version", "0.2.0"}}}}},
+                {"ttlMs", 30000}, {"cacheScope", "private"}};
+        else if (method == "initialize") {
+            auto version = transport_version.empty() ? std::string("2025-06-18") : transport_version;
+            const auto params = request.value("params", Json::object());
+            if (params.is_object() && params.contains("protocolVersion") && params["protocolVersion"].is_string()) {
+                const auto requested = params["protocolVersion"].get<std::string>();
+                version = (requested == "2025-03-26" || requested == "2025-06-18" || requested == "2025-11-25")
+                    ? requested : "2025-11-25";
+            }
+            response["result"] = {{"protocolVersion", version}, {"capabilities", {{"tools", {{"listChanged", false}}}}},
                                   {"serverInfo", {{"name", "gptframes"}, {"version", "0.2.0"}}}};
+        }
         else if (method == "ping") response["result"] = Json::object();
         else if (method == "tools/list") response["result"] = {{"tools", tool_definitions()}};
         else if (method == "resources/list") response["result"] = {{"resources", Json::array()}};
@@ -194,6 +209,14 @@ public:
                 response["result"] = {{"content", Json::array({{{"type", "text"}, {"text", std::string(error.what()).substr(0, 1500)}}})}, {"isError", true}};
             }
         } else response["error"] = {{"code", -32601}, {"message", "Method not found"}};
+        if (modern && response.contains("result") &&
+            (method == "tools/list" || method == "tools/call")) {
+            response["result"]["resultType"] = "complete";
+            if (method == "tools/list") {
+                response["result"]["ttlMs"] = 30000;
+                response["result"]["cacheScope"] = "private";
+            }
+        }
         return response;
     }
 };

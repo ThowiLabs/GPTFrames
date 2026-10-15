@@ -38,3 +38,4 @@ Permissive source licensing does not remove H.264/AAC patent or distribution obl
 - httplib.h SHA-256: bc77114769db3b3c97e4a6d753dab797c3cadaaa48beead3806298b09702df18.
 - Linux HTTPS clients link system libcurl, under the curl license: https://curl.se/docs/copyright.html. Its linked native dependencies retain their own licenses.
 - Windows HTTPS clients use the operating system WinHTTP API.
+- Native PIN/OAuth uses system OpenSSL libcrypto for secure randomness and SHA-256 on Linux; the system package retains its license notices. Windows uses the operating system BCrypt API. No crypto primitives are implemented by this project.

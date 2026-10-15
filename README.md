@@ -5,7 +5,7 @@ GPTFrames is a C++17 video compositor with a native C++ MCP service, controlled 
 ## Components
 
 - Renderer: JSON scene composition, keyframes, text, PNG/JPEG, shapes, transitions, optional Chromium HTML/CSS/JavaScript capture, AVI and native H.264/AAC MP4.
-- MCP: the compiled gptframes-mcp executable provides stdio and authenticated loopback HTTP. Its eight existing tool names and environment variables are preserved.
+- MCP: the compiled gptframes-mcp executable connects ChatGPT through HTTPS and a PIN window. Its eight tool names are preserved; public access uses OAuth.
 - Media clients: C++ with libcurl HTTPS on Linux and system WinHTTP on Windows. Commons downloads retain author, source and license sidecars; Openverse remains discovery-only.
 - Voice: the pinned Neo-TTS submodule builds its native NEO_LITE_ONLY inference path. No interpreter is required.
 - Build utilities and regression fixtures: C++ executables. CMake automatically embeds local fonts using a host C++ compiler, including during cross-compilation.
@@ -21,7 +21,7 @@ Clone with submodules:
 
 On Debian/Ubuntu install C/C++17, CMake, Git, curl, DejaVu fonts and libcurl development files:
 
-    sudo apt install build-essential cmake git curl fonts-dejavu-core libcurl4-openssl-dev
+    sudo apt install build-essential cmake git curl fonts-dejavu-core libcurl4-openssl-dev libssl-dev
 
 Fetch optional native renderer dependencies, then build:
 
@@ -34,31 +34,24 @@ CMake generates its font header under the build directory. Set HFC_FONT_DIR if D
 
 The renderer keeps its installed-browser mode. Chromium/Chrome/Edge must be installed to use that mode. JSON and raster modes do not require a browser. The native renderer does not invoke an external encoder executable.
 
-## MCP service
+## Connect GPTFrames to ChatGPT
 
-Local MCP:
+1. Add the public HTTPS URL ending in /mcp to ChatGPT as a custom MCP server.
+2. Select OAuth. Client registration is automatic; no manual API key or client secret is needed.
+3. ChatGPT opens the GPTFrames PIN window. Enter your private PIN and confirm the connection.
 
-    build/native-linux/gptframes-mcp --transport stdio
+The public HTTP service accepts only tokens issued by this PIN authorization flow. It does not accept a fixed API token. The MCP, PIN page and authorization implementation are C++.
 
-Example client configuration:
+Operator setup:
 
-    {
-      "mcpServers": {
-        "gptframes": {
-          "command": "/absolute/path/GPTFrames/build/native-linux/gptframes-mcp",
-          "args": ["--transport", "stdio", "--root", "/absolute/path/GPTFrames"]
-        }
-      }
-    }
+    export GPTFRAMES_OAUTH_PIN_FILE=/private/path/gptframes-pin
+    export GPTFRAMES_PUBLIC_URL=https://your-public-host.example
+    export GPTFRAMES_OAUTH_STATE=/private/path/oauth-clients.json
+    build/native-linux/gptframes-mcp --port 18769 --root "$PWD"
 
-The engine is discovered beside the MCP executable. GPTFRAMES_ENGINE can select a different native engine. GPTFRAMES_ROOT, GPTFRAMES_PROJECTS, GPTFRAMES_MODELS and GPTFRAMES_NEO_LITE remain supported.
+The PIN file must be private (mode 600 on Linux) and its directory mode 700. A protected HTTPS tunnel or reverse proxy forwards to the loopback listener. GPTFRAMES_PUBLIC_URL_FILE can supply the public origin once a managed tunnel has assigned it.
 
-Authenticated HTTP:
-
-    export GPTFRAMES_MCP_TOKEN='use-a-long-private-token-at-least-24-characters'
-    build/native-linux/gptframes-mcp --transport http --port 8769
-
-HTTP binds to 127.0.0.1. POST /mcp requires the bearer token. GET /health returns minimal status. HTTP clients that send an Origin must use a loopback origin or an exact origin configured in GPTFRAMES_ALLOWED_ORIGINS. Remote transport still requires a protected HTTPS reverse proxy. OAuth and SSE sessions are not added by this migration. See docs/MCP.md.
+The engine is discovered beside the MCP executable. GPTFRAMES_ENGINE can select a different engine; GPTFRAMES_ROOT, GPTFRAMES_PROJECTS, GPTFRAMES_MODELS and GPTFRAMES_NEO_LITE configure local resources. See docs/MCP.md for operation and reconnect behavior.
 
 ## Native voice inference
 

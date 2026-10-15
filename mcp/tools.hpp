@@ -2,7 +2,8 @@
 #include "common.hpp"
 namespace gptframes::mcp {
 inline const Json& tool_definitions() {
-    static const Json tools = Json::parse(R"JSON([
+    static const Json tools = [] {
+        auto result = Json::parse(R"JSON([
  {"name":"list_projects","description":"List available GPTFrames projects.","inputSchema":{"type":"object","properties":{},"additionalProperties":false}},
  {"name":"create_project","description":"Create an editable GPTFrames JSON video project from the included showcase.","inputSchema":{"type":"object","properties":{"name":{"type":"string","minLength":1,"maxLength":40}},"required":["name"],"additionalProperties":false}},
  {"name":"validate_project","description":"Validate scenes, layers, paths and timing using the native C++ engine.","inputSchema":{"type":"object","properties":{"project":{"type":"string"}},"required":["project"],"additionalProperties":false}},
@@ -12,6 +13,13 @@ inline const Json& tool_definitions() {
  {"name":"search_images","description":"Search Wikimedia Commons or Openverse with author, source and license metadata. Results do not automatically grant reuse rights.","inputSchema":{"type":"object","properties":{"query":{"type":"string","minLength":2,"maxLength":120},"provider":{"type":"string","enum":["wikimedia","openverse"]},"limit":{"type":"integer","minimum":1,"maximum":15}},"required":["query"],"additionalProperties":false}},
  {"name":"download_commons_image","description":"Download a PNG/JPEG from Wikimedia Commons into project assets and preserve attribution in JSON.","inputSchema":{"type":"object","properties":{"project":{"type":"string"},"file_title":{"type":"string","maxLength":240},"asset_name":{"type":"string"}},"required":["project","file_title","asset_name"],"additionalProperties":false}}
 ])JSON");
+        for (auto& tool : result) {
+            const auto scheme = Json::array({{{"type", "oauth2"}, {"scopes", Json::array({"gptframes"})}}});
+            tool["securitySchemes"] = scheme;
+            tool["_meta"] = {{"securitySchemes", scheme}};
+        }
+        return result;
+    }();
     return tools;
 }
 inline void validate_arguments(const std::string& name, const Json& arguments) {

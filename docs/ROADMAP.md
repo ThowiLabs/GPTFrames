@@ -13,7 +13,7 @@
 | Static Linux / cross-compiled Windows builds | Implemented, Windows runtime untested |
 | Native JSON scenes, keyframes, layers and WAV track mixing | Implemented, bounded version-1 schema |
 | Native Neo Lite speech inference | Implemented, optional local model |
-| C++ MCP over stdio / authenticated loopback HTTP | Implemented, eight tools |
+| C++ MCP with ChatGPT PIN/OAuth | Implemented, eight tools, PKCE S256 and dynamic client registration |
 | Wikimedia / Openverse discovery, Commons import with attribution | Implemented; Openverse discovery-only |
 | Native font embedding and regression fixtures | Implemented in C++ |
 | MP3/M4A and other audio inputs | Pending |

@@ -1,62 +1,88 @@
-# GPTFrames native C++ MCP
+# GPTFrames: connect to ChatGPT
 
-gptframes-mcp is a C++17 executable. It implements JSON-RPC 2.0 with protocol version 2025-06-18 through newline-delimited stdio or stateless Streamable HTTP JSON responses.
+GPTFrames is a C++17 MCP server. Its public connection method is an HTTPS URL and a PIN window opened during ChatGPT authorization.
 
-## Build and run
+## User connection
+
+1. In ChatGPT, add a custom MCP server using the public URL ending in /mcp.
+2. Choose OAuth with automatic client registration (DCR). Leave manual client credentials empty.
+3. When the GPTFrames window opens, enter your private PIN and select Conectar GPTFrames.
+
+After confirmation, ChatGPT receives connection credentials automatically. The user does not copy a bearer token or API key. A fixed GPTFRAMES_MCP_TOKEN is no longer accepted by the HTTP server.
+
+## Build
 
     cmake -S . -B build/native-linux -DHFC_MCP=ON
     cmake --build build/native-linux --target gptframes-mcp -j2
-    build/native-linux/gptframes-mcp --transport stdio
 
-The video engine must also be built for validate/preview/render/voice tools. Build it with HFC_NATIVE_MP4=ON to export MP4. HFC_MCP=OFF produces the renderer without the MCP service.
+Linux requires libcurl and OpenSSL libcrypto development packages for building. Windows uses system WinHTTP and BCrypt. The native video engine must also be built to validate, preview, synthesize voice or render MP4.
 
-The root defaults to the source checkout used during development, or a packaged root containing examples/json-showcase-v2 beside bin/. Override it with --root or GPTFRAMES_ROOT when relocating the application.
+## Operator configuration
 
-## Preserved tools
+| Variable | Meaning |
+| --- | --- |
+| GPTFRAMES_OAUTH_PIN_FILE | Private file containing the PIN. Requires a regular file, no symlink, mode 600 on Linux. |
+| GPTFRAMES_OAUTH_PIN | Optional PIN supplied by the operator environment instead of a file. Never printed by the server. |
+| GPTFRAMES_PUBLIC_URL | Exact public HTTPS origin, without a path; endpoints are derived from it. |
+| GPTFRAMES_PUBLIC_URL_FILE | Private file supplying the origin after a managed tunnel starts. Discovery stays unavailable until configured. The origin is locked after first successful loading. |
+| GPTFRAMES_OAUTH_STATE | Private file preserving DCR client registrations across server restarts. |
+| GPTFRAMES_ROOT | Root containing templates. |
+| GPTFRAMES_PROJECTS | Projects directory; defaults to ROOT/projects. |
+| GPTFRAMES_MODELS | Local voice model directory; defaults to ROOT/models. |
+| GPTFRAMES_ENGINE | Native engine, discovered beside the MCP executable by default. |
+| GPTFRAMES_NEO_LITE | Installed native Neo Lite executable or native launcher. |
+| GPTFRAMES_ALLOWED_ORIGINS | Exact extra allowed origins, comma-separated. |
+
+The PIN accepts 6-128 characters. Generate a long, unpredictable PIN; a temporary PIN can be provided privately to the owner. Never commit it or place it in a URL. The state directory requires mode 700 on Linux. Windows operators must protect private files with their account ACL.
+
+    export GPTFRAMES_OAUTH_PIN_FILE=/private/path/gptframes-pin
+    export GPTFRAMES_PUBLIC_URL=https://your-public-host.example
+    export GPTFRAMES_OAUTH_STATE=/private/path/oauth-clients.json
+    build/native-linux/gptframes-mcp --port 18769 --root "$PWD"
+
+HTTP listens only on 127.0.0.1. Place the authorized HTTPS tunnel or reverse proxy in front. HTTP is the default executable mode. New deployments fail closed if the PIN or public URL configuration is missing.
+
+## Authorization behavior
+
+The C++ server publishes protected-resource and OAuth metadata. It supports public-client dynamic registration, authorization codes with PKCE S256, exact registered ChatGPT callbacks, issuer identification and resource-bound opaque access tokens.
+
+The supported callbacks are the stable https://chatgpt.com/connector_platform_oauth_redirect and callback-specific https://chatgpt.com/connector/oauth/CALLBACK_ID forms. The server does not advertise CIMD. Select DCR in the connection settings.
+
+The consent page displays the requesting client and callback. Its one-use transaction expires after five minutes; codes expire after 90 seconds. PIN guesses are rate limited. The PIN form requires a session-bound CSRF value matching its Secure, HttpOnly, SameSite=Lax cookie; it cannot be embedded in frames. Like kaggle-mcp, this browser form does not rely on Origin, which can be null under no-referrer or rewritten by a proxy. MCP API requests retain strict Origin checks. After approval, an HTML refresh and a fallback link return to the exact registered ChatGPT callback, avoiding form-action redirect restrictions. Registration and authorization state have capacity limits.
+
+Access expires after one hour. When offline_access is requested, refresh tokens rotate, expire after at most 24 hours and revoke their family if reused. Registered clients persist; authorization transactions and access/refresh credentials remain in memory. A server restart revokes active credentials, so ChatGPT may ask to connect again. A changed temporary tunnel URL also requires a new connection.
+
+GET /health and GET / show only minimal public status. POST /mcp requires a valid OAuth-issued credential; there is no static-token bypass. Missing or expired credentials return a discovery challenge. Bodies are bounded to 1,000,000 bytes, supplied Origins are checked and request bodies/credentials are not logged.
+
+This is a single-owner PIN authorization service. Per-user accounts, enterprise identity, multi-user ACLs and permanent hosting are separate production work.
+
+## ChatGPT action discovery
+
+The connection follows the behavior reviewed in ThowiLabs/kaggle-mcp at 8ed2d2b, implemented here in C++.
+
+The HTTP server supports legacy initialize (2025-03-26, 2025-06-18, 2025-11-25) and server/discover for 2026-07-28. Modern requests validate Mcp-Method, Mcp-Name for tool calls, and protocol/client-capabilities metadata. Discovery and tool responses use the complete result format and private cache scope. Unsupported versions return -32022 with available versions.
+
+## Tools
 
 | Tool | Behavior |
 | --- | --- |
 | list_projects | List project slugs. |
-| create_project | Copy the editable showcase and its assets to a new project. |
-| validate_project | Validate via the native C++ renderer. |
-| preview_frame | Render a PNG at a requested second. |
-| render_video | Render native MP4, preserving the existing 60-second MCP limit. |
-| synthesize_voice | Run native Neo Lite through the renderer and atomically attach validated mono 24kHz WAV. |
-| search_images | Discover Wikimedia Commons or Openverse resources with attribution metadata. |
-| download_commons_image | Import a Commons PNG/JPEG and its attribution sidecar. |
+| create_project | Copy the editable showcase and assets to a new project. |
+| validate_project | Validate with the native renderer. |
+| preview_frame | Render a PNG at the requested second. |
+| render_video | Render native MP4; current MCP limit is 60 seconds. |
+| synthesize_voice | Run Neo Lite and attach validated mono 24 kHz WAV atomically. |
+| search_images | Wikimedia Commons or Openverse discovery with attribution metadata. |
+| download_commons_image | Import a Commons PNG/JPEG and attribution sidecar. |
 
-The argument names and response fields used by the previous service are retained. Wrong types, unknown arguments, booleans used as numeric arguments, invalid slugs and out-of-range values are rejected. The native service serializes tool mutations to avoid lost project updates.
+All tools declare the gptframes OAuth scope. Wrong types, unknown arguments, invalid slugs and out-of-range values are rejected. Tool mutations are serialized. Process arguments are passed directly without a shell. Timeouts terminate the subprocess group; failed inference leaves the prior project intact.
 
-## Configuration
+Provider requests use verified HTTPS and exact host allowlists. Redirects and response sizes are checked. Openverse remains discovery-only. Returned media paths are internal filesystem paths; authenticated remote artifact delivery is pending.
 
-| Variable | Meaning |
-| --- | --- |
-| GPTFRAMES_ROOT | Root containing the packaged templates. |
-| GPTFRAMES_PROJECTS | Projects directory; default ROOT/projects. |
-| GPTFRAMES_MODELS | Model directory; default ROOT/models. |
-| GPTFRAMES_ENGINE | Native engine; discovered beside gptframes-mcp by default. |
-| GPTFRAMES_NEO_LITE | Native Neo Lite executable or native launcher. |
-| GPTFRAMES_MCP_TOKEN | HTTP bearer token, at least 24 characters. |
-| GPTFRAMES_ALLOWED_ORIGINS | Comma-separated exact additional HTTP Origin values. |
+## Regression tests
 
-The service invokes the renderer with separate argv entries and captured output, never through a command shell. Linux uses posix_spawn and process groups; Windows uses CreateProcessW and a kill-on-close job. Timeouts terminate the child group. Inference failure removes partial outputs and leaves the prior project intact.
+    ctest --test-dir build/native-linux --output-on-failure
 
-## HTTP transport
+Compiled C++ tests exercise the PIN page, registration, PKCE, callback and audience validation, issuer/state, cancellation, expiry, replay prevention, refresh rotation, PIN throttling, HTTP behavior and the native tools. They also preserve an internal stdio test mode, selected explicitly with --transport stdio; this is not the public ChatGPT connection flow.
 
-    build/native-linux/gptframes-mcp --transport http --port 8769
-
-The service binds to 127.0.0.1, requires bearer authentication on POST /mcp, bounds message bodies to 1,000,000 bytes, validates supplied origins and suppresses request logging. GET /health returns minimal public status. MCP notifications receive HTTP 202; unsupported GET /mcp receives 405. JSON-RPC errors and tool execution errors remain distinct.
-
-Use a protected HTTPS reverse proxy for remote clients. OAuth, session persistence, SSE subscriptions, queued render jobs and per-user ACLs are not introduced here.
-
-## Networking and delivery
-
-Linux provider requests use libcurl with certificate verification; Windows requests use WinHTTP. Queries and downloads use HTTPS and exact host allowlists. Redirects are validated before the next request, response sizes are bounded, and Commons downloads accept PNG/JPEG magic signatures and preserve metadata. Openverse is discovery-only.
-
-Returned paths are internal filesystem paths, as in the previous interface. A client needs an authenticated artifact channel to retrieve those outputs remotely.
-
-## Native tests
-
-    ctest --test-dir build/native-linux --output-on-failure -R mcp
-
-Tests exercise real stdio/HTTP transport, bearer/origin handling, message limits, the native renderer, filesystem confinement, mocked provider responses, download attribution, process timeout and voice rollback with a native test fixture. Fixture inference is not a voice-quality test.
+Reference for interoperability: https://developers.openai.com/plugins/build/auth
