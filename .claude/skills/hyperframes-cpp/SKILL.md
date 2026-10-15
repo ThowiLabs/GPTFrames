@@ -9,6 +9,18 @@ HyperFrames C++ is a C++17 command-line video renderer with a native compositor 
 
 **Never put a user's video project, photographs, narration, generated video or third-party GSAP inside the engine's `main` branch.** Use a separate project directory.
 
+## Política obligatoria para videos GPTFrames / HyperFrames
+
+**NO CREAR CONTENIDO ESTÁTICO POR DEFECTO.** Cada escena debe tener movimiento real, observable y calculado por tiempo: títulos con entradas/salidas, imágenes con parallax, tarjetas escalonadas, subrayados/resaltados, formas, barras/gráficas progresivas y tablas reveladas por filas. Un collage fijo o una foto inmóvil más un corte **no** son animación. Un zoom global sobre una captura fija por sí solo **no** sustituye animar elementos. Planifica **mínimo una capa con cambio de keyframes por escena, preferiblemente dos o más**. Para proyectos JSON de GPTFrames llama al MCP analyze_motion antes de render_video; el MCP rechaza escenas sin movimiento salvo allow_static=true autorizado expresamente por el usuario. Para HTML/GSAP, definir animaciones seekables y verificar diferencias entre fotogramas.
+
+**ESCRIBIR LA VOZ COMO SE PRONUNCIA, NO COMO SE ESCRIBE.** Mantener **dos textos separados** por escena: display_text/title, con la ortografía técnica correcta, y spoken_text/speech_text, donde abreviaturas, nombres, números, anglicismos y unidades deben estar escritos según la pronunciación que la voz TTS realmente interprete. Ejemplos del documental español: Go → «gou»; Rust → «rast»; C++ → «ce más más»; HirCoir → «Jírcoir». No mostrar «Jírcoir» como nombre del canal ni «gou» como título. Para MCP usar prepare_narration y pasar al parámetro synthesize_voice.text la propuesta **revisada con escucha**, opcionalmente synthesize_voice.display_text con la ortografía original. Las sustituciones son orientativas, no universales; prueba la voz exacta (Capybara/Neo Lite, Piper o la solicitada). Genera y escucha los WAV de cada escena, mide las duraciones de las grabaciones y reescribe las palabras mal pronunciadas **antes** del render.
+
+**Animación y edición a la medida del usuario.** Para la serie actual, 1920×1080 a **30 FPS** (o el tamaño/FPS que indique el usuario), sin marca de GPTFrames ni subtítulos automáticos y con tarjeta CTA al final **si se solicita**. En otros proyectos seguir las instrucciones de marca y subtítulos del cliente; jamás asumir que siempre se necesitan. No agregar «página actual/total» salvo petición expresa. Eliminar audio procedural cuando se pida y solo incorporar pistas externas con licencia verificada y acceso legítimo. Mantener títulos de calidad, transiciones, assets con atribución y controles de QA.
+
+**Flujo obligatorio en MCP:** get_production_guidelines → storyboard con textos separados y animaciones previstas → prepare_narration + prueba auditiva → edición del JSON/HTML con keyframes por capas → analyze_motion y validate_project → frames de inicio/mitad/final → MP4 → comprobación fps/duración/códecs y reproducción completa. Los proyectos HTML externos no se incluyen en el analizador JSON: comprobar manualmente sus animaciones.
+
+La skill específica de la integración GPTFrames está en la carpeta hermana gptframes-video/SKILL.md. Las funcionalidades de TTS pueden necesitar Neo Lite, y el renderer C++ clásico no sintetiza voz por sí mismo.
+
 ## Find the real executable first
 
 Do not hardcode the engine's repository path. Check the terminal command before searching installation folders.

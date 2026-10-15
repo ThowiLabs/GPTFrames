@@ -15,6 +15,7 @@ from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
 
 from media import download_commons_image, search_images
+from production import GUIDELINES, analyze_motion, suggest_pronunciation
 
 ROOT = Path(__file__).resolve().parent.parent
 PROJECTS = Path(os.environ.get("GPTFRAMES_PROJECTS", ROOT / "projects")).resolve()
@@ -24,12 +25,15 @@ NEO_LITE = os.environ.get("GPTFRAMES_NEO_LITE", "neo-lite")
 MAX_RENDER_SECONDS = 60
 
 TOOLS = [
+    {"name": "get_production_guidelines", "description": "CONSULTAR ANTES DE PRODUCIR VIDEOS: TTS fonético (escribir COMO SE PRONUNCIA, separado del texto visible correcto), movimiento REAL por keyframes en cada escena, elementos animados por separado, FPS/calidad, marca y subtítulos según solicitud.", "inputSchema": {"type": "object", "properties": {}, "additionalProperties": False}},
+    {"name": "prepare_narration", "description": "Devuelve texto visible correctamente escrito y propuesta separada de cómo SUENA al TTS (gou, rast, ce más más, Jírcoir). Escuchar la voz exacta y corregir antes de sintetizar. Nunca cambiar texto de código en pantalla.", "inputSchema": {"type": "object", "properties": {"display_text": {"type": "string", "minLength": 1, "maxLength": 4000}}, "required": ["display_text"], "additionalProperties": False}},
+    {"name": "analyze_motion", "description": "Audita cambios REALES en keyframes por cada escena JSON y advierte si hay imágenes/capas estáticas. Cada escena debe tener movimiento por capas, no un pase de diapositivas.", "inputSchema": {"type": "object", "properties": {"project": {"type": "string"}}, "required": ["project"], "additionalProperties": False}},
     {"name": "list_projects", "description": "List available GPTFrames projects.", "inputSchema": {"type": "object", "properties": {}, "additionalProperties": False}},
-    {"name": "create_project", "description": "Create an editable GPTFrames JSON video project from the included showcase.", "inputSchema": {"type": "object", "properties": {"name": {"type": "string", "description": "Short project slug, e.g. promo_octubre"}}, "required": ["name"], "additionalProperties": False}},
-    {"name": "validate_project", "description": "Validate a project's scenes, layers, paths and timing using the native C++ engine.", "inputSchema": {"type": "object", "properties": {"project": {"type": "string"}}, "required": ["project"], "additionalProperties": False}},
+    {"name": "create_project", "description": "Crea proyecto JSON ANIMADO con keyframes REALES en todas las escenas (evitar diapositivas estáticas). Para TTS usa texto escrito como se pronuncia, sin cambiar títulos correctos. Consulta get_production_guidelines.", "inputSchema": {"type": "object", "properties": {"name": {"type": "string", "description": "Short project slug, e.g. promo_octubre"}}, "required": ["name"], "additionalProperties": False}},
+    {"name": "validate_project", "description": "Valida C++ y audita por escena capas con movimiento verdadero; textos visibles correctos y voz TTS fonética separada.", "inputSchema": {"type": "object", "properties": {"project": {"type": "string"}}, "required": ["project"], "additionalProperties": False}},
     {"name": "preview_frame", "description": "Render one PNG preview of a project at the requested second.", "inputSchema": {"type": "object", "properties": {"project": {"type": "string"}, "second": {"type": "number", "minimum": 0}}, "required": ["project", "second"], "additionalProperties": False}},
-    {"name": "render_video", "description": "Render a project's MP4 with native H.264/AAC encoding.", "inputSchema": {"type": "object", "properties": {"project": {"type": "string"}, "seconds": {"type": "number", "minimum": 0.1, "maximum": 60}}, "required": ["project"], "additionalProperties": False}},
-    {"name": "synthesize_voice", "description": "Synthesize Spanish or other single-speaker audio using installed Neo Lite and a configured local .onnx/.neo model, then attach 24kHz WAV audio to the project.", "inputSchema": {"type": "object", "properties": {"project": {"type": "string"}, "model": {"type": "string", "description": "Model basename installed in GPTFRAMES_MODELS"}, "text": {"type": "string", "maxLength": 4000}, "start": {"type": "number", "minimum": 0}, "track_name": {"type": "string"}}, "required": ["project", "model", "text"], "additionalProperties": False}},
+    {"name": "render_video", "description": "Renderiza MP4 H.264/AAC; por defecto BLOQUEA escenas sin animación real salvo allow_static=true expreso. Primero auditar movimiento y TTS. Respeta marca y subtítulos solicitados.", "inputSchema": {"type": "object", "properties": {"project": {"type": "string"}, "seconds": {"type": "number", "minimum": 0.1, "maximum": 60}, "allow_static": {"type": "boolean", "description": "False por defecto, solo true si el usuario autorizó contenido estático"}}, "required": ["project"], "additionalProperties": False}},
+    {"name": "synthesize_voice", "description": "SINTETIZA voz con Neo Lite: text debe estar escrito COMO SE PRONUNCIA (gou, rast, ce más más, Jírcoir); display_text preserva ortografía correcta. Escuchar la voz y ajustar duración. Audio WAV a 24 kHz. No crear subtítulos automáticamente.", "inputSchema": {"type": "object", "properties": {"project": {"type": "string"}, "model": {"type": "string", "description": "Model basename installed in GPTFRAMES_MODELS"}, "text": {"type": "string", "maxLength": 4000, "description": "Escribe los términos fonéticamente para el TTS, p.ej. gou, rast, ce más más, Jírcoir"}, "display_text": {"type": "string", "maxLength": 4000, "description": "Ortografía CORRECTA del texto en pantalla (se guarda por separado)"}, "start": {"type": "number", "minimum": 0}, "track_name": {"type": "string"}}, "required": ["project", "model", "text"], "additionalProperties": False}},
     {"name": "search_images", "description": "Search licensed images in Wikimedia Commons or Openverse, returning author, source and license information; search results are NOT automatically licensed for all uses.", "inputSchema": {"type": "object", "properties": {"query": {"type": "string"}, "provider": {"type": "string", "enum": ["wikimedia", "openverse"]}, "limit": {"type": "integer", "minimum": 1, "maximum": 15}}, "required": ["query"], "additionalProperties": False}},
     {"name": "download_commons_image", "description": "Download a compatible PNG/JPEG from Wikimedia Commons into project assets, preserving license and attribution in a sidecar JSON.", "inputSchema": {"type": "object", "properties": {"project": {"type": "string"}, "file_title": {"type": "string", "description": "Commons page title, e.g. File:Example.jpg"}, "asset_name": {"type": "string"}}, "required": ["project", "file_title", "asset_name"], "additionalProperties": False}},
 ]
@@ -72,6 +76,13 @@ def _model(raw: object) -> Path:
 def _run_tool(name: str, args: dict) -> object:
     if not isinstance(args, dict):
         raise ValueError("arguments debe ser un objeto JSON")
+    if name == "get_production_guidelines":
+        return GUIDELINES
+    if name == "prepare_narration":
+        return suggest_pronunciation(args.get("display_text"))
+    if name == "analyze_motion":
+        _, project_file = _project(args.get("project"))
+        return analyze_motion(json.loads(project_file.read_text(encoding="utf-8")))
     if name == "list_projects":
         return {"projects": sorted(p.name for p in PROJECTS.glob("*") if p.is_dir() and not p.is_symlink() and (p / "project.json").is_file())[:100]}
     if name == "create_project":
@@ -82,7 +93,7 @@ def _run_tool(name: str, args: dict) -> object:
         fixture = ROOT / "examples" / "json-showcase-v2"
         shutil.copytree(fixture / "assets", dest / "assets")
         (dest / "project.json").write_bytes((fixture / "showcase-v2.json").read_bytes())
-        return {"project": dest.name, "project_json": str(dest / "project.json"), "tip": "Personaliza project.json para animar textos, imágenes y keyframes."}
+        return {"project": dest.name, "project_json": str(dest / "project.json"), "motion": analyze_motion(json.loads((dest / "project.json").read_text(encoding="utf-8"))), "tip": "Cada escena debe tener animación real, ideal varias capas escalonadas. Para voz consulta prepare_narration y escribe los nombres tal como se pronuncian, con display_text correcto. Revisa get_production_guidelines."}
     if name == "search_images":
         return {"results": search_images(args.get("query", ""), args.get("provider", "wikimedia"), args.get("limit", 6))}
     if name == "download_commons_image":
@@ -92,7 +103,8 @@ def _run_tool(name: str, args: dict) -> object:
         return result
     if name == "validate_project":
         _, f = _project(args.get("project"))
-        return {"message": _call_binary(["--project", "validate", str(f)])}
+        msg = _call_binary(["--project", "validate", str(f)])
+        return {"message": msg, "motion": analyze_motion(json.loads(f.read_text(encoding="utf-8"))), "guideline": "Movimiento real por escena obligatorio por defecto; texto TTS fonético y texto visible separados."}
     if name == "preview_frame":
         base, f = _project(args.get("project"))
         second = args.get("second")
@@ -107,6 +119,12 @@ def _run_tool(name: str, args: dict) -> object:
         if seconds is not None and (not isinstance(seconds, (float, int)) or not .1 <= seconds <= MAX_RENDER_SECONDS):
             raise ValueError("Render máximo 60s por llamada MCP")
         source = json.loads(f.read_text(encoding="utf-8"))
+        motion = analyze_motion(source)
+        allow_static = args.get("allow_static", False)
+        if not isinstance(allow_static, bool):
+            raise ValueError("allow_static debe ser booleano")
+        if not motion["meets_motion_requirement"] and not allow_static:
+            raise ValueError(f"Escenas estáticas {motion['static_scenes']}: agrega keyframes con cambios reales antes de renderizar, o allow_static=true si el usuario autorizó expresamente imágenes fijas")
         scenes = source.get("scenes") or []
         total = (scenes[-1].get("start", 0) + scenes[-1].get("duration", 0)) if scenes else 0
         if seconds is None and total > MAX_RENDER_SECONDS:
@@ -116,7 +134,7 @@ def _run_tool(name: str, args: dict) -> object:
         if seconds is not None:
             params.append(str(seconds))
         msg = _call_binary(params, timeout=240)
-        return {"message": msg, "video_path": str(out), "bytes": out.stat().st_size}
+        return {"message": msg, "video_path": str(out), "bytes": out.stat().st_size, "motion": motion}
     if name == "synthesize_voice":
         base, project_file = _project(args.get("project"))
         text = args.get("text")
@@ -125,16 +143,22 @@ def _run_tool(name: str, args: dict) -> object:
             raise ValueError("Texto de voz 1–4000 caracteres")
         if not isinstance(start, (float, int)) or not 0 <= start <= 240:
             raise ValueError("Inicio de voz 0–240s")
+        display_text = args.get("display_text")
+        if display_text is not None and (not isinstance(display_text, str) or not 1 <= len(display_text.strip()) <= 4000):
+            raise ValueError("display_text opcional requiere 1–4000 caracteres")
         model = _model(args.get("model"))
         voice_id = _slug(args.get("track_name", "narracion"))
         audio_dir = base / "assets" / "voices"
         audio_dir.mkdir(parents=True, exist_ok=True)
         wav = audio_dir / (voice_id + ".wav")
         txt = audio_dir / (voice_id + ".txt")
-        if wav.exists() or txt.exists():
+        display_file = audio_dir / (voice_id + ".display.txt")
+        if wav.exists() or txt.exists() or display_file.exists():
             raise FileExistsError("Nombre de pista existente")
         txt.write_text(text, encoding="utf-8")
         try:
+            if display_text is not None:
+                display_file.write_text(display_text, encoding="utf-8")
             result = _call_binary(["--voice", "synth", "--model", str(model), "--text-file", str(txt), "--out", str(wav), "--neo-lite", NEO_LITE], timeout=180)
             doc = json.loads(project_file.read_text(encoding="utf-8"))
             if not isinstance(doc.get("audio", []), list) or len(doc.get("audio", [])) >= 12:
@@ -146,10 +170,11 @@ def _run_tool(name: str, args: dict) -> object:
                 temp.write(json.dumps(doc, ensure_ascii=False, indent=2) + "\n")
                 temp_name = temp.name
             Path(temp_name).replace(project_file)
-            return {"message": result, "wav_path": str(wav), "project": base.name}
+            return {"message": result, "wav_path": str(wav), "spoken_text_path": str(txt), "display_text_path": str(display_file) if display_text is not None else None, "listen_and_verify": "Escucha la voz, ajusta pronunciaciones y comprueba duración real.", "project": base.name}
         except Exception:
             txt.unlink(missing_ok=True)
             wav.unlink(missing_ok=True)
+            display_file.unlink(missing_ok=True)
             raise
     raise ValueError("Herramienta no reconocida")
 

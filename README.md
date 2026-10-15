@@ -39,6 +39,12 @@ Download a properly licensed Piper Spanish ONNX single-speaker voice with matchi
 
 The C++ voice bridge invokes Neo Lite directly without a shell and checks/resamples WAV to 24000 Hz 16-bit mono. Model licenses, audio rights and voice consent must be checked separately. See docs/NEO_LITE.md.
 
+## Política de creación de videos (Skill + MCP)
+
+**Escritura fonética para TTS:** separar siempre el texto correcto en pantalla (Go, Rust, C++, HirCoir) del texto que se pronuncia (gou, rast, ce más más, Jírcoir). Usar prepare_narration como borrador, escuchar la voz real y ajustar antes del render. **Movimiento obligatorio por defecto:** capas independientes, keyframes reales, títulos animados, parallax, tarjetas, gráficos/tablas progresivas, no diapositivas estáticas. El MCP ofrece get_production_guidelines y analyze_motion; validate_project informa sobre movimiento y render_video bloquea escenas sin animaciones, salvo allow_static=true aprobado expresamente por el usuario. Respetar FPS, resolución, marcas, subtítulos, CTA y licencias solicitados.
+
+Estas reglas están tanto en la **[skill GPTFrames](.claude/skills/gptframes-video/SKILL.md)** como en la **[skill HyperFrames](.claude/skills/hyperframes-cpp/SKILL.md)** y en [la documentación MCP](docs/MCP.md). Al actualizar el código de un MCP que ya está ejecutándose, es necesario reiniciar ese proceso para que anuncie las herramientas nuevas; esto puede cambiar la URL de un túnel temporal.
+
 ## MCP server
 
 Local MCP (stdio, no Python packages required):

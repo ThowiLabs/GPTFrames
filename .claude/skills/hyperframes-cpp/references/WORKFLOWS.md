@@ -16,6 +16,15 @@ The canonical skill is `.claude/skills/hyperframes-cpp/SKILL.md`. Copy that **en
 8. Preview 3-5 seconds, then render full MP4 using browser theme. Confirm native encoding reaches exit code 0.
 9. Verify final streams by playback or probing, and deliver MP4 plus optional editable media archive. Do not commit audiovisual content to engine `main`.
 
+## Checklist editorial vinculante (MCP y skill)
+
+- Storyboard incluye por separado display_text (ortografía) y spoken_text (fonética validada con la voz real). Para «Go, Rust, C++ y HirCoir», probar con «gou, rast, ce más más y Jírcoir». Números, fechas, siglas, comandos y unidades se narran según su sonido; comandos y nombres visuales se conservan literales.
+- Cada escena **anima elementos de manera independiente**: mínimo un keyframe con propiedad variable, ideal varias capas escalonadas, no una imagen estática con transición global; las tablas aparecen por filas, las fotos se desplazan con parallax y los títulos revelan palabras/resaltados.
+- Verificar duración por WAV, audio sin recortes y sincronización visual; la voz se escucha antes de exportar. Un preset fonético no reemplaza la prueba auditiva.
+- Respetar resolución y FPS: para el documental pedido 1080p 30fps; otros proyectos según el formato solicitado.
+- Respetar marca, subtítulos y CTA que pidió el usuario: nunca insertar logo del motor, marcas de página ni subtítulos por defecto, y no descargar música no autorizada.
+- JSON del MCP: get_production_guidelines y analyze_motion antes de render, y render_video bloquea escenas estáticas sin consentimiento explícito (allow_static=true). HTML/GSAP: comprobar animación seekable fotograma a fotograma.
+
 ## Minimal HTML test example
 
 ```html
