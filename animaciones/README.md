@@ -83,3 +83,17 @@ de esta colección son HTML/CSS local previamente revisado y sin JS.
 
 Código de la Colección 02 basado en el archivo entregado por el usuario,
 no en código obtenido de UIverse u otros catálogos externos.
+
+## Colección 04 — Linux Motion Pack (29 módulos)
+
+Se añadió `build_linux_04.py`, que transforma el HTML de Linux facilitado por
+el usuario en 29 presets CSS/HTML independientes. Se **omite** el diseño 26,
+Debian Red Swirl. El catálogo suma 61 presets con categorías, tags y
+movimientos indexados.
+
+`build_gallery_linux_04.py` produce `catalogo-linux-04.html`; el vídeo
+de evaluación `Linux_Motion_29_Presets_480p24.mp4` dura 58 s, con
+resolución 848×480 y 24 FPS.
+
+`../docs/LINUX_MOTION_HOT_RELOAD.md` documenta tanto el catálogo como
+el sistema nuevo de actualización en caliente de recursos del MCP.

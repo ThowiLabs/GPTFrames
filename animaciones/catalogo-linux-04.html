@@ -1,0 +1,1265 @@
+<!doctype html><html lang="es"><head><meta charset="utf-8"><meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'none'; connect-src 'none'; style-src 'unsafe-inline'; img-src data:; font-src data:"><style>*{box-sizing:border-box}html,body{width:100%;height:100%;overflow:hidden;margin:0}
+body{background:transparent;color:#e2e8f0;font-family:ui-monospace,Consolas,Menlo,monospace}
+.anim-engine{width:100%;height:100%;display:flex;align-items:center;justify-content:center;overflow:hidden}
+.stage{position:relative;width:290px;height:235px;display:flex;align-items:center;justify-content:center}
+.linux-asset{width:290px;height:215px;display:flex;flex-direction:column;justify-content:center;align-items:center;transform-origin:center;transform:scale(1.18)}
+:root {
+      --bg: #06090e;
+      --card-bg: #0d121d;
+      --border: #1a2333;
+      --text: #e2e8f0;
+      --text-dim: #64748b;
+
+      /* Paleta Linux */
+      --c-tux-yellow: #facc15;
+      --c-tux-orange: #f97316;
+      --c-term-green: #22c55e;
+      --c-arch-blue:  #0ea5e9;
+      --c-deb-red:    #e11d48;
+      --c-ubu-orange: #ea580c;
+      --c-cyan:       #06b6d4;
+      --c-purple:     #a855f7;
+
+      --ease-elastic: cubic-bezier(0.34, 1.56, 0.64, 1);
+      --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+            .panic-box {
+              width: 90%; background: #000; border: 2px solid var(--c-deb-red);
+              padding: 10px; font-size: 10px; line-height: 1.4; color: #ff8597; border-radius: 6px;
+            }
+            .anim-engine .panic-box { animation: panicFlicker 1.8s infinite; }
+            @keyframes panicFlicker {
+              0%, 100% { border-color: var(--c-deb-red); box-shadow: 0 0 10px rgba(225,29,72,0.4); }
+              50% { border-color: #550a18; box-shadow: none; }
+            }
+          *{box-sizing:border-box}html,body{width:100%;height:100%;overflow:hidden;margin:0}
+body{background:transparent;color:#e2e8f0;font-family:ui-monospace,Consolas,Menlo,monospace}
+.anim-engine{width:100%;height:100%;display:flex;align-items:center;justify-content:center;overflow:hidden}
+.stage{position:relative;width:290px;height:235px;display:flex;align-items:center;justify-content:center}
+.linux-asset{width:290px;height:215px;display:flex;flex-direction:column;justify-content:center;align-items:center;transform-origin:center;transform:scale(1.18)}
+:root {
+      --bg: #06090e;
+      --card-bg: #0d121d;
+      --border: #1a2333;
+      --text: #e2e8f0;
+      --text-dim: #64748b;
+
+      /* Paleta Linux */
+      --c-tux-yellow: #facc15;
+      --c-tux-orange: #f97316;
+      --c-term-green: #22c55e;
+      --c-arch-blue:  #0ea5e9;
+      --c-deb-red:    #e11d48;
+      --c-ubu-orange: #ea580c;
+      --c-cyan:       #06b6d4;
+      --c-purple:     #a855f7;
+
+      --ease-elastic: cubic-bezier(0.34, 1.56, 0.64, 1);
+      --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+            .sysd-list { width: 90%; font-size: 11px; display: flex; flex-direction: column; gap: 5px; }
+            .sysd-row { opacity: 0; transform: translateX(-10px); }
+            .anim-engine .sysd-row:nth-child(1) { animation: rowSlide 0.4s var(--ease-out) 0.1s forwards; }
+            .anim-engine .sysd-row:nth-child(2) { animation: rowSlide 0.4s var(--ease-out) 0.4s forwards; }
+            .anim-engine .sysd-row:nth-child(3) { animation: rowSlide 0.4s var(--ease-out) 0.7s forwards; }
+            .sysd-ok { color: var(--c-term-green); font-weight: bold; }
+            @keyframes rowSlide { to { opacity: 1; transform: translateX(0); } }
+          *{box-sizing:border-box}html,body{width:100%;height:100%;overflow:hidden;margin:0}
+body{background:transparent;color:#e2e8f0;font-family:ui-monospace,Consolas,Menlo,monospace}
+.anim-engine{width:100%;height:100%;display:flex;align-items:center;justify-content:center;overflow:hidden}
+.stage{position:relative;width:290px;height:235px;display:flex;align-items:center;justify-content:center}
+.linux-asset{width:290px;height:215px;display:flex;flex-direction:column;justify-content:center;align-items:center;transform-origin:center;transform:scale(1.18)}
+:root {
+      --bg: #06090e;
+      --card-bg: #0d121d;
+      --border: #1a2333;
+      --text: #e2e8f0;
+      --text-dim: #64748b;
+
+      /* Paleta Linux */
+      --c-tux-yellow: #facc15;
+      --c-tux-orange: #f97316;
+      --c-term-green: #22c55e;
+      --c-arch-blue:  #0ea5e9;
+      --c-deb-red:    #e11d48;
+      --c-ubu-orange: #ea580c;
+      --c-cyan:       #06b6d4;
+      --c-purple:     #a855f7;
+
+      --ease-elastic: cubic-bezier(0.34, 1.56, 0.64, 1);
+      --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+            .rm-prompt {
+              background: #030712; border: 1px solid var(--border); padding: 12px;
+              border-radius: 6px; font-size: 11px; width: 90%;
+            }
+            .anim-engine .rm-alert { animation: shakeDenial 0.5s ease-in-out infinite alternate 1s; }
+            @keyframes shakeDenial {
+              0% { transform: translateX(0); }
+              25% { transform: translateX(-4px); }
+              75% { transform: translateX(4px); }
+              100% { transform: translateX(0); }
+            }
+          *{box-sizing:border-box}html,body{width:100%;height:100%;overflow:hidden;margin:0}
+body{background:transparent;color:#e2e8f0;font-family:ui-monospace,Consolas,Menlo,monospace}
+.anim-engine{width:100%;height:100%;display:flex;align-items:center;justify-content:center;overflow:hidden}
+.stage{position:relative;width:290px;height:235px;display:flex;align-items:center;justify-content:center}
+.linux-asset{width:290px;height:215px;display:flex;flex-direction:column;justify-content:center;align-items:center;transform-origin:center;transform:scale(1.18)}
+:root {
+      --bg: #06090e;
+      --card-bg: #0d121d;
+      --border: #1a2333;
+      --text: #e2e8f0;
+      --text-dim: #64748b;
+
+      /* Paleta Linux */
+      --c-tux-yellow: #facc15;
+      --c-tux-orange: #f97316;
+      --c-term-green: #22c55e;
+      --c-arch-blue:  #0ea5e9;
+      --c-deb-red:    #e11d48;
+      --c-ubu-orange: #ea580c;
+      --c-cyan:       #06b6d4;
+      --c-purple:     #a855f7;
+
+      --ease-elastic: cubic-bezier(0.34, 1.56, 0.64, 1);
+      --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+            .fetch-box { display: flex; gap: 14px; align-items: center; width: 90%; font-size: 10px; }
+            .anim-engine .fetch-tux-svg { animation: drawTuxLogo 1.5s var(--ease-out) forwards; }
+            .fetch-lines span { color: var(--c-cyan); }
+            @keyframes drawTuxLogo { from { opacity: 0; transform: scale(0.8); } to { opacity: 1; transform: scale(1); } }
+          *{box-sizing:border-box}html,body{width:100%;height:100%;overflow:hidden;margin:0}
+body{background:transparent;color:#e2e8f0;font-family:ui-monospace,Consolas,Menlo,monospace}
+.anim-engine{width:100%;height:100%;display:flex;align-items:center;justify-content:center;overflow:hidden}
+.stage{position:relative;width:290px;height:235px;display:flex;align-items:center;justify-content:center}
+.linux-asset{width:290px;height:215px;display:flex;flex-direction:column;justify-content:center;align-items:center;transform-origin:center;transform:scale(1.18)}
+:root {
+      --bg: #06090e;
+      --card-bg: #0d121d;
+      --border: #1a2333;
+      --text: #e2e8f0;
+      --text-dim: #64748b;
+
+      /* Paleta Linux */
+      --c-tux-yellow: #facc15;
+      --c-tux-orange: #f97316;
+      --c-term-green: #22c55e;
+      --c-arch-blue:  #0ea5e9;
+      --c-deb-red:    #e11d48;
+      --c-ubu-orange: #ea580c;
+      --c-cyan:       #06b6d4;
+      --c-purple:     #a855f7;
+
+      --ease-elastic: cubic-bezier(0.34, 1.56, 0.64, 1);
+      --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+            .vim-window { width: 90%; background: #000; border: 1px solid #334155; padding: 10px; font-size: 11px; border-radius: 4px; }
+            .anim-engine .vim-status { animation: vimSave 2.4s infinite; }
+            @keyframes vimSave {
+              0%, 40% { content: "-- INSERT --"; color: var(--c-term-green); }
+              50%, 80% { content: ":wq"; color: #fff; }
+              90%, 100% { content: "\"main.rs\" 42L, 1024B written"; color: var(--c-cyan); }
+            }
+
+        .vim-status{display:none}
+        .vim-state{display:block;font-size:10px;font-weight:800}
+        .vim-insert{color:#22c55e;animation:vimInsert 2.4s steps(1) infinite}
+        .vim-save{color:#fff;animation:vimCommit 2.4s steps(1) infinite}
+        .vim-done{color:#06b6d4;animation:vimDone 2.4s steps(1) infinite}
+        @keyframes vimInsert{0%,40%{display:block;opacity:1}41%,100%{display:none;opacity:0}}
+        @keyframes vimCommit{0%,45%{display:none;opacity:0}50%,79%{display:block;opacity:1}80%,100%{display:none;opacity:0}}
+        @keyframes vimDone{0%,85%{display:none;opacity:0}90%,100%{display:block;opacity:1}}
+        *{box-sizing:border-box}html,body{width:100%;height:100%;overflow:hidden;margin:0}
+body{background:transparent;color:#e2e8f0;font-family:ui-monospace,Consolas,Menlo,monospace}
+.anim-engine{width:100%;height:100%;display:flex;align-items:center;justify-content:center;overflow:hidden}
+.stage{position:relative;width:290px;height:235px;display:flex;align-items:center;justify-content:center}
+.linux-asset{width:290px;height:215px;display:flex;flex-direction:column;justify-content:center;align-items:center;transform-origin:center;transform:scale(1.18)}
+:root {
+      --bg: #06090e;
+      --card-bg: #0d121d;
+      --border: #1a2333;
+      --text: #e2e8f0;
+      --text-dim: #64748b;
+
+      /* Paleta Linux */
+      --c-tux-yellow: #facc15;
+      --c-tux-orange: #f97316;
+      --c-term-green: #22c55e;
+      --c-arch-blue:  #0ea5e9;
+      --c-deb-red:    #e11d48;
+      --c-ubu-orange: #ea580c;
+      --c-cyan:       #06b6d4;
+      --c-purple:     #a855f7;
+
+      --ease-elastic: cubic-bezier(0.34, 1.56, 0.64, 1);
+      --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+            .randomart {
+              font-family: monospace; font-size: 9px; line-height: 1.1;
+              background: #020617; border: 1px dashed var(--c-cyan); padding: 8px; border-radius: 4px;
+            }
+            .anim-engine .randomart pre {
+              overflow: hidden; width: 0; white-space: pre;
+              animation: traceArt 2.5s steps(20, end) infinite alternate;
+            }
+            @keyframes traceArt { to { width: 100%; } }
+          *{box-sizing:border-box}html,body{width:100%;height:100%;overflow:hidden;margin:0}
+body{background:transparent;color:#e2e8f0;font-family:ui-monospace,Consolas,Menlo,monospace}
+.anim-engine{width:100%;height:100%;display:flex;align-items:center;justify-content:center;overflow:hidden}
+.stage{position:relative;width:290px;height:235px;display:flex;align-items:center;justify-content:center}
+.linux-asset{width:290px;height:215px;display:flex;flex-direction:column;justify-content:center;align-items:center;transform-origin:center;transform:scale(1.18)}
+:root {
+      --bg: #06090e;
+      --card-bg: #0d121d;
+      --border: #1a2333;
+      --text: #e2e8f0;
+      --text-dim: #64748b;
+
+      /* Paleta Linux */
+      --c-tux-yellow: #facc15;
+      --c-tux-orange: #f97316;
+      --c-term-green: #22c55e;
+      --c-arch-blue:  #0ea5e9;
+      --c-deb-red:    #e11d48;
+      --c-ubu-orange: #ea580c;
+      --c-cyan:       #06b6d4;
+      --c-purple:     #a855f7;
+
+      --ease-elastic: cubic-bezier(0.34, 1.56, 0.64, 1);
+      --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+            .htop-grid { width: 90%; display: flex; flex-direction: column; gap: 4px; font-size: 10px; }
+            .htop-bar-track { height: 8px; background: #1e293b; border-radius: 2px; overflow: hidden; display: flex; }
+            .anim-engine .htop-fill { height: 100%; background: linear-gradient(90deg, var(--c-term-green), var(--c-tux-yellow), var(--c-deb-red)); transform-origin: left; }
+            .anim-engine .c1 { animation: coreJump 1.2s infinite alternate 0.1s; }
+            .anim-engine .c2 { animation: coreJump 0.9s infinite alternate 0.3s; }
+            .anim-engine .c3 { animation: coreJump 1.5s infinite alternate 0.0s; }
+            .anim-engine .c4 { animation: coreJump 0.7s infinite alternate 0.4s; }
+            @keyframes coreJump { 0% { width: 25%; } 50% { width: 92%; } 100% { width: 45%; } }
+          *{box-sizing:border-box}html,body{width:100%;height:100%;overflow:hidden;margin:0}
+body{background:transparent;color:#e2e8f0;font-family:ui-monospace,Consolas,Menlo,monospace}
+.anim-engine{width:100%;height:100%;display:flex;align-items:center;justify-content:center;overflow:hidden}
+.stage{position:relative;width:290px;height:235px;display:flex;align-items:center;justify-content:center}
+.linux-asset{width:290px;height:215px;display:flex;flex-direction:column;justify-content:center;align-items:center;transform-origin:center;transform:scale(1.18)}
+:root {
+      --bg: #06090e;
+      --card-bg: #0d121d;
+      --border: #1a2333;
+      --text: #e2e8f0;
+      --text-dim: #64748b;
+
+      /* Paleta Linux */
+      --c-tux-yellow: #facc15;
+      --c-tux-orange: #f97316;
+      --c-term-green: #22c55e;
+      --c-arch-blue:  #0ea5e9;
+      --c-deb-red:    #e11d48;
+      --c-ubu-orange: #ea580c;
+      --c-cyan:       #06b6d4;
+      --c-purple:     #a855f7;
+
+      --ease-elastic: cubic-bezier(0.34, 1.56, 0.64, 1);
+      --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+            .mem-gauge-wrap { width: 85%; display: flex; flex-direction: column; gap: 8px; font-size: 10px; }
+            .mem-track { width: 100%; height: 12px; background: #1e293b; border-radius: 4px; overflow: hidden; display: flex; }
+            .anim-engine .mem-used { background: var(--c-cyan); height: 100%; animation: memPulse 2s infinite alternate; }
+            .anim-engine .mem-buf { background: var(--c-purple); height: 100%; animation: memPulse 2s infinite alternate 0.5s; }
+            @keyframes memPulse { 0% { width: 40%; } 100% { width: 75%; } }
+          *{box-sizing:border-box}html,body{width:100%;height:100%;overflow:hidden;margin:0}
+body{background:transparent;color:#e2e8f0;font-family:ui-monospace,Consolas,Menlo,monospace}
+.anim-engine{width:100%;height:100%;display:flex;align-items:center;justify-content:center;overflow:hidden}
+.stage{position:relative;width:290px;height:235px;display:flex;align-items:center;justify-content:center}
+.linux-asset{width:290px;height:215px;display:flex;flex-direction:column;justify-content:center;align-items:center;transform-origin:center;transform:scale(1.18)}
+:root {
+      --bg: #06090e;
+      --card-bg: #0d121d;
+      --border: #1a2333;
+      --text: #e2e8f0;
+      --text-dim: #64748b;
+
+      /* Paleta Linux */
+      --c-tux-yellow: #facc15;
+      --c-tux-orange: #f97316;
+      --c-term-green: #22c55e;
+      --c-arch-blue:  #0ea5e9;
+      --c-deb-red:    #e11d48;
+      --c-ubu-orange: #ea580c;
+      --c-cyan:       #06b6d4;
+      --c-purple:     #a855f7;
+
+      --ease-elastic: cubic-bezier(0.34, 1.56, 0.64, 1);
+      --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+            .oom-wrap { position: relative; width: 100px; height: 100px; display: grid; place-items: center; }
+            .anim-engine .oom-crosshair {
+              position: absolute; inset: 10px; border: 2px dashed var(--c-deb-red); border-radius: 50%;
+              animation: crosshairSpin 3s linear infinite;
+            }
+            .anim-engine .oom-badge {
+              font-size: 10px; background: #000; border: 1px solid var(--c-deb-red);
+              padding: 4px 6px; border-radius: 4px; color: var(--c-deb-red);
+              animation: killFlicker 1s steps(2) infinite;
+            }
+            @keyframes crosshairSpin { to { transform: rotate(360deg); } }
+            @keyframes killFlicker { 0% { opacity: 1; } 50% { opacity: 0.3; } }
+          *{box-sizing:border-box}html,body{width:100%;height:100%;overflow:hidden;margin:0}
+body{background:transparent;color:#e2e8f0;font-family:ui-monospace,Consolas,Menlo,monospace}
+.anim-engine{width:100%;height:100%;display:flex;align-items:center;justify-content:center;overflow:hidden}
+.stage{position:relative;width:290px;height:235px;display:flex;align-items:center;justify-content:center}
+.linux-asset{width:290px;height:215px;display:flex;flex-direction:column;justify-content:center;align-items:center;transform-origin:center;transform:scale(1.18)}
+:root {
+      --bg: #06090e;
+      --card-bg: #0d121d;
+      --border: #1a2333;
+      --text: #e2e8f0;
+      --text-dim: #64748b;
+
+      /* Paleta Linux */
+      --c-tux-yellow: #facc15;
+      --c-tux-orange: #f97316;
+      --c-term-green: #22c55e;
+      --c-arch-blue:  #0ea5e9;
+      --c-deb-red:    #e11d48;
+      --c-ubu-orange: #ea580c;
+      --c-cyan:       #06b6d4;
+      --c-purple:     #a855f7;
+
+      --ease-elastic: cubic-bezier(0.34, 1.56, 0.64, 1);
+      --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+            .fork-tree-svg { width: 140px; height: 80px; }
+            .anim-engine .fork-node {
+              animation: forkExplode 1.2s var(--ease-elastic) infinite alternate;
+              transform-origin: center;
+            }
+            @keyframes forkExplode { 0% { transform: scale(0.6); opacity: 0.4; } 100% { transform: scale(1.2); opacity: 1; } }
+          *{box-sizing:border-box}html,body{width:100%;height:100%;overflow:hidden;margin:0}
+body{background:transparent;color:#e2e8f0;font-family:ui-monospace,Consolas,Menlo,monospace}
+.anim-engine{width:100%;height:100%;display:flex;align-items:center;justify-content:center;overflow:hidden}
+.stage{position:relative;width:290px;height:235px;display:flex;align-items:center;justify-content:center}
+.linux-asset{width:290px;height:215px;display:flex;flex-direction:column;justify-content:center;align-items:center;transform-origin:center;transform:scale(1.18)}
+:root {
+      --bg: #06090e;
+      --card-bg: #0d121d;
+      --border: #1a2333;
+      --text: #e2e8f0;
+      --text-dim: #64748b;
+
+      /* Paleta Linux */
+      --c-tux-yellow: #facc15;
+      --c-tux-orange: #f97316;
+      --c-term-green: #22c55e;
+      --c-arch-blue:  #0ea5e9;
+      --c-deb-red:    #e11d48;
+      --c-ubu-orange: #ea580c;
+      --c-cyan:       #06b6d4;
+      --c-purple:     #a855f7;
+
+      --ease-elastic: cubic-bezier(0.34, 1.56, 0.64, 1);
+      --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+            .loadavg-svg { width: 160px; height: 60px; }
+            .anim-engine .load-pulse-path {
+              stroke-dasharray: 200; stroke-dashoffset: 200;
+              animation: drawLoadLine 2s linear infinite;
+            }
+            @keyframes drawLoadLine {
+              0% { stroke-dashoffset: 200; }
+              100% { stroke-dashoffset: 0; }
+            }
+          *{box-sizing:border-box}html,body{width:100%;height:100%;overflow:hidden;margin:0}
+body{background:transparent;color:#e2e8f0;font-family:ui-monospace,Consolas,Menlo,monospace}
+.anim-engine{width:100%;height:100%;display:flex;align-items:center;justify-content:center;overflow:hidden}
+.stage{position:relative;width:290px;height:235px;display:flex;align-items:center;justify-content:center}
+.linux-asset{width:290px;height:215px;display:flex;flex-direction:column;justify-content:center;align-items:center;transform-origin:center;transform:scale(1.18)}
+:root {
+      --bg: #06090e;
+      --card-bg: #0d121d;
+      --border: #1a2333;
+      --text: #e2e8f0;
+      --text-dim: #64748b;
+
+      /* Paleta Linux */
+      --c-tux-yellow: #facc15;
+      --c-tux-orange: #f97316;
+      --c-term-green: #22c55e;
+      --c-arch-blue:  #0ea5e9;
+      --c-deb-red:    #e11d48;
+      --c-ubu-orange: #ea580c;
+      --c-cyan:       #06b6d4;
+      --c-purple:     #a855f7;
+
+      --ease-elastic: cubic-bezier(0.34, 1.56, 0.64, 1);
+      --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+            .pipe-stream { display: flex; align-items: center; gap: 8px; font-size: 11px; }
+            .pipe-token { background: #1e293b; padding: 4px 8px; border-radius: 4px; border: 1px solid var(--border); }
+            .pipe-char { color: var(--c-cyan); font-weight: 900; }
+            .anim-engine .data-dot-flow {
+              width: 6px; height: 6px; background: var(--c-term-green); border-radius: 50%;
+              animation: pipeTravel 1.4s infinite;
+            }
+            @keyframes pipeTravel { 0% { transform: scale(0.4); opacity: 0; } 50% { opacity: 1; transform: scale(1.3); } 100% { transform: scale(0.4); opacity: 0; } }
+          *{box-sizing:border-box}html,body{width:100%;height:100%;overflow:hidden;margin:0}
+body{background:transparent;color:#e2e8f0;font-family:ui-monospace,Consolas,Menlo,monospace}
+.anim-engine{width:100%;height:100%;display:flex;align-items:center;justify-content:center;overflow:hidden}
+.stage{position:relative;width:290px;height:235px;display:flex;align-items:center;justify-content:center}
+.linux-asset{width:290px;height:215px;display:flex;flex-direction:column;justify-content:center;align-items:center;transform-origin:center;transform:scale(1.18)}
+:root {
+      --bg: #06090e;
+      --card-bg: #0d121d;
+      --border: #1a2333;
+      --text: #e2e8f0;
+      --text-dim: #64748b;
+
+      /* Paleta Linux */
+      --c-tux-yellow: #facc15;
+      --c-tux-orange: #f97316;
+      --c-term-green: #22c55e;
+      --c-arch-blue:  #0ea5e9;
+      --c-deb-red:    #e11d48;
+      --c-ubu-orange: #ea580c;
+      --c-cyan:       #06b6d4;
+      --c-purple:     #a855f7;
+
+      --ease-elastic: cubic-bezier(0.34, 1.56, 0.64, 1);
+      --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+            .pacman-track { width: 140px; height: 30px; display: flex; align-items: center; position: relative; }
+            .pac-mouth {
+              width: 24px; height: 24px; border-radius: 50%; background: var(--c-tux-yellow);
+              clip-path: polygon(100% 0%, 50% 50%, 100% 100%, 0% 100%, 0% 0%);
+            }
+            .anim-engine .pac-mouth { animation: chomp 0.4s infinite alternate; }
+            .anim-engine .pac-pellets {
+              display: flex; gap: 14px; margin-left: 10px;
+              animation: pelletsMove 1.2s linear infinite;
+            }
+            .pellet { width: 6px; height: 6px; border-radius: 50%; background: #94a3b8; }
+            @keyframes chomp {
+              0% { clip-path: polygon(100% 0%, 50% 50%, 100% 100%, 0% 100%, 0% 0%); }
+              100% { clip-path: polygon(100% 35%, 50% 50%, 100% 65%, 0% 100%, 0% 0%); }
+            }
+            @keyframes pelletsMove { from { transform: translateX(0); } to { transform: translateX(-20px); } }
+          *{box-sizing:border-box}html,body{width:100%;height:100%;overflow:hidden;margin:0}
+body{background:transparent;color:#e2e8f0;font-family:ui-monospace,Consolas,Menlo,monospace}
+.anim-engine{width:100%;height:100%;display:flex;align-items:center;justify-content:center;overflow:hidden}
+.stage{position:relative;width:290px;height:235px;display:flex;align-items:center;justify-content:center}
+.linux-asset{width:290px;height:215px;display:flex;flex-direction:column;justify-content:center;align-items:center;transform-origin:center;transform:scale(1.18)}
+:root {
+      --bg: #06090e;
+      --card-bg: #0d121d;
+      --border: #1a2333;
+      --text: #e2e8f0;
+      --text-dim: #64748b;
+
+      /* Paleta Linux */
+      --c-tux-yellow: #facc15;
+      --c-tux-orange: #f97316;
+      --c-term-green: #22c55e;
+      --c-arch-blue:  #0ea5e9;
+      --c-deb-red:    #e11d48;
+      --c-ubu-orange: #ea580c;
+      --c-cyan:       #06b6d4;
+      --c-purple:     #a855f7;
+
+      --ease-elastic: cubic-bezier(0.34, 1.56, 0.64, 1);
+      --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+            .raid-stack { display: flex; gap: 8px; }
+            .raid-disk {
+              width: 32px; height: 50px; background: #0f172a; border: 2px solid #334155;
+              border-radius: 4px; display: flex; flex-direction: column; align-items: center; justify-content: space-around;
+            }
+            .anim-engine .raid-led { width: 5px; height: 5px; border-radius: 50%; animation: raidBlink 0.3s steps(2) infinite; }
+            @keyframes raidBlink { 0% { background: #334155; } 100% { background: var(--c-term-green); box-shadow: 0 0 6px var(--c-term-green); } }
+          *{box-sizing:border-box}html,body{width:100%;height:100%;overflow:hidden;margin:0}
+body{background:transparent;color:#e2e8f0;font-family:ui-monospace,Consolas,Menlo,monospace}
+.anim-engine{width:100%;height:100%;display:flex;align-items:center;justify-content:center;overflow:hidden}
+.stage{position:relative;width:290px;height:235px;display:flex;align-items:center;justify-content:center}
+.linux-asset{width:290px;height:215px;display:flex;flex-direction:column;justify-content:center;align-items:center;transform-origin:center;transform:scale(1.18)}
+:root {
+      --bg: #06090e;
+      --card-bg: #0d121d;
+      --border: #1a2333;
+      --text: #e2e8f0;
+      --text-dim: #64748b;
+
+      /* Paleta Linux */
+      --c-tux-yellow: #facc15;
+      --c-tux-orange: #f97316;
+      --c-term-green: #22c55e;
+      --c-arch-blue:  #0ea5e9;
+      --c-deb-red:    #e11d48;
+      --c-ubu-orange: #ea580c;
+      --c-cyan:       #06b6d4;
+      --c-purple:     #a855f7;
+
+      --ease-elastic: cubic-bezier(0.34, 1.56, 0.64, 1);
+      --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+            .ping-run { position: relative; width: 140px; height: 20px; display: flex; align-items: center; justify-content: space-between; }
+            .anim-engine .packet-pulse {
+              position: absolute; width: 10px; height: 10px; border-radius: 50%; background: var(--c-cyan);
+              animation: pingTravel 1.6s ease-in-out infinite;
+            }
+            @keyframes pingTravel {
+              0% { left: 0%; background: var(--c-cyan); }
+              50% { left: 90%; background: var(--c-tux-yellow); }
+              100% { left: 0%; background: var(--c-term-green); }
+            }
+          *{box-sizing:border-box}html,body{width:100%;height:100%;overflow:hidden;margin:0}
+body{background:transparent;color:#e2e8f0;font-family:ui-monospace,Consolas,Menlo,monospace}
+.anim-engine{width:100%;height:100%;display:flex;align-items:center;justify-content:center;overflow:hidden}
+.stage{position:relative;width:290px;height:235px;display:flex;align-items:center;justify-content:center}
+.linux-asset{width:290px;height:215px;display:flex;flex-direction:column;justify-content:center;align-items:center;transform-origin:center;transform:scale(1.18)}
+:root {
+      --bg: #06090e;
+      --card-bg: #0d121d;
+      --border: #1a2333;
+      --text: #e2e8f0;
+      --text-dim: #64748b;
+
+      /* Paleta Linux */
+      --c-tux-yellow: #facc15;
+      --c-tux-orange: #f97316;
+      --c-term-green: #22c55e;
+      --c-arch-blue:  #0ea5e9;
+      --c-deb-red:    #e11d48;
+      --c-ubu-orange: #ea580c;
+      --c-cyan:       #06b6d4;
+      --c-purple:     #a855f7;
+
+      --ease-elastic: cubic-bezier(0.34, 1.56, 0.64, 1);
+      --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+            .cron-gear-svg { width: 55px; height: 55px; transform-origin: center; }
+            .anim-engine .cron-gear-svg { animation: spinGear 4s linear infinite; }
+            @keyframes spinGear { to { transform: rotate(360deg); } }
+          *{box-sizing:border-box}html,body{width:100%;height:100%;overflow:hidden;margin:0}
+body{background:transparent;color:#e2e8f0;font-family:ui-monospace,Consolas,Menlo,monospace}
+.anim-engine{width:100%;height:100%;display:flex;align-items:center;justify-content:center;overflow:hidden}
+.stage{position:relative;width:290px;height:235px;display:flex;align-items:center;justify-content:center}
+.linux-asset{width:290px;height:215px;display:flex;flex-direction:column;justify-content:center;align-items:center;transform-origin:center;transform:scale(1.18)}
+:root {
+      --bg: #06090e;
+      --card-bg: #0d121d;
+      --border: #1a2333;
+      --text: #e2e8f0;
+      --text-dim: #64748b;
+
+      /* Paleta Linux */
+      --c-tux-yellow: #facc15;
+      --c-tux-orange: #f97316;
+      --c-term-green: #22c55e;
+      --c-arch-blue:  #0ea5e9;
+      --c-deb-red:    #e11d48;
+      --c-ubu-orange: #ea580c;
+      --c-cyan:       #06b6d4;
+      --c-purple:     #a855f7;
+
+      --ease-elastic: cubic-bezier(0.34, 1.56, 0.64, 1);
+      --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+            .fw-zone { display: flex; align-items: center; gap: 14px; position: relative; width: 150px; }
+            .fw-wall { width: 6px; height: 60px; background: var(--c-deb-red); box-shadow: 0 0 8px var(--c-deb-red); border-radius: 3px; }
+            .anim-engine .bad-packet {
+              width: 10px; height: 10px; background: #fff; border-radius: 50%;
+              animation: packetDrop 1.6s ease-in infinite;
+            }
+            @keyframes packetDrop {
+              0% { transform: translateX(0); opacity: 1; }
+              55% { transform: translateX(50px); opacity: 1; background: var(--c-tux-yellow); }
+              60% { transform: translateX(55px) scale(1.6); opacity: 1; background: var(--c-deb-red); }
+              70%, 100% { transform: translateX(55px) scale(0); opacity: 0; }
+            }
+          *{box-sizing:border-box}html,body{width:100%;height:100%;overflow:hidden;margin:0}
+body{background:transparent;color:#e2e8f0;font-family:ui-monospace,Consolas,Menlo,monospace}
+.anim-engine{width:100%;height:100%;display:flex;align-items:center;justify-content:center;overflow:hidden}
+.stage{position:relative;width:290px;height:235px;display:flex;align-items:center;justify-content:center}
+.linux-asset{width:290px;height:215px;display:flex;flex-direction:column;justify-content:center;align-items:center;transform-origin:center;transform:scale(1.18)}
+:root {
+      --bg: #06090e;
+      --card-bg: #0d121d;
+      --border: #1a2333;
+      --text: #e2e8f0;
+      --text-dim: #64748b;
+
+      /* Paleta Linux */
+      --c-tux-yellow: #facc15;
+      --c-tux-orange: #f97316;
+      --c-term-green: #22c55e;
+      --c-arch-blue:  #0ea5e9;
+      --c-deb-red:    #e11d48;
+      --c-ubu-orange: #ea580c;
+      --c-cyan:       #06b6d4;
+      --c-purple:     #a855f7;
+
+      --ease-elastic: cubic-bezier(0.34, 1.56, 0.64, 1);
+      --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+            .sym-box { display: flex; align-items: center; gap: 8px; font-size: 11px; }
+            .anim-engine .sym-arrow {
+              color: var(--c-cyan);
+              animation: linkBounce 1.2s var(--ease-elastic) infinite alternate;
+            }
+            @keyframes linkBounce { from { transform: translateX(-4px); } to { transform: translateX(4px); } }
+          *{box-sizing:border-box}html,body{width:100%;height:100%;overflow:hidden;margin:0}
+body{background:transparent;color:#e2e8f0;font-family:ui-monospace,Consolas,Menlo,monospace}
+.anim-engine{width:100%;height:100%;display:flex;align-items:center;justify-content:center;overflow:hidden}
+.stage{position:relative;width:290px;height:235px;display:flex;align-items:center;justify-content:center}
+.linux-asset{width:290px;height:215px;display:flex;flex-direction:column;justify-content:center;align-items:center;transform-origin:center;transform:scale(1.18)}
+:root {
+      --bg: #06090e;
+      --card-bg: #0d121d;
+      --border: #1a2333;
+      --text: #e2e8f0;
+      --text-dim: #64748b;
+
+      /* Paleta Linux */
+      --c-tux-yellow: #facc15;
+      --c-tux-orange: #f97316;
+      --c-term-green: #22c55e;
+      --c-arch-blue:  #0ea5e9;
+      --c-deb-red:    #e11d48;
+      --c-ubu-orange: #ea580c;
+      --c-cyan:       #06b6d4;
+      --c-purple:     #a855f7;
+
+      --ease-elastic: cubic-bezier(0.34, 1.56, 0.64, 1);
+      --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+            .perm-display { font-size: 13px; font-weight: bold; }
+            .anim-engine .perm-bits { animation: permToggle 2.4s infinite; }
+            @keyframes permToggle {
+              0%, 45% { color: var(--c-deb-red); content: "-rwxrwxrwx (777)"; }
+              55%, 100% { color: var(--c-term-green); content: "-rwx------ (700)"; }
+            }
+
+        .perm-before,.perm-after{display:inline-block;white-space:nowrap;animation-duration:2.4s;animation-iteration-count:infinite;animation-timing-function:steps(1)}
+        .perm-before{color:#e11d48;animation-name:permBefore}
+        .perm-after{color:#22c55e;animation-name:permAfter}
+        @keyframes permBefore{0%,47%{display:inline-block}48%,100%{display:none}}
+        @keyframes permAfter{0%,47%{display:none}48%,100%{display:inline-block}}
+        *{box-sizing:border-box}html,body{width:100%;height:100%;overflow:hidden;margin:0}
+body{background:transparent;color:#e2e8f0;font-family:ui-monospace,Consolas,Menlo,monospace}
+.anim-engine{width:100%;height:100%;display:flex;align-items:center;justify-content:center;overflow:hidden}
+.stage{position:relative;width:290px;height:235px;display:flex;align-items:center;justify-content:center}
+.linux-asset{width:290px;height:215px;display:flex;flex-direction:column;justify-content:center;align-items:center;transform-origin:center;transform:scale(1.18)}
+:root {
+      --bg: #06090e;
+      --card-bg: #0d121d;
+      --border: #1a2333;
+      --text: #e2e8f0;
+      --text-dim: #64748b;
+
+      /* Paleta Linux */
+      --c-tux-yellow: #facc15;
+      --c-tux-orange: #f97316;
+      --c-term-green: #22c55e;
+      --c-arch-blue:  #0ea5e9;
+      --c-deb-red:    #e11d48;
+      --c-ubu-orange: #ea580c;
+      --c-cyan:       #06b6d4;
+      --c-purple:     #a855f7;
+
+      --ease-elastic: cubic-bezier(0.34, 1.56, 0.64, 1);
+      --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+            .sudo-token-box { width: 50px; height: 50px; position: relative; display: grid; place-items: center; }
+            .anim-engine .sudo-shield-svg {
+              animation: sudoElevate 2.4s var(--ease-elastic) infinite alternate;
+            }
+            @keyframes sudoElevate {
+              0% { transform: scale(0.8); fill: #475569; filter: none; }
+              100% { transform: scale(1.15); fill: var(--c-tux-yellow); filter: drop-shadow(0 0 10px var(--c-tux-yellow)); }
+            }
+          *{box-sizing:border-box}html,body{width:100%;height:100%;overflow:hidden;margin:0}
+body{background:transparent;color:#e2e8f0;font-family:ui-monospace,Consolas,Menlo,monospace}
+.anim-engine{width:100%;height:100%;display:flex;align-items:center;justify-content:center;overflow:hidden}
+.stage{position:relative;width:290px;height:235px;display:flex;align-items:center;justify-content:center}
+.linux-asset{width:290px;height:215px;display:flex;flex-direction:column;justify-content:center;align-items:center;transform-origin:center;transform:scale(1.18)}
+:root {
+      --bg: #06090e;
+      --card-bg: #0d121d;
+      --border: #1a2333;
+      --text: #e2e8f0;
+      --text-dim: #64748b;
+
+      /* Paleta Linux */
+      --c-tux-yellow: #facc15;
+      --c-tux-orange: #f97316;
+      --c-term-green: #22c55e;
+      --c-arch-blue:  #0ea5e9;
+      --c-deb-red:    #e11d48;
+      --c-ubu-orange: #ea580c;
+      --c-cyan:       #06b6d4;
+      --c-purple:     #a855f7;
+
+      --ease-elastic: cubic-bezier(0.34, 1.56, 0.64, 1);
+      --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+            .selinux-radar { width: 70px; height: 70px; border: 2px solid #334155; border-radius: 50%; position: relative; overflow: hidden; }
+            .anim-engine .radar-sweep {
+              position: absolute; inset: 0;
+              background: conic-gradient(from 0deg, rgba(34,197,94,0.4) 0deg, transparent 60deg, transparent 360deg);
+              animation: sweepSE 2s linear infinite;
+            }
+            @keyframes sweepSE { to { transform: rotate(360deg); } }
+          *{box-sizing:border-box}html,body{width:100%;height:100%;overflow:hidden;margin:0}
+body{background:transparent;color:#e2e8f0;font-family:ui-monospace,Consolas,Menlo,monospace}
+.anim-engine{width:100%;height:100%;display:flex;align-items:center;justify-content:center;overflow:hidden}
+.stage{position:relative;width:290px;height:235px;display:flex;align-items:center;justify-content:center}
+.linux-asset{width:290px;height:215px;display:flex;flex-direction:column;justify-content:center;align-items:center;transform-origin:center;transform:scale(1.18)}
+:root {
+      --bg: #06090e;
+      --card-bg: #0d121d;
+      --border: #1a2333;
+      --text: #e2e8f0;
+      --text-dim: #64748b;
+
+      /* Paleta Linux */
+      --c-tux-yellow: #facc15;
+      --c-tux-orange: #f97316;
+      --c-term-green: #22c55e;
+      --c-arch-blue:  #0ea5e9;
+      --c-deb-red:    #e11d48;
+      --c-ubu-orange: #ea580c;
+      --c-cyan:       #06b6d4;
+      --c-purple:     #a855f7;
+
+      --ease-elastic: cubic-bezier(0.34, 1.56, 0.64, 1);
+      --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+            .chroot-box {
+              width: 90px; height: 90px; border: 2px dashed var(--c-cyan);
+              display: grid; place-items: center; border-radius: 8px; position: relative;
+            }
+            .anim-engine .isolated-dot {
+              width: 14px; height: 14px; background: var(--c-tux-yellow); border-radius: 50%;
+              animation: jailWander 2s infinite ease-in-out;
+            }
+            @keyframes jailWander {
+              0%, 100% { transform: translate(-20px, -20px); }
+              50% { transform: translate(20px, 20px); }
+            }
+          *{box-sizing:border-box}html,body{width:100%;height:100%;overflow:hidden;margin:0}
+body{background:transparent;color:#e2e8f0;font-family:ui-monospace,Consolas,Menlo,monospace}
+.anim-engine{width:100%;height:100%;display:flex;align-items:center;justify-content:center;overflow:hidden}
+.stage{position:relative;width:290px;height:235px;display:flex;align-items:center;justify-content:center}
+.linux-asset{width:290px;height:215px;display:flex;flex-direction:column;justify-content:center;align-items:center;transform-origin:center;transform:scale(1.18)}
+:root {
+      --bg: #06090e;
+      --card-bg: #0d121d;
+      --border: #1a2333;
+      --text: #e2e8f0;
+      --text-dim: #64748b;
+
+      /* Paleta Linux */
+      --c-tux-yellow: #facc15;
+      --c-tux-orange: #f97316;
+      --c-term-green: #22c55e;
+      --c-arch-blue:  #0ea5e9;
+      --c-deb-red:    #e11d48;
+      --c-ubu-orange: #ea580c;
+      --c-cyan:       #06b6d4;
+      --c-purple:     #a855f7;
+
+      --ease-elastic: cubic-bezier(0.34, 1.56, 0.64, 1);
+      --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+            .gpg-seal {
+              width: 55px; height: 55px; border: 3px double var(--c-term-green);
+              border-radius: 50%; display: grid; place-items: center; font-size: 8px;
+            }
+            .anim-engine .gpg-seal { animation: stampSeal 1.8s var(--ease-elastic) infinite alternate; }
+            @keyframes stampSeal { 0% { transform: scale(0.6) rotate(-20deg); opacity: 0.3; } 100% { transform: scale(1) rotate(0deg); opacity: 1; } }
+          *{box-sizing:border-box}html,body{width:100%;height:100%;overflow:hidden;margin:0}
+body{background:transparent;color:#e2e8f0;font-family:ui-monospace,Consolas,Menlo,monospace}
+.anim-engine{width:100%;height:100%;display:flex;align-items:center;justify-content:center;overflow:hidden}
+.stage{position:relative;width:290px;height:235px;display:flex;align-items:center;justify-content:center}
+.linux-asset{width:290px;height:215px;display:flex;flex-direction:column;justify-content:center;align-items:center;transform-origin:center;transform:scale(1.18)}
+:root {
+      --bg: #06090e;
+      --card-bg: #0d121d;
+      --border: #1a2333;
+      --text: #e2e8f0;
+      --text-dim: #64748b;
+
+      /* Paleta Linux */
+      --c-tux-yellow: #facc15;
+      --c-tux-orange: #f97316;
+      --c-term-green: #22c55e;
+      --c-arch-blue:  #0ea5e9;
+      --c-deb-red:    #e11d48;
+      --c-ubu-orange: #ea580c;
+      --c-cyan:       #06b6d4;
+      --c-purple:     #a855f7;
+
+      --ease-elastic: cubic-bezier(0.34, 1.56, 0.64, 1);
+      --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+            .tree-view { font-size: 10px; line-height: 1.4; color: #94a3b8; }
+            .anim-engine .branch-pop { opacity: 0; animation: branchReveal 0.4s forwards; }
+            .anim-engine .b1 { animation-delay: 0.1s; }
+            .anim-engine .b2 { animation-delay: 0.3s; }
+            .anim-engine .b3 { animation-delay: 0.5s; }
+            @keyframes branchReveal { to { opacity: 1; transform: translateX(0); } }
+          *{box-sizing:border-box}html,body{width:100%;height:100%;overflow:hidden;margin:0}
+body{background:transparent;color:#e2e8f0;font-family:ui-monospace,Consolas,Menlo,monospace}
+.anim-engine{width:100%;height:100%;display:flex;align-items:center;justify-content:center;overflow:hidden}
+.stage{position:relative;width:290px;height:235px;display:flex;align-items:center;justify-content:center}
+.linux-asset{width:290px;height:215px;display:flex;flex-direction:column;justify-content:center;align-items:center;transform-origin:center;transform:scale(1.18)}
+:root {
+      --bg: #06090e;
+      --card-bg: #0d121d;
+      --border: #1a2333;
+      --text: #e2e8f0;
+      --text-dim: #64748b;
+
+      /* Paleta Linux */
+      --c-tux-yellow: #facc15;
+      --c-tux-orange: #f97316;
+      --c-term-green: #22c55e;
+      --c-arch-blue:  #0ea5e9;
+      --c-deb-red:    #e11d48;
+      --c-ubu-orange: #ea580c;
+      --c-cyan:       #06b6d4;
+      --c-purple:     #a855f7;
+
+      --ease-elastic: cubic-bezier(0.34, 1.56, 0.64, 1);
+      --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+            .tux-full-svg { width: 75px; height: 75px; }
+            .anim-engine .tux-flipper {
+              transform-origin: 25px 45px;
+              animation: waveFlipper 0.7s ease-in-out infinite alternate;
+            }
+            @keyframes waveFlipper { from { transform: rotate(0deg); } to { transform: rotate(28deg); } }
+          *{box-sizing:border-box}html,body{width:100%;height:100%;overflow:hidden;margin:0}
+body{background:transparent;color:#e2e8f0;font-family:ui-monospace,Consolas,Menlo,monospace}
+.anim-engine{width:100%;height:100%;display:flex;align-items:center;justify-content:center;overflow:hidden}
+.stage{position:relative;width:290px;height:235px;display:flex;align-items:center;justify-content:center}
+.linux-asset{width:290px;height:215px;display:flex;flex-direction:column;justify-content:center;align-items:center;transform-origin:center;transform:scale(1.18)}
+:root {
+      --bg: #06090e;
+      --card-bg: #0d121d;
+      --border: #1a2333;
+      --text: #e2e8f0;
+      --text-dim: #64748b;
+
+      /* Paleta Linux */
+      --c-tux-yellow: #facc15;
+      --c-tux-orange: #f97316;
+      --c-term-green: #22c55e;
+      --c-arch-blue:  #0ea5e9;
+      --c-deb-red:    #e11d48;
+      --c-ubu-orange: #ea580c;
+      --c-cyan:       #06b6d4;
+      --c-purple:     #a855f7;
+
+      --ease-elastic: cubic-bezier(0.34, 1.56, 0.64, 1);
+      --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+            .arch-svg { width: 70px; height: 70px; }
+            .anim-engine .arch-base {
+              animation: archConstruct 2s var(--ease-elastic) infinite alternate;
+              transform-origin: center bottom;
+            }
+            @keyframes archConstruct { 0% { transform: scale(0.7); opacity: 0.3; } 100% { transform: scale(1.05); opacity: 1; } }
+          *{box-sizing:border-box}html,body{width:100%;height:100%;overflow:hidden;margin:0}
+body{background:transparent;color:#e2e8f0;font-family:ui-monospace,Consolas,Menlo,monospace}
+.anim-engine{width:100%;height:100%;display:flex;align-items:center;justify-content:center;overflow:hidden}
+.stage{position:relative;width:290px;height:235px;display:flex;align-items:center;justify-content:center}
+.linux-asset{width:290px;height:215px;display:flex;flex-direction:column;justify-content:center;align-items:center;transform-origin:center;transform:scale(1.18)}
+:root {
+      --bg: #06090e;
+      --card-bg: #0d121d;
+      --border: #1a2333;
+      --text: #e2e8f0;
+      --text-dim: #64748b;
+
+      /* Paleta Linux */
+      --c-tux-yellow: #facc15;
+      --c-tux-orange: #f97316;
+      --c-term-green: #22c55e;
+      --c-arch-blue:  #0ea5e9;
+      --c-deb-red:    #e11d48;
+      --c-ubu-orange: #ea580c;
+      --c-cyan:       #06b6d4;
+      --c-purple:     #a855f7;
+
+      --ease-elastic: cubic-bezier(0.34, 1.56, 0.64, 1);
+      --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+            .ubu-ring { width: 65px; height: 65px; position: relative; }
+            .anim-engine .ubu-ring { animation: ubuSpin 5s linear infinite; }
+            .ubu-node { position: absolute; width: 12px; height: 12px; border-radius: 50%; }
+            .un1 { top: 0; left: 26px; background: var(--c-ubu-orange); }
+            .un2 { bottom: 6px; left: 6px; background: var(--c-tux-yellow); }
+            .un3 { bottom: 6px; right: 6px; background: var(--c-deb-red); }
+            @keyframes ubuSpin { to { transform: rotate(360deg); } }
+          *{box-sizing:border-box}html,body{width:100%;height:100%;overflow:hidden;margin:0}
+body{background:transparent;color:#e2e8f0;font-family:ui-monospace,Consolas,Menlo,monospace}
+.anim-engine{width:100%;height:100%;display:flex;align-items:center;justify-content:center;overflow:hidden}
+.stage{position:relative;width:290px;height:235px;display:flex;align-items:center;justify-content:center}
+.linux-asset{width:290px;height:215px;display:flex;flex-direction:column;justify-content:center;align-items:center;transform-origin:center;transform:scale(1.18)}
+:root {
+      --bg: #06090e;
+      --card-bg: #0d121d;
+      --border: #1a2333;
+      --text: #e2e8f0;
+      --text-dim: #64748b;
+
+      /* Paleta Linux */
+      --c-tux-yellow: #facc15;
+      --c-tux-orange: #f97316;
+      --c-term-green: #22c55e;
+      --c-arch-blue:  #0ea5e9;
+      --c-deb-red:    #e11d48;
+      --c-ubu-orange: #ea580c;
+      --c-cyan:       #06b6d4;
+      --c-purple:     #a855f7;
+
+      --ease-elastic: cubic-bezier(0.34, 1.56, 0.64, 1);
+      --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+            .grub-menu { width: 90%; background: #000; border: 1px solid #334155; padding: 10px; font-size: 10px; }
+            .anim-engine .grub-select {
+              animation: grubJump 3s steps(3) infinite;
+            }
+            @keyframes grubJump {
+              0% { transform: translateY(0); }
+              33% { transform: translateY(16px); }
+              66% { transform: translateY(32px); }
+            }
+          *{box-sizing:border-box}html,body{width:100%;height:100%;overflow:hidden;margin:0}
+body{background:transparent;color:#e2e8f0;font-family:ui-monospace,Consolas,Menlo,monospace}
+.anim-engine{width:100%;height:100%;display:flex;align-items:center;justify-content:center;overflow:hidden}
+.stage{position:relative;width:290px;height:235px;display:flex;align-items:center;justify-content:center}
+.linux-asset{width:290px;height:215px;display:flex;flex-direction:column;justify-content:center;align-items:center;transform-origin:center;transform:scale(1.18)}
+:root {
+      --bg: #06090e;
+      --card-bg: #0d121d;
+      --border: #1a2333;
+      --text: #e2e8f0;
+      --text-dim: #64748b;
+
+      /* Paleta Linux */
+      --c-tux-yellow: #facc15;
+      --c-tux-orange: #f97316;
+      --c-term-green: #22c55e;
+      --c-arch-blue:  #0ea5e9;
+      --c-deb-red:    #e11d48;
+      --c-ubu-orange: #ea580c;
+      --c-cyan:       #06b6d4;
+      --c-purple:     #a855f7;
+
+      --ease-elastic: cubic-bezier(0.34, 1.56, 0.64, 1);
+      --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+            .rpi-header { display: grid; grid-template-columns: repeat(6, 1fr); gap: 6px; padding: 10px; background: #064e3b; border-radius: 6px; }
+            .gpio-pin { width: 8px; height: 8px; border-radius: 50%; background: #0f172a; border: 1px solid #facc15; }
+            .anim-engine .pin-active { animation: gpioPulse 0.6s infinite alternate; }
+            @keyframes gpioPulse {
+              0% { background: #0f172a; box-shadow: none; }
+              100% { background: var(--c-term-green); box-shadow: 0 0 8px var(--c-term-green); }
+            }
+          *{box-sizing:border-box}html,body{width:100%;height:100%;margin:0;overflow:hidden}
+body{background:radial-gradient(ellipse at 20% 24%,#14253b,#06090e 72%);color:#eef5ff;font-family:ui-monospace,Consolas,monospace}
+header{position:absolute;top:26px;left:35px;right:35px;font-size:12px;font-weight:800;letter-spacing:1px;color:#b8c5d2;display:flex;justify-content:space-between}
+header em{font-style:normal;color:#7cebc2}
+.rule{position:absolute;top:52px;height:2px;left:35px;right:35px;background:#324458}
+.module{position:absolute;inset:0;display:flex;align-items:center;gap:32px;padding:73px 37px 32px;visibility:hidden}
+.canvas{width:380px;height:330px;flex-shrink:0;display:flex;align-items:center;justify-content:center;overflow:hidden;background:radial-gradient(ellipse at 44% 42%,#1a3042,#0c1726 85%);border:1px solid #355368;border-radius:24px;box-shadow:0 13px 38px #0007}
+.canvas .anim-engine{width:370px;height:315px;flex-shrink:0}
+.canvas .linux-asset{transform:scale(1.30)}
+.content{min-width:0;width:350px}
+.number{font-size:12px;font-weight:800;color:#68f0ae;letter-spacing:1.2px;margin:0 0 15px}
+.name{font-size:32px;line-height:1.1;font-weight:800;letter-spacing:-.6px;color:#f7fbff;margin:0 0 20px}
+.description{font-family:system-ui,sans-serif;font-size:17px;line-height:1.42;color:#c3d2e1;margin:0 0 23px}
+.label{font-size:11px;letter-spacing:1px;color:#98acc2;margin:0 0 8px}
+.tags{font-size:13px;color:#eecb80;line-height:1.5}
+footer{position:absolute;bottom:17px;left:35px;right:35px;display:flex;justify-content:space-between;color:#899cb1;font-size:11px}
+
+.module:nth-child(1){animation:show1 58.0s linear infinite}
+@keyframes show1{0%,0.0000%{visibility:hidden}0.0002%,3.4481%{visibility:visible}3.4483%,100%{visibility:hidden}}
+
+.module:nth-child(2){animation:show2 58.0s linear infinite}
+@keyframes show2{0%,3.4483%{visibility:hidden}3.4485%,6.8964%{visibility:visible}6.8966%,100%{visibility:hidden}}
+
+.module:nth-child(3){animation:show3 58.0s linear infinite}
+@keyframes show3{0%,6.8966%{visibility:hidden}6.8968%,10.3446%{visibility:visible}10.3448%,100%{visibility:hidden}}
+
+.module:nth-child(4){animation:show4 58.0s linear infinite}
+@keyframes show4{0%,10.3448%{visibility:hidden}10.3450%,13.7929%{visibility:visible}13.7931%,100%{visibility:hidden}}
+
+.module:nth-child(5){animation:show5 58.0s linear infinite}
+@keyframes show5{0%,13.7931%{visibility:hidden}13.7933%,17.2412%{visibility:visible}17.2414%,100%{visibility:hidden}}
+
+.module:nth-child(6){animation:show6 58.0s linear infinite}
+@keyframes show6{0%,17.2414%{visibility:hidden}17.2416%,20.6895%{visibility:visible}20.6897%,100%{visibility:hidden}}
+
+.module:nth-child(7){animation:show7 58.0s linear infinite}
+@keyframes show7{0%,20.6897%{visibility:hidden}20.6899%,24.1377%{visibility:visible}24.1379%,100%{visibility:hidden}}
+
+.module:nth-child(8){animation:show8 58.0s linear infinite}
+@keyframes show8{0%,24.1379%{visibility:hidden}24.1381%,27.5860%{visibility:visible}27.5862%,100%{visibility:hidden}}
+
+.module:nth-child(9){animation:show9 58.0s linear infinite}
+@keyframes show9{0%,27.5862%{visibility:hidden}27.5864%,31.0343%{visibility:visible}31.0345%,100%{visibility:hidden}}
+
+.module:nth-child(10){animation:show10 58.0s linear infinite}
+@keyframes show10{0%,31.0345%{visibility:hidden}31.0347%,34.4826%{visibility:visible}34.4828%,100%{visibility:hidden}}
+
+.module:nth-child(11){animation:show11 58.0s linear infinite}
+@keyframes show11{0%,34.4828%{visibility:hidden}34.4830%,37.9308%{visibility:visible}37.9310%,100%{visibility:hidden}}
+
+.module:nth-child(12){animation:show12 58.0s linear infinite}
+@keyframes show12{0%,37.9310%{visibility:hidden}37.9312%,41.3791%{visibility:visible}41.3793%,100%{visibility:hidden}}
+
+.module:nth-child(13){animation:show13 58.0s linear infinite}
+@keyframes show13{0%,41.3793%{visibility:hidden}41.3795%,44.8274%{visibility:visible}44.8276%,100%{visibility:hidden}}
+
+.module:nth-child(14){animation:show14 58.0s linear infinite}
+@keyframes show14{0%,44.8276%{visibility:hidden}44.8278%,48.2757%{visibility:visible}48.2759%,100%{visibility:hidden}}
+
+.module:nth-child(15){animation:show15 58.0s linear infinite}
+@keyframes show15{0%,48.2759%{visibility:hidden}48.2761%,51.7239%{visibility:visible}51.7241%,100%{visibility:hidden}}
+
+.module:nth-child(16){animation:show16 58.0s linear infinite}
+@keyframes show16{0%,51.7241%{visibility:hidden}51.7243%,55.1722%{visibility:visible}55.1724%,100%{visibility:hidden}}
+
+.module:nth-child(17){animation:show17 58.0s linear infinite}
+@keyframes show17{0%,55.1724%{visibility:hidden}55.1726%,58.6205%{visibility:visible}58.6207%,100%{visibility:hidden}}
+
+.module:nth-child(18){animation:show18 58.0s linear infinite}
+@keyframes show18{0%,58.6207%{visibility:hidden}58.6209%,62.0688%{visibility:visible}62.0690%,100%{visibility:hidden}}
+
+.module:nth-child(19){animation:show19 58.0s linear infinite}
+@keyframes show19{0%,62.0690%{visibility:hidden}62.0692%,65.5170%{visibility:visible}65.5172%,100%{visibility:hidden}}
+
+.module:nth-child(20){animation:show20 58.0s linear infinite}
+@keyframes show20{0%,65.5172%{visibility:hidden}65.5174%,68.9653%{visibility:visible}68.9655%,100%{visibility:hidden}}
+
+.module:nth-child(21){animation:show21 58.0s linear infinite}
+@keyframes show21{0%,68.9655%{visibility:hidden}68.9657%,72.4136%{visibility:visible}72.4138%,100%{visibility:hidden}}
+
+.module:nth-child(22){animation:show22 58.0s linear infinite}
+@keyframes show22{0%,72.4138%{visibility:hidden}72.4140%,75.8619%{visibility:visible}75.8621%,100%{visibility:hidden}}
+
+.module:nth-child(23){animation:show23 58.0s linear infinite}
+@keyframes show23{0%,75.8621%{visibility:hidden}75.8623%,79.3101%{visibility:visible}79.3103%,100%{visibility:hidden}}
+
+.module:nth-child(24){animation:show24 58.0s linear infinite}
+@keyframes show24{0%,79.3103%{visibility:hidden}79.3105%,82.7584%{visibility:visible}82.7586%,100%{visibility:hidden}}
+
+.module:nth-child(25){animation:show25 58.0s linear infinite}
+@keyframes show25{0%,82.7586%{visibility:hidden}82.7588%,86.2067%{visibility:visible}86.2069%,100%{visibility:hidden}}
+
+.module:nth-child(26){animation:show26 58.0s linear infinite}
+@keyframes show26{0%,86.2069%{visibility:hidden}86.2071%,89.6550%{visibility:visible}89.6552%,100%{visibility:hidden}}
+
+.module:nth-child(27){animation:show27 58.0s linear infinite}
+@keyframes show27{0%,89.6552%{visibility:hidden}89.6554%,93.1032%{visibility:visible}93.1034%,100%{visibility:hidden}}
+
+.module:nth-child(28){animation:show28 58.0s linear infinite}
+@keyframes show28{0%,93.1034%{visibility:hidden}93.1036%,96.5515%{visibility:visible}96.5517%,100%{visibility:hidden}}
+
+.module:nth-child(29){animation:show29 58.0s linear infinite}
+@keyframes show29{0%,96.5517%{visibility:hidden}96.5519%,99.9998%{visibility:visible}100.0000%,100%{visibility:hidden}}
+</style></head><body><header><span>GPTFRAMES / ANIMACIONES LINUX</span><em>29 PRESETS · SIN DEBIAN</em></header><div class="rule"></div><main data-segment-seconds="2"><section class="module" data-id="kernel-panic"><div class="canvas"><div class="anim-engine"><div class="stage"><div class="linux-asset"><div class="panic-box">
+            <strong style="color:#fff;background:var(--c-deb-red);padding:1px 4px;">KERNEL PANIC</strong><br>
+            [ 0.004128] Fatal: attempted to kill init!<br>
+            [ 0.004130] Call Trace: do_exit+0x8a2<br>
+            <span style="color:#facc15;">CPU 0: PID 1 comm: systemd tainted</span>
+          </div></div></div></div></div><article class="content"><p class="number">01 / 29 · KERNEL Y ARRANQUE</p><h1 class="name">Kernel Panic</h1><p class="description">Alerta del kernel que pulsa con borde rojo.</p><p class="label">TAGS · MOVIMIENTO</p><p class="tags">linux, kernel, error, panic, sistema<br>parpadeo, escala, cambio de color</p></article></section><section class="module" data-id="systemd-boot"><div class="canvas"><div class="anim-engine"><div class="stage"><div class="linux-asset"><div class="sysd-list">
+            <div class="sysd-row">[ <span class="sysd-ok">OK</span> ] Reached target Local FS.</div>
+            <div class="sysd-row">[ <span class="sysd-ok">OK</span> ] Started WireGuard VPN tunnel.</div>
+            <div class="sysd-row">[ <span class="sysd-ok">OK</span> ] Reached target Multi-User System.</div>
+          </div></div></div></div></div><article class="content"><p class="number">02 / 29 · KERNEL Y ARRANQUE</p><h1 class="name">Inicio con systemd</h1><p class="description">Unidades de arranque que entran secuencialmente.</p><p class="label">TAGS · MOVIMIENTO</p><p class="tags">linux, systemd, boot, inicio, servicios<br>entrada, deslizamiento, escala</p></article></section><section class="module" data-id="root-command-warning"><div class="canvas"><div class="anim-engine"><div class="stage"><div class="linux-asset"><div class="rm-prompt">
+            <span style="color:var(--c-term-green);">root@srv:~#</span> rm -rf /<br>
+            <div class="rm-alert" style="color:var(--c-deb-red);margin-top:6px;">
+              [FAIL] rm: it is dangerous to operate recursively on '/'
+            </div>
+          </div></div></div></div></div><article class="content"><p class="number">03 / 29 · KERNEL Y ARRANQUE</p><h1 class="name">Aviso de comando root</h1><p class="description">Terminal que se sacude tras una operación bloqueada.</p><p class="label">TAGS · MOVIMIENTO</p><p class="tags">linux, bash, terminal, sudo, root<br>sacudida, deslizamiento, escala</p></article></section><section class="module" data-id="fastfetch-info"><div class="canvas"><div class="anim-engine"><div class="stage"><div class="linux-asset"><div class="fetch-box">
+            <svg class="fetch-tux-svg" width="50" height="50" viewBox="0 0 100 100">
+              <path d="M50 15 C35 15 28 30 28 50 C28 72 20 85 50 85 C80 85 72 72 72 50 C72 30 65 15 50 15 Z" fill="#fff"/>
+              <circle cx="43" cy="38" r="4" fill="#000"/><circle cx="57" cy="38" r="4" fill="#000"/>
+              <ellipse cx="50" cy="48" rx="7" ry="4" fill="var(--c-tux-orange)"/>
+            </svg>
+            <div class="fetch-lines">
+              <div><span>OS:</span> Debian GNU/Linux 13</div>
+              <div><span>Host:</span> ThinkPad X1 Carbon</div>
+              <div><span>Kernel:</span> 6.12.0-rc3</div>
+              <div><span>Uptime:</span> 42 days, 13 hrs</div>
+            </div>
+          </div></div></div></div></div><article class="content"><p class="number">04 / 29 · KERNEL Y ARRANQUE</p><h1 class="name">Fastfetch y hardware</h1><p class="description">Información del equipo presentada con un pequeño Tux.</p><p class="label">TAGS · MOVIMIENTO</p><p class="tags">linux, fastfetch, neofetch, sistema, hardware<br>revelado, escala, opacidad</p></article></section><section class="module" data-id="vim-save"><div class="canvas"><div class="anim-engine"><div class="stage"><div class="linux-asset"><div class="vim-window">
+            <div>fn main() { println!("Linux!"); }</div>
+            <div style="color:var(--text-dim);margin:6px 0;">~</div>
+            <div style="border-top:1px solid #1e293b;padding-top:4px;">
+              <span class="vim-state vim-insert">-- INSERT --</span><span class="vim-state vim-save">:wq</span><span class="vim-state vim-done">"main.rs" written</span>
+            </div>
+          </div></div></div></div></div><article class="content"><p class="number">05 / 29 · KERNEL Y ARRANQUE</p><h1 class="name">Vim guardar y salir</h1><p class="description">Estado del editor cambia de INSERT a guardando.</p><p class="label">TAGS · MOVIMIENTO</p><p class="tags">linux, vim, editor, guardar, archivo<br>secuencia, escala, opacidad</p></article></section><section class="module" data-id="ssh-randomart"><div class="canvas"><div class="anim-engine"><div class="stage"><div class="linux-asset"><div class="randomart">
+            <pre>
++--[ED25519 256]--+
+|   . =+.o        |
+|  . B +o +       |
+|   * * o= o      |
+|  . = = *o       |
+|     S *o=       |
++----[SHA256]-----+
+            </pre>
+          </div></div></div></div></div><article class="content"><p class="number">06 / 29 · KERNEL Y ARRANQUE</p><h1 class="name">SSH Randomart</h1><p class="description">Huella visual de clave SSH que aparece por pasos.</p><p class="label">TAGS · MOVIMIENTO</p><p class="tags">linux, ssh, llaves, keygen, randomart<br>escritura, escala</p></article></section><section class="module" data-id="htop-multicore"><div class="canvas"><div class="anim-engine"><div class="stage"><div class="linux-asset"><div class="htop-grid">
+            <div>0 [||||||||||||||  48%]</div>
+            <div class="htop-bar-track"><div class="htop-fill c1"></div></div>
+            <div>1 [|||||||||||||||||| 86%]</div>
+            <div class="htop-bar-track"><div class="htop-fill c2"></div></div>
+            <div>2 [|||||||||       31%]</div>
+            <div class="htop-bar-track"><div class="htop-fill c3"></div></div>
+            <div>3 [||||||||||||||| 64%]</div>
+            <div class="htop-bar-track"><div class="htop-fill c4"></div></div>
+          </div></div></div></div></div><article class="content"><p class="number">07 / 29 · PROCESOS Y MEMORIA</p><h1 class="name">Carga multinúcleo</h1><p class="description">Barras de utilización de cuatro núcleos que oscilan.</p><p class="label">TAGS · MOVIMIENTO</p><p class="tags">linux, htop, cpu, nucleos, procesos<br>barras, escala, rebote</p></article></section><section class="module" data-id="memory-swap"><div class="canvas"><div class="anim-engine"><div class="stage"><div class="linux-asset"><div class="mem-gauge-wrap">
+            <div>Mem: 24.2G / 64.0G (Used/Buffers)</div>
+            <div class="mem-track">
+              <div class="mem-used" style="width:55%;"></div>
+              <div class="mem-buf" style="width:20%;"></div>
+            </div>
+            <div>Swap: 1.2G / 16.0G</div>
+            <div class="mem-track">
+              <div style="width:12%;background:var(--c-deb-red);"></div>
+            </div>
+          </div></div></div></div></div><article class="content"><p class="number">08 / 29 · PROCESOS Y MEMORIA</p><h1 class="name">RAM y Swap</h1><p class="description">Indicadores de memoria que crecen y decrecen.</p><p class="label">TAGS · MOVIMIENTO</p><p class="tags">linux, ram, swap, memoria, uso<br>progreso, escala, pulso</p></article></section><section class="module" data-id="oom-killer"><div class="canvas"><div class="anim-engine"><div class="stage"><div class="linux-asset"><div class="oom-wrap">
+            <div class="oom-crosshair"></div>
+            <div class="oom-badge">KILL PID:1337</div>
+          </div></div></div></div></div><article class="content"><p class="number">09 / 29 · PROCESOS Y MEMORIA</p><h1 class="name">OOM Killer</h1><p class="description">Objetivo circular giratorio con aviso de proceso terminado.</p><p class="label">TAGS · MOVIMIENTO</p><p class="tags">linux, oom, memoria, proceso, killer<br>rotacion, rotación, escala</p></article></section><section class="module" data-id="fork-bomb-diagram"><div class="canvas"><div class="anim-engine"><div class="stage"><div class="linux-asset"><svg class="fork-tree-svg" viewBox="0 0 140 80">
+            <line x1="70" y1="10" x2="35" y2="40" stroke="#475569" stroke-width="2"/>
+            <line x1="70" y1="10" x2="105" y2="40" stroke="#475569" stroke-width="2"/>
+            <line x1="35" y1="40" x2="18" y2="70" stroke="#475569" stroke-width="2"/>
+            <line x1="35" y1="40" x2="52" y2="70" stroke="#475569" stroke-width="2"/>
+            <line x1="105" y1="40" x2="88" y2="70" stroke="#475569" stroke-width="2"/>
+            <line x1="105" y1="40" x2="122" y2="70" stroke="#475569" stroke-width="2"/>
+            <circle class="fork-node" cx="70" cy="10" r="6" fill="var(--c-cyan)"/>
+            <circle class="fork-node" cx="35" cy="40" r="5" fill="var(--c-tux-yellow)"/>
+            <circle class="fork-node" cx="105" cy="40" r="5" fill="var(--c-tux-yellow)"/>
+            <circle class="fork-node" cx="18" cy="70" r="4" fill="var(--c-deb-red)"/>
+            <circle class="fork-node" cx="52" cy="70" r="4" fill="var(--c-deb-red)"/>
+            <circle class="fork-node" cx="88" cy="70" r="4" fill="var(--c-deb-red)"/>
+            <circle class="fork-node" cx="122" cy="70" r="4" fill="var(--c-deb-red)"/>
+          </svg></div></div></div></div><article class="content"><p class="number">10 / 29 · PROCESOS Y MEMORIA</p><h1 class="name">Árbol de procesos</h1><p class="description">Ramas de procesos con nodos que laten.</p><p class="label">TAGS · MOVIMIENTO</p><p class="tags">linux, fork, procesos, arbol, sistema<br>pulso, escala, opacidad</p></article></section><section class="module" data-id="load-average"><div class="canvas"><div class="anim-engine"><div class="stage"><div class="linux-asset"><svg class="loadavg-svg" viewBox="0 0 160 60">
+            <line x1="0" y1="50" x2="160" y2="50" stroke="#1e293b" stroke-width="2"/>
+            <path class="load-pulse-path" d="M0,45 Q40,48 70,25 T130,12 T160,35" fill="none" stroke="var(--c-term-green)" stroke-width="3"/>
+          </svg></div></div></div></div><article class="content"><p class="number">11 / 29 · PROCESOS Y MEMORIA</p><h1 class="name">Gráfica load average</h1><p class="description">Curva de carga del sistema que se dibuja.</p><p class="label">TAGS · MOVIMIENTO</p><p class="tags">linux, loadavg, grafica, estadisticas, rendimiento<br>trazado, escala</p></article></section><section class="module" data-id="unix-pipeline"><div class="canvas"><div class="anim-engine"><div class="stage"><div class="linux-asset"><div class="pipe-stream">
+            <span class="pipe-token">cat log</span>
+            <span class="pipe-char">|</span>
+            <div class="data-dot-flow"></div>
+            <span class="pipe-token">grep ERR</span>
+            <span class="pipe-char">|</span>
+            <span class="pipe-token">wc -l</span>
+          </div></div></div></div></div><article class="content"><p class="number">12 / 29 · PROCESOS Y MEMORIA</p><h1 class="name">Pipeline de Unix</h1><p class="description">Comandos encadenados con un pulso de flujo.</p><p class="label">TAGS · MOVIMIENTO</p><p class="tags">linux, pipeline, unix, pipe, comandos<br>pulso, escala, opacidad</p></article></section><section class="module" data-id="pacman-upgrade"><div class="canvas"><div class="anim-engine"><div class="stage"><div class="linux-asset"><div class="pacman-track">
+            <div class="pac-mouth"></div>
+            <div class="pac-pellets">
+              <div class="pellet"></div><div class="pellet"></div>
+              <div class="pellet"></div><div class="pellet"></div>
+            </div>
+          </div></div></div></div></div><article class="content"><p class="number">13 / 29 · PAQUETES Y RED</p><h1 class="name">Pacman actualizando</h1><p class="description">Pacman animado consume paquetes mientras actualiza.</p><p class="label">TAGS · MOVIMIENTO</p><p class="tags">linux, pacman, arch, paquetes, actualizacion<br>desplazamiento, deslizamiento, escala</p></article></section><section class="module" data-id="raid-resync"><div class="canvas"><div class="anim-engine"><div class="stage"><div class="linux-asset"><div class="raid-stack">
+            <div class="raid-disk"><span style="font-size:7px;">sda</span><div class="raid-led"></div></div>
+            <div class="raid-disk"><span style="font-size:7px;">sdb</span><div class="raid-led" style="animation-delay:0.1s;"></div></div>
+            <div class="raid-disk"><span style="font-size:7px;">sdc</span><div class="raid-led" style="animation-delay:0.2s;"></div></div>
+            <div class="raid-disk"><span style="font-size:7px;">sdd</span><div class="raid-led" style="animation-delay:0.05s;"></div></div>
+          </div></div></div></div></div><article class="content"><p class="number">14 / 29 · PAQUETES Y RED</p><h1 class="name">Sincronización RAID</h1><p class="description">Unidades del arreglo RAID con LEDs intermitentes.</p><p class="label">TAGS · MOVIMIENTO</p><p class="tags">linux, raid, discos, almacenamiento, sincronizacion<br>parpadeo, escala</p></article></section><section class="module" data-id="icmp-ping"><div class="canvas"><div class="anim-engine"><div class="stage"><div class="linux-asset"><div class="ping-run">
+            <span style="font-size:10px;">HOST_A</span>
+            <div class="packet-pulse"></div>
+            <span style="font-size:10px;">HOST_B</span>
+          </div></div></div></div></div><article class="content"><p class="number">15 / 29 · PAQUETES Y RED</p><h1 class="name">Ping ICMP</h1><p class="description">Paquete de red rebota entre dos equipos.</p><p class="label">TAGS · MOVIMIENTO</p><p class="tags">linux, ping, icmp, red, latencia<br>trayectoria, escala</p></article></section><section class="module" data-id="cron-job"><div class="canvas"><div class="anim-engine"><div class="stage"><div class="linux-asset"><svg class="cron-gear-svg" viewBox="0 0 100 100">
+            <circle cx="50" cy="50" r="30" fill="none" stroke="var(--c-cyan)" stroke-width="8" stroke-dasharray="12, 6"/>
+            <circle cx="50" cy="50" r="14" fill="#1e293b"/>
+          </svg></div></div></div></div><article class="content"><p class="number">16 / 29 · PAQUETES Y RED</p><h1 class="name">Trabajo cron</h1><p class="description">Engranaje giratorio que simboliza una tarea programada.</p><p class="label">TAGS · MOVIMIENTO</p><p class="tags">linux, cron, programar, automatizacion, horario<br>rotacion, rotación, escala</p></article></section><section class="module" data-id="firewall-drop"><div class="canvas"><div class="anim-engine"><div class="stage"><div class="linux-asset"><div class="fw-zone">
+            <div class="bad-packet"></div>
+            <div class="fw-wall" style="margin-left:50px;"></div>
+            <span style="font-size:9px;color:var(--c-deb-red);">DROP</span>
+          </div></div></div></div></div><article class="content"><p class="number">17 / 29 · PAQUETES Y RED</p><h1 class="name">Cortafuegos DROP</h1><p class="description">Un paquete se aproxima a una barrera y desaparece.</p><p class="label">TAGS · MOVIMIENTO</p><p class="tags">linux, firewall, iptables, ufw, seguridad<br>impacto, deslizamiento, escala</p></article></section><section class="module" data-id="symlink-arrow"><div class="canvas"><div class="anim-engine"><div class="stage"><div class="linux-asset"><div class="sym-box">
+            <span style="color:#94a3b8;">/usr/bin/python</span>
+            <span class="sym-arrow">-&gt;</span>
+            <span style="color:var(--c-term-green);font-weight:bold;">python3.12</span>
+          </div></div></div></div></div><article class="content"><p class="number">18 / 29 · PAQUETES Y RED</p><h1 class="name">Enlace simbólico</h1><p class="description">Flecha animada que conecta un alias y su destino.</p><p class="label">TAGS · MOVIMIENTO</p><p class="tags">linux, symlink, enlace, archivos, ln<br>rebote, deslizamiento, escala</p></article></section><section class="module" data-id="chmod-permissions"><div class="canvas"><div class="anim-engine"><div class="stage"><div class="linux-asset"><div class="perm-display">
+            <span class="perm-before">-rwxrwxrwx (777)</span><span class="perm-after">-rwx------ (700)</span>
+          </div></div></div></div></div><article class="content"><p class="number">19 / 29 · SEGURIDAD Y ARCHIVOS</p><h1 class="name">Permisos chmod</h1><p class="description">Permisos cambian visiblemente de 777 a 700.</p><p class="label">TAGS · MOVIMIENTO</p><p class="tags">linux, chmod, permisos, acceso, seguridad<br>secuencia, escala, cambio de color</p></article></section><section class="module" data-id="sudo-elevation"><div class="canvas"><div class="anim-engine"><div class="stage"><div class="linux-asset"><div class="sudo-token-box">
+            <svg class="sudo-shield-svg" width="44" height="44" viewBox="0 0 24 24">
+              <path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm0 6c1.4 0 2.5 1.1 2.5 2.5 0 .8-.4 1.5-1 1.9V14h-3v-2.6c-.6-.4-1-1.1-1-1.9 0-1.4 1.1-2.5 2.5-2.5z"/>
+            </svg>
+          </div></div></div></div></div><article class="content"><p class="number">20 / 29 · SEGURIDAD Y ARCHIVOS</p><h1 class="name">Privilegios sudo</h1><p class="description">Escudo que aumenta de tamaño y se ilumina.</p><p class="label">TAGS · MOVIMIENTO</p><p class="tags">linux, sudo, root, privilegios, elevacion<br>escala</p></article></section><section class="module" data-id="selinux-radar"><div class="canvas"><div class="anim-engine"><div class="stage"><div class="linux-asset"><div class="selinux-radar">
+            <div class="radar-sweep"></div>
+          </div></div></div></div></div><article class="content"><p class="number">21 / 29 · SEGURIDAD Y ARCHIVOS</p><h1 class="name">Radar SELinux</h1><p class="description">Barrido circular de estado enforcing.</p><p class="label">TAGS · MOVIMIENTO</p><p class="tags">linux, selinux, enforcing, seguridad, radar<br>rotacion, rotación, escala</p></article></section><section class="module" data-id="chroot-isolation"><div class="canvas"><div class="anim-engine"><div class="stage"><div class="linux-asset"><div class="chroot-box">
+            <div class="isolated-dot"></div>
+          </div></div></div></div></div><article class="content"><p class="number">22 / 29 · SEGURIDAD Y ARCHIVOS</p><h1 class="name">Aislamiento chroot</h1><p class="description">Punto confinado que recorre su celda.</p><p class="label">TAGS · MOVIMIENTO</p><p class="tags">linux, chroot, jail, aislamiento, contenedor<br>trayectoria, deslizamiento, escala</p></article></section><section class="module" data-id="gpg-verify"><div class="canvas"><div class="anim-engine"><div class="stage"><div class="linux-asset"><div class="gpg-seal">
+            <span style="color:var(--c-term-green);font-weight:bold;">VERIFIED</span>
+          </div></div></div></div></div><article class="content"><p class="number">23 / 29 · SEGURIDAD Y ARCHIVOS</p><h1 class="name">Firma GPG</h1><p class="description">Sello VERIFIED estampado con rebote.</p><p class="label">TAGS · MOVIMIENTO</p><p class="tags">linux, gpg, firma, criptografia, verified<br>rebote, rotación, escala</p></article></section><section class="module" data-id="directory-tree"><div class="canvas"><div class="anim-engine"><div class="stage"><div class="linux-asset"><div class="tree-view">
+            <div>/etc</div>
+            <div class="branch-pop b1">├── network.conf</div>
+            <div class="branch-pop b2">└── systemd/</div>
+            <div class="branch-pop b3">&nbsp;&nbsp;&nbsp;&nbsp;└── system.conf</div>
+          </div></div></div></div></div><article class="content"><p class="number">24 / 29 · SEGURIDAD Y ARCHIVOS</p><h1 class="name">Árbol de directorios</h1><p class="description">Ramas de archivos reveladas una tras otra.</p><p class="label">TAGS · MOVIMIENTO</p><p class="tags">linux, tree, archivos, directorios, carpetas<br>entrada, deslizamiento, escala</p></article></section><section class="module" data-id="tux-waving"><div class="canvas"><div class="anim-engine"><div class="stage"><div class="linux-asset"><svg class="tux-full-svg" viewBox="0 0 100 100">
+            <!-- Cuerpo Tux -->
+            <path d="M50 15 C35 15 28 30 28 50 C28 72 20 85 50 85 C80 85 72 72 72 50 C72 30 65 15 50 15 Z" fill="#fff"/>
+            <path d="M50 10 C30 10 20 30 20 55 C20 85 10 90 50 90 C90 90 80 85 80 55 C80 30 70 10 50 10 Z" fill="#0f172a" style="z-index:-1;"/>
+            <!-- Ojos y pico -->
+            <circle cx="43" cy="38" r="4" fill="#000"/><circle cx="57" cy="38" r="4" fill="#000"/>
+            <polygon points="50,42 40,50 60,50" fill="var(--c-tux-orange)"/>
+            <!-- Aleta móvil -->
+            <path class="tux-flipper" d="M22 45 Q5 60 22 75 Z" fill="#0f172a"/>
+          </svg></div></div></div></div><article class="content"><p class="number">25 / 29 · DISTROS Y HARDWARE</p><h1 class="name">Tux saludando</h1><p class="description">Pingüino Tux mueve una de sus aletas.</p><p class="label">TAGS · MOVIMIENTO</p><p class="tags">linux, tux, pinguino, mascota, saludo<br>rotacion, rotación, escala</p></article></section><section class="module" data-id="arch-geometry"><div class="canvas"><div class="anim-engine"><div class="stage"><div class="linux-asset"><svg class="arch-svg" viewBox="0 0 100 100">
+            <polygon class="arch-base" points="50,15 15,85 85,85" fill="none" stroke="var(--c-arch-blue)" stroke-width="6" stroke-linejoin="round"/>
+            <polygon points="50,45 35,80 65,80" fill="var(--c-arch-blue)"/>
+          </svg></div></div></div></div><article class="content"><p class="number">26 / 29 · DISTROS Y HARDWARE</p><h1 class="name">Geometría Arch Linux</h1><p class="description">Triángulos geométricos de Arch se construyen.</p><p class="label">TAGS · MOVIMIENTO</p><p class="tags">linux, arch, triangulos, logo, distro<br>escala, opacidad</p></article></section><section class="module" data-id="ubuntu-friends"><div class="canvas"><div class="anim-engine"><div class="stage"><div class="linux-asset"><div class="ubu-ring">
+            <div style="position:absolute;inset:8px;border:4px solid #fff;border-radius:50%;opacity:0.8;"></div>
+            <div class="ubu-node un1"></div>
+            <div class="ubu-node un2"></div>
+            <div class="ubu-node un3"></div>
+          </div></div></div></div></div><article class="content"><p class="number">27 / 29 · DISTROS Y HARDWARE</p><h1 class="name">Ubuntu Circle of Friends</h1><p class="description">Anillo y tres nodos de Ubuntu en rotación.</p><p class="label">TAGS · MOVIMIENTO</p><p class="tags">linux, ubuntu, circulo, logo, distro<br>rotacion, rotación, escala</p></article></section><section class="module" data-id="grub-menu"><div class="canvas"><div class="anim-engine"><div class="stage"><div class="linux-asset"><div class="grub-menu">
+            <div style="color:var(--text-dim);margin-bottom:6px;">GNU GRUB version 2.12</div>
+            <div style="position:relative;">
+              <div class="grub-select" style="position:absolute;left:-4px;width:105%;height:14px;background:var(--c-cyan);opacity:0.25;border-radius:2px;"></div>
+              <div>* Ubuntu Linux (generic-6.11)</div>
+              <div>&nbsp;&nbsp;Advanced options for Ubuntu</div>
+              <div>&nbsp;&nbsp;UEFI Firmware Settings</div>
+            </div>
+          </div></div></div></div></div><article class="content"><p class="number">28 / 29 · DISTROS Y HARDWARE</p><h1 class="name">Selector GNU GRUB</h1><p class="description">Selección del cargador de arranque cambia de opción.</p><p class="label">TAGS · MOVIMIENTO</p><p class="tags">linux, grub, arranque, menu, bootloader<br>selector, deslizamiento, escala</p></article></section><section class="module" data-id="raspberry-gpio"><div class="canvas"><div class="anim-engine"><div class="stage"><div class="linux-asset"><div class="rpi-header">
+            <div class="gpio-pin pin-active"></div>
+            <div class="gpio-pin"></div>
+            <div class="gpio-pin pin-active" style="animation-delay:0.2s;"></div>
+            <div class="gpio-pin"></div>
+            <div class="gpio-pin pin-active" style="animation-delay:0.4s;"></div>
+            <div class="gpio-pin"></div>
+          </div></div></div></div></div><article class="content"><p class="number">29 / 29 · DISTROS Y HARDWARE</p><h1 class="name">Pines Raspberry Pi GPIO</h1><p class="description">Señales intermitentes en conectores GPIO.</p><p class="label">TAGS · MOVIMIENTO</p><p class="tags">linux, raspberry, pi, gpio, hardware<br>parpadeo, escala, pulso</p></article></section></main><footer><span>CSS ANIMADO EN CHROMIUM / MCP AUTO-INDEXADO</span><span>480p · 24 FPS</span></footer></body></html>

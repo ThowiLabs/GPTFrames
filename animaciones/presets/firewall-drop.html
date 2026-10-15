@@ -1,0 +1,43 @@
+<!doctype html><html lang="es"><head><meta charset="utf-8"><meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'none'; connect-src 'none'; style-src 'unsafe-inline'; img-src data:; font-src data:"><style>*{box-sizing:border-box}html,body{width:100%;height:100%;overflow:hidden;margin:0}
+body{background:transparent;color:#e2e8f0;font-family:ui-monospace,Consolas,Menlo,monospace}
+.anim-engine{width:100%;height:100%;display:flex;align-items:center;justify-content:center;overflow:hidden}
+.stage{position:relative;width:290px;height:235px;display:flex;align-items:center;justify-content:center}
+.linux-asset{width:290px;height:215px;display:flex;flex-direction:column;justify-content:center;align-items:center;transform-origin:center;transform:scale(1.18)}
+:root {
+      --bg: #06090e;
+      --card-bg: #0d121d;
+      --border: #1a2333;
+      --text: #e2e8f0;
+      --text-dim: #64748b;
+
+      /* Paleta Linux */
+      --c-tux-yellow: #facc15;
+      --c-tux-orange: #f97316;
+      --c-term-green: #22c55e;
+      --c-arch-blue:  #0ea5e9;
+      --c-deb-red:    #e11d48;
+      --c-ubu-orange: #ea580c;
+      --c-cyan:       #06b6d4;
+      --c-purple:     #a855f7;
+
+      --ease-elastic: cubic-bezier(0.34, 1.56, 0.64, 1);
+      --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+            .fw-zone { display: flex; align-items: center; gap: 14px; position: relative; width: 150px; }
+            .fw-wall { width: 6px; height: 60px; background: var(--c-deb-red); box-shadow: 0 0 8px var(--c-deb-red); border-radius: 3px; }
+            .anim-engine .bad-packet {
+              width: 10px; height: 10px; background: #fff; border-radius: 50%;
+              animation: packetDrop 1.6s ease-in infinite;
+            }
+            @keyframes packetDrop {
+              0% { transform: translateX(0); opacity: 1; }
+              55% { transform: translateX(50px); opacity: 1; background: var(--c-tux-yellow); }
+              60% { transform: translateX(55px) scale(1.6); opacity: 1; background: var(--c-deb-red); }
+              70%, 100% { transform: translateX(55px) scale(0); opacity: 0; }
+            }
+          </style></head><body><div class="anim-engine"><div class="stage"><div class="linux-asset"><div class="fw-zone">
+            <div class="bad-packet"></div>
+            <div class="fw-wall" style="margin-left:50px;"></div>
+            <span style="font-size:9px;color:var(--c-deb-red);">DROP</span>
+          </div></div></div></div></body></html>

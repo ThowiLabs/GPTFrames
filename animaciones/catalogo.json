@@ -2,8 +2,8 @@
   "version": 1,
   "name": "Animaciones",
   "description": "Colección de recursos visuales editables, categorizados y buscables.",
-  "total": 32,
-  "duration": 89.0,
+  "total": 61,
+  "duration": 161.5,
   "presets": [
     {
       "number": 1,
@@ -1607,6 +1607,1430 @@
         "recBlink"
       ],
       "searchable": true
+    },
+    {
+      "number": 33,
+      "source_number": 1,
+      "id": "kernel-panic",
+      "name": "Kernel Panic",
+      "category": "Kernel y arranque",
+      "type": "linux-sistema",
+      "description": "Alerta del kernel que pulsa con borde rojo.",
+      "style": "dark / Linux / consola",
+      "backend": "browser",
+      "collection": "animaciones",
+      "preset_file": "animaciones/presets/kernel-panic.html",
+      "status": "candidate",
+      "duration": 2.5,
+      "batch": "linux-motion-04",
+      "tags": [
+        "linux",
+        "kernel",
+        "error",
+        "panic",
+        "sistema",
+        "alerta",
+        "arranque",
+        "dark",
+        "consola",
+        "pulsa",
+        "borde",
+        "rojo",
+        "linux-sistema",
+        "kernel y arranque"
+      ],
+      "motion": [
+        "parpadeo",
+        "escala",
+        "cambio de color"
+      ],
+      "usage": [
+        "tutorial",
+        "sistemas Linux",
+        "documental técnico"
+      ],
+      "editable": {},
+      "css_keyframes": [
+        "panicFlicker"
+      ],
+      "searchable": true
+    },
+    {
+      "number": 34,
+      "source_number": 2,
+      "id": "systemd-boot",
+      "name": "Inicio con systemd",
+      "category": "Kernel y arranque",
+      "type": "linux-sistema",
+      "description": "Unidades de arranque que entran secuencialmente.",
+      "style": "dark / Linux / consola",
+      "backend": "browser",
+      "collection": "animaciones",
+      "preset_file": "animaciones/presets/systemd-boot.html",
+      "status": "candidate",
+      "duration": 2.5,
+      "batch": "linux-motion-04",
+      "tags": [
+        "linux",
+        "systemd",
+        "boot",
+        "inicio",
+        "servicios",
+        "consola",
+        "kernel",
+        "arranque",
+        "dark",
+        "unidades",
+        "entran",
+        "secuencialmente",
+        "linux-sistema",
+        "kernel y arranque"
+      ],
+      "motion": [
+        "entrada",
+        "deslizamiento",
+        "escala",
+        "opacidad",
+        "cambio de color"
+      ],
+      "usage": [
+        "tutorial",
+        "sistemas Linux",
+        "documental técnico"
+      ],
+      "editable": {},
+      "css_keyframes": [
+        "rowSlide"
+      ],
+      "searchable": true
+    },
+    {
+      "number": 35,
+      "source_number": 3,
+      "id": "root-command-warning",
+      "name": "Aviso de comando root",
+      "category": "Kernel y arranque",
+      "type": "linux-sistema",
+      "description": "Terminal que se sacude tras una operación bloqueada.",
+      "style": "dark / Linux / consola",
+      "backend": "browser",
+      "collection": "animaciones",
+      "preset_file": "animaciones/presets/root-command-warning.html",
+      "status": "candidate",
+      "duration": 2.5,
+      "batch": "linux-motion-04",
+      "tags": [
+        "linux",
+        "bash",
+        "terminal",
+        "sudo",
+        "root",
+        "advertencia",
+        "comando",
+        "aviso",
+        "kernel",
+        "arranque",
+        "dark",
+        "consola",
+        "sacude",
+        "tras",
+        "operacion",
+        "bloqueada",
+        "linux-sistema",
+        "kernel y arranque"
+      ],
+      "motion": [
+        "sacudida",
+        "deslizamiento",
+        "escala"
+      ],
+      "usage": [
+        "tutorial",
+        "sistemas Linux",
+        "documental técnico"
+      ],
+      "editable": {},
+      "css_keyframes": [
+        "shakeDenial"
+      ],
+      "searchable": true
+    },
+    {
+      "number": 36,
+      "source_number": 4,
+      "id": "fastfetch-info",
+      "name": "Fastfetch y hardware",
+      "category": "Kernel y arranque",
+      "type": "linux-sistema",
+      "description": "Información del equipo presentada con un pequeño Tux.",
+      "style": "dark / Linux / consola",
+      "backend": "browser",
+      "collection": "animaciones",
+      "preset_file": "animaciones/presets/fastfetch-info.html",
+      "status": "candidate",
+      "duration": 2.5,
+      "batch": "linux-motion-04",
+      "tags": [
+        "linux",
+        "fastfetch",
+        "neofetch",
+        "sistema",
+        "hardware",
+        "informacion",
+        "kernel",
+        "arranque",
+        "dark",
+        "consola",
+        "equipo",
+        "presentada",
+        "pequeno",
+        "tux",
+        "linux-sistema",
+        "kernel y arranque"
+      ],
+      "motion": [
+        "revelado",
+        "escala",
+        "opacidad",
+        "cambio de color"
+      ],
+      "usage": [
+        "tutorial",
+        "sistemas Linux",
+        "documental técnico"
+      ],
+      "editable": {},
+      "css_keyframes": [
+        "drawTuxLogo"
+      ],
+      "searchable": true
+    },
+    {
+      "number": 37,
+      "source_number": 5,
+      "id": "vim-save",
+      "name": "Vim guardar y salir",
+      "category": "Kernel y arranque",
+      "type": "linux-sistema",
+      "description": "Estado del editor cambia de INSERT a guardando.",
+      "style": "dark / Linux / consola",
+      "backend": "browser",
+      "collection": "animaciones",
+      "preset_file": "animaciones/presets/vim-save.html",
+      "status": "candidate",
+      "duration": 2.5,
+      "batch": "linux-motion-04",
+      "tags": [
+        "linux",
+        "vim",
+        "editor",
+        "guardar",
+        "archivo",
+        "terminal",
+        "salir",
+        "kernel",
+        "arranque",
+        "dark",
+        "consola",
+        "estado",
+        "cambia",
+        "insert",
+        "guardando",
+        "linux-sistema",
+        "kernel y arranque"
+      ],
+      "motion": [
+        "secuencia",
+        "escala",
+        "opacidad",
+        "cambio de color"
+      ],
+      "usage": [
+        "tutorial",
+        "sistemas Linux",
+        "documental técnico"
+      ],
+      "editable": {},
+      "css_keyframes": [
+        "vimSave",
+        "vimInsert",
+        "vimCommit",
+        "vimDone"
+      ],
+      "searchable": true
+    },
+    {
+      "number": 38,
+      "source_number": 6,
+      "id": "ssh-randomart",
+      "name": "SSH Randomart",
+      "category": "Kernel y arranque",
+      "type": "linux-sistema",
+      "description": "Huella visual de clave SSH que aparece por pasos.",
+      "style": "dark / Linux / consola",
+      "backend": "browser",
+      "collection": "animaciones",
+      "preset_file": "animaciones/presets/ssh-randomart.html",
+      "status": "candidate",
+      "duration": 2.5,
+      "batch": "linux-motion-04",
+      "tags": [
+        "linux",
+        "ssh",
+        "llaves",
+        "keygen",
+        "randomart",
+        "seguridad",
+        "kernel",
+        "arranque",
+        "dark",
+        "consola",
+        "huella",
+        "visual",
+        "clave",
+        "aparece",
+        "pasos",
+        "linux-sistema",
+        "kernel y arranque"
+      ],
+      "motion": [
+        "escritura",
+        "escala"
+      ],
+      "usage": [
+        "tutorial",
+        "sistemas Linux",
+        "documental técnico"
+      ],
+      "editable": {},
+      "css_keyframes": [
+        "traceArt"
+      ],
+      "searchable": true
+    },
+    {
+      "number": 39,
+      "source_number": 7,
+      "id": "htop-multicore",
+      "name": "Carga multinúcleo",
+      "category": "Procesos y memoria",
+      "type": "linux-sistema",
+      "description": "Barras de utilización de cuatro núcleos que oscilan.",
+      "style": "dark / Linux / consola",
+      "backend": "browser",
+      "collection": "animaciones",
+      "preset_file": "animaciones/presets/htop-multicore.html",
+      "status": "candidate",
+      "duration": 2.5,
+      "batch": "linux-motion-04",
+      "tags": [
+        "linux",
+        "htop",
+        "cpu",
+        "nucleos",
+        "procesos",
+        "carga",
+        "multinucleo",
+        "memoria",
+        "dark",
+        "consola",
+        "barras",
+        "utilizacion",
+        "cuatro",
+        "oscilan",
+        "linux-sistema",
+        "procesos y memoria"
+      ],
+      "motion": [
+        "barras",
+        "escala",
+        "rebote"
+      ],
+      "usage": [
+        "tutorial",
+        "sistemas Linux",
+        "documental técnico"
+      ],
+      "editable": {},
+      "css_keyframes": [
+        "coreJump"
+      ],
+      "searchable": true
+    },
+    {
+      "number": 40,
+      "source_number": 8,
+      "id": "memory-swap",
+      "name": "RAM y Swap",
+      "category": "Procesos y memoria",
+      "type": "linux-sistema",
+      "description": "Indicadores de memoria que crecen y decrecen.",
+      "style": "dark / Linux / consola",
+      "backend": "browser",
+      "collection": "animaciones",
+      "preset_file": "animaciones/presets/memory-swap.html",
+      "status": "candidate",
+      "duration": 2.5,
+      "batch": "linux-motion-04",
+      "tags": [
+        "linux",
+        "ram",
+        "swap",
+        "memoria",
+        "uso",
+        "barras",
+        "procesos",
+        "dark",
+        "consola",
+        "indicadores",
+        "crecen",
+        "decrecen",
+        "linux-sistema",
+        "procesos y memoria"
+      ],
+      "motion": [
+        "progreso",
+        "escala",
+        "pulso"
+      ],
+      "usage": [
+        "tutorial",
+        "sistemas Linux",
+        "documental técnico"
+      ],
+      "editable": {},
+      "css_keyframes": [
+        "memPulse"
+      ],
+      "searchable": true
+    },
+    {
+      "number": 41,
+      "source_number": 9,
+      "id": "oom-killer",
+      "name": "OOM Killer",
+      "category": "Procesos y memoria",
+      "type": "linux-sistema",
+      "description": "Objetivo circular giratorio con aviso de proceso terminado.",
+      "style": "dark / Linux / consola",
+      "backend": "browser",
+      "collection": "animaciones",
+      "preset_file": "animaciones/presets/oom-killer.html",
+      "status": "candidate",
+      "duration": 2.5,
+      "batch": "linux-motion-04",
+      "tags": [
+        "linux",
+        "oom",
+        "memoria",
+        "proceso",
+        "killer",
+        "alerta",
+        "procesos",
+        "dark",
+        "consola",
+        "objetivo",
+        "circular",
+        "giratorio",
+        "aviso",
+        "terminado",
+        "linux-sistema",
+        "procesos y memoria"
+      ],
+      "motion": [
+        "rotacion",
+        "rotación",
+        "escala",
+        "opacidad",
+        "parpadeo",
+        "cambio de color"
+      ],
+      "usage": [
+        "tutorial",
+        "sistemas Linux",
+        "documental técnico"
+      ],
+      "editable": {},
+      "css_keyframes": [
+        "crosshairSpin",
+        "killFlicker"
+      ],
+      "searchable": true
+    },
+    {
+      "number": 42,
+      "source_number": 10,
+      "id": "fork-bomb-diagram",
+      "name": "Árbol de procesos",
+      "category": "Procesos y memoria",
+      "type": "linux-sistema",
+      "description": "Ramas de procesos con nodos que laten.",
+      "style": "dark / Linux / consola",
+      "backend": "browser",
+      "collection": "animaciones",
+      "preset_file": "animaciones/presets/fork-bomb-diagram.html",
+      "status": "candidate",
+      "duration": 2.5,
+      "batch": "linux-motion-04",
+      "tags": [
+        "linux",
+        "fork",
+        "procesos",
+        "arbol",
+        "sistema",
+        "diagrama",
+        "memoria",
+        "dark",
+        "consola",
+        "ramas",
+        "nodos",
+        "laten",
+        "linux-sistema",
+        "procesos y memoria"
+      ],
+      "motion": [
+        "pulso",
+        "escala",
+        "opacidad"
+      ],
+      "usage": [
+        "tutorial",
+        "sistemas Linux",
+        "documental técnico"
+      ],
+      "editable": {},
+      "css_keyframes": [
+        "forkExplode"
+      ],
+      "searchable": true
+    },
+    {
+      "number": 43,
+      "source_number": 11,
+      "id": "load-average",
+      "name": "Gráfica load average",
+      "category": "Procesos y memoria",
+      "type": "linux-sistema",
+      "description": "Curva de carga del sistema que se dibuja.",
+      "style": "dark / Linux / consola",
+      "backend": "browser",
+      "collection": "animaciones",
+      "preset_file": "animaciones/presets/load-average.html",
+      "status": "candidate",
+      "duration": 2.5,
+      "batch": "linux-motion-04",
+      "tags": [
+        "linux",
+        "loadavg",
+        "grafica",
+        "estadisticas",
+        "rendimiento",
+        "load",
+        "average",
+        "procesos",
+        "memoria",
+        "dark",
+        "consola",
+        "curva",
+        "carga",
+        "sistema",
+        "dibuja",
+        "linux-sistema",
+        "procesos y memoria"
+      ],
+      "motion": [
+        "trazado",
+        "escala"
+      ],
+      "usage": [
+        "tutorial",
+        "sistemas Linux",
+        "documental técnico"
+      ],
+      "editable": {},
+      "css_keyframes": [
+        "drawLoadLine"
+      ],
+      "searchable": true
+    },
+    {
+      "number": 44,
+      "source_number": 12,
+      "id": "unix-pipeline",
+      "name": "Pipeline de Unix",
+      "category": "Procesos y memoria",
+      "type": "linux-sistema",
+      "description": "Comandos encadenados con un pulso de flujo.",
+      "style": "dark / Linux / consola",
+      "backend": "browser",
+      "collection": "animaciones",
+      "preset_file": "animaciones/presets/unix-pipeline.html",
+      "status": "candidate",
+      "duration": 2.5,
+      "batch": "linux-motion-04",
+      "tags": [
+        "linux",
+        "pipeline",
+        "unix",
+        "pipe",
+        "comandos",
+        "flujo",
+        "procesos",
+        "memoria",
+        "dark",
+        "consola",
+        "encadenados",
+        "pulso",
+        "linux-sistema",
+        "procesos y memoria"
+      ],
+      "motion": [
+        "pulso",
+        "escala",
+        "opacidad",
+        "cambio de color"
+      ],
+      "usage": [
+        "tutorial",
+        "sistemas Linux",
+        "documental técnico"
+      ],
+      "editable": {},
+      "css_keyframes": [
+        "pipeTravel"
+      ],
+      "searchable": true
+    },
+    {
+      "number": 45,
+      "source_number": 13,
+      "id": "pacman-upgrade",
+      "name": "Pacman actualizando",
+      "category": "Paquetes y red",
+      "type": "linux-sistema",
+      "description": "Pacman animado consume paquetes mientras actualiza.",
+      "style": "dark / Linux / consola",
+      "backend": "browser",
+      "collection": "animaciones",
+      "preset_file": "animaciones/presets/pacman-upgrade.html",
+      "status": "candidate",
+      "duration": 2.5,
+      "batch": "linux-motion-04",
+      "tags": [
+        "linux",
+        "pacman",
+        "arch",
+        "paquetes",
+        "actualizacion",
+        "descarga",
+        "actualizando",
+        "red",
+        "dark",
+        "consola",
+        "animado",
+        "consume",
+        "mientras",
+        "actualiza",
+        "linux-sistema",
+        "paquetes y red"
+      ],
+      "motion": [
+        "desplazamiento",
+        "deslizamiento",
+        "escala"
+      ],
+      "usage": [
+        "tutorial",
+        "sistemas Linux",
+        "documental técnico"
+      ],
+      "editable": {},
+      "css_keyframes": [
+        "chomp",
+        "pelletsMove"
+      ],
+      "searchable": true
+    },
+    {
+      "number": 46,
+      "source_number": 14,
+      "id": "raid-resync",
+      "name": "Sincronización RAID",
+      "category": "Paquetes y red",
+      "type": "linux-sistema",
+      "description": "Unidades del arreglo RAID con LEDs intermitentes.",
+      "style": "dark / Linux / consola",
+      "backend": "browser",
+      "collection": "animaciones",
+      "preset_file": "animaciones/presets/raid-resync.html",
+      "status": "candidate",
+      "duration": 2.5,
+      "batch": "linux-motion-04",
+      "tags": [
+        "linux",
+        "raid",
+        "discos",
+        "almacenamiento",
+        "sincronizacion",
+        "led",
+        "paquetes",
+        "red",
+        "dark",
+        "consola",
+        "unidades",
+        "arreglo",
+        "leds",
+        "intermitentes",
+        "linux-sistema",
+        "paquetes y red"
+      ],
+      "motion": [
+        "parpadeo",
+        "escala"
+      ],
+      "usage": [
+        "tutorial",
+        "sistemas Linux",
+        "documental técnico"
+      ],
+      "editable": {},
+      "css_keyframes": [
+        "raidBlink"
+      ],
+      "searchable": true
+    },
+    {
+      "number": 47,
+      "source_number": 15,
+      "id": "icmp-ping",
+      "name": "Ping ICMP",
+      "category": "Paquetes y red",
+      "type": "linux-sistema",
+      "description": "Paquete de red rebota entre dos equipos.",
+      "style": "dark / Linux / consola",
+      "backend": "browser",
+      "collection": "animaciones",
+      "preset_file": "animaciones/presets/icmp-ping.html",
+      "status": "candidate",
+      "duration": 2.5,
+      "batch": "linux-motion-04",
+      "tags": [
+        "linux",
+        "ping",
+        "icmp",
+        "red",
+        "latencia",
+        "host",
+        "paquetes",
+        "dark",
+        "consola",
+        "paquete",
+        "rebota",
+        "entre",
+        "dos",
+        "equipos",
+        "linux-sistema",
+        "paquetes y red"
+      ],
+      "motion": [
+        "trayectoria",
+        "escala"
+      ],
+      "usage": [
+        "tutorial",
+        "sistemas Linux",
+        "documental técnico"
+      ],
+      "editable": {},
+      "css_keyframes": [
+        "pingTravel"
+      ],
+      "searchable": true
+    },
+    {
+      "number": 48,
+      "source_number": 16,
+      "id": "cron-job",
+      "name": "Trabajo cron",
+      "category": "Paquetes y red",
+      "type": "linux-sistema",
+      "description": "Engranaje giratorio que simboliza una tarea programada.",
+      "style": "dark / Linux / consola",
+      "backend": "browser",
+      "collection": "animaciones",
+      "preset_file": "animaciones/presets/cron-job.html",
+      "status": "candidate",
+      "duration": 2.5,
+      "batch": "linux-motion-04",
+      "tags": [
+        "linux",
+        "cron",
+        "programar",
+        "automatizacion",
+        "horario",
+        "trabajo",
+        "paquetes",
+        "red",
+        "dark",
+        "consola",
+        "engranaje",
+        "giratorio",
+        "simboliza",
+        "tarea",
+        "programada",
+        "linux-sistema",
+        "paquetes y red"
+      ],
+      "motion": [
+        "rotacion",
+        "rotación",
+        "escala"
+      ],
+      "usage": [
+        "tutorial",
+        "sistemas Linux",
+        "documental técnico"
+      ],
+      "editable": {},
+      "css_keyframes": [
+        "spinGear"
+      ],
+      "searchable": true
+    },
+    {
+      "number": 49,
+      "source_number": 17,
+      "id": "firewall-drop",
+      "name": "Cortafuegos DROP",
+      "category": "Paquetes y red",
+      "type": "linux-sistema",
+      "description": "Un paquete se aproxima a una barrera y desaparece.",
+      "style": "dark / Linux / consola",
+      "backend": "browser",
+      "collection": "animaciones",
+      "preset_file": "animaciones/presets/firewall-drop.html",
+      "status": "candidate",
+      "duration": 2.5,
+      "batch": "linux-motion-04",
+      "tags": [
+        "linux",
+        "firewall",
+        "iptables",
+        "ufw",
+        "seguridad",
+        "bloqueo",
+        "cortafuegos",
+        "drop",
+        "paquetes",
+        "red",
+        "dark",
+        "consola",
+        "paquete",
+        "aproxima",
+        "barrera",
+        "desaparece",
+        "linux-sistema",
+        "paquetes y red"
+      ],
+      "motion": [
+        "impacto",
+        "deslizamiento",
+        "escala",
+        "opacidad"
+      ],
+      "usage": [
+        "tutorial",
+        "sistemas Linux",
+        "documental técnico"
+      ],
+      "editable": {},
+      "css_keyframes": [
+        "packetDrop"
+      ],
+      "searchable": true
+    },
+    {
+      "number": 50,
+      "source_number": 18,
+      "id": "symlink-arrow",
+      "name": "Enlace simbólico",
+      "category": "Paquetes y red",
+      "type": "linux-sistema",
+      "description": "Flecha animada que conecta un alias y su destino.",
+      "style": "dark / Linux / consola",
+      "backend": "browser",
+      "collection": "animaciones",
+      "preset_file": "animaciones/presets/symlink-arrow.html",
+      "status": "candidate",
+      "duration": 2.5,
+      "batch": "linux-motion-04",
+      "tags": [
+        "linux",
+        "symlink",
+        "enlace",
+        "archivos",
+        "ln",
+        "alias",
+        "simbolico",
+        "paquetes",
+        "red",
+        "dark",
+        "consola",
+        "flecha",
+        "animada",
+        "conecta",
+        "destino",
+        "linux-sistema",
+        "paquetes y red"
+      ],
+      "motion": [
+        "rebote",
+        "deslizamiento",
+        "escala",
+        "cambio de color"
+      ],
+      "usage": [
+        "tutorial",
+        "sistemas Linux",
+        "documental técnico"
+      ],
+      "editable": {},
+      "css_keyframes": [
+        "linkBounce"
+      ],
+      "searchable": true
+    },
+    {
+      "number": 51,
+      "source_number": 19,
+      "id": "chmod-permissions",
+      "name": "Permisos chmod",
+      "category": "Seguridad y archivos",
+      "type": "linux-sistema",
+      "description": "Permisos cambian visiblemente de 777 a 700.",
+      "style": "dark / Linux / consola",
+      "backend": "browser",
+      "collection": "animaciones",
+      "preset_file": "animaciones/presets/chmod-permissions.html",
+      "status": "candidate",
+      "duration": 2.5,
+      "batch": "linux-motion-04",
+      "tags": [
+        "linux",
+        "chmod",
+        "permisos",
+        "acceso",
+        "seguridad",
+        "archivo",
+        "archivos",
+        "dark",
+        "consola",
+        "cambian",
+        "visiblemente",
+        "777",
+        "700",
+        "linux-sistema",
+        "seguridad y archivos"
+      ],
+      "motion": [
+        "secuencia",
+        "escala",
+        "cambio de color"
+      ],
+      "usage": [
+        "tutorial",
+        "sistemas Linux",
+        "documental técnico"
+      ],
+      "editable": {},
+      "css_keyframes": [
+        "permToggle",
+        "permBefore",
+        "permAfter"
+      ],
+      "searchable": true
+    },
+    {
+      "number": 52,
+      "source_number": 20,
+      "id": "sudo-elevation",
+      "name": "Privilegios sudo",
+      "category": "Seguridad y archivos",
+      "type": "linux-sistema",
+      "description": "Escudo que aumenta de tamaño y se ilumina.",
+      "style": "dark / Linux / consola",
+      "backend": "browser",
+      "collection": "animaciones",
+      "preset_file": "animaciones/presets/sudo-elevation.html",
+      "status": "candidate",
+      "duration": 2.5,
+      "batch": "linux-motion-04",
+      "tags": [
+        "linux",
+        "sudo",
+        "root",
+        "privilegios",
+        "elevacion",
+        "escudo",
+        "seguridad",
+        "archivos",
+        "dark",
+        "consola",
+        "aumenta",
+        "tamano",
+        "ilumina",
+        "linux-sistema",
+        "seguridad y archivos"
+      ],
+      "motion": [
+        "escala"
+      ],
+      "usage": [
+        "tutorial",
+        "sistemas Linux",
+        "documental técnico"
+      ],
+      "editable": {},
+      "css_keyframes": [
+        "sudoElevate"
+      ],
+      "searchable": true
+    },
+    {
+      "number": 53,
+      "source_number": 21,
+      "id": "selinux-radar",
+      "name": "Radar SELinux",
+      "category": "Seguridad y archivos",
+      "type": "linux-sistema",
+      "description": "Barrido circular de estado enforcing.",
+      "style": "dark / Linux / consola",
+      "backend": "browser",
+      "collection": "animaciones",
+      "preset_file": "animaciones/presets/selinux-radar.html",
+      "status": "candidate",
+      "duration": 2.5,
+      "batch": "linux-motion-04",
+      "tags": [
+        "linux",
+        "selinux",
+        "enforcing",
+        "seguridad",
+        "radar",
+        "archivos",
+        "dark",
+        "consola",
+        "barrido",
+        "circular",
+        "estado",
+        "linux-sistema",
+        "seguridad y archivos"
+      ],
+      "motion": [
+        "rotacion",
+        "rotación",
+        "escala",
+        "barrido"
+      ],
+      "usage": [
+        "tutorial",
+        "sistemas Linux",
+        "documental técnico"
+      ],
+      "editable": {},
+      "css_keyframes": [
+        "sweepSE"
+      ],
+      "searchable": true
+    },
+    {
+      "number": 54,
+      "source_number": 22,
+      "id": "chroot-isolation",
+      "name": "Aislamiento chroot",
+      "category": "Seguridad y archivos",
+      "type": "linux-sistema",
+      "description": "Punto confinado que recorre su celda.",
+      "style": "dark / Linux / consola",
+      "backend": "browser",
+      "collection": "animaciones",
+      "preset_file": "animaciones/presets/chroot-isolation.html",
+      "status": "candidate",
+      "duration": 2.5,
+      "batch": "linux-motion-04",
+      "tags": [
+        "linux",
+        "chroot",
+        "jail",
+        "aislamiento",
+        "contenedor",
+        "seguridad",
+        "archivos",
+        "dark",
+        "consola",
+        "punto",
+        "confinado",
+        "recorre",
+        "celda",
+        "linux-sistema",
+        "seguridad y archivos"
+      ],
+      "motion": [
+        "trayectoria",
+        "deslizamiento",
+        "escala"
+      ],
+      "usage": [
+        "tutorial",
+        "sistemas Linux",
+        "documental técnico"
+      ],
+      "editable": {},
+      "css_keyframes": [
+        "jailWander"
+      ],
+      "searchable": true
+    },
+    {
+      "number": 55,
+      "source_number": 23,
+      "id": "gpg-verify",
+      "name": "Firma GPG",
+      "category": "Seguridad y archivos",
+      "type": "linux-sistema",
+      "description": "Sello VERIFIED estampado con rebote.",
+      "style": "dark / Linux / consola",
+      "backend": "browser",
+      "collection": "animaciones",
+      "preset_file": "animaciones/presets/gpg-verify.html",
+      "status": "candidate",
+      "duration": 2.5,
+      "batch": "linux-motion-04",
+      "tags": [
+        "linux",
+        "gpg",
+        "firma",
+        "criptografia",
+        "verified",
+        "seguridad",
+        "archivos",
+        "dark",
+        "consola",
+        "sello",
+        "estampado",
+        "rebote",
+        "linux-sistema",
+        "seguridad y archivos"
+      ],
+      "motion": [
+        "rebote",
+        "rotación",
+        "escala",
+        "opacidad"
+      ],
+      "usage": [
+        "tutorial",
+        "sistemas Linux",
+        "documental técnico"
+      ],
+      "editable": {},
+      "css_keyframes": [
+        "stampSeal"
+      ],
+      "searchable": true
+    },
+    {
+      "number": 56,
+      "source_number": 24,
+      "id": "directory-tree",
+      "name": "Árbol de directorios",
+      "category": "Seguridad y archivos",
+      "type": "linux-sistema",
+      "description": "Ramas de archivos reveladas una tras otra.",
+      "style": "dark / Linux / consola",
+      "backend": "browser",
+      "collection": "animaciones",
+      "preset_file": "animaciones/presets/directory-tree.html",
+      "status": "candidate",
+      "duration": 2.5,
+      "batch": "linux-motion-04",
+      "tags": [
+        "linux",
+        "tree",
+        "archivos",
+        "directorios",
+        "carpetas",
+        "arbol",
+        "seguridad",
+        "dark",
+        "consola",
+        "ramas",
+        "reveladas",
+        "tras",
+        "otra",
+        "linux-sistema",
+        "seguridad y archivos"
+      ],
+      "motion": [
+        "entrada",
+        "deslizamiento",
+        "escala",
+        "opacidad"
+      ],
+      "usage": [
+        "tutorial",
+        "sistemas Linux",
+        "documental técnico"
+      ],
+      "editable": {},
+      "css_keyframes": [
+        "branchReveal"
+      ],
+      "searchable": true
+    },
+    {
+      "number": 57,
+      "source_number": 25,
+      "id": "tux-waving",
+      "name": "Tux saludando",
+      "category": "Distros y hardware",
+      "type": "linux-hardware",
+      "description": "Pingüino Tux mueve una de sus aletas.",
+      "style": "dark / Linux / consola",
+      "backend": "browser",
+      "collection": "animaciones",
+      "preset_file": "animaciones/presets/tux-waving.html",
+      "status": "candidate",
+      "duration": 2.5,
+      "batch": "linux-motion-04",
+      "tags": [
+        "linux",
+        "tux",
+        "pinguino",
+        "mascota",
+        "saludo",
+        "saludando",
+        "distros",
+        "hardware",
+        "dark",
+        "consola",
+        "mueve",
+        "sus",
+        "aletas",
+        "linux-hardware",
+        "distros y hardware"
+      ],
+      "motion": [
+        "rotacion",
+        "rotación",
+        "escala",
+        "ondas"
+      ],
+      "usage": [
+        "tutorial",
+        "sistemas Linux",
+        "documental técnico"
+      ],
+      "editable": {},
+      "css_keyframes": [
+        "waveFlipper"
+      ],
+      "searchable": true
+    },
+    {
+      "number": 58,
+      "source_number": 27,
+      "id": "arch-geometry",
+      "name": "Geometría Arch Linux",
+      "category": "Distros y hardware",
+      "type": "linux-hardware",
+      "description": "Triángulos geométricos de Arch se construyen.",
+      "style": "dark / Linux / consola",
+      "backend": "browser",
+      "collection": "animaciones",
+      "preset_file": "animaciones/presets/arch-geometry.html",
+      "status": "candidate",
+      "duration": 2.5,
+      "batch": "linux-motion-04",
+      "tags": [
+        "linux",
+        "arch",
+        "triangulos",
+        "logo",
+        "distro",
+        "geometria",
+        "distros",
+        "hardware",
+        "dark",
+        "consola",
+        "geometricos",
+        "construyen",
+        "linux-hardware",
+        "distros y hardware"
+      ],
+      "motion": [
+        "escala",
+        "opacidad"
+      ],
+      "usage": [
+        "tutorial",
+        "sistemas Linux",
+        "documental técnico"
+      ],
+      "editable": {},
+      "css_keyframes": [
+        "archConstruct"
+      ],
+      "searchable": true
+    },
+    {
+      "number": 59,
+      "source_number": 28,
+      "id": "ubuntu-friends",
+      "name": "Ubuntu Circle of Friends",
+      "category": "Distros y hardware",
+      "type": "linux-hardware",
+      "description": "Anillo y tres nodos de Ubuntu en rotación.",
+      "style": "dark / Linux / consola",
+      "backend": "browser",
+      "collection": "animaciones",
+      "preset_file": "animaciones/presets/ubuntu-friends.html",
+      "status": "candidate",
+      "duration": 2.5,
+      "batch": "linux-motion-04",
+      "tags": [
+        "linux",
+        "ubuntu",
+        "circulo",
+        "logo",
+        "distro",
+        "circle",
+        "friends",
+        "distros",
+        "hardware",
+        "dark",
+        "consola",
+        "anillo",
+        "tres",
+        "nodos",
+        "rotacion",
+        "linux-hardware",
+        "distros y hardware"
+      ],
+      "motion": [
+        "rotacion",
+        "rotación",
+        "escala"
+      ],
+      "usage": [
+        "tutorial",
+        "sistemas Linux",
+        "documental técnico"
+      ],
+      "editable": {},
+      "css_keyframes": [
+        "ubuSpin"
+      ],
+      "searchable": true
+    },
+    {
+      "number": 60,
+      "source_number": 29,
+      "id": "grub-menu",
+      "name": "Selector GNU GRUB",
+      "category": "Distros y hardware",
+      "type": "linux-hardware",
+      "description": "Selección del cargador de arranque cambia de opción.",
+      "style": "dark / Linux / consola",
+      "backend": "browser",
+      "collection": "animaciones",
+      "preset_file": "animaciones/presets/grub-menu.html",
+      "status": "candidate",
+      "duration": 2.5,
+      "batch": "linux-motion-04",
+      "tags": [
+        "linux",
+        "grub",
+        "arranque",
+        "menu",
+        "bootloader",
+        "selector",
+        "gnu",
+        "distros",
+        "hardware",
+        "dark",
+        "consola",
+        "seleccion",
+        "cargador",
+        "cambia",
+        "opcion",
+        "linux-hardware",
+        "distros y hardware"
+      ],
+      "motion": [
+        "selector",
+        "deslizamiento",
+        "escala",
+        "rebote"
+      ],
+      "usage": [
+        "tutorial",
+        "sistemas Linux",
+        "documental técnico"
+      ],
+      "editable": {},
+      "css_keyframes": [
+        "grubJump"
+      ],
+      "searchable": true
+    },
+    {
+      "number": 61,
+      "source_number": 30,
+      "id": "raspberry-gpio",
+      "name": "Pines Raspberry Pi GPIO",
+      "category": "Distros y hardware",
+      "type": "linux-hardware",
+      "description": "Señales intermitentes en conectores GPIO.",
+      "style": "dark / Linux / consola",
+      "backend": "browser",
+      "collection": "animaciones",
+      "preset_file": "animaciones/presets/raspberry-gpio.html",
+      "status": "candidate",
+      "duration": 2.5,
+      "batch": "linux-motion-04",
+      "tags": [
+        "linux",
+        "raspberry",
+        "pi",
+        "gpio",
+        "hardware",
+        "pines",
+        "led",
+        "distros",
+        "dark",
+        "consola",
+        "senales",
+        "intermitentes",
+        "conectores",
+        "linux-hardware",
+        "distros y hardware"
+      ],
+      "motion": [
+        "parpadeo",
+        "escala",
+        "pulso"
+      ],
+      "usage": [
+        "tutorial",
+        "sistemas Linux",
+        "documental técnico"
+      ],
+      "editable": {},
+      "css_keyframes": [
+        "gpioPulse"
+      ],
+      "searchable": true
     }
   ],
   "deduplicated": [
@@ -1614,5 +3038,12 @@
     "success-checkmark",
     "padlock-closing",
     "audio-equalizer"
+  ],
+  "excluded_linux_modules": [
+    {
+      "number": 26,
+      "label": "Debian Red Swirl",
+      "reason": "Omitido por petición del usuario"
+    }
   ]
 }

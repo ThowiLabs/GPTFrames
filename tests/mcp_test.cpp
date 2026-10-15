@@ -82,10 +82,38 @@ int main(int argc, char** argv) {
         const auto r = service.rpc(request(2, "tools/list"));
         std::set<std::string> names;
         for (const auto& t : (*r)["result"]["tools"]) names.insert(t["name"].get<std::string>());
-        require(names == std::set<std::string>{"search_animations","list_animation_facets","list_animations","describe_animation","list_asset_presets","describe_asset_preset","list_projects", "create_project", "validate_project", "preview_frame",
+        require(names == std::set<std::string>{"resource_status","rescan_resources","search_animations","list_animation_facets","list_animations","describe_animation","list_asset_presets","describe_asset_preset","list_projects", "create_project", "validate_project", "preview_frame",
                 "render_video", "synthesize_voice", "search_images", "download_commons_image",
                 "list_voice_models", "review_layout", "start_render", "render_status", "cancel_render",
                 "read_project", "save_project"}, "Tool mismatch");
+    });
+    test("hot discovery of voice models and unregistered HTML", [&] {
+        auto before=service.run_tool("resource_status",Json::object());
+        require(before["live"]==true,"Monitor should be live");
+        const auto new_neo=config.models/"hot_reload_fixture.neo";
+        write_file(new_neo,"synthetic voice fixture");
+        auto list=service.run_tool("list_voice_models",Json::object());
+        require(std::find(list["models"].begin(),list["models"].end(),"hot_reload_fixture.neo")!=list["models"].end(),
+                "New voice must be visible without restarting Service");
+        fs::remove(new_neo);
+        list=service.run_tool("list_voice_models",Json::object());
+        require(std::find(list["models"].begin(),list["models"].end(),"hot_reload_fixture.neo")==list["models"].end(),
+                "Removed voice must disappear without restarting Service");
+        auto refreshed=service.run_tool("rescan_resources",Json::object());
+        require(refreshed["counts"]["animation_files"]>=61,"Assets scan missing");
+    });
+    test("unregistered HTML discovered without MCP restart", [&] {
+        auto local=temp.path/"dynamic_animation_fixture";
+        fs::create_directories(local/"animaciones"/"presets");
+        write_file(local/"animaciones"/"catalogo.json",Json{{"version",1},{"presets",Json::array()}}.dump());
+        require(animation_library(local)["presets"].empty(),"Initial catalog should be empty");
+        auto added=local/"animaciones"/"presets"/"new-demo.html";
+        write_file(added,"<!doctype html><style>.demo{opacity:.9}</style><div>local</div>");
+        auto fresh=animation_library(local);
+        require(fresh["total"]==1 && fresh["presets"][0]["id"]=="new-demo" &&
+               fresh["presets"][0]["renderable"]==false,"New HTML must be discovered but never trusted");
+        fs::remove(added);
+        require(animation_library(local)["total"]==0,"Deleted preset should disappear live");
     });
     test("catalogue of numbered presets", [&] {
         const auto all=service.run_tool("list_asset_presets",Json::object());
@@ -100,7 +128,7 @@ int main(int argc, char** argv) {
     });
     test("deduplicated animation library", [&] {
         const auto all=service.run_tool("list_animations",Json::object());
-        require(all["total"]==32,"Expected 32 unique animations");
+        require(all["total"]==61,"Expected 61 unique animations");
         require(all["presets"][0]["number"]==1,"Expected numbered animation");
         require(all["presets"][5]["id"]=="biometric-scanner","Six original modules were displaced");
         require(all["presets"][22]["id"]=="shimmer-progress","Last imported animation mismatch");
@@ -117,7 +145,7 @@ int main(int argc, char** argv) {
         const auto types=service.run_tool("list_animations",{{"type","servidor"}});
         require(types["total"]>=2,"Asset type filter failed");
         const auto facets=service.run_tool("list_animation_facets",Json::object());
-        require(facets["total"]==32 && facets["category"].is_array() && facets["tags"].is_array(),"Facet index invalid");
+        require(facets["total"]==61 && facets["category"].is_array() && facets["tags"].is_array(),"Facet index invalid");
         rejects([&]{service.run_tool("search_animations",{{"query"," "}});});
         const auto item=service.run_tool("describe_animation",{{"id","smartphone-vibrate"}});
         require(item["name"]=="Teléfono vibrando","Wrong animation");

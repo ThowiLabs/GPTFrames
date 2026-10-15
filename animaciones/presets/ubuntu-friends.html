@@ -1,0 +1,39 @@
+<!doctype html><html lang="es"><head><meta charset="utf-8"><meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'none'; connect-src 'none'; style-src 'unsafe-inline'; img-src data:; font-src data:"><style>*{box-sizing:border-box}html,body{width:100%;height:100%;overflow:hidden;margin:0}
+body{background:transparent;color:#e2e8f0;font-family:ui-monospace,Consolas,Menlo,monospace}
+.anim-engine{width:100%;height:100%;display:flex;align-items:center;justify-content:center;overflow:hidden}
+.stage{position:relative;width:290px;height:235px;display:flex;align-items:center;justify-content:center}
+.linux-asset{width:290px;height:215px;display:flex;flex-direction:column;justify-content:center;align-items:center;transform-origin:center;transform:scale(1.18)}
+:root {
+      --bg: #06090e;
+      --card-bg: #0d121d;
+      --border: #1a2333;
+      --text: #e2e8f0;
+      --text-dim: #64748b;
+
+      /* Paleta Linux */
+      --c-tux-yellow: #facc15;
+      --c-tux-orange: #f97316;
+      --c-term-green: #22c55e;
+      --c-arch-blue:  #0ea5e9;
+      --c-deb-red:    #e11d48;
+      --c-ubu-orange: #ea580c;
+      --c-cyan:       #06b6d4;
+      --c-purple:     #a855f7;
+
+      --ease-elastic: cubic-bezier(0.34, 1.56, 0.64, 1);
+      --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+            .ubu-ring { width: 65px; height: 65px; position: relative; }
+            .anim-engine .ubu-ring { animation: ubuSpin 5s linear infinite; }
+            .ubu-node { position: absolute; width: 12px; height: 12px; border-radius: 50%; }
+            .un1 { top: 0; left: 26px; background: var(--c-ubu-orange); }
+            .un2 { bottom: 6px; left: 6px; background: var(--c-tux-yellow); }
+            .un3 { bottom: 6px; right: 6px; background: var(--c-deb-red); }
+            @keyframes ubuSpin { to { transform: rotate(360deg); } }
+          </style></head><body><div class="anim-engine"><div class="stage"><div class="linux-asset"><div class="ubu-ring">
+            <div style="position:absolute;inset:8px;border:4px solid #fff;border-radius:50%;opacity:0.8;"></div>
+            <div class="ubu-node un1"></div>
+            <div class="ubu-node un2"></div>
+            <div class="ubu-node un3"></div>
+          </div></div></div></div></body></html>

@@ -5,6 +5,7 @@
 #include "asset_catalog.hpp"
 #include "animation_catalog.hpp"
 #include "animation_search.hpp"
+#include "resource_monitor.hpp"
 #include "tools.hpp"
 #include "../voice/neo_bridge.hpp"
 #include <optional>
@@ -35,6 +36,7 @@ class Service {
     MediaClient media_;
     std::mutex mutex_;
     RenderQueue render_queue_;
+    ResourceMonitor resource_monitor_;
     std::pair<fs::path, fs::path> project(const Json& name) const {
         const auto base = config_.projects / slug(name);
         if (!fs::is_directory(base) || fs::is_symlink(base) || fs::canonical(base).parent_path() != fs::weakly_canonical(config_.projects))
@@ -91,12 +93,15 @@ class Service {
 public:
     explicit Service(Config config, MediaClient media = MediaClient{})
         : config_(std::move(config)), media_(std::move(media)),
-          render_queue_(config_.projects.parent_path(),config_.engine) {}
+          render_queue_(config_.projects.parent_path(),config_.engine),
+          resource_monitor_(config_.root,config_.models) {}
     RenderQueue& render_jobs(){return render_queue_;}
     const Config& config() const { return config_; }
     Json run_tool(const std::string& name, const Json& args) {
         validate_arguments(name, args);
         std::lock_guard<std::mutex> lock(mutex_);
+        if (name == "rescan_resources") return resource_monitor_.snapshot(true);
+        if (name == "resource_status") return resource_monitor_.snapshot(false);
         if (name == "search_animations") return search_animations(config_.root,args);
         if (name == "list_animation_facets") return animation_facets(config_.root);
         if (name == "list_animations") return list_animations_filtered(config_.root,args);
@@ -119,15 +124,9 @@ public:
         if (name == "render_status") return render_queue_.status(args.at("job_id").get<std::string>());
         if (name == "cancel_render") return render_queue_.cancel(args.at("job_id").get<std::string>());
         if (name == "list_voice_models") {
-            std::vector<std::string> models;
-            if(fs::is_directory(config_.models))for(const auto& entry:fs::directory_iterator(config_.models)){
-                if(!entry.is_regular_file()||entry.is_symlink())continue;
-                auto ext=entry.path().extension().string();
-                if(ext==".neo"||ext==".onnx")models.push_back(entry.path().filename().u8string());
-            }
-            std::sort(models.begin(),models.end());
-            if(models.size()>100)models.resize(100);
-            return {{"models",models}};
+            auto models=resource_monitor_.models(true);
+            if(models.size()>100)models.erase(models.begin()+100,models.end());
+            return {{"models",std::move(models)},{"hot_reload",true}};
         }
         if (name == "search_images")
             return {{"results", media_.search(args.at("query").get<std::string>(), args.value("provider", "wikimedia"), args.value("limit", 6))}};

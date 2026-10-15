@@ -1,0 +1,839 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Linux Master Motion Pack: 30 Animaciones Puras (Zero-CDN)</title>
+  <style>
+    /* ==========================================================
+       VARIABLES GLOBALES Y RESET (ZERO-CDN)
+       ========================================================== */
+    :root {
+      --bg: #06090e;
+      --card-bg: #0d121d;
+      --border: #1a2333;
+      --text: #e2e8f0;
+      --text-dim: #64748b;
+
+      /* Paleta Linux */
+      --c-tux-yellow: #facc15;
+      --c-tux-orange: #f97316;
+      --c-term-green: #22c55e;
+      --c-arch-blue:  #0ea5e9;
+      --c-deb-red:    #e11d48;
+      --c-ubu-orange: #ea580c;
+      --c-cyan:       #06b6d4;
+      --c-purple:     #a855f7;
+
+      --ease-elastic: cubic-bezier(0.34, 1.56, 0.64, 1);
+      --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background-color: var(--bg);
+      color: var(--text);
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+      padding: 30px 20px 80px 20px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    /* BARRA DE HERRAMIENTAS STICKY */
+    .master-toolbar {
+      position: sticky;
+      top: 15px;
+      z-index: 1000;
+      background: rgba(13, 18, 29, 0.95);
+      backdrop-filter: blur(12px);
+      border: 1px solid var(--border);
+      padding: 10px 24px;
+      border-radius: 99px;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      margin-bottom: 40px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.7);
+    }
+
+    .btn-replay {
+      background: var(--c-term-green);
+      color: #021a0a;
+      font-weight: 800;
+      border: none;
+      padding: 9px 20px;
+      border-radius: 99px;
+      cursor: pointer;
+      font-size: 12px;
+      font-family: inherit;
+      letter-spacing: 0.5px;
+      transition: transform 0.15s ease, filter 0.15s ease;
+    }
+    .btn-replay:hover { transform: scale(1.04); filter: brightness(1.15); }
+
+    .category-section {
+      width: 100%;
+      max-width: 1240px;
+      margin-bottom: 50px;
+    }
+
+    .section-title {
+      font-size: 13px;
+      color: var(--c-term-green);
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      margin-bottom: 20px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .section-title::after {
+      content: "";
+      flex: 1;
+      height: 1px;
+      background: var(--border);
+    }
+
+    .grid-layout {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 22px;
+    }
+
+    .card {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 22px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 230px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .card-label {
+      position: absolute;
+      top: 12px;
+      left: 14px;
+      font-size: 10px;
+      color: var(--text-dim);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- BARRA DE REPRODUCCIÓN -->
+  <aside class="master-toolbar">
+    <button class="btn-replay" onclick="triggerReplay()">↺ REINICIAR LAS 30 ANIMACIONES</button>
+    <span style="font-size: 11px; color: var(--text-dim);">30 / 30 ANIMACIONES LINUX ACTIVAS</span>
+  </aside>
+
+  <main id="mainContainer" class="anim-engine" style="width: 100%; max-width: 1240px;">
+
+    <!-- ===================================================================
+         CATEGORÍA 1: KERNEL, BOOT & TERMINAL CORE (1 - 6)
+         =================================================================== -->
+    <section class="category-section">
+      <h2 class="section-title">01 // Kernel, Boot & Terminal Core</h2>
+      <div class="grid-layout">
+
+        <!-- 01: Kernel Panic -->
+        <div class="card">
+          <span class="card-label">01 // Kernel Panic Alert</span>
+          <style>
+            .panic-box {
+              width: 90%; background: #000; border: 2px solid var(--c-deb-red);
+              padding: 10px; font-size: 10px; line-height: 1.4; color: #ff8597; border-radius: 6px;
+            }
+            .anim-engine .panic-box { animation: panicFlicker 1.8s infinite; }
+            @keyframes panicFlicker {
+              0%, 100% { border-color: var(--c-deb-red); box-shadow: 0 0 10px rgba(225,29,72,0.4); }
+              50% { border-color: #550a18; box-shadow: none; }
+            }
+          </style>
+          <div class="panic-box">
+            <strong style="color:#fff;background:var(--c-deb-red);padding:1px 4px;">KERNEL PANIC</strong><br>
+            [ 0.004128] Fatal: attempted to kill init!<br>
+            [ 0.004130] Call Trace: do_exit+0x8a2<br>
+            <span style="color:#facc15;">CPU 0: PID 1 comm: systemd tainted</span>
+          </div>
+        </div>
+
+        <!-- 02: systemd Boot Sequence -->
+        <div class="card">
+          <span class="card-label">02 // systemd Boot Units</span>
+          <style>
+            .sysd-list { width: 90%; font-size: 11px; display: flex; flex-direction: column; gap: 5px; }
+            .sysd-row { opacity: 0; transform: translateX(-10px); }
+            .anim-engine .sysd-row:nth-child(1) { animation: rowSlide 0.4s var(--ease-out) 0.1s forwards; }
+            .anim-engine .sysd-row:nth-child(2) { animation: rowSlide 0.4s var(--ease-out) 0.4s forwards; }
+            .anim-engine .sysd-row:nth-child(3) { animation: rowSlide 0.4s var(--ease-out) 0.7s forwards; }
+            .sysd-ok { color: var(--c-term-green); font-weight: bold; }
+            @keyframes rowSlide { to { opacity: 1; transform: translateX(0); } }
+          </style>
+          <div class="sysd-list">
+            <div class="sysd-row">[ <span class="sysd-ok">OK</span> ] Reached target Local FS.</div>
+            <div class="sysd-row">[ <span class="sysd-ok">OK</span> ] Started WireGuard VPN tunnel.</div>
+            <div class="sysd-row">[ <span class="sysd-ok">OK</span> ] Reached target Multi-User System.</div>
+          </div>
+        </div>
+
+        <!-- 03: Bash sudo rm -rf Refusal -->
+        <div class="card">
+          <span class="card-label">03 // Bash Root Warning Shake</span>
+          <style>
+            .rm-prompt {
+              background: #030712; border: 1px solid var(--border); padding: 12px;
+              border-radius: 6px; font-size: 11px; width: 90%;
+            }
+            .anim-engine .rm-alert { animation: shakeDenial 0.5s ease-in-out infinite alternate 1s; }
+            @keyframes shakeDenial {
+              0% { transform: translateX(0); }
+              25% { transform: translateX(-4px); }
+              75% { transform: translateX(4px); }
+              100% { transform: translateX(0); }
+            }
+          </style>
+          <div class="rm-prompt">
+            <span style="color:var(--c-term-green);">root@srv:~#</span> rm -rf /<br>
+            <div class="rm-alert" style="color:var(--c-deb-red);margin-top:6px;">
+              [FAIL] rm: it is dangerous to operate recursively on '/'
+            </div>
+          </div>
+        </div>
+
+        <!-- 04: Neofetch Hardware Info Reveal -->
+        <div class="card">
+          <span class="card-label">04 // Fastfetch/Neofetch Info</span>
+          <style>
+            .fetch-box { display: flex; gap: 14px; align-items: center; width: 90%; font-size: 10px; }
+            .anim-engine .fetch-tux-svg { animation: drawTuxLogo 1.5s var(--ease-out) forwards; }
+            .fetch-lines span { color: var(--c-cyan); }
+            @keyframes drawTuxLogo { from { opacity: 0; transform: scale(0.8); } to { opacity: 1; transform: scale(1); } }
+          </style>
+          <div class="fetch-box">
+            <svg class="fetch-tux-svg" width="50" height="50" viewBox="0 0 100 100">
+              <path d="M50 15 C35 15 28 30 28 50 C28 72 20 85 50 85 C80 85 72 72 72 50 C72 30 65 15 50 15 Z" fill="#fff"/>
+              <circle cx="43" cy="38" r="4" fill="#000"/><circle cx="57" cy="38" r="4" fill="#000"/>
+              <ellipse cx="50" cy="48" rx="7" ry="4" fill="var(--c-tux-orange)"/>
+            </svg>
+            <div class="fetch-lines">
+              <div><span>OS:</span> Debian GNU/Linux 13</div>
+              <div><span>Host:</span> ThinkPad X1 Carbon</div>
+              <div><span>Kernel:</span> 6.12.0-rc3</div>
+              <div><span>Uptime:</span> 42 days, 13 hrs</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 05: Vim :wq Save & Exit Flash -->
+        <div class="card">
+          <span class="card-label">05 // Vim :wq Buffer Save</span>
+          <style>
+            .vim-window { width: 90%; background: #000; border: 1px solid #334155; padding: 10px; font-size: 11px; border-radius: 4px; }
+            .anim-engine .vim-status { animation: vimSave 2.4s infinite; }
+            @keyframes vimSave {
+              0%, 40% { content: "-- INSERT --"; color: var(--c-term-green); }
+              50%, 80% { content: ":wq"; color: #fff; }
+              90%, 100% { content: "\"main.rs\" 42L, 1024B written"; color: var(--c-cyan); }
+            }
+          </style>
+          <div class="vim-window">
+            <div>fn main() { println!("Linux!"); }</div>
+            <div style="color:var(--text-dim);margin:6px 0;">~</div>
+            <div style="border-top:1px solid #1e293b;padding-top:4px;">
+              <span class="vim-status" style="font-weight:bold;">:wq</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- 06: SSH Randomart Matrix Generation -->
+        <div class="card">
+          <span class="card-label">06 // SSH Keygen Randomart</span>
+          <style>
+            .randomart {
+              font-family: monospace; font-size: 9px; line-height: 1.1;
+              background: #020617; border: 1px dashed var(--c-cyan); padding: 8px; border-radius: 4px;
+            }
+            .anim-engine .randomart pre {
+              overflow: hidden; width: 0; white-space: pre;
+              animation: traceArt 2.5s steps(20, end) infinite alternate;
+            }
+            @keyframes traceArt { to { width: 100%; } }
+          </style>
+          <div class="randomart">
+            <pre>
++--[ED25519 256]--+
+|   . =+.o        |
+|  . B +o +       |
+|   * * o= o      |
+|  . = = *o       |
+|     S *o=       |
++----[SHA256]-----+
+            </pre>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ===================================================================
+         CATEGORÍA 2: PROCESOS, MONITORES & MEMORIA (7 - 12)
+         =================================================================== -->
+    <section class="category-section">
+      <h2 class="section-title">02 // Procesos, Memoria & Monitores</h2>
+      <div class="grid-layout">
+
+        <!-- 07: htop Multi-Core CPU Jump -->
+        <div class="card">
+          <span class="card-label">07 // htop Multicore Load</span>
+          <style>
+            .htop-grid { width: 90%; display: flex; flex-direction: column; gap: 4px; font-size: 10px; }
+            .htop-bar-track { height: 8px; background: #1e293b; border-radius: 2px; overflow: hidden; display: flex; }
+            .anim-engine .htop-fill { height: 100%; background: linear-gradient(90deg, var(--c-term-green), var(--c-tux-yellow), var(--c-deb-red)); transform-origin: left; }
+            .anim-engine .c1 { animation: coreJump 1.2s infinite alternate 0.1s; }
+            .anim-engine .c2 { animation: coreJump 0.9s infinite alternate 0.3s; }
+            .anim-engine .c3 { animation: coreJump 1.5s infinite alternate 0.0s; }
+            .anim-engine .c4 { animation: coreJump 0.7s infinite alternate 0.4s; }
+            @keyframes coreJump { 0% { width: 25%; } 50% { width: 92%; } 100% { width: 45%; } }
+          </style>
+          <div class="htop-grid">
+            <div>0 [||||||||||||||  48%]</div>
+            <div class="htop-bar-track"><div class="htop-fill c1"></div></div>
+            <div>1 [|||||||||||||||||| 86%]</div>
+            <div class="htop-bar-track"><div class="htop-fill c2"></div></div>
+            <div>2 [|||||||||       31%]</div>
+            <div class="htop-bar-track"><div class="htop-fill c3"></div></div>
+            <div>3 [||||||||||||||| 64%]</div>
+            <div class="htop-bar-track"><div class="htop-fill c4"></div></div>
+          </div>
+        </div>
+
+        <!-- 08: RAM & Swap Memory Gauge -->
+        <div class="card">
+          <span class="card-label">08 // RAM / Swap Saturation</span>
+          <style>
+            .mem-gauge-wrap { width: 85%; display: flex; flex-direction: column; gap: 8px; font-size: 10px; }
+            .mem-track { width: 100%; height: 12px; background: #1e293b; border-radius: 4px; overflow: hidden; display: flex; }
+            .anim-engine .mem-used { background: var(--c-cyan); height: 100%; animation: memPulse 2s infinite alternate; }
+            .anim-engine .mem-buf { background: var(--c-purple); height: 100%; animation: memPulse 2s infinite alternate 0.5s; }
+            @keyframes memPulse { 0% { width: 40%; } 100% { width: 75%; } }
+          </style>
+          <div class="mem-gauge-wrap">
+            <div>Mem: 24.2G / 64.0G (Used/Buffers)</div>
+            <div class="mem-track">
+              <div class="mem-used" style="width:55%;"></div>
+              <div class="mem-buf" style="width:20%;"></div>
+            </div>
+            <div>Swap: 1.2G / 16.0G</div>
+            <div class="mem-track">
+              <div style="width:12%;background:var(--c-deb-red);"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 09: OOM Killer (Targeting Process) -->
+        <div class="card">
+          <span class="card-label">09 // Out of Memory (OOM) Killer</span>
+          <style>
+            .oom-wrap { position: relative; width: 100px; height: 100px; display: grid; place-items: center; }
+            .anim-engine .oom-crosshair {
+              position: absolute; inset: 10px; border: 2px dashed var(--c-deb-red); border-radius: 50%;
+              animation: crosshairSpin 3s linear infinite;
+            }
+            .anim-engine .oom-badge {
+              font-size: 10px; background: #000; border: 1px solid var(--c-deb-red);
+              padding: 4px 6px; border-radius: 4px; color: var(--c-deb-red);
+              animation: killFlicker 1s steps(2) infinite;
+            }
+            @keyframes crosshairSpin { to { transform: rotate(360deg); } }
+            @keyframes killFlicker { 0% { opacity: 1; } 50% { opacity: 0.3; } }
+          </style>
+          <div class="oom-wrap">
+            <div class="oom-crosshair"></div>
+            <div class="oom-badge">KILL PID:1337</div>
+          </div>
+        </div>
+
+        <!-- 10: Fork Bomb Recursion Branch -->
+        <div class="card">
+          <span class="card-label">10 // Fork Bomb: :(){ :|:& };:</span>
+          <style>
+            .fork-tree-svg { width: 140px; height: 80px; }
+            .anim-engine .fork-node {
+              animation: forkExplode 1.2s var(--ease-elastic) infinite alternate;
+              transform-origin: center;
+            }
+            @keyframes forkExplode { 0% { transform: scale(0.6); opacity: 0.4; } 100% { transform: scale(1.2); opacity: 1; } }
+          </style>
+          <svg class="fork-tree-svg" viewBox="0 0 140 80">
+            <line x1="70" y1="10" x2="35" y2="40" stroke="#475569" stroke-width="2"/>
+            <line x1="70" y1="10" x2="105" y2="40" stroke="#475569" stroke-width="2"/>
+            <line x1="35" y1="40" x2="18" y2="70" stroke="#475569" stroke-width="2"/>
+            <line x1="35" y1="40" x2="52" y2="70" stroke="#475569" stroke-width="2"/>
+            <line x1="105" y1="40" x2="88" y2="70" stroke="#475569" stroke-width="2"/>
+            <line x1="105" y1="40" x2="122" y2="70" stroke="#475569" stroke-width="2"/>
+            <circle class="fork-node" cx="70" cy="10" r="6" fill="var(--c-cyan)"/>
+            <circle class="fork-node" cx="35" cy="40" r="5" fill="var(--c-tux-yellow)"/>
+            <circle class="fork-node" cx="105" cy="40" r="5" fill="var(--c-tux-yellow)"/>
+            <circle class="fork-node" cx="18" cy="70" r="4" fill="var(--c-deb-red)"/>
+            <circle class="fork-node" cx="52" cy="70" r="4" fill="var(--c-deb-red)"/>
+            <circle class="fork-node" cx="88" cy="70" r="4" fill="var(--c-deb-red)"/>
+            <circle class="fork-node" cx="122" cy="70" r="4" fill="var(--c-deb-red)"/>
+          </svg>
+        </div>
+
+        <!-- 11: Load Average Real-Time Curve -->
+        <div class="card">
+          <span class="card-label">11 // loadavg: 0.42, 1.15, 2.80</span>
+          <style>
+            .loadavg-svg { width: 160px; height: 60px; }
+            .anim-engine .load-pulse-path {
+              stroke-dasharray: 200; stroke-dashoffset: 200;
+              animation: drawLoadLine 2s linear infinite;
+            }
+            @keyframes drawLoadLine {
+              0% { stroke-dashoffset: 200; }
+              100% { stroke-dashoffset: 0; }
+            }
+          </style>
+          <svg class="loadavg-svg" viewBox="0 0 160 60">
+            <line x1="0" y1="50" x2="160" y2="50" stroke="#1e293b" stroke-width="2"/>
+            <path class="load-pulse-path" d="M0,45 Q40,48 70,25 T130,12 T160,35" fill="none" stroke="var(--c-term-green)" stroke-width="3"/>
+          </svg>
+        </div>
+
+        <!-- 12: Unix Pipe Flow: ps | grep | awk -->
+        <div class="card">
+          <span class="card-label">12 // Pipeline Data Stream |</span>
+          <style>
+            .pipe-stream { display: flex; align-items: center; gap: 8px; font-size: 11px; }
+            .pipe-token { background: #1e293b; padding: 4px 8px; border-radius: 4px; border: 1px solid var(--border); }
+            .pipe-char { color: var(--c-cyan); font-weight: 900; }
+            .anim-engine .data-dot-flow {
+              width: 6px; height: 6px; background: var(--c-term-green); border-radius: 50%;
+              animation: pipeTravel 1.4s infinite;
+            }
+            @keyframes pipeTravel { 0% { transform: scale(0.4); opacity: 0; } 50% { opacity: 1; transform: scale(1.3); } 100% { transform: scale(0.4); opacity: 0; } }
+          </style>
+          <div class="pipe-stream">
+            <span class="pipe-token">cat log</span>
+            <span class="pipe-char">|</span>
+            <div class="data-dot-flow"></div>
+            <span class="pipe-token">grep ERR</span>
+            <span class="pipe-char">|</span>
+            <span class="pipe-token">wc -l</span>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ===================================================================
+         CATEGORÍA 3: GESTIÓN DE PAQUETES, REDES & DISCO (13 - 18)
+         =================================================================== -->
+    <section class="category-section">
+      <h2 class="section-title">03 // Paquetes, Redes & Almacenamiento</h2>
+      <div class="grid-layout">
+
+        <!-- 13: Pacman eating packages (pacman -Syu) -->
+        <div class="card">
+          <span class="card-label">13 // pacman -Syu Progress</span>
+          <style>
+            .pacman-track { width: 140px; height: 30px; display: flex; align-items: center; position: relative; }
+            .pac-mouth {
+              width: 24px; height: 24px; border-radius: 50%; background: var(--c-tux-yellow);
+              clip-path: polygon(100% 0%, 50% 50%, 100% 100%, 0% 100%, 0% 0%);
+            }
+            .anim-engine .pac-mouth { animation: chomp 0.4s infinite alternate; }
+            .anim-engine .pac-pellets {
+              display: flex; gap: 14px; margin-left: 10px;
+              animation: pelletsMove 1.2s linear infinite;
+            }
+            .pellet { width: 6px; height: 6px; border-radius: 50%; background: #94a3b8; }
+            @keyframes chomp {
+              0% { clip-path: polygon(100% 0%, 50% 50%, 100% 100%, 0% 100%, 0% 0%); }
+              100% { clip-path: polygon(100% 35%, 50% 50%, 100% 65%, 0% 100%, 0% 0%); }
+            }
+            @keyframes pelletsMove { from { transform: translateX(0); } to { transform: translateX(-20px); } }
+          </style>
+          <div class="pacman-track">
+            <div class="pac-mouth"></div>
+            <div class="pac-pellets">
+              <div class="pellet"></div><div class="pellet"></div>
+              <div class="pellet"></div><div class="pellet"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 14: RAID Array Parity Sync -->
+        <div class="card">
+          <span class="card-label">14 // RAID 5 Resync Activity</span>
+          <style>
+            .raid-stack { display: flex; gap: 8px; }
+            .raid-disk {
+              width: 32px; height: 50px; background: #0f172a; border: 2px solid #334155;
+              border-radius: 4px; display: flex; flex-direction: column; align-items: center; justify-content: space-around;
+            }
+            .anim-engine .raid-led { width: 5px; height: 5px; border-radius: 50%; animation: raidBlink 0.3s steps(2) infinite; }
+            @keyframes raidBlink { 0% { background: #334155; } 100% { background: var(--c-term-green); box-shadow: 0 0 6px var(--c-term-green); } }
+          </style>
+          <div class="raid-stack">
+            <div class="raid-disk"><span style="font-size:7px;">sda</span><div class="raid-led"></div></div>
+            <div class="raid-disk"><span style="font-size:7px;">sdb</span><div class="raid-led" style="animation-delay:0.1s;"></div></div>
+            <div class="raid-disk"><span style="font-size:7px;">sdc</span><div class="raid-led" style="animation-delay:0.2s;"></div></div>
+            <div class="raid-disk"><span style="font-size:7px;">sdd</span><div class="raid-led" style="animation-delay:0.05s;"></div></div>
+          </div>
+        </div>
+
+        <!-- 15: ICMP Ping Echo Bounce -->
+        <div class="card">
+          <span class="card-label">15 // ICMP Ping: 64B time=4.2ms</span>
+          <style>
+            .ping-run { position: relative; width: 140px; height: 20px; display: flex; align-items: center; justify-content: space-between; }
+            .anim-engine .packet-pulse {
+              position: absolute; width: 10px; height: 10px; border-radius: 50%; background: var(--c-cyan);
+              animation: pingTravel 1.6s ease-in-out infinite;
+            }
+            @keyframes pingTravel {
+              0% { left: 0%; background: var(--c-cyan); }
+              50% { left: 90%; background: var(--c-tux-yellow); }
+              100% { left: 0%; background: var(--c-term-green); }
+            }
+          </style>
+          <div class="ping-run">
+            <span style="font-size:10px;">HOST_A</span>
+            <div class="packet-pulse"></div>
+            <span style="font-size:10px;">HOST_B</span>
+          </div>
+        </div>
+
+        <!-- 16: Cron Job Gear Trigger -->
+        <div class="card">
+          <span class="card-label">16 // cron.hourly Trigger</span>
+          <style>
+            .cron-gear-svg { width: 55px; height: 55px; transform-origin: center; }
+            .anim-engine .cron-gear-svg { animation: spinGear 4s linear infinite; }
+            @keyframes spinGear { to { transform: rotate(360deg); } }
+          </style>
+          <svg class="cron-gear-svg" viewBox="0 0 100 100">
+            <circle cx="50" cy="50" r="30" fill="none" stroke="var(--c-cyan)" stroke-width="8" stroke-dasharray="12, 6"/>
+            <circle cx="50" cy="50" r="14" fill="#1e293b"/>
+          </svg>
+        </div>
+
+        <!-- 17: iptables / ufw Firewall Drop -->
+        <div class="card">
+          <span class="card-label">17 // iptables DROP Packet</span>
+          <style>
+            .fw-zone { display: flex; align-items: center; gap: 14px; position: relative; width: 150px; }
+            .fw-wall { width: 6px; height: 60px; background: var(--c-deb-red); box-shadow: 0 0 8px var(--c-deb-red); border-radius: 3px; }
+            .anim-engine .bad-packet {
+              width: 10px; height: 10px; background: #fff; border-radius: 50%;
+              animation: packetDrop 1.6s ease-in infinite;
+            }
+            @keyframes packetDrop {
+              0% { transform: translateX(0); opacity: 1; }
+              55% { transform: translateX(50px); opacity: 1; background: var(--c-tux-yellow); }
+              60% { transform: translateX(55px) scale(1.6); opacity: 1; background: var(--c-deb-red); }
+              70%, 100% { transform: translateX(55px) scale(0); opacity: 0; }
+            }
+          </style>
+          <div class="fw-zone">
+            <div class="bad-packet"></div>
+            <div class="fw-wall" style="margin-left:50px;"></div>
+            <span style="font-size:9px;color:var(--c-deb-red);">DROP</span>
+          </div>
+        </div>
+
+        <!-- 18: Symlink Arrow Connection -->
+        <div class="card">
+          <span class="card-label">18 // ln -s target alias</span>
+          <style>
+            .sym-box { display: flex; align-items: center; gap: 8px; font-size: 11px; }
+            .anim-engine .sym-arrow {
+              color: var(--c-cyan);
+              animation: linkBounce 1.2s var(--ease-elastic) infinite alternate;
+            }
+            @keyframes linkBounce { from { transform: translateX(-4px); } to { transform: translateX(4px); } }
+          </style>
+          <div class="sym-box">
+            <span style="color:#94a3b8;">/usr/bin/python</span>
+            <span class="sym-arrow">-&gt;</span>
+            <span style="color:var(--c-term-green);font-weight:bold;">python3.12</span>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ===================================================================
+         CATEGORÍA 4: PERMISOS, SEGURIDAD & FILE SYSTEM (19 - 24)
+         =================================================================== -->
+    <section class="category-section">
+      <h2 class="section-title">04 // Permisos, Seguridad & File System</h2>
+      <div class="grid-layout">
+
+        <!-- 19: chmod 777 to 700 Lock Snap -->
+        <div class="card">
+          <span class="card-label">19 // chmod 700 id_rsa</span>
+          <style>
+            .perm-display { font-size: 13px; font-weight: bold; }
+            .anim-engine .perm-bits { animation: permToggle 2.4s infinite; }
+            @keyframes permToggle {
+              0%, 45% { color: var(--c-deb-red); content: "-rwxrwxrwx (777)"; }
+              55%, 100% { color: var(--c-term-green); content: "-rwx------ (700)"; }
+            }
+          </style>
+          <div class="perm-display">
+            <span class="perm-bits">-rwx------ (700)</span>
+          </div>
+        </div>
+
+        <!-- 20: sudo Privilege Escalation -->
+        <div class="card">
+          <span class="card-label">20 // sudo Root Elevation</span>
+          <style>
+            .sudo-token-box { width: 50px; height: 50px; position: relative; display: grid; place-items: center; }
+            .anim-engine .sudo-shield-svg {
+              animation: sudoElevate 2.4s var(--ease-elastic) infinite alternate;
+            }
+            @keyframes sudoElevate {
+              0% { transform: scale(0.8); fill: #475569; filter: none; }
+              100% { transform: scale(1.15); fill: var(--c-tux-yellow); filter: drop-shadow(0 0 10px var(--c-tux-yellow)); }
+            }
+          </style>
+          <div class="sudo-token-box">
+            <svg class="sudo-shield-svg" width="44" height="44" viewBox="0 0 24 24">
+              <path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm0 6c1.4 0 2.5 1.1 2.5 2.5 0 .8-.4 1.5-1 1.9V14h-3v-2.6c-.6-.4-1-1.1-1-1.9 0-1.4 1.1-2.5 2.5-2.5z"/>
+            </svg>
+          </div>
+        </div>
+
+        <!-- 21: SELinux Enforcing Radar -->
+        <div class="card">
+          <span class="card-label">21 // SELinux: Enforcing</span>
+          <style>
+            .selinux-radar { width: 70px; height: 70px; border: 2px solid #334155; border-radius: 50%; position: relative; overflow: hidden; }
+            .anim-engine .radar-sweep {
+              position: absolute; inset: 0;
+              background: conic-gradient(from 0deg, rgba(34,197,94,0.4) 0deg, transparent 60deg, transparent 360deg);
+              animation: sweepSE 2s linear infinite;
+            }
+            @keyframes sweepSE { to { transform: rotate(360deg); } }
+          </style>
+          <div class="selinux-radar">
+            <div class="radar-sweep"></div>
+          </div>
+        </div>
+
+        <!-- 22: chroot Jail Isolation Barrier -->
+        <div class="card">
+          <span class="card-label">22 // chroot /jail/sys</span>
+          <style>
+            .chroot-box {
+              width: 90px; height: 90px; border: 2px dashed var(--c-cyan);
+              display: grid; place-items: center; border-radius: 8px; position: relative;
+            }
+            .anim-engine .isolated-dot {
+              width: 14px; height: 14px; background: var(--c-tux-yellow); border-radius: 50%;
+              animation: jailWander 2s infinite ease-in-out;
+            }
+            @keyframes jailWander {
+              0%, 100% { transform: translate(-20px, -20px); }
+              50% { transform: translate(20px, 20px); }
+            }
+          </style>
+          <div class="chroot-box">
+            <div class="isolated-dot"></div>
+          </div>
+        </div>
+
+        <!-- 23: GPG Cryptographic Signature -->
+        <div class="card">
+          <span class="card-label">23 // gpg --verify Good Signature</span>
+          <style>
+            .gpg-seal {
+              width: 55px; height: 55px; border: 3px double var(--c-term-green);
+              border-radius: 50%; display: grid; place-items: center; font-size: 8px;
+            }
+            .anim-engine .gpg-seal { animation: stampSeal 1.8s var(--ease-elastic) infinite alternate; }
+            @keyframes stampSeal { 0% { transform: scale(0.6) rotate(-20deg); opacity: 0.3; } 100% { transform: scale(1) rotate(0deg); opacity: 1; } }
+          </style>
+          <div class="gpg-seal">
+            <span style="color:var(--c-term-green);font-weight:bold;">VERIFIED</span>
+          </div>
+        </div>
+
+        <!-- 24: Directory Tree / File Structure -->
+        <div class="card">
+          <span class="card-label">24 // tree /etc/systemd</span>
+          <style>
+            .tree-view { font-size: 10px; line-height: 1.4; color: #94a3b8; }
+            .anim-engine .branch-pop { opacity: 0; animation: branchReveal 0.4s forwards; }
+            .anim-engine .b1 { animation-delay: 0.1s; }
+            .anim-engine .b2 { animation-delay: 0.3s; }
+            .anim-engine .b3 { animation-delay: 0.5s; }
+            @keyframes branchReveal { to { opacity: 1; transform: translateX(0); } }
+          </style>
+          <div class="tree-view">
+            <div>/etc</div>
+            <div class="branch-pop b1">├── network.conf</div>
+            <div class="branch-pop b2">└── systemd/</div>
+            <div class="branch-pop b3">&nbsp;&nbsp;&nbsp;&nbsp;└── system.conf</div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ===================================================================
+         CATEGORÍA 5: DISTROS, MASCOTAS & HARDWARE (25 - 30)
+         =================================================================== -->
+    <section class="category-section">
+      <h2 class="section-title">05 // Distros, Mascotas & Hardware</h2>
+      <div class="grid-layout">
+
+        <!-- 25: Tux Waving Flipper -->
+        <div class="card">
+          <span class="card-label">25 // Tux Mascot Wave</span>
+          <style>
+            .tux-full-svg { width: 75px; height: 75px; }
+            .anim-engine .tux-flipper {
+              transform-origin: 25px 45px;
+              animation: waveFlipper 0.7s ease-in-out infinite alternate;
+            }
+            @keyframes waveFlipper { from { transform: rotate(0deg); } to { transform: rotate(28deg); } }
+          </style>
+          <svg class="tux-full-svg" viewBox="0 0 100 100">
+            <!-- Cuerpo Tux -->
+            <path d="M50 15 C35 15 28 30 28 50 C28 72 20 85 50 85 C80 85 72 72 72 50 C72 30 65 15 50 15 Z" fill="#fff"/>
+            <path d="M50 10 C30 10 20 30 20 55 C20 85 10 90 50 90 C90 90 80 85 80 55 C80 30 70 10 50 10 Z" fill="#0f172a" style="z-index:-1;"/>
+            <!-- Ojos y pico -->
+            <circle cx="43" cy="38" r="4" fill="#000"/><circle cx="57" cy="38" r="4" fill="#000"/>
+            <polygon points="50,42 40,50 60,50" fill="var(--c-tux-orange)"/>
+            <!-- Aleta móvil -->
+            <path class="tux-flipper" d="M22 45 Q5 60 22 75 Z" fill="#0f172a"/>
+          </svg>
+        </div>
+
+        <!-- 26: Debian Spiral Hypnotic Vortex -->
+        <div class="card">
+          <span class="card-label">26 // Debian Red Swirl</span>
+          <style>
+            .deb-spiral-svg { width: 65px; height: 65px; transform-origin: center; }
+            .anim-engine .deb-spiral-svg { animation: debVortex 4s linear infinite; }
+            @keyframes debVortex { to { transform: rotate(360deg); } }
+          </style>
+          <svg class="deb-spiral-svg" viewBox="0 0 100 100">
+            <path d="M50 50 Q60 20 80 40 T50 90 T10 50 T50 10" fill="none" stroke="var(--c-deb-red)" stroke-width="7" stroke-linecap="round"/>
+          </svg>
+        </div>
+
+        <!-- 27: Arch Linux Triangles Assembling -->
+        <div class="card">
+          <span class="card-label">27 // Arch Linux Geometry</span>
+          <style>
+            .arch-svg { width: 70px; height: 70px; }
+            .anim-engine .arch-base {
+              animation: archConstruct 2s var(--ease-elastic) infinite alternate;
+              transform-origin: center bottom;
+            }
+            @keyframes archConstruct { 0% { transform: scale(0.7); opacity: 0.3; } 100% { transform: scale(1.05); opacity: 1; } }
+          </style>
+          <svg class="arch-svg" viewBox="0 0 100 100">
+            <polygon class="arch-base" points="50,15 15,85 85,85" fill="none" stroke="var(--c-arch-blue)" stroke-width="6" stroke-linejoin="round"/>
+            <polygon points="50,45 35,80 65,80" fill="var(--c-arch-blue)"/>
+          </svg>
+        </div>
+
+        <!-- 28: Ubuntu Circle of Friends Rotation -->
+        <div class="card">
+          <span class="card-label">28 // Ubuntu Circle of Friends</span>
+          <style>
+            .ubu-ring { width: 65px; height: 65px; position: relative; }
+            .anim-engine .ubu-ring { animation: ubuSpin 5s linear infinite; }
+            .ubu-node { position: absolute; width: 12px; height: 12px; border-radius: 50%; }
+            .un1 { top: 0; left: 26px; background: var(--c-ubu-orange); }
+            .un2 { bottom: 6px; left: 6px; background: var(--c-tux-yellow); }
+            .un3 { bottom: 6px; right: 6px; background: var(--c-deb-red); }
+            @keyframes ubuSpin { to { transform: rotate(360deg); } }
+          </style>
+          <div class="ubu-ring">
+            <div style="position:absolute;inset:8px;border:4px solid #fff;border-radius:50%;opacity:0.8;"></div>
+            <div class="ubu-node un1"></div>
+            <div class="ubu-node un2"></div>
+            <div class="ubu-node un3"></div>
+          </div>
+        </div>
+
+        <!-- 29: GRUB Bootloader Selection Jump -->
+        <div class="card">
+          <span class="card-label">29 // GNU GRUB Menu Selector</span>
+          <style>
+            .grub-menu { width: 90%; background: #000; border: 1px solid #334155; padding: 10px; font-size: 10px; }
+            .anim-engine .grub-select {
+              animation: grubJump 3s steps(3) infinite;
+            }
+            @keyframes grubJump {
+              0% { transform: translateY(0); }
+              33% { transform: translateY(16px); }
+              66% { transform: translateY(32px); }
+            }
+          </style>
+          <div class="grub-menu">
+            <div style="color:var(--text-dim);margin-bottom:6px;">GNU GRUB version 2.12</div>
+            <div style="position:relative;">
+              <div class="grub-select" style="position:absolute;left:-4px;width:105%;height:14px;background:var(--c-cyan);opacity:0.25;border-radius:2px;"></div>
+              <div>* Ubuntu Linux (generic-6.11)</div>
+              <div>&nbsp;&nbsp;Advanced options for Ubuntu</div>
+              <div>&nbsp;&nbsp;UEFI Firmware Settings</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 30: Raspberry Pi GPIO Pin Signal Pulse -->
+        <div class="card">
+          <span class="card-label">30 // Raspberry Pi GPIO Header</span>
+          <style>
+            .rpi-header { display: grid; grid-template-columns: repeat(6, 1fr); gap: 6px; padding: 10px; background: #064e3b; border-radius: 6px; }
+            .gpio-pin { width: 8px; height: 8px; border-radius: 50%; background: #0f172a; border: 1px solid #facc15; }
+            .anim-engine .pin-active { animation: gpioPulse 0.6s infinite alternate; }
+            @keyframes gpioPulse {
+              0% { background: #0f172a; box-shadow: none; }
+              100% { background: var(--c-term-green); box-shadow: 0 0 8px var(--c-term-green); }
+            }
+          </style>
+          <div class="rpi-header">
+            <div class="gpio-pin pin-active"></div>
+            <div class="gpio-pin"></div>
+            <div class="gpio-pin pin-active" style="animation-delay:0.2s;"></div>
+            <div class="gpio-pin"></div>
+            <div class="gpio-pin pin-active" style="animation-delay:0.4s;"></div>
+            <div class="gpio-pin"></div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+  </main>
+
+  <!-- CONTROLADOR JS NATIVO: REINICIO Y REFLOW FORZADO -->
+  <script>
+    function triggerReplay() {
+      const container = document.getElementById('mainContainer');
+      container.classList.remove('anim-engine');
+      void container.offsetWidth; // Dispara el reflow sincrónico de CSS
+      container.classList.add('anim-engine');
+    }
+  </script>
+</body>
+</html>

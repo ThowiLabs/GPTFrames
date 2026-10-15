@@ -5,6 +5,24 @@ inline const Json& tool_definitions() {
     static const Json tools = [] {
         auto result = Json::parse(R"JSON([
  {
+  "name": "rescan_resources",
+  "description": "Immediately refresh resource discovery and return current resource inventory without restarting MCP.",
+  "inputSchema": {
+   "type": "object",
+   "properties": {},
+   "additionalProperties": false
+  }
+ },
+ {
+  "name": "resource_status",
+  "description": "Show current background filesystem scan for installed voices, animation files, images, audio, video and Lottie resources.",
+  "inputSchema": {
+   "type": "object",
+   "properties": {},
+   "additionalProperties": false
+  }
+ },
+ {
   "name": "search_animations",
   "description": "Search indexed animations by meaning, text, category, type and CSS-derived motion tags. Returns ranked safe preset IDs, editable fields and descriptions. No arbitrary HTML execution.",
   "inputSchema": {
@@ -54,7 +72,7 @@ inline const Json& tool_definitions() {
  },
  {
   "name": "list_animations",
-  "description": "List numbered curated animations with optional category, visual type, tag, motion style, and result limit.",
+  "description": "Live discover new HTML animations. Curated presets are renderable; newly found unregistered HTML is marked detected-unverified and never executed. Filter by category/type/tags.",
   "inputSchema": {
    "type": "object",
    "properties": {
@@ -310,7 +328,7 @@ inline const Json& tool_definitions() {
  },
  {
   "name": "list_voice_models",
-  "description": "List installed local .neo and .onnx voices by filename.",
+  "description": "List installed local .neo and .onnx voices with live discovery on every request, no MCP restart.",
   "inputSchema": {
    "type": "object",
    "properties": {},

@@ -1,0 +1,49 @@
+<!doctype html><html lang="es"><head><meta charset="utf-8"><meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'none'; connect-src 'none'; style-src 'unsafe-inline'; img-src data:; font-src data:"><style>*{box-sizing:border-box}html,body{width:100%;height:100%;overflow:hidden;margin:0}
+body{background:transparent;color:#e2e8f0;font-family:ui-monospace,Consolas,Menlo,monospace}
+.anim-engine{width:100%;height:100%;display:flex;align-items:center;justify-content:center;overflow:hidden}
+.stage{position:relative;width:290px;height:235px;display:flex;align-items:center;justify-content:center}
+.linux-asset{width:290px;height:215px;display:flex;flex-direction:column;justify-content:center;align-items:center;transform-origin:center;transform:scale(1.18)}
+:root {
+      --bg: #06090e;
+      --card-bg: #0d121d;
+      --border: #1a2333;
+      --text: #e2e8f0;
+      --text-dim: #64748b;
+
+      /* Paleta Linux */
+      --c-tux-yellow: #facc15;
+      --c-tux-orange: #f97316;
+      --c-term-green: #22c55e;
+      --c-arch-blue:  #0ea5e9;
+      --c-deb-red:    #e11d48;
+      --c-ubu-orange: #ea580c;
+      --c-cyan:       #06b6d4;
+      --c-purple:     #a855f7;
+
+      --ease-elastic: cubic-bezier(0.34, 1.56, 0.64, 1);
+      --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+            .vim-window { width: 90%; background: #000; border: 1px solid #334155; padding: 10px; font-size: 11px; border-radius: 4px; }
+            .anim-engine .vim-status { animation: vimSave 2.4s infinite; }
+            @keyframes vimSave {
+              0%, 40% { content: "-- INSERT --"; color: var(--c-term-green); }
+              50%, 80% { content: ":wq"; color: #fff; }
+              90%, 100% { content: "\"main.rs\" 42L, 1024B written"; color: var(--c-cyan); }
+            }
+
+        .vim-status{display:none}
+        .vim-state{display:block;font-size:10px;font-weight:800}
+        .vim-insert{color:#22c55e;animation:vimInsert 2.4s steps(1) infinite}
+        .vim-save{color:#fff;animation:vimCommit 2.4s steps(1) infinite}
+        .vim-done{color:#06b6d4;animation:vimDone 2.4s steps(1) infinite}
+        @keyframes vimInsert{0%,40%{display:block;opacity:1}41%,100%{display:none;opacity:0}}
+        @keyframes vimCommit{0%,45%{display:none;opacity:0}50%,79%{display:block;opacity:1}80%,100%{display:none;opacity:0}}
+        @keyframes vimDone{0%,85%{display:none;opacity:0}90%,100%{display:block;opacity:1}}
+        </style></head><body><div class="anim-engine"><div class="stage"><div class="linux-asset"><div class="vim-window">
+            <div>fn main() { println!("Linux!"); }</div>
+            <div style="color:var(--text-dim);margin:6px 0;">~</div>
+            <div style="border-top:1px solid #1e293b;padding-top:4px;">
+              <span class="vim-state vim-insert">-- INSERT --</span><span class="vim-state vim-save">:wq</span><span class="vim-state vim-done">"main.rs" written</span>
+            </div>
+          </div></div></div></div></body></html>

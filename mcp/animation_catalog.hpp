@@ -34,6 +34,35 @@ inline Json animation_library(const fs::path& root){
            fs::file_size(path)>1024*1024)
             throw std::runtime_error("Archivo de animación ausente o no verificado");
     }
+    // Discover new local assets on every read. Unknown HTML is indexed but not
+    // executable: it requires a reviewed catalog registration before rendering.
+    std::error_code ec;
+    const auto presets=root/"animaciones"/"presets";
+    if(fs::is_directory(presets,ec) && !fs::is_symlink(presets,ec)){
+        std::vector<std::string> discovered;
+        for(fs::directory_iterator it(presets,fs::directory_options::skip_permission_denied,ec),end;
+            !ec && it!=end && discovered.size()<128;it.increment(ec)){
+            const auto& entry=*it;
+            if(entry.is_symlink(ec)||!entry.is_regular_file(ec)||
+               entry.path().extension()!=".html"||entry.file_size(ec)>1024*1024)continue;
+            auto id=entry.path().stem().u8string();
+            if(id.empty()||id.size()>64||
+               !std::all_of(id.begin(),id.end(),[](unsigned char c){return ascii_alnum(c)||c=='-';})||
+               ids.count(id))continue;
+            discovered.push_back(id);
+        }
+        std::sort(discovered.begin(),discovered.end());
+        for(const auto& id:discovered){
+            ids.insert(id);
+            doc["presets"].push_back({{"number",doc["presets"].size()+1},
+                {"id",id},{"name",id},{"category","Sin clasificar"},{"type","animación"},
+                {"description","HTML detectado; requiere registro y revisión antes de renderizar."},
+                {"style","pendiente"},{"preset_file","animaciones/presets/"+id+".html"},
+                {"status","detected-unverified"},{"renderable",false},
+                {"tags",Json::array({"nuevo","sin revisar"})},{"motion",Json::array()}});
+        }
+    }
+    doc["total"]=doc["presets"].size();
     return doc;
 }
 inline Json list_animations(const fs::path& root,const std::string& category){
