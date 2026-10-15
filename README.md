@@ -62,6 +62,8 @@ Image sources: Wikimedia Commons metadata-driven downloads with attribution side
 Ejemplo educativo Go vs. Rust vs. C++: 13 capítulos, 1920×1080 a 24 fps, fotos/logotipos atribuidos de Commons, tabla de comparación y narraciones reales de Capybara compilada a archivo NEO mediante Neo Compiler y sintetizada con Neo Lite. Se exporta mediante la pipeline HTML/Chromium/FFmpeg 16:9 que extiende el compositor vertical original. Ver [docs/CAPYBARA_1080P_VIDEO.md](docs/CAPYBARA_1080P_VIDEO.md) para reproducción y metodología. El modelo y los archivos generados se guardan localmente, fuera de Git.
 
 ## Túnel Gradio nativo Go con OAuth para ChatGPT
+Puedes definir tu propio PIN OAuth copiando .env.example a .env en la raíz del proyecto, cambiando GPTFRAMES_OAUTH_PIN=... y ejecutando chmod 600 .env antes de arrancar el gateway. Este PIN **tiene prioridad** sobre el generado en .gptframes-private/oauth-pin.txt; la configuración también acepta la variable de entorno del proceso (prioridad máxima). El gateway no vuelve a leer .env hasta reiniciar. Ver docs/GO_GRADIO_MCP.md para detalles y advertencias sobre sesiones existentes.
+
 
 Se adaptaron componentes del propio [kagssh-go](https://github.com/ThowiLabs/kagssh-go) al módulo Go en `tunnel/`, que usa Gradio FRP nativo TLS/yamux y autorización OAuth con PIN/PKCE antes de exponer el MCP:
 

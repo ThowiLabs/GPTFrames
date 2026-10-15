@@ -216,9 +216,9 @@ func main() {
 	if dir == "" {
 		dir = filepath.Join(root, ".gptframes-private")
 	}
-	pin, e := storedPIN(dir)
+	pin, pinSource, e := configuredPIN(root, dir)
 	if e != nil {
-		log.Fatal(e)
+		log.Fatal("configuración del PIN OAuth: ", e)
 	}
 	ctx, stop := signal.NotifyContext(context.Background(), os.Interrupt, syscall.SIGTERM)
 	defer stop()
@@ -276,8 +276,13 @@ func main() {
 	})
 	b.set(mux)
 	fmt.Println("MCP URL:", public+"/mcp")
-	fmt.Println("PIN stored privately at:", filepath.Join(dir, "oauth-pin.txt"))
-	fmt.Println("To connect to ChatGPT, add an MCP app and authorize it with OAuth + your PIN.")
+	fmt.Println("Origen del PIN OAuth:", pinSource)
+	if pinSource == "archivo privado oauth-pin.txt (generado automáticamente)" {
+		fmt.Println("Archivo del PIN autogenerado:", filepath.Join(dir, "oauth-pin.txt"))
+	} else {
+		fmt.Println("El PIN configurado tiene prioridad sobre oauth-pin.txt y nunca se muestra.")
+	}
+	fmt.Println("Para conectar ChatGPT registra la app MCP y autoriza OAuth con tu PIN.")
 	if tunnel == nil {
 		<-ctx.Done()
 	} else {

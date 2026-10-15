@@ -15,12 +15,38 @@ Desde GPTFrames:
 
 Go necesita dependencias públicas hashicorp/yamux y fatedier/golib. El motor de render C++ y la aplicación MCP Python conservan sus dependencias originales.
 
+## Elegir tu propio PIN mediante .env
+
+El gateway Go ahora admite **GPTFRAMES_OAUTH_PIN** en el archivo .env de la raíz del proyecto. No requiere bibliotecas nuevas.
+
+    cd /workspace/GPTFrames
+    cp .env.example .env
+    chmod 600 .env
+    nano .env
+
+En el archivo privado coloca, por ejemplo:
+
+    GPTFRAMES_OAUTH_PIN=TuPinPropioLargoYUnico2026
+
+Después inicia o reinicia el gateway de forma controlada:
+
+    ./build/gptframes-tunnel-go --port 18885 --backend-port 18886 --project-dir "$PWD" --data-dir "$PWD/.gptframes-private"
+
+**Prioridad exacta** (de mayor a menor):
+1. Variable de entorno del proceso GPTFRAMES_OAUTH_PIN (por ejemplo, desde un gestor de secretos).
+2. Clave GPTFRAMES_OAUTH_PIN dentro de PROJECT_DIR/.env, usando --project-dir para definir el directorio.
+3. PIN autogenerado persistente en .gptframes-private/oauth-pin.txt, solo si no se configuró el anterior.
+
+El PIN personalizado sustituye **para nuevas autorizaciones** al PIN autogenerado anterior, aunque exista oauth-pin.txt. No se escribe ni se copia a ese archivo, y jamás aparece en los registros ni en la URL. Los PIN definidos manualmente admiten entre 6 y 128 caracteres, sin saltos de línea ni espacios en extremos. Se permiten comillas simples/dobles y comentarios en .env. El .env debe ser un archivo regular, no symlink, con permisos privados (600) en Linux/macOS; en Windows protege el archivo mediante ACL del sistema; si está mal protegido o el valor es inválido, el inicio falla de forma segura.
+
+**Importante:** cambiar el PIN afecta **nuevas solicitudes OAuth** cuando reinicies el gateway. Los tokens OAuth ya emitidos pueden permanecer vigentes; cambiar el PIN **no es lo mismo que revocar una sesión autorizada**. Para revocación, gestionar el estado OAuth/tokens por separado. El gateway en ejecución no recarga .env dinámicamente; planificar el reinicio porque el túnel Gradio puede cambiar de URL y requerir volver a conectar ChatGPT. No subas .env al repositorio (.gitignore lo excluye). La plantilla .env.example no contiene credenciales reales.
+
 ## Uso
 El ejecutable lanza el servidor MCP privado en Python y luego obtiene un dominio HTTPS temporal de Gradio. Solo abre el servicio OAuth cuando una prueba real por la URL pública confirma que el túnel apunta al proceso correcto.
 
     ./build/gptframes-tunnel-go --port 18885 --backend-port 18886 --project-dir "$PWD" --data-dir "$PWD/.gptframes-private"
 
-Muestra la dirección pública del tipo https://<random>.gradio.live/mcp. El PIN es generado una sola vez y almacenado en .gptframes-private/oauth-pin.txt, modo 0600, dentro del directorio 0700. Nunca se coloca el PIN en la URL ni en el código fuente. El cliente que desee acceder a las herramientas MCP debe pasar la autorización OAuth mediante navegador con ese PIN. El contenido del archivo es una credencial: se debe leer de forma privada y **no pegarse en mensajes, logs o repositorios**.
+Muestra la dirección pública del tipo https://<random>.gradio.live/mcp. **Si no has definido GPTFRAMES_OAUTH_PIN** por variable de entorno ni por .env, el PIN se genera y conserva en .gptframes-private/oauth-pin.txt (modo 0600, dentro del directorio 0700). Nunca se coloca el PIN en la URL ni en el código fuente. El cliente que desee acceder a las herramientas MCP debe pasar la autorización OAuth mediante navegador con ese PIN. El contenido del archivo es una credencial: se debe leer de forma privada y **no pegarse en mensajes, logs o repositorios**.
 
 La URL es temporal; si Gradio cambia el subdominio, el recurso OAuth también cambia y podría requerir reconectar el cliente. Este túnel no debe considerarse hosting permanente.
 
