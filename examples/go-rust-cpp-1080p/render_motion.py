@@ -7,9 +7,9 @@ from pathlib import Path
 ROOT=Path(__file__).resolve().parent
 DOC=json.loads((ROOT/"storyboard.json").read_text())
 LAYERS=ROOT/"motion-layers"
-OUT=ROOT/"output"/"motion"
+OUT=ROOT/"output"/"motion-30fps"
 OUT.mkdir(parents=True,exist_ok=True)
-FPS=24
+FPS=30
 
 def render(scene,preview_seconds:int|None=None):
     ix=scene["index"]+1
@@ -21,11 +21,12 @@ def render(scene,preview_seconds:int|None=None):
         if not p.is_file():raise FileNotFoundError(p)
         inputs+=["-loop","1","-framerate",str(FPS),"-i",str(p)]
     filters=[
-      "[0:v]format=rgba,zoompan=z='min(zoom+0.000075,1.045)':x='(iw-iw/zoom)/2':y='(ih-ih/zoom)/2':d=1:fps=24:s=1920x1080,format=yuva420p[b0]"
+      "[0:v]format=rgba,zoompan=z='min(zoom+0.000075,1.045)':x='(iw-iw/zoom)/2':y='(ih-ih/zoom)/2':d=1:fps=30:s=1920x1080,format=yuva420p[b0]"
     ]
     current="b0"
     for layer in range(1,count+1):
-        begin=[0.15,1.55,3.25,5.3][min(layer-1,3)] if count<=5 else 0.25+1.65*(layer-1)
+        begin=(14.1 if scene["style"]=="verdict" and layer==count else
+               ([0.15,1.55,3.25,5.3][min(layer-1,3)] if count<=5 else 0.25+1.65*(layer-1)))
         fade_d=0.8
         # Different real movements per component: horizontal, vertical, reverse.
         if layer%3==1:
@@ -40,11 +41,8 @@ def render(scene,preview_seconds:int|None=None):
         filters.append(f"[{layer}:v]format=rgba,fade=t=in:st={begin:.2f}:d={fade_d:.2f}:alpha=1[p{layer}]")
         filters.append(f"[{current}][p{layer}]overlay=x='{motion}':y='{y}':eval=frame:shortest=1:format=auto[b{layer}]")
         current=f"b{layer}"
-    # Live subtitles change with the voice every few seconds. They replace the
-    # decorative scrolling ticker, making the motion more useful to viewers.
-    ass=(ROOT/"motion-captions"/f"scene-{ix:02d}.ass").resolve()
-    if not ass.is_file():raise FileNotFoundError(ass)
-    filters.append(f"[{current}]ass=filename='{ass}':fontsdir=/usr/share/fonts/truetype/dejavu,fade=t=in:st=0:d=0.3,fade=t=out:st={max(0,duration-.45):.2f}:d=0.45,format=yuv420p[v]")
+    # Sin subtítulos ASS: solo motion graphics sin subtítulos flotantes.
+    filters.append(f"[{current}]fade=t=in:st=0:d=0.3,fade=t=out:st={max(0,duration-.45):.2f}:d=0.45,format=yuv420p[v]")
     outfile=OUT/f"clip-{ix:02d}.mp4"
     cmd=["ffmpeg","-nostdin","-hide_banner","-loglevel","error","-y",*inputs,
          "-filter_complex",";".join(filters),"-map","[v]",
@@ -67,9 +65,9 @@ def main():
     if args.only is not None:return
     playlist=OUT/"concat.txt"
     playlist.write_text("".join("file '"+str(c.resolve())+"'\n" for c in clips))
-    audio=Path(args.audio) if args.audio else ROOT/"output"/"latest-capybara-voiceonly.wav"
+    audio=Path(args.audio) if args.audio else ROOT/"output"/"capybara-fonetica-30fps.wav"
     if not audio.is_file():raise FileNotFoundError(audio)
-    final=OUT/"GPTFrames-Go-Rust-Cpp-Capybara-latest-MOTION-1080p.mp4"
+    final=OUT/"Go-Rust-Cpp-Capybara-30fps-SinSubtitulos.mp4"
     subprocess.run(["ffmpeg","-nostdin","-hide_banner","-loglevel","error","-y",
        "-f","concat","-safe","0","-i",str(playlist),"-i",str(audio),
        "-map","0:v:0","-map","1:a:0","-c:v","copy","-c:a","aac",

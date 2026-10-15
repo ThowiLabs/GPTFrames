@@ -25,7 +25,7 @@ def photo(scene):
 def footer(scene):
     src=sources.get(scene.get("asset",""),{})
     credit=f'RECURSO VISUAL  ·  {src.get("author","Wikimedia Commons")}  ·  {src.get("license","")} ' if src else 'COMPARACIÓN EDITORIAL  ·  SIN DATOS DE BENCHMARK INVENTADOS'
-    return f'<footer><div class="footer-logo">GPTFRAMES <span>× CAPYBARA TTS</span></div><div class="foot-source">{esc(credit)}</div><div class="foot-line"></div></footer>'
+    return f'<footer><div class="footer-logo">COMPARATIVA <span>· GO · RUST · C++</span></div><div class="foot-source">{esc(credit)}</div><div class="foot-line"></div></footer>'
 
 def panel(title,note,accent):
     return f'<div class="feature-chip" style="--tone:{accent}"><strong>{esc(title)}</strong><span>{esc(note)}</span></div>'
@@ -105,6 +105,12 @@ def standard(scene):
         <p>RUST SE LLEVA LA CORONA DEL EQUILIBRIO.<br>C++ DEL CONTROL. GO DE LA PRODUCTIVIDAD.</p>
         <div class="win-columns">{panel("RUST","rendimiento + seguridad","#F3B27B")}
          {panel("C++","control + legado","#A697FF")}{panel("GO","simplicidad + servicios","#53DFFF")}</div>
+        </div>
+        <div class="subscribe-cta">
+          <div class="subscribe-play">▶</div>
+          <p class="subscribe-kicker">SI TE GUSTÓ ESTE VÍDEO</p>
+          <div class="subscribe-heading">SUSCRÍBETE<br><span>A HIRCOIR</span></div>
+          <p class="subscribe-desc">DALE ME GUSTA · COMPARTE · NOS VEMOS EN EL PRÓXIMO</p>
         </div>'''
     return body
 
@@ -178,10 +184,18 @@ h1.display .rust{color:#f5b87e}h1.display .cpp{color:#9d9dff}
 .winner{position:relative;text-align:center;top:30px}.winner h2{font-size:155px;line-height:1}.winner h2 span{color:var(--accent)}
 .winner>p:not(.hint){font-size:33px;color:#c5e1e6;font-weight:650;line-height:1.6}.win-columns{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;margin-top:65px}
 .winner-glow{position:absolute;left:30%;top:50px;width:700px;height:650px;background:radial-gradient(circle,#54eacd22,transparent 62%);pointer-events:none}
+
+.subscribe-cta{position:absolute;inset:0;z-index:10;border-radius:21px;background:radial-gradient(circle at 68% 45%,#143f49 0%,#0a2434 43%,#07111e 88%);box-shadow:inset 0 0 150px #0007;border:1px solid #72faea55;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;gap:22px}
+.subscribe-play{display:grid;place-items:center;width:140px;height:105px;border-radius:30px;background:#ef384e;box-shadow:0 15px 85px #f84a4e49;font-size:65px;color:#fff;padding-left:8px}
+.subscribe-kicker{letter-spacing:6px;font-size:24px;color:#a3dfdf;font-weight:800}
+.subscribe-heading{font-size:120px;line-height:1.05;letter-spacing:-4px;font-weight:900;color:#fff}
+.subscribe-heading span{color:#64ffdb}
+.subscribe-desc{font-size:23px;font-weight:800;letter-spacing:1px;color:#bfd4df}
+
 '''
 def make_html(s):
     title=esc(s["title"]);accent=esc(s["accent"])
-    top=f'<div class="topbar"><span class="brand">GPT<b>FRAMES</b></span><span class="tab">CAPYBARA / VOZ ESPAÑOLA</span><span>{esc(s["k"])}</span></div>'
+    top=f'<div class="topbar"><span class="brand">GO <b>·</b> RUST <b>·</b> C++</span><span class="tab">CAPYBARA / VOZ ESPAÑOLA</span><span>{esc(s["k"])}</span></div>'
     return f'<!DOCTYPE html><html lang="es"><head><meta charset="UTF-8"><style>:root{{--accent:{accent}}}{css}</style></head><body><div class="stage">{top}<div class="content">{standard(s)}</div>{footer(s)}</div></body></html>'
 
 for scene in scenes:

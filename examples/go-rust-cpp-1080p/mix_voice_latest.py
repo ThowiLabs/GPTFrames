@@ -27,7 +27,7 @@ for scene in DOC["scenes"]:
  window=scene["d"]-1.05
  tempo=max(1.,original/window)
  if tempo>1.7:raise ValueError(f"Clip {n} too long ({tempo:.3f}x)")
- tmp=OUT/f"latest-voice-frag-{n:02d}.wav"
+ tmp=OUT/f"phonetic-voice-frag-{n:02d}.wav"
  subprocess.run(["ffmpeg","-nostdin","-hide_banner","-loglevel","error","-y","-i",str(infile),
    "-af",f"atempo={tempo:.6f},highpass=f=70,volume=1.08",
    "-ar",str(RATE),"-ac","1","-c:a","pcm_s16le",str(tmp)],check=True)
@@ -40,10 +40,10 @@ for scene in DOC["scenes"]:
   samples[start+j]=max(-32768,min(32767,int(a[j]*.95*fade)))
  timing.append({"scene":n,"original_s":round(original,3),"tempo":round(tempo,3),"mixed_samples":count})
  print(f"LATEST_CAPYBARA_AUDIO {n:02d}/{len(DOC['scenes'])} speed={tempo:.3f}",flush=True)
-out=OUT/"latest-capybara-voiceonly.wav"
+out=OUT/"capybara-fonetica-30fps.wav"
 with wave.open(str(out),"wb") as w:
  w.setnchannels(1);w.setsampwidth(2);w.setframerate(RATE);w.writeframes(samples.tobytes())
-(OUT/"latest-voice-timing.json").write_text(json.dumps(timing,indent=2)+"\n")
+(OUT/"phonetic-voice-timing.json").write_text(json.dumps(timing,indent=2)+"\n")
 if args.youtube_audio_library is not None:
  music=args.youtube_audio_library.resolve()
  if not music.is_file() or music.suffix.lower() not in (".mp3",".wav",".m4a",".flac"):

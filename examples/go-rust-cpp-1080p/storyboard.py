@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """Guion y storyboards del documental. Sin indicadores de página."""
 import json
+import re
 from pathlib import Path
 ROOT=Path(__file__).resolve().parent
 scenes=[
@@ -29,12 +30,38 @@ scenes=[
  dict(d=20,k="ELECCIÓN PRÁCTICA",title="¿CUÁL USARÍAS MAÑANA?",subtitle="ELIGE SEGÚN TU PROBLEMA REAL",style="scenarios",asset="code",accent="#FFC870",
  narration="Si construyes microservicios y necesitas iterar rápido, empieza evaluando Go. Si diseñas nuevos componentes críticos donde seguridad y rendimiento importan, Rust es un candidato muy sólido. Si trabajas con motores gráficos, sistemas heredados o bibliotecas C más más, aprovechar ese ecosistema puede ser la decisión inteligente."),
  dict(d=21,k="VEREDICTO",title="EL REY NO ES UNIVERSAL",subtitle="RUST GANA EN EQUILIBRIO; C++ EN CONTROL; GO EN PRODUCTIVIDAD",style="verdict",asset="racks",accent="#64FFD6",
- narration="Mi veredicto: Rust se lleva la corona del equilibrio moderno entre rendimiento y seguridad de memoria. C más más sigue siendo un gigante del control y del ecosistema de alto rendimiento. Go brilla cuando importa entregar servicios fiables con un equipo productivo. El verdadero rey es la herramienta adecuada para el trabajo.")
+ narration="Mi veredicto: Rust destaca en seguridad y rendimiento. C más más sigue siendo el rey del control. Go sobresale al crear servicios rápidamente. En realidad, el mejor lenguaje depende del proyecto. Si te gustó este vídeo, suscríbete al canal de HirCoir, deja tu me gusta y compártelo. Nos vemos en el próximo.")
 ]
+# Pronunciación para Capybara, separada de los títulos visuales.
+def phonetic_for_capybara(text):
+    replacements = [
+        (r'\bC\s*más\s*más\b', 'ce más más'),
+        (r'\bC\+\+\b', 'ce más más'),
+        (r'\bRust\b', 'rast'),
+        (r'\bGo\b', 'gou'),
+        (r'\bHirCoir\b', 'Jírcoir'),
+        (r'\bbackend\b', 'bac end'),
+        (r'\bthroughput\b', 'trútput'),
+        (r'\bHTTP\b', 'hache te te pe'),
+        (r'\bgoroutines\b', 'gou rutinas'),
+        (r'\bownership\b', 'óunership'),
+        (r'\bborrowing\b', 'bórouin'),
+        (r'\blifetimes\b', 'láiftaims'),
+        (r'\bthread safety\b', 'zred séifti'),
+        (r'\bsoftware\b', 'sóftuer'),
+        (r'\bmicroservicios\b', 'micro servicios'),
+        (r'\bbenchmark\b', 'bénchmark'),
+    ]
+    result = text
+    for pattern,rep in replacements:
+        result = re.sub(pattern,rep,result,flags=re.IGNORECASE)
+    return result
+
 for i,s in enumerate(scenes):
+    s["speech_text"]=phonetic_for_capybara(s["narration"])
     s["index"]=i
     s["start"]=sum(z["d"] for z in scenes[:i])
     (ROOT/"text").mkdir(exist_ok=True)
-    (ROOT/"text"/("narracion-%02d.txt"%(i+1))).write_text(s["narration"]+"\n",encoding="utf-8")
-(ROOT/"storyboard.json").write_text(json.dumps({"width":1920,"height":1080,"fps":24,"duration":sum(x["d"] for x in scenes),"scenes":scenes},ensure_ascii=False,indent=2)+"\n",encoding="utf-8")
+    (ROOT/"text"/("narracion-%02d.txt"%(i+1))).write_text(s["speech_text"]+"\n",encoding="utf-8")
+(ROOT/"storyboard.json").write_text(json.dumps({"width":1920,"height":1080,"fps":30,"duration":sum(x["d"] for x in scenes),"scenes":scenes},ensure_ascii=False,indent=2)+"\n",encoding="utf-8")
 print("Total:",sum(x["d"] for x in scenes),"seconds /",round(sum(x["d"] for x in scenes)/60,2),"min; words:",sum(len(x["narration"].split()) for x in scenes))

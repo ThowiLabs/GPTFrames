@@ -18,7 +18,7 @@ GROUPS={
  "cpptrade":[".trade-copy h2,.trade-copy .section-sub",".trade-chips",".trade-image"],
  "table":[".table-kicker,.comp-table .theads", ".comp-table .tr:nth-child(2),.comp-table .tr:nth-child(3)", ".comp-table .tr:nth-child(4),.comp-table .tr:nth-child(5)", ".comp-table .tr:nth-child(6),.comp-table .tr:nth-child(7),.comp-table .tr:nth-child(8)",".table-note"],
  "scenarios":[".case-layout h2,.case-layout .hint",".case-list",".case-photo"],
- "verdict":[".winner .hint,.winner h2",".winner>p:not(.hint)",".win-columns"]
+ "verdict":[".winner .hint,.winner h2",".winner>p:not(.hint)",".win-columns",".subscribe-cta"]
 }
 def capture(html_file,save):
     subprocess.run(["chromium","--headless","--no-sandbox","--disable-dev-shm-usage","--disable-gpu",
