@@ -1,0 +1,14 @@
+# Tarea: Capybara + documental Full HD + Go MCP
+- [x] Verificar HF auth sin exponer token.
+- [x] Descargar ONNX Capybara vinculado a checkpoint gated.
+- [x] Compilar NEO mediante neo-compiler y verificar firma.
+- [x] Inferir las 13 escenas con Neo Lite Capybara.
+- [x] Montar voz, música y storyboard de 243s.
+- [x] Crear fotografías atribuidas, logos y tabla comparativa.
+- [x] Renderizar 5832 frames Full HD a H.264/AAC, sin paginación.
+- [x] Decodificar MP4 completo con FFmpeg.
+- [x] Implementar túnel Go de KagSSH con OAuth + PIN.
+- [x] Verificar Gradio HTTPS público con metadata OAuth y 401 sin autenticación.
+- [x] Publicar visor y descarga del documental.
+- [ ] Autorizar desde la UI real de ChatGPT (requiere acción del usuario).
+- [ ] Validación Windows real de Go y Neo Lite.

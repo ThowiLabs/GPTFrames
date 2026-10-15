@@ -1,0 +1,58 @@
+[
+  {
+    "key": "go-logo",
+    "file": "assets/go-logo.png",
+    "source_title": "Go Logo Blue.svg",
+    "source_url": "https://commons.wikimedia.org/wiki/File:Go_Logo_Blue.svg",
+    "license": "Public domain",
+    "author": "The Go Authors"
+  },
+  {
+    "key": "rust-logo",
+    "file": "assets/rust-logo.png",
+    "source_title": "Rust programming language black logo.svg",
+    "source_url": "https://commons.wikimedia.org/wiki/File:Rust_programming_language_black_logo.svg",
+    "license": "CC BY 4.0",
+    "author": "Rust Foundation"
+  },
+  {
+    "key": "cpp-logo",
+    "file": "assets/cpp-logo.png",
+    "source_title": "ISO C++ Logo.svg",
+    "source_url": "https://commons.wikimedia.org/wiki/File:ISO_C%2B%2B_Logo.svg",
+    "license": "Public domain",
+    "author": "ISO C++ logo contributors"
+  },
+  {
+    "key": "server",
+    "file": "assets/server.jpg",
+    "source_title": "Datacenter Server Racks (22370909788).jpg",
+    "source_url": "https://commons.wikimedia.org/wiki/File:Datacenter_Server_Racks_%2822370909788%29.jpg",
+    "license": "CC BY 2.0",
+    "author": "Carl Lender"
+  },
+  {
+    "key": "code",
+    "file": "assets/code.jpg",
+    "source_title": "Code on computer monitor (Unsplash).jpg",
+    "source_url": "https://commons.wikimedia.org/wiki/File:Code_on_computer_monitor_%28Unsplash%29.jpg",
+    "license": "CC0",
+    "author": "Markus Spiske"
+  },
+  {
+    "key": "racks",
+    "file": "assets/racks.jpg",
+    "source_title": "Rear of rack at NERSC data center - closeup.jpg",
+    "source_url": "https://commons.wikimedia.org/wiki/File:Rear_of_rack_at_NERSC_data_center_-_closeup.jpg",
+    "license": "CC0",
+    "author": "Derrick Coetzee"
+  },
+  {
+    "key": "css",
+    "file": "assets/css.jpg",
+    "source_title": "CSS code on a screen (Unsplash).jpg",
+    "source_url": "https://commons.wikimedia.org/wiki/File:CSS_code_on_a_screen_%28Unsplash%29.jpg",
+    "license": "CC0",
+    "author": "Sai Kiran Anagani"
+  }
+]

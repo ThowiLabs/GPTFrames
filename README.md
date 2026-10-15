@@ -51,6 +51,19 @@ Remote MCP is an optional authenticated HTTP transport bound to 127.0.0.1. It re
 
 Image sources: Wikimedia Commons metadata-driven downloads with attribution sidecars; Openverse search results are discovery only, not automatically imported. Review third-party media licenses. See docs/IMAGE_SOURCES.md.
 
+## Video Full HD con voz Capybara (243 segundos)
+
+Ejemplo educativo Go vs. Rust vs. C++: 13 capítulos, 1920×1080 a 24 fps, fotos/logotipos atribuidos de Commons, tabla de comparación y narraciones reales de Capybara compilada a archivo NEO mediante Neo Compiler y sintetizada con Neo Lite. Se exporta mediante la pipeline HTML/Chromium/FFmpeg 16:9 que extiende el compositor vertical original. Ver [docs/CAPYBARA_1080P_VIDEO.md](docs/CAPYBARA_1080P_VIDEO.md) para reproducción y metodología. El modelo y los archivos generados se guardan localmente, fuera de Git.
+
+## Túnel Gradio nativo Go con OAuth para ChatGPT
+
+Se adaptaron componentes del propio [kagssh-go](https://github.com/ThowiLabs/kagssh-go) al módulo Go en `tunnel/`, que usa Gradio FRP nativo TLS/yamux y autorización OAuth con PIN/PKCE antes de exponer el MCP:
+
+    cd tunnel && go test ./... && go build -o ../build/gptframes-tunnel-go ./cmd/gptframes-tunnel
+    cd .. && ./build/gptframes-tunnel-go --port 18885 --backend-port 18886
+
+La URL temporal tiene formato https://subdominio.gradio.live/mcp. Se requiere registrar el MCP desde ChatGPT y completar la autorización OAuth; no se enlaza automáticamente la cuenta. El archivo de PIN es privado (0600). [Documentación y limitaciones](docs/GO_GRADIO_MCP.md).
+
 ## Tests
 
     python3 -m unittest discover -s tests -p test_gptframes.py -v

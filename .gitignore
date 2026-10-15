@@ -44,3 +44,17 @@ output/
 # Voice models and local ONNX Runtime binaries (not redistributed)
 models/
 third_party/onnxruntime-dist/
+
+# Private OAuth/PIN state (must never be committed)
+.gptframes-private*/
+
+# Capybara voice weights and generated media: download using HF auth
+examples/go-rust-cpp-1080p/voice/
+examples/go-rust-cpp-1080p/output/
+examples/go-rust-cpp-1080p/slides/
+examples/go-rust-cpp-1080p/text/
+examples/go-rust-cpp-1080p/storyboard.json
+examples/go-rust-cpp-1080p/assets-download.log
+
+# Public demo bundle is generated, not committed
+examples/go-rust-cpp-1080p/public/
