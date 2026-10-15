@@ -1,0 +1,27 @@
+{
+  "source_repo": "HirCoir/piper-checkpoint-es-mx-capybara",
+  "checkpoint_name": "epoch=268-step=110398.ckpt",
+  "epoch": 268,
+  "step": 110398,
+  "declared_checkpoint_license": "cc-by-nc-4.0",
+  "converter": "neo-tts C++17 NEO_INFER_ONLY export-onnx",
+  "format_compiler": "neo-compiler build --profile lite",
+  "inference": "neo-lite C++17 CPU",
+  "files": [
+    {
+      "name": "epoch=268-step=110398.ckpt",
+      "bytes": 845898584,
+      "sha256": "6cb0cf0a49f80ad2622be31ab951ab10dca7e45180943a5558058da0594a81ac"
+    },
+    {
+      "name": "capybara-epoch268-step110398.onnx",
+      "bytes": 63516077,
+      "sha256": "d23c7b48072e2c3d35e15c2d2968e1cf2f7d6141a2a3b1acb94d2cfdb3043fb7"
+    },
+    {
+      "name": "capybara-epoch268-step110398.neo",
+      "bytes": 31365501,
+      "sha256": "cf138fab2f640b27bcdcabe6621b29b111e02268820229f1e943b774264c8f79"
+    }
+  ]
+}

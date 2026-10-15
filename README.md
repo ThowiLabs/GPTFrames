@@ -71,6 +71,14 @@ El servidor de video es **separado** del gateway MCP OAuth. Algunos proxies Grad
 
 La URL temporal tiene formato https://subdominio.gradio.live/mcp. Se requiere registrar el MCP desde ChatGPT y completar la autorización OAuth; no se enlaza automáticamente la cuenta. El archivo de PIN es privado (0600). [Documentación y limitaciones](docs/GO_GRADIO_MCP.md).
 
+## Documentary v2: Capybara epoch 268 / step 110398 and live motion
+
+The Full HD Go/Rust/C++ documentary has a second version based on the **latest numeric checkpoint** from HirCoir/piper-checkpoint-es-mx-capybara (epoch=268-step=110398.ckpt). Neo TTS native C++ exports the exact checkpoint to ONNX, then Neo Compiler packages a Lite-compatible .neo; Neo Lite synthesizes every Spanish narration chapter. The checkpoint/model binaries are downloaded by the authenticated owner and are **not committed**. More steps do not objectively guarantee better quality; this is simply the most-trained checkpoint available.
+
+The updated 243s 1920x1080 pipeline animates independent transparent layers (image cards, titles, feature boxes, individual comparison-table rows), plus live subtitles and parallax. It is no longer a static slideshow. See [docs/CAPYBARA_LATEST_MOTION.md](docs/CAPYBARA_LATEST_MOTION.md) for rebuild details and voice/music licensing.
+
+**Music:** the prior generated soundtrack was removed. The official YouTube Audio Library requires a logged-in YouTube Studio session, unavailable in this sandbox. We do not rip tracks or substitute an unverified track. The new mix is narration-only until the owner supplies a permitted music file downloaded in Studio; the mixer accepts `--youtube-audio-library /path/to/track.mp3` for that case.
+
 ## Tests
 
     python3 -m unittest discover -s tests -p test_gptframes.py -v

@@ -58,3 +58,8 @@ examples/go-rust-cpp-1080p/assets-download.log
 
 # Public demo bundle is generated, not committed
 examples/go-rust-cpp-1080p/public/
+
+# Piper checkpoint converter dependencies and layered 1080p media
+third_party/libtorch-cpu/
+examples/go-rust-cpp-1080p/motion-layers/
+examples/go-rust-cpp-1080p/motion-captions/

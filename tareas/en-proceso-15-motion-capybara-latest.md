@@ -1,0 +1,14 @@
+# Actualización de documental Capybara
+- [x] Identificar checkpoint de mayor step/epoch en HF.
+- [x] Descargar epoch=268-step=110398.ckpt autorizado.
+- [x] Compilar Neo-TTS con LibTorch.
+- [x] Exportar ONNX desde checkpoint exacto y compilar .neo.
+- [x] Verificar firma e inferencia Capybara epoch268.
+- [x] Crear capas animables, tabla progresiva y subtítulos ASS.
+- [x] Quitar música procedural anterior.
+- [ ] Sintetizar capítulos restantes con modelo reciente.
+- [ ] Renderizar 243s con componentes animados.
+- [ ] Validar codecs, resolución, duración, voz y decodificación completa.
+- [ ] Publicar descarga MP4 y reproducir en página temporal.
+- [ ] Versionar y subir rama de trabajo.
+- [ ] Añadir pista YouTube Audio Library solo con licencia y acceso Studio autorizado.
