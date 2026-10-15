@@ -79,6 +79,10 @@ El servidor de video es **separado** del gateway MCP OAuth. Algunos proxies Grad
 
 La URL temporal tiene formato https://subdominio.gradio.live/mcp. Se requiere registrar el MCP desde ChatGPT y completar la autorización OAuth; no se enlaza automáticamente la cuenta. El archivo de PIN es privado (0600). [Documentación y limitaciones](docs/GO_GRADIO_MCP.md).
 
+## Documental educativo de seguridad web con voz Lilith
+
+Nuevo video informativo y preventivo, 13 capítulos, duración 4:40, voz Lilith compilada de ONNX a NEO y escenas con diagramas animados de amenazas y medidas de protección. Basado en OWASP Top 10:2025. El tema es complejo y se presenta como una breve introducción. Revisa [la documentación y los scripts](examples/seguridad-web-lilith/README.md). El modelo Lilith con acceso gated permanece local y **no se publica en Git**. Su procedencia es HirCoir/es_MX-lilith2, no se pudo verificar que sea idéntica a la copia en ZIP privado de YahirHub.
+
 ## Documentary v2: Capybara epoch 268 / step 110398 and live motion
 
 The Full HD Go/Rust/C++ documentary has a second version based on the **latest numeric checkpoint** from HirCoir/piper-checkpoint-es-mx-capybara (epoch=268-step=110398.ckpt). Neo TTS native C++ exports the exact checkpoint to ONNX, then Neo Compiler packages a Lite-compatible .neo; Neo Lite synthesizes every Spanish narration chapter. The checkpoint/model binaries are downloaded by the authenticated owner and are **not committed**. More steps do not objectively guarantee better quality; this is simply the most-trained checkpoint available.

@@ -1,0 +1,24 @@
+{
+  "origin": "https://huggingface.co/HirCoir/es_MX-lilith2",
+  "revision": "8d7ca9584a4019a13f4a661d27951b93c9fdea36",
+  "model": "Lilith Espa\u00f1ol M\u00e9xico",
+  "license_declared": "Apache-2.0",
+  "source_archive_comparison": "not possible: YahirHub archive not accessible",
+  "files": [
+    {
+      "name": "es_MX-lilith.onnx",
+      "size": 63122309,
+      "sha256": "d1bbb380d132e35ce0f3b0cafa97528bcefd5af07e86d8ef195525ab3f760375"
+    },
+    {
+      "name": "es_MX-lilith.onnx.json",
+      "size": 7095,
+      "sha256": "36ae0277a0684f0cb0c4be4acc55904f5fa4ff28fd461453fe1d2f9a5655466f"
+    },
+    {
+      "name": "lilith.neo",
+      "size": 31273799,
+      "sha256": "b88478083a98c9a1ed3ccd6423284037e1723ca00287a74982a63c3a98df73d3"
+    }
+  ]
+}

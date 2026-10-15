@@ -1,0 +1,313 @@
+{
+  "title": "Vulnerabilidades web: una introducción defensiva",
+  "fps": 30,
+  "width": 1920,
+  "height": 1080,
+  "duration": 280,
+  "sources": [
+    "https://top10.owasp.org/2025/",
+    "https://cheatsheetseries.owasp.org/cheatsheets/Cross_Site_Scripting_Prevention_Cheat_Sheet.html",
+    "https://cheatsheetseries.owasp.org/cheatsheets/SQL_Injection_Prevention_Cheat_Sheet.html"
+  ],
+  "scenes": [
+    {
+      "duration": 18,
+      "accent": "#5FE7E3",
+      "eyebrow": "00  /  APERTURA",
+      "title": "VULNERABILIDADES\nWEB",
+      "subtitle": "Qué son · Cómo ocurren · Cómo defenderte",
+      "risk": "TU APLICACIÓN",
+      "defense": "TU DEFENSA",
+      "nodes": [
+        "USUARIO",
+        "WEB",
+        "SERVIDOR"
+      ],
+      "mechanism": "Una brecha aparece donde falla una validación, un permiso o una configuración.",
+      "protect": "No existe una medida única. Protege cada capa.",
+      "tags": [
+        "OWASP TOP 10 · 2025",
+        "ENFOQUE DEFENSIVO"
+      ],
+      "narration": "¿Qué es una vulnerabilidad web? Es una debilidad que permite acceder, modificar o afectar algo sin autorización. El tema es complejo. Este video es solo una breve introducción a los riesgos más conocidos y a cómo proteger tu servidor. Vamos a entender las causas, sin realizar ataques.",
+      "index": 0,
+      "start": 0
+    },
+    {
+      "duration": 22,
+      "accent": "#FF7C98",
+      "eyebrow": "01 / A01 2025",
+      "title": "CONTROL DE\nACCESO",
+      "subtitle": "Permisos que no se verifican",
+      "risk": "RIESGO · IDOR",
+      "defense": "DEFENSA · SERVIDOR",
+      "nodes": [
+        "CUENTA A",
+        "CAMBIA ID",
+        "CUENTA B"
+      ],
+      "mechanism": "Un usuario intenta ver datos de otra cuenta cambiando un identificador.",
+      "protect": "Verifica identidad, rol y propiedad del recurso en cada petición.",
+      "tags": [
+        "DENEGAR POR DEFECTO",
+        "MÍNIMO PRIVILEGIO"
+      ],
+      "narration": "El control de acceso falla cuando el servidor confía en un identificador enviado por el usuario. Por ejemplo, si alguien cambia el número de un pedido y puede ver un pedido ajeno. No basta con ocultar botones en la página. El servidor debe comprobar, en cada solicitud, quién pide los datos y si realmente tiene permiso para verlos.",
+      "index": 1,
+      "start": 18
+    },
+    {
+      "duration": 22,
+      "accent": "#FFBE69",
+      "eyebrow": "02 / A05 2025",
+      "title": "INYECCIÓN\nDE CONSULTAS",
+      "subtitle": "Datos que se confunden con órdenes",
+      "risk": "RIESGO · SQL",
+      "defense": "DEFENSA · PARÁMETROS",
+      "nodes": [
+        "ENTRADA",
+        "CONSULTA",
+        "BASE DE DATOS"
+      ],
+      "mechanism": "Entradas no confiables alteran la intención de una consulta.",
+      "protect": "Consultas parametrizadas; nunca concatenar valores en SQL.",
+      "tags": [
+        "VALIDACIÓN",
+        "CUENTAS CON POCOS PERMISOS"
+      ],
+      "narration": "La inyección ocurre cuando datos de entrada se mezclan con instrucciones que interpreta otro sistema. En una base de datos, eso puede alterar consultas y exponer información. La defensa principal no es bloquear palabras sospechosas: son consultas parametrizadas que separan claramente los valores del código. Además, valida formatos y usa una cuenta de base de datos con privilegios mínimos.",
+      "index": 2,
+      "start": 40
+    },
+    {
+      "duration": 22,
+      "accent": "#C195FF",
+      "eyebrow": "03 / XSS",
+      "title": "SCRIPT ENTRE\nNAVEGADORES",
+      "subtitle": "XSS · Contenido no confiable",
+      "risk": "RIESGO · NAVEGADOR",
+      "defense": "DEFENSA · ESCAPE",
+      "nodes": [
+        "COMENTARIO",
+        "PÁGINA",
+        "NAVEGADOR"
+      ],
+      "mechanism": "Contenido de un tercero se interpreta como código dentro del navegador.",
+      "protect": "Escapar al mostrar; sanitizar HTML permitido; CSP como refuerzo.",
+      "tags": [
+        "OUTPUT ENCODING",
+        "DEFENSA EN PROFUNDIDAD"
+      ],
+      "narration": "El llamado equis ese ese aparece cuando una página muestra contenido sin tratarlo correctamente y el navegador puede ejecutarlo como código. Puede afectar sesiones o suplantar acciones. Para prevenirlo, codifica la salida según el contexto, evita insertar hache te eme ele no confiable, y utiliza sanitización cuando debas permitir contenido enriquecido. Una política de seguridad de contenido ayuda, pero no reemplaza estos controles.",
+      "index": 3,
+      "start": 62
+    },
+    {
+      "duration": 22,
+      "accent": "#69AFFE",
+      "eyebrow": "04 / A07 2025",
+      "title": "AUTENTICACIÓN\nY SESIONES",
+      "subtitle": "Credenciales débiles · Sesiones expuestas",
+      "risk": "RIESGO · ACCESO",
+      "defense": "DEFENSA · MFA",
+      "nodes": [
+        "LOGIN",
+        "SESIÓN",
+        "PANEL"
+      ],
+      "mechanism": "Contraseñas robadas o cookies mal protegidas facilitan el acceso indebido.",
+      "protect": "MFA, limitación de intentos, cookies seguras y expiración.",
+      "tags": [
+        "HTTPONLY · SAMESITE",
+        "REVOCAR AL CERRAR SESIÓN"
+      ],
+      "narration": "Si una cuenta acepta contraseñas débiles, no limita intentos o mantiene sesiones mal protegidas, puede quedar expuesta. Utiliza autenticación multifactor, protección contra intentos repetidos y contraseñas almacenadas con algoritmos adecuados. Las cookies de sesión necesitan atributos de seguridad y conexiones cifradas. Al cerrar sesión o detectar actividad sospechosa, revoca las credenciales que corresponda.",
+      "index": 4,
+      "start": 84
+    },
+    {
+      "duration": 22,
+      "accent": "#7FEBB0",
+      "eyebrow": "05 / A02 2025",
+      "title": "CONFIGURACIÓN\nINSEGURA",
+      "subtitle": "Lo que expones sin darte cuenta",
+      "risk": "RIESGO · SERVICIO",
+      "defense": "DEFENSA · HARDENING",
+      "nodes": [
+        "PUERTO",
+        "PANEL ADMIN",
+        "INTERNET"
+      ],
+      "mechanism": "Paneles, secretos o servicios internos quedan publicados.",
+      "protect": "Cerrar puertos; separar redes; retirar credenciales y paneles públicos.",
+      "tags": [
+        "ACTUALIZACIONES",
+        "CONFIGURACIÓN MÍNIMA"
+      ],
+      "narration": "No todos los incidentes empiezan con un fallo de programación. Un panel de administración accesible desde Internet, un directorio con copias de seguridad o un servicio sin actualizar también crean riesgos. Desactiva funciones innecesarias, restringe los puertos públicos y protege los paneles con controles de acceso. Guarda secretos fuera del código y revisa tu configuración después de cada despliegue.",
+      "index": 5,
+      "start": 106
+    },
+    {
+      "duration": 22,
+      "accent": "#FFC66D",
+      "eyebrow": "06 / A03 2025",
+      "title": "CADENA DE\nSUMINISTRO",
+      "subtitle": "Dependencias, paquetes y compilación",
+      "risk": "RIESGO · DEPENDENCIA",
+      "defense": "DEFENSA · AUDITORÍA",
+      "nodes": [
+        "PAQUETE",
+        "CI / CD",
+        "PRODUCCIÓN"
+      ],
+      "mechanism": "Una dependencia o etapa de compilación comprometida afecta la aplicación.",
+      "protect": "Fijar versiones; analizar dependencias; verificar origen y firmas.",
+      "tags": [
+        "LOCKFILES",
+        "ACTUALIZAR CON PRUEBAS"
+      ],
+      "narration": "Tu aplicación no depende solo del código que escribes. También usa librerías, paquetes, contenedores y procesos de compilación. Si uno se compromete, todo el producto puede verse afectado. Usa fuentes confiables, fija versiones, revisa alertas de vulnerabilidades y evita ejecutar instalaciones con permisos excesivos. Mantén una lista de componentes y actualiza con pruebas.",
+      "index": 6,
+      "start": 128
+    },
+    {
+      "duration": 22,
+      "accent": "#F28DC2",
+      "eyebrow": "07 / SSRF",
+      "title": "PETICIONES\nDEL SERVIDOR",
+      "subtitle": "SSRF · Acceso a redes internas",
+      "risk": "RIESGO · SSRF",
+      "defense": "DEFENSA · EGRESO",
+      "nodes": [
+        "URL EXTERNA",
+        "SERVIDOR",
+        "RED INTERNA"
+      ],
+      "mechanism": "Una URL controlada por terceros intenta llevar al servidor a recursos internos.",
+      "protect": "Permitir destinos confiables; bloquear rangos privados y metadatos.",
+      "tags": [
+        "VALIDAR REDIRECCIONES",
+        "EGRESS FILTERING"
+      ],
+      "narration": "En una falsificación de peticiones del lado del servidor, una función que visita direcciones externas puede ser inducida a consultar recursos internos. Por eso, no aceptes cualquier dirección enviada por el cliente. Permite solo destinos necesarios, comprueba redirecciones y resuelve los nombres con cuidado. Aísla servicios internos y restringe también las conexiones salientes desde el servidor.",
+      "index": 7,
+      "start": 150
+    },
+    {
+      "duration": 22,
+      "accent": "#6CDFE0",
+      "eyebrow": "08 / CSRF + ARCHIVOS",
+      "title": "SOLICITUDES\nY ARCHIVOS",
+      "subtitle": "Dos superficies de ataque habituales",
+      "risk": "RIESGO · ACCIÓN",
+      "defense": "DEFENSA · CONTROL",
+      "nodes": [
+        "NAVEGADOR",
+        "FORMULARIO",
+        "ALMACÉN"
+      ],
+      "mechanism": "Una sesión existente o un archivo enviado puede activar comportamientos inseguros.",
+      "protect": "CSRF tokens; validar archivos, tamaño y tipo; guardar fuera del webroot.",
+      "tags": [
+        "ORIGIN / SAMESITE",
+        "ANTIVIRUS SI APLICA"
+      ],
+      "narration": "También debes proteger acciones sensibles contra solicitudes iniciadas desde páginas ajenas. Los tóquens contra ce ese erre efe, junto con controles del origen y las cookies, ayudan a reducir ese riesgo. Las subidas de archivos requieren validar formato y tamaño, renombrar con identificadores seguros y almacenar fuera de la carpeta pública. Nunca confíes únicamente en la extensión del archivo.",
+      "index": 8,
+      "start": 172
+    },
+    {
+      "duration": 22,
+      "accent": "#94B8FF",
+      "eyebrow": "09 / A04 2025",
+      "title": "CIFRADO\nY SECRETOS",
+      "subtitle": "Protege datos en tránsito y reposo",
+      "risk": "RIESGO · DATOS",
+      "defense": "DEFENSA · TLS",
+      "nodes": [
+        "CLIENTE",
+        "HTTPS",
+        "SERVIDOR"
+      ],
+      "mechanism": "Comunicación o almacenamiento inseguro puede exponer datos sensibles.",
+      "protect": "HTTPS moderno, certificados válidos, rotación de claves y secretos.",
+      "tags": [
+        "HASH DE CONTRASEÑAS",
+        "COPIAS CIFRADAS"
+      ],
+      "narration": "Los fallos criptográficos dejan expuestos datos que deberían permanecer privados. Asegura las conexiones con hache te te pe ese y certificados válidos, protege los secretos fuera del repositorio y no inventes tus propios algoritmos de cifrado. Las contraseñas necesitan un hash especializado y las copias de seguridad también deben estar protegidas. Piensa cómo recuperarte si una clave llega a filtrarse.",
+      "index": 9,
+      "start": 194
+    },
+    {
+      "duration": 22,
+      "accent": "#FFA88C",
+      "eyebrow": "10 / A09 + A10 2025",
+      "title": "MONITOREO\nY DISPONIBILIDAD",
+      "subtitle": "Detectar incidentes antes de que escalen",
+      "risk": "RIESGO · ABUSO",
+      "defense": "DEFENSA · ALERTA",
+      "nodes": [
+        "TRÁFICO",
+        "MÉTRICAS",
+        "ALERTA"
+      ],
+      "mechanism": "Los picos de tráfico o fallos silenciosos pueden afectar la operación.",
+      "protect": "Logs sin secretos; alertas; rate limits; copias y recuperación.",
+      "tags": [
+        "MITIGACIÓN DDoS",
+        "PLAN DE RESPUESTA"
+      ],
+      "narration": "Un servidor también puede sufrir abuso automatizado, saturación o errores inesperados. Registra eventos de seguridad sin guardar contraseñas ni tóquens, configura alertas sobre fallos repetidos y mide el rendimiento. Los límites de solicitudes, la protección ante denegación de servicio y la capacidad de recuperación mejoran la resiliencia. Recuerda que un cortafuegos web no corrige por sí solo una vulnerabilidad.",
+      "index": 10,
+      "start": 216
+    },
+    {
+      "duration": 24,
+      "accent": "#83EEAF",
+      "eyebrow": "11 / PLAN DE ACCIÓN",
+      "title": "ENDURECE\nTU SERVIDOR",
+      "subtitle": "Una lista de prioridades realistas",
+      "risk": "PRIMERO · REDUCE",
+      "defense": "DESPUÉS · VERIFICA",
+      "nodes": [
+        "INVENTARIO",
+        "CORRECCIÓN",
+        "PRUEBA"
+      ],
+      "mechanism": "Descubre superficie expuesta, prioriza riesgos y verifica controles.",
+      "protect": "Parches, MFA, permisos, pruebas, logs y respaldo probado.",
+      "tags": [
+        "DENEGAR POR DEFECTO",
+        "REVISIÓN CONTINUA"
+      ],
+      "narration": "Para empezar hoy, haz inventario de tus servicios y cierra lo que no necesites. Actualiza sistema y dependencias. Activa autenticación multifactor y permisos mínimos. Separa base de datos y servicios internos. Usa consultas seguras, protege las entradas y revisa los registros. Haz copias de seguridad y comprueba que se pueden restaurar. Finalmente, evalúa tu aplicación con pruebas autorizadas y corrige por prioridad.",
+      "index": 11,
+      "start": 238
+    },
+    {
+      "duration": 18,
+      "accent": "#57F6CE",
+      "eyebrow": "12 / CIERRE",
+      "title": "APRENDE · REVISA\nY PROTEGE",
+      "subtitle": "La seguridad es un proceso, no un botón",
+      "risk": "UNA INTRODUCCIÓN",
+      "defense": "SIGUIENTE PASO",
+      "nodes": [
+        "APRENDER",
+        "MEDIR",
+        "MEJORAR"
+      ],
+      "mechanism": "Un marco de trabajo útil: entender, reducir y comprobar riesgos.",
+      "protect": "Revisa OWASP Top 10:2025 y sus guías de prevención.",
+      "tags": [
+        "GUÍAS OWASP",
+        "PRUEBAS AUTORIZADAS"
+      ],
+      "narration": "La seguridad web es un tema complejo. Esto fue apenas una breve introducción a algunas vulnerabilidades frecuentes, cómo funcionan y las primeras medidas para defender un servidor. No existe protección absoluta: la clave es reducir riesgos, vigilar y mejorar continuamente. Consulta las guías de óuaspe y realiza pruebas solo en sistemas propios o con autorización.",
+      "index": 12,
+      "start": 262
+    }
+  ]
+}

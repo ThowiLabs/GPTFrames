@@ -1,0 +1,51 @@
+<!doctype html><html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Vulnerabilidades web — Introducción a la defensa | Voz Lilith</title>
+<style>
+*{box-sizing:border-box}body{margin:0;color:#f1fbff;background:#07111f;font-family:Inter,system-ui,Arial,sans-serif}
+body:before{content:"";position:fixed;inset:0;z-index:-1;background:radial-gradient(ellipse at 75% 0%,#14565486,transparent 46%),radial-gradient(ellipse at 5% 95%,#17416577,transparent 50%)}
+.shell{max-width:1470px;margin:0 auto;padding:26px 32px 75px}
+header{display:flex;justify-content:space-between;align-items:center;gap:15px;padding-bottom:22px;border-bottom:1px solid #6cd9d534}
+.logo{font-weight:900;letter-spacing:2px;color:#80f7e0;font-size:17px}.smallmeta{color:#9fbdc8;letter-spacing:1.7px;font-size:12px}
+.hero{display:grid;grid-template-columns:1.2fr 1fr;gap:42px;align-items:end;margin:46px 0 28px}
+.overline{color:#85ffdb;letter-spacing:3px;font-size:12px;font-weight:900}
+h1{font-size:clamp(45px,5vw,74px);line-height:1.06;letter-spacing:-2.5px;margin:13px 0;color:#fff}
+h1 em{font-style:normal;color:#71efda}
+.desc{color:#bbd0da;font-size:17px;line-height:1.72;margin:0 0 15px}
+.pills{display:flex;flex-wrap:wrap;gap:8px;margin-top:20px}
+.pills span{border:1px solid #77cdcf65;background:#20485a53;padding:7px 12px;border-radius:30px;font-weight:700;color:#cde9ed;font-size:12px}
+.main{display:grid;grid-template-columns:minmax(0,1fr) 320px;gap:19px}
+.player{padding:8px;border:1px solid #6edcc271;border-radius:17px;background:#0c1c2e;box-shadow:0 20px 90px #0008;align-self:start}
+video{display:block;width:100%;background:#020a12;border-radius:10px;aspect-ratio:16/9;object-fit:contain}
+.side{padding:20px;border:1px solid #ffffff27;background:#11283c;border-radius:17px}
+h2{font-size:19px;margin:0 0 16px}
+.chapters{max-height:520px;overflow:auto;display:flex;flex-direction:column;gap:6px}
+.chapters button{cursor:pointer;text-align:left;color:#e5f1f4;border:1px solid #c5eff012;background:#19374d70;border-radius:9px;padding:11px 12px;font-size:13px;font-weight:700}
+.chapters button:hover,.chapters button:focus{outline:1px solid #77f7dd;background:#1b514e}
+.chapters button strong{color:#7aefd9;margin-right:9px;font-variant-numeric:tabular-nums}
+.actions{display:flex;flex-wrap:wrap;gap:12px;margin:24px 0}
+.actions a{display:inline-flex;align-items:center;text-decoration:none;border-radius:11px;padding:13px 18px;background:#7af4d8;color:#041b22;font-weight:900;font-size:14px}
+.actions .alt{color:#e4f7fa;background:#193749;border:1px solid #78d5d45e}
+.bottom{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+.info{border:1px solid #5a8b9366;background:#12253a;padding:22px 26px;border-radius:13px;color:#bcd8dc;line-height:1.65;font-size:14px}
+.info strong{color:#f1ffff}a{color:#8ff2dd}
+@media(max-width:1050px){.main,.hero{grid-template-columns:1fr}.chapters{display:grid;grid-template-columns:repeat(2,1fr);max-height:260px}}
+@media(max-width:640px){.shell{padding:18px 14px 40px}.bottom{grid-template-columns:1fr}.chapters{grid-template-columns:1fr 1fr}h1{font-size:45px}.smallmeta{font-size:10px}}
+</style></head><body><main class="shell">
+<header><div class="logo">● DEFENSA WEB</div><span class="smallmeta">EXPLICACIÓN EDUCATIVA · OWASP 2025</span></header>
+<section class="hero"><div><div class="overline">SEGURIDAD · 13 ESCENAS ANIMADAS</div><h1>¿QUÉ PUEDE FALLAR<br><em>EN TU SERVIDOR?</em></h1></div>
+<div><p class="desc">Una introducción visual a las vulnerabilidades web: cómo aparecen los riesgos y cuáles son las primeras medidas para proteger un servidor. Narrado con el modelo mexicano <strong>Lilith</strong> compilado a formato NEO.</p><div class="pills"><span>4:40 minutos</span><span>1920 × 1080</span><span>30 FPS</span><span>Voz Lilith</span><span>Sin música</span><span>13 capítulos</span></div></div></section>
+<section class="main">
+<div class="player"><video id="film" controls preload="metadata" playsinline poster="poster.jpg"><source src="Vulnerabilidades-Web-Lilith-1080p-30fps.mp4" type="video/mp4">Tu navegador no soporta reproducción MP4.</video></div>
+<aside class="side"><h2>Índice de capítulos</h2><div class="chapters" id="chapters"></div></aside>
+</section>
+<div class="actions"><a href="Vulnerabilidades-Web-Lilith-1080p-30fps.mp4" download>↓ Descargar documental Full HD</a>
+<a class="alt" href="lilith-voiceonly.wav" download>↓ Audio de voz Lilith</a>
+<a class="alt" href="fuentes-y-licencias.json" download>↓ Fuentes y licencias</a></div>
+<section class="bottom"><div class="info"><strong>Un tema complejo, resumido.</strong> Este video es una introducción, no una auditoría de seguridad. Incluye control de acceso, inyección, XSS, autenticación, configuraciones, dependencias, SSRF, CSRF, archivos, cifrado y respuesta a incidentes. Las medidas se aplican con controles en varias capas.</div>
+<div class="info"><strong>Fuentes y buenas prácticas.</strong> Información basada en <a href="https://top10.owasp.org/2025/" target="_blank" rel="noopener">OWASP Top 10:2025</a> y las guías de prevención de OWASP. Gráficos y diagramas producidos para este documental. La voz procede de Lilith de HirCoir; el modelo permanece en el entorno de trabajo y no se distribuye públicamente desde esta página. URL temporal de reproducción.</div></section>
+</main>
+<script>
+const scenes=__CHAPTERS_JSON__;
+const film=document.getElementById('film'); const box=document.getElementById('chapters');
+for(const s of scenes){const b=document.createElement('button');let mm=String(Math.floor(s.start/60)).padStart(2,'0'),ss=String(s.start%60).padStart(2,'0');b.innerHTML='<strong>'+mm+':'+ss+'</strong>'+s.label;b.addEventListener('click',()=>{film.currentTime=s.start;film.play().catch(()=>{});});box.appendChild(b)}
+</script></body></html>

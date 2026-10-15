@@ -1,0 +1,12 @@
+# Entrega: documental Lilith, vulnerabilidades web
+- [x] Investigar OWASP Top 10:2025 y Cheat Sheets.
+- [x] Comprobar acceso ZIP privado, no exponer token; usar publicación oficial HirCoir Lilith autorizada.
+- [x] Descargar exclusivamente ONNX Lilith y JSON, compilar .neo y verificar inferencia.
+- [x] Narrar 13 escenas y mezclar pista sin música, 280 segundos.
+- [x] Diagramar vulnerabilidades y medidas de prevención en 13 capítulos.
+- [x] Animar títulos/diagramas/tarjetas y exportar 1080p, 30 FPS, H264/AAC.
+- [x] Corregir pronunciaciones HTML/OWASP; incluir que tema es complejo y una breve introducción.
+- [x] Verificar 8400 fotogramas y decodificación íntegra sin errores.
+- [x] Publicar reproductor, MP4, WAV y fuentes por túnel Gradio temporal.
+- [x] Aislar modelos Lilith/secretos de GitHub, documentar fuente y limitaciones.
+- [ ] Si se requiere el modelo EXACTO del ZIP YahirHub, conseguir acceso o adjuntar y comparar hash.

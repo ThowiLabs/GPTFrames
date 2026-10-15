@@ -63,3 +63,10 @@ examples/go-rust-cpp-1080p/public/
 third_party/libtorch-cpu/
 examples/go-rust-cpp-1080p/motion-layers/
 examples/go-rust-cpp-1080p/motion-captions/
+
+# Lilith security documentary: generated voice, graphic frames and video
+examples/seguridad-web-lilith/voice/
+examples/seguridad-web-lilith/text/
+examples/seguridad-web-lilith/layers/
+examples/seguridad-web-lilith/layers-720/
+examples/seguridad-web-lilith/output/
