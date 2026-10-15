@@ -1,0 +1,13 @@
+# Tarea 04 — Fusión de motores
+- [x] Analizar motor HyperFrames C++ y showcase C++.
+- [x] Crear rama feature/remix-hyperframes-remotion sin tocar main.
+- [x] Adaptar compositor a módulo sin segundo binario.
+- [x] Preservar classic/news/html/browser, importador HTML, AVI y MP4.
+- [x] Implementar --remix, --remix-list, --remix-frame.
+- [x] Implementar --fusion con HTML original más 81 s de efectos.
+- [x] Compilar Linux y Windows x64 desde Linux.
+- [x] Renderizar video combinado 148 s.
+- [x] Verificar video y audio completos; inspeccionar fotogramas.
+- [x] Ejecutar suite de regresión original y nueva.
+- [ ] Probar ejecución del binario Windows en Windows real.
+- [ ] Publicar enlace permanente si se necesita.

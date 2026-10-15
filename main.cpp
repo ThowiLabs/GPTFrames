@@ -95,6 +95,7 @@ void text(int x,int y,string s,int scale,RGB c){for(char ch:s){if(ch==' '){x+=sc
 #if defined(__GNUC__)
 #pragma GCC diagnostic pop
 #endif
+#include "remix/remix_renderer.hpp"
 vector<int16_t> loadAudio(const string&dir,const vector<hf::Scene>&scenes,int seconds){
  vector<int16_t> result(size_t(seconds)*SR,0);
  if(dir=="-")return result;
@@ -142,6 +143,132 @@ std::vector<unsigned char> encodeJpeg(const std::vector<unsigned char>& bgr,int 
  return result;
 }
 int main(int argc,char**argv){try{
+ // El mismo ejecutable conserva la CLI HTML/AVI/browser y añade el compositor fusionado.
+ if(argc==2 && string(argv[1])=="--remix-list"){
+   for(size_t i=0;i<remix::scenes.size();++i){
+    const auto& s=remix::scenes[i];
+    cout<<i+1<<" | "<<s.start<<"s | "<<s.duration<<"s | "<<s.tag<<"\n";
+   }
+   return 0;
+ }
+ if(argc==4 && string(argv[1])=="--remix-frame"){
+   size_t used=0;double sec=std::stod(argv[3],&used);
+   if(used!=std::strlen(argv[3])||!std::isfinite(sec)||sec<0||sec>=148)
+     throw runtime_error("Segundo remix invalido (0..148)");
+   remix::init();
+   remix::draw(std::min(3551,int(std::round(sec*24))));
+   vector<unsigned char> rgb(pixels);
+   for(size_t i=0;i<rgb.size();i+=3)std::swap(rgb[i],rgb[i+2]);
+   if(!stbi_write_png(argv[2],W,H,3,rgb.data(),W*3))
+     throw runtime_error("No se pudo guardar PNG remix");
+   cout<<"Remix preview: "<<argv[2]<<" ("<<sec<<"s)\n";
+   return 0;
+ }
+ if(argc>=5 && argc<=8 && string(argv[1])=="--fusion"){
+#ifndef HFC_WITH_NATIVE_MP4
+   throw runtime_error("Fusion requiere compilacion HFC_NATIVE_MP4=ON");
+#else
+   if(string(argv[4]).size()<5 || string(argv[4]).substr(std::strlen(argv[4])-4)!=".mp4")
+     throw runtime_error("Fusion requiere salida .mp4");
+   size_t used=0;
+   int fps=24;
+   if(argc>=6){fps=stoi(argv[5],&used);
+     if(used!=std::strlen(argv[5]) || fps<1||fps>60)throw runtime_error("Fusion FPS 1..60");}
+   string theme=argc>=7?argv[6]:"classic";
+   if(theme!="classic"&&theme!="news"&&theme!="html"&&theme!="browser")
+     throw runtime_error("Fusion theme: classic, news, html o browser");
+#ifndef HFC_WITH_BROWSER_CAPTURE
+   if(theme=="browser")throw runtime_error("Fusion browser requiere navegador/CDP");
+#endif
+#ifndef HFC_WITH_LITEHTML
+   if(theme=="html")throw runtime_error("Fusion html requiere litehtml");
+#endif
+   auto dim=argc>=8?output::parseSize(argv[7]):output::Size{};
+   const auto intro=hf::load(argv[2]);
+   double introSeconds=intro.back().start+intro.back().duration;
+   if(introSeconds>480||introSeconds<1)throw runtime_error("Intro fusion debe durar 1..480 segundos");
+   const double fullDuration=introSeconds+81.;
+   const int frames=int(std::ceil(fullDuration*fps-1e-5));
+   const int samples=int(std::ceil(fullDuration))*SR;
+   vector<int16_t> mixed(samples,0);
+   const int voiceSeconds=int(std::ceil(introSeconds));
+   auto initial=loadAudio(argv[3],intro,voiceSeconds);
+   std::copy_n(initial.begin(),std::min(initial.size(),mixed.size()),mixed.begin());
+   const auto score=remix::soundtrack("-",148);
+   const size_t at=size_t(std::llround(introSeconds*SR));
+   const size_t scoreStart=67u*SR;
+   if(at<mixed.size()&&scoreStart<score.size()){
+     const size_t count=std::min(mixed.size()-at,score.size()-scoreStart);
+     std::copy_n(score.begin()+scoreStart,count,mixed.begin()+at);
+   }
+   remix::init();
+#ifdef HFC_WITH_LITEHTML
+   std::unique_ptr<HtmlSceneEngine> htmlScene;
+   if(theme=="html")htmlScene=std::make_unique<HtmlSceneEngine>(argv[2],intro);
+#endif
+#ifdef HFC_WITH_BROWSER_CAPTURE
+   std::unique_ptr<browser::Capture> browserScene;
+   if(theme=="browser")browserScene=std::make_unique<browser::Capture>(argv[2],W,H);
+#endif
+   NativeMp4Writer video(argv[4],dim.width,dim.height,fps);
+   vector<unsigned char> scaled;
+   for(int n=0;n<frames;++n){
+     double t=double(n)/fps;
+     if(t<introSeconds){
+#ifdef HFC_WITH_BROWSER_CAPTURE
+       if(theme=="browser")browserScene->render(t,pixels);
+       else
+#endif
+#ifdef HFC_WITH_LITEHTML
+       if(theme=="html")htmlScene->frame(n,fps,intro);
+       else
+#endif
+       if(theme=="news")renderNews(n,fps,intro,fullDuration);
+       else render(n,fps,intro,fullDuration);
+     }else{
+       int source=1608+int(std::floor((t-introSeconds)*24.+.5));
+       remix::draw(std::min(source,3551));
+     }
+     if(dim.width!=W||dim.height!=H)scaled=output::resize(pixels,W,H,dim.width,dim.height);
+     video.addVideo((dim.width==W && dim.height==H)?pixels:scaled);
+     if(n%std::max(1,5*fps)==0)cerr<<"Fusion "<<n<<"/"<<frames<<" frames\n";
+   }
+   video.addAudio(mixed);
+   cout<<"MP4 fusionado: "<<argv[4]<<" ("<<fullDuration<<" s; "<<fps<<" fps; "<<intro.size()<<" escenas HyperFrames + 9 efectos)\n";
+   return 0;
+#endif
+ }
+ if(argc>=3 && string(argv[1])=="--remix" && argc<=7){
+#ifndef HFC_WITH_NATIVE_MP4
+   throw runtime_error("Remix MP4 requiere HFC_NATIVE_MP4=ON");
+#else
+   const std::string out=argv[2];
+   if(out.size()<5||out.substr(out.size()-4)!=".mp4")throw runtime_error("Salida remix requiere .mp4");
+   auto strictInteger=[](const char* value,int lo,int hi){
+    size_t used=0;int n=std::stoi(value,&used);
+    if(used!=std::strlen(value)||n<lo||n>hi)throw std::runtime_error("Numero remix invalido");
+    return n;
+   };
+   const int fps=argc>=4?strictInteger(argv[3],1,60):24;
+   const auto dim=argc>=5?output::parseSize(argv[4]):output::Size{};
+   const int sec=argc>=6?strictInteger(argv[5],1,148):148;
+   const std::string audioDir=argc>=7?argv[6]:"proyecto-remix/audio";
+   remix::init();
+   auto audio=remix::soundtrack(audioDir,sec);
+   NativeMp4Writer writer(out.c_str(),dim.width,dim.height,fps);
+   vector<unsigned char> scaled;
+   const int frames=sec*fps;
+   for(int n=0;n<frames;++n){
+    remix::draw(std::min(remix::totalFrames()-1,int(std::llround(double(n)*24/fps))));
+    if(dim.width!=W||dim.height!=H)scaled=output::resize(pixels,W,H,dim.width,dim.height);
+    writer.addVideo((dim.width==W && dim.height==H)?pixels:scaled);
+    if(n%std::max(1,fps*5)==0)std::cerr<<"Remix "<<n<<"/"<<frames<<" frames\n";
+   }
+   writer.addAudio(audio);
+   cout<<"Remix MP4 generado: "<<out<<" ("<<sec<<"s, "<<fps<<"fps)\n";
+   return 0;
+#endif
+ }
  #ifdef HFC_WITH_BROWSER_CAPTURE
  if(argc==5 && string(argv[1])=="--browser-frame"){
   browser::Capture cap(argv[2],W,H);

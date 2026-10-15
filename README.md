@@ -159,6 +159,21 @@ The smoke suite **generates its own synthetic HTML and PCM audio in a temporary 
 See [docs/ROADMAP.md](docs/ROADMAP.md) and [SECURITY.md](SECURITY.md).
 
 
+
+## Remix: HyperFrames + compositor C++ de efectos
+
+La rama `feature/remix-hyperframes-remotion` incluye un compositor nativo de motion graphics integrado en el mismo ejecutable. Conserva `classic`, `news`, `html`, `browser`, AVI/MP4, importación HTML y todas las opciones previas. El modo `--fusion` combina cualquier composición HTML compatible con 81 segundos de efectos demostrativos, música procedural y 7 transiciones. El modo `--remix` exporta el showcase nativo completo de 148 segundos.
+
+Comandos básicos:
+```bash
+./build/native-linux/hyperframes-cpp-native --remix-list
+./build/native-linux/hyperframes-cpp-native --remix-frame escena.png 72
+./build/native-linux/hyperframes-cpp-native --remix video-remix.mp4 24 720x1280 148 proyecto-remix/audio
+./build/native-linux/hyperframes-cpp-native --fusion proyecto-remix/index.html proyecto-remix/audio fusion.mp4 24 classic 720x1280
+```
+
+La documentación completa de opciones, compilación cruzada y límites está en [docs/REMIX.md](docs/REMIX.md).
+
 ## Releases and Agent Skill
 
 Download precompiled Linux/Windows x64 binaries and an Agent Skill from [the latest GitHub release](https://github.com/ThowiLabs/hyperframes-cpp/releases/latest). The binaries can run directly as `hyperframes-cpp-native` when placed in your `PATH`, or by absolute path. The Agent Skill at [`.claude/skills/hyperframes-cpp/SKILL.md`](.claude/skills/hyperframes-cpp/SKILL.md) teaches agents executable discovery, HTML/GSAP authoring, timed narration, TTS pronunciation rules (spell unfamiliar words and numbers phonetically for the selected voice), exports and quality checks.
