@@ -307,8 +307,21 @@ class Capture{
  std::unique_ptr<BrowserProcess> child_;
  std::unique_ptr<Devtools> session_;
  int width_,height_;
+ bool cssTimeline_=false;
  public:
- Capture(const std::string& filename,int width=720,int height=1280):width_(width),height_(height){
+ Capture(const std::string& filename,int width=720,int height=1280,bool cssTimeline=false):width_(width),height_(height),cssTimeline_(cssTimeline){
+  if(cssTimeline_){
+   if(width_<256||width_>1920||height_<144||height_>1080)
+    throw std::runtime_error("CSS browser canvas outside safe preview limits");
+   const fs::path file=fs::absolute(filename);
+   if(file.extension()!=".html"||!fs::is_regular_file(file)||fs::file_size(file)>1024*1024)
+    throw std::runtime_error("Browser CSS mode requires a local HTML under 1 MiB");
+   std::ifstream source(file);
+   const std::string html((std::istreambuf_iterator<char>(source)),std::istreambuf_iterator<char>());
+   if(html.find("Content-Security-Policy")==std::string::npos ||
+      html.find("default-src")==std::string::npos || html.find("script-src")==std::string::npos)
+    throw std::runtime_error("CSS widget requires local offline Content Security Policy");
+  }
   auto executable=discover();
   if(executable.empty())throw std::runtime_error(
     "No Chromium-family browser detected. Install Chrome, Chromium, Edge, or set HFC_BROWSER to its executable.");
@@ -335,12 +348,13 @@ class Capture{
   bool ready=false;
   for(int i=0;i<120;i++){
    auto res=session_->command("Runtime.evaluate",{
-    {"expression","document.readyState === 'complete' && !!(window.__timelines && window.__timelines.main)"},
+    {"expression",cssTimeline_ ? "document.readyState === 'complete'" : "document.readyState === 'complete' && !!(window.__timelines && window.__timelines.main)"},
     {"returnByValue",true}});
    if(res.contains("result")&&res["result"].value("value",false)){ready=true;break;}
    std::this_thread::sleep_for(std::chrono::milliseconds(100));
   }
-  if(!ready)throw std::runtime_error(
+  if(!ready)throw std::runtime_error(cssTimeline_ ?
+    "Browser CSS document was not loaded" :
     "Browser page did not expose window.__timelines.main. Check that GSAP assets exist next to HTML.");
  }
  void render(double seconds,std::vector<unsigned char>& bgr){
@@ -352,10 +366,16 @@ class Capture{
     " if(active<0)active=elements.length-1;"+
     " elements.forEach((el,i)=>{el.style.visibility=i===active?'visible':'hidden';});"+
     " window.__timelines.main.pause();window.__timelines.main.seek(t,false);return active})()";
+  if(cssTimeline_){
+   code="(()=>{const ms="+std::to_string(seconds*1000.)+"; "
+        "const tracks=document.getAnimations({subtree:true});"
+        "for(const track of tracks){track.pause();track.currentTime=ms;}"
+        "return tracks.length;})()";
+  }
   auto evaluated=session_->command("Runtime.evaluate",{{"expression",code},{"returnByValue",true}});
-  if(evaluated.contains("exceptionDetails"))throw std::runtime_error("GSAP seek failed in browser");
+  if(evaluated.contains("exceptionDetails"))throw std::runtime_error("Browser timeline seek failed");
   auto screenshot=session_->command("Page.captureScreenshot",{
-    {"format","jpeg"},{"quality",93},{"fromSurface",true},{"captureBeyondViewport",false}});
+    {"format",cssTimeline_?"png":"jpeg"},{"quality",93},{"fromSurface",true},{"captureBeyondViewport",false}});
   auto encoded=base64(screenshot.at("data").get<std::string>());
   int w=0,h=0,c=0;
   stbi_uc* pixels=stbi_load_from_memory(encoded.data(),static_cast<int>(encoded.size()),&w,&h,&c,3);

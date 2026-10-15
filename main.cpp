@@ -391,6 +391,45 @@ int main(int argc,char**argv){try{
 #endif
  }
  #ifdef HFC_WITH_BROWSER_CAPTURE
+ if(argc==8 && string(argv[1])=="--browser-widget-render"){
+#ifndef HFC_WITH_NATIVE_MP4
+  throw runtime_error("CSS widget MP4 requires HFC_NATIVE_MP4");
+#else
+  const double duration=stod(argv[4]);
+  const int fps=stoi(argv[5]),vw=stoi(argv[6]),vh=stoi(argv[7]);
+  if(!isfinite(duration)||duration<=0||duration>10||fps<1||fps>30||
+     vw<256||vw>1920||vh<144||vh>1080||vw%16||vh%2)
+   throw runtime_error("Preview limits: <=10 seconds, <=30fps, 16-aligned width");
+  const string out=argv[3];
+  if(out.size()<5||out.substr(out.size()-4)!=".mp4")
+   throw runtime_error("Output must have .mp4 extension");
+  browser::Capture widget(argv[2],vw,vh,true);
+  NativeMp4Writer writer(out.c_str(),vw,vh,fps);
+  vector<unsigned char> data;
+  const int count=int(ceil(duration*fps-0.00001));
+  for(int i=0;i<count;++i){
+   widget.render(double(i)/fps,data);
+   writer.addVideo(data);
+  }
+  writer.addAudio(vector<int16_t>(size_t(ceil(duration*SR)),0));
+  cout<<"CSS widget MP4 "<<out<<" ("<<count<<" frames)"<<endl;
+  return 0;
+#endif
+ }
+ if(argc==7 && string(argv[1])=="--browser-widget-frame"){
+  int vw=stoi(argv[5]),vh=stoi(argv[6]);
+  if(vw<256||vw>1920||vh<144||vh>1080)throw runtime_error("Invalid widget viewport");
+  const auto t=stod(argv[3]);
+  if(!isfinite(t)||t<0||t>120)throw runtime_error("Invalid CSS timeline second");
+  browser::Capture widget(argv[2],vw,vh,true);
+  vector<unsigned char> data;
+  widget.render(t,data);
+  for(size_t i=0;i<data.size();i+=3)swap(data[i],data[i+2]);
+  if(!stbi_write_png(argv[4],vw,vh,3,data.data(),vw*3))
+    throw runtime_error("Unable to write CSS widget PNG");
+  cout<<"CSS widget rendered at "<<t<<"s"<<endl;
+  return 0;
+ }
  if(argc==5 && string(argv[1])=="--browser-frame"){
   browser::Capture cap(argv[2],W,H);
   std::vector<unsigned char> image;
