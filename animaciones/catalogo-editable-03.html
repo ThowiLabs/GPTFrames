@@ -420,6 +420,16 @@ body{background:transparent;color:#f8fafc;font-family:system-ui,-apple-system,"S
           to { opacity: 1; }
         }
 
+  .anim-engine .marquee-track-container{height:42px;overflow:hidden;background:#030712;border-top:1px solid #1c4255}
+  .anim-engine .marquee-content{display:flex;width:max-content;white-space:nowrap;
+    animation:newsCrawl 12s linear infinite!important;will-change:transform;
+    font-size:15px;color:#73f4fa;letter-spacing:.35px}
+  .anim-engine .marquee-copy{display:block;flex:0 0 auto;white-space:nowrap;
+    padding:0 52px 0 0;font:700 15px/42px ui-monospace,SFMono-Regular,monospace}
+  .anim-engine .news-main-headline{font-size:17px;line-height:1.25;letter-spacing:.15px}
+  .anim-engine .breaking-tag{font-size:13px;white-space:nowrap}
+  @keyframes newsCrawl{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+
 html,body{height:100%;width:100%;margin:0;padding:0;overflow:hidden}
 body{background:radial-gradient(ellipse at 25% 35%,#1c2940,#080b12 68%)!important;font-family:system-ui,"Segoe UI",Arial,sans-serif;color:#f6faff}
 header{position:absolute;top:17px;left:32px;right:32px;display:flex;justify-content:space-between;align-items:center;font-size:12px;font-weight:760;color:#acc3d0;letter-spacing:1.2px}
@@ -437,6 +447,17 @@ header strong{color:#45e6ed}.rule{position:absolute;top:51px;left:32px;right:32p
 .tags{font-size:12px;color:#f2c988;line-height:1.4;margin:0 0 20px}
 .fields{font-size:11px;color:#9edee0;line-height:1.4}
 footer{position:absolute;left:34px;right:34px;bottom:16px;color:#8ea5bb;display:flex;justify-content:space-between;font-size:11px}
+
+.module:last-child{display:block;padding:0}
+.module:last-child .copy{position:absolute;left:48px;top:72px;width:730px}
+.module:last-child .copy .index{margin:0 0 8px}
+.module:last-child .copy .name{font-size:30px;margin:0 0 8px}
+.module:last-child .copy .description{font-size:16px;margin:0 0 8px}
+.module:last-child .copy .label,.module:last-child .copy .fields{display:none}
+.module:last-child .copy .tags{font-size:12px;margin:0}
+.module:last-child .preview{position:absolute;left:36px;top:232px;width:776px;height:148px}
+.module:last-child .preview .anim-engine{width:760px!important;height:144px!important;transform:none!important}
+.module:last-child .preview .stage{width:750px!important;max-width:none!important;height:140px!important}
 
 .module:nth-child(1){animation:show1 31.5s linear infinite}
 @keyframes show1{0%,0.00000%{visibility:hidden}0.00020%,11.11091%{visibility:visible}11.11111%,100%{visibility:hidden}}
@@ -565,8 +586,6 @@ footer{position:absolute;left:34px;right:34px;bottom:16px;color:#8ea5bb;display:
           <div class="news-main-headline" data-field="headline">NUEVA VERSIÓN DE KERNEL LINUX DISPONIBLE PARA SERVIDORES ENTERPRISE</div>
         </div>
         <div class="marquee-track-container">
-          <div class="marquee-content" data-field="ticker">
-            +++ [MERCADOS]: TECH INDEX +3.4% +++ [SERVIDOR]: CLUSTER PROCESANDO 40 Gbps SIN PÉRDIDAS +++ [SISTEMA]: DESPLIEGUES AUTOMATIZADOS AL 100% COMPLETADOS +++
-          </div>
+          <div class="marquee-content"><span class="marquee-copy" data-field="ticker">+++ [MERCADOS]: TECH INDEX +3.4% +++ [SERVIDOR]: CLUSTER PROCESANDO 40 Gbps SIN PÉRDIDAS +++ [SISTEMA]: DESPLIEGUES AUTOMATIZADOS AL 100% COMPLETADOS +++</span><span class="marquee-copy" data-field="ticker" aria-hidden="true">+++ [MERCADOS]: TECH INDEX +3.4% +++ [SERVIDOR]: CLUSTER PROCESANDO 40 Gbps SIN PÉRDIDAS +++ [SISTEMA]: DESPLIEGUES AUTOMATIZADOS AL 100% COMPLETADOS +++</span></div>
         </div>
       </div></div></div></div><article class="copy"><p class="index">09 / 09 · NOTICIAS</p><h1 class="name">Cintillo informativo</h1><p class="description">Titular superior y marquesina de noticias en movimiento.</p><p class="label">Tags</p><p class="tags">noticias, cintillo, breaking news, marquee</p><p class="label">Campos editables</p><p class="fields">label, headline, ticker</p></article></section></main><footer><span>HTML/CSS + TAGS / MOTOR C++ + CHROMIUM</span><span>848×480 · 24 FPS</span></footer></body></html>

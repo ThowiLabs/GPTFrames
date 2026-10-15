@@ -26,6 +26,18 @@ header strong{color:#45e6ed}.rule{position:absolute;top:51px;left:32px;right:32p
 .fields{font-size:11px;color:#9edee0;line-height:1.4}
 footer{position:absolute;left:34px;right:34px;bottom:16px;color:#8ea5bb;display:flex;justify-content:space-between;font-size:11px}
 """
+css+="""
+.module:last-child{display:block;padding:0}
+.module:last-child .copy{position:absolute;left:48px;top:72px;width:730px}
+.module:last-child .copy .index{margin:0 0 8px}
+.module:last-child .copy .name{font-size:30px;margin:0 0 8px}
+.module:last-child .copy .description{font-size:16px;margin:0 0 8px}
+.module:last-child .copy .label,.module:last-child .copy .fields{display:none}
+.module:last-child .copy .tags{font-size:12px;margin:0}
+.module:last-child .preview{position:absolute;left:36px;top:232px;width:776px;height:148px}
+.module:last-child .preview .anim-engine{width:760px!important;height:144px!important;transform:none!important}
+.module:last-child .preview .stage{width:750px!important;max-width:none!important;height:140px!important}
+"""
 for i,item in enumerate(rows):
  path=R/"presets"/(item["id"]+".html")
  page=path.read_text()

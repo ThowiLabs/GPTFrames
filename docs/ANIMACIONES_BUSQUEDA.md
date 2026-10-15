@@ -124,3 +124,26 @@ sin sandbox del navegador. El modo de HTML arbitrario de terceros
 revisados y listas blancas de propiedades. La importación de plantillas
 desconocidas requiere un proceso de aislamiento separado antes de
 considerarse segura para el público.
+
+## Corrección del cintillo — movimiento visible
+
+El módulo `breaking-news-ticker` se corrigió para evitar que una
+marquesina de 18 segundos quede fuera de cámara durante su aparición
+de 3.5 segundos en el catálogo. Ahora:
+
+- Las noticias comienzan a verse desde el primer fotograma y avanzan de
+  derecha a izquierda con el `@keyframes newsCrawl` de 12 segundos.
+- Dos copias idénticas del texto se desplazan `-50%` de la anchura total,
+  para obtener un bucle continuo sin saltos.
+- Ambos elementos exponen `data-field="ticker"`. El motor Chromium/CDP
+  actualiza **todas** las coincidencias de ese campo (nunca `innerHTML`),
+  preservando la edición de noticias desde JSON.
+- La última escena de `catalogo-editable-03.html` tiene una presentación
+  horizontal más amplia para resultar legible a 480p.
+- La vista previa independiente `demo-cintillo-corregido.html` presenta el
+  cintillo durante ocho segundos a 24 FPS.
+
+`ticker-motion-css` es un test opcional para CTest que captura dos tiempos
+de un mismo preset, compara solo los píxeles de la franja inferior y falla
+si el contenido no cambia de posición. Además, `mcp-native` sigue pasando
+para las 32 animaciones y sus herramientas de búsqueda.

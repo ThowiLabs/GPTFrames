@@ -88,7 +88,17 @@ body{background:transparent;color:#f8fafc;font-family:system-ui,-apple-system,"S
           from { opacity: 0.2; }
           to { opacity: 1; }
         }
-      </style></head><body><div class="anim-engine"><div class="stage" style="width:100%;max-width:800px"><div class="news-broadcast-bar">
+
+  .anim-engine .marquee-track-container{height:42px;overflow:hidden;background:#030712;border-top:1px solid #1c4255}
+  .anim-engine .marquee-content{display:flex;width:max-content;white-space:nowrap;
+    animation:newsCrawl 12s linear infinite!important;will-change:transform;
+    font-size:15px;color:#73f4fa;letter-spacing:.35px}
+  .anim-engine .marquee-copy{display:block;flex:0 0 auto;white-space:nowrap;
+    padding:0 52px 0 0;font:700 15px/42px ui-monospace,SFMono-Regular,monospace}
+  .anim-engine .news-main-headline{font-size:17px;line-height:1.25;letter-spacing:.15px}
+  .anim-engine .breaking-tag{font-size:13px;white-space:nowrap}
+  @keyframes newsCrawl{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+  </style></head><body><div class="anim-engine"><div class="stage" style="width:100%;max-width:800px"><div class="news-broadcast-bar">
         <div class="news-upper-row">
           <div class="breaking-tag">
             <div class="pulse-rec-dot"></div>
@@ -97,8 +107,6 @@ body{background:transparent;color:#f8fafc;font-family:system-ui,-apple-system,"S
           <div class="news-main-headline" data-field="headline">NUEVA VERSIÓN DE KERNEL LINUX DISPONIBLE PARA SERVIDORES ENTERPRISE</div>
         </div>
         <div class="marquee-track-container">
-          <div class="marquee-content" data-field="ticker">
-            +++ [MERCADOS]: TECH INDEX +3.4% +++ [SERVIDOR]: CLUSTER PROCESANDO 40 Gbps SIN PÉRDIDAS +++ [SISTEMA]: DESPLIEGUES AUTOMATIZADOS AL 100% COMPLETADOS +++
-          </div>
+          <div class="marquee-content"><span class="marquee-copy" data-field="ticker">+++ [MERCADOS]: TECH INDEX +3.4% +++ [SERVIDOR]: CLUSTER PROCESANDO 40 Gbps SIN PÉRDIDAS +++ [SISTEMA]: DESPLIEGUES AUTOMATIZADOS AL 100% COMPLETADOS +++</span><span class="marquee-copy" data-field="ticker" aria-hidden="true">+++ [MERCADOS]: TECH INDEX +3.4% +++ [SERVIDOR]: CLUSTER PROCESANDO 40 Gbps SIN PÉRDIDAS +++ [SISTEMA]: DESPLIEGUES AUTOMATIZADOS AL 100% COMPLETADOS +++</span></div>
         </div>
       </div></div></div></body></html>

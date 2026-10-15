@@ -96,7 +96,16 @@ def set_attrs(content,slug):
  if slug=="breaking-news-ticker":
   content=content.replace('ÚLTIMA HORA','<span data-field="label">ÚLTIMA HORA</span>')
   content=content.replace('class="news-main-headline"','class="news-main-headline" data-field="headline"')
-  content=content.replace('class="marquee-content"','class="marquee-content" data-field="ticker"')
+  # Repeat ticker content for seamless motion. Both copies have the editable field.
+  def duplicate_ticker(match):
+   text=match.group(1).strip()
+   if not text: raise ValueError("The source ticker is empty")
+   return ('<div class="marquee-content"><span class="marquee-copy" data-field="ticker">'+
+           text+'</span><span class="marquee-copy" data-field="ticker" aria-hidden="true">'+
+           text+'</span></div>')
+  content,changed=re.subn(r'<div class="marquee-content">\s*(.*?)\s*</div>',
+                           duplicate_ticker,content,count=1,flags=re.S)
+  assert changed==1, "Ticker markup not found"
  return content
 
 def fallback_svg(mode):
@@ -132,12 +141,26 @@ for number,(card,meta) in enumerate(zip(cards,fields),start=24):
   # Display text with 'https://...' is allowed if not an external resource
   if '<img src="https:' in inside:raise RuntimeError("External image not allowed")
  css=RESET+root_css+"\n"+(styles[0] if styles else re.findall(r"<style[^>]*>(.*?)</style>",source[:newsstart],re.S|re.I)[-1])
+ if slug=="breaking-news-ticker":
+  # Show readable headlines immediately; two copies give a continuous
+  # marquee from t=0, rather than hiding the news offscreen for 18 seconds.
+  css+="""
+  .anim-engine .marquee-track-container{height:42px;overflow:hidden;background:#030712;border-top:1px solid #1c4255}
+  .anim-engine .marquee-content{display:flex;width:max-content;white-space:nowrap;
+    animation:newsCrawl 12s linear infinite!important;will-change:transform;
+    font-size:15px;color:#73f4fa;letter-spacing:.35px}
+  .anim-engine .marquee-copy{display:block;flex:0 0 auto;white-space:nowrap;
+    padding:0 52px 0 0;font:700 15px/42px ui-monospace,SFMono-Regular,monospace}
+  .anim-engine .news-main-headline{font-size:17px;line-height:1.25;letter-spacing:.15px}
+  .anim-engine .breaking-tag{font-size:13px;white-space:nowrap}
+  @keyframes newsCrawl{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+  """
  # Original animation selectors rely on .anim-engine; append .stage if desired.
  structure=f'<div class="anim-engine"><div class="stage">{inside}</div></div>'
  if slug=="breaking-news-ticker":
   structure=f'<div class="anim-engine"><div class="stage" style="width:100%;max-width:800px">{inside}</div></div>'
  page='<!doctype html><html lang="es"><head><meta charset="utf-8">'+CSP+'<style>'+css+'</style></head><body>'+structure+'</body></html>'
- (output/(slug+".html")).write_text(page,encoding="utf-8")
+ (output/(slug+".html")).write_text("\n".join(line.rstrip() for line in page.splitlines())+"\n",encoding="utf-8")
  added.append({"number":number,"id":slug,"name":name,"category":cat,"type":typ,
   "description":desc,"style":"dark / premium / tech", "backend":"browser",
   "collection":"animaciones","preset_file":f"animaciones/presets/{slug}.html",

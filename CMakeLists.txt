@@ -135,6 +135,10 @@ if(BUILD_TESTING)
       "${CMAKE_CURRENT_SOURCE_DIR}/tests/animation-timeline-smoke.sh"
       $<TARGET_FILE:hyperframes-cpp-native> "${CMAKE_CURRENT_SOURCE_DIR}")
     set_tests_properties(animation-timeline-css PROPERTIES TIMEOUT 190)
+    add_test(NAME ticker-motion-css COMMAND sh
+      "${CMAKE_CURRENT_SOURCE_DIR}/tests/ticker-motion-smoke.sh"
+      $<TARGET_FILE:hyperframes-cpp-native> "${CMAKE_CURRENT_SOURCE_DIR}")
+    set_tests_properties(ticker-motion-css PROPERTIES TIMEOUT 100)
   endif()
   if(UNIX)
     add_test(NAME studio-fullhd-smoke COMMAND sh "${CMAKE_CURRENT_SOURCE_DIR}/tests/pro-studio-smoke.sh" $<TARGET_FILE:hyperframes-cpp-native> "${CMAKE_CURRENT_SOURCE_DIR}")

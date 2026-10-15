@@ -413,10 +413,10 @@ class Capture{
     "if(key==='signal_color'){if(!/^#[0-9A-Fa-f]{6}$/.test(value))throw Error('Invalid color');"+
     "document.documentElement.style.setProperty('--c-cyan',value);"+
     "document.documentElement.style.setProperty('--c-green',value);updated++;continue;}"+
-    "const target=document.querySelector('[data-field=\\\"'+key+'\\\"]');"+
-    "if(!target)throw Error('Unknown property: '+key);"+
-    "if(target.tagName==='IMG'){if(!/^data:image\\/(png|jpeg|webp|svg\\+xml);/.test(value))throw Error('Local image expected');"+
-    "target.src=value;pictures.push(target.decode());}else{target.textContent=value;}updated++;}await Promise.all(pictures);return updated;})()";
+    "const targets=document.querySelectorAll('[data-field=\\\"'+key+'\\\"]');"+
+    "if(!targets.length)throw Error('Unknown property: '+key);"+
+    "for(const target of targets){if(target.tagName==='IMG'){if(!/^data:image\\/(png|jpeg|webp|svg\\+xml);/.test(value))throw Error('Local image expected');"+
+    "target.src=value;pictures.push(target.decode());}else{target.textContent=value;}}updated++;}await Promise.all(pictures);return updated;})()";
   auto response=session_->command("Runtime.evaluate",{{"expression",script},{"returnByValue",true},{"awaitPromise",true}});
   if(response.contains("exceptionDetails")||!response.contains("result")||
      response["result"].value("value",0)!=static_cast<int>(properties.size()))
