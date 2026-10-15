@@ -1,0 +1,3 @@
+[submodule "third_party/neo-tts"]
+	path = third_party/neo-tts
+	url = https://github.com/ThowiLabs/neo-tts.git

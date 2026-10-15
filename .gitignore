@@ -40,3 +40,7 @@ samples/
 projects/
 renders/
 output/
+
+# Voice models and local ONNX Runtime binaries (not redistributed)
+models/
+third_party/onnxruntime-dist/

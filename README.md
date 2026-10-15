@@ -1,213 +1,63 @@
-# HyperFrames C++
+# GPTFrames
 
-**An experimental C++17 video renderer with native AVI/MP4 encoding and optional browser-assisted HTML/CSS/JavaScript capture.**
+GPTFrames is a C++17 video compositor extended with native Neo Lite speech inference and an MCP tool server for controlled image search, narration and video rendering.
 
-![C++17](https://img.shields.io/badge/C%2B%2B-17-00599C)
-![License](https://img.shields.io/badge/license-Apache--2.0-blue)
-![Linux & Windows](https://img.shields.io/badge/platform-Linux%20%7C%20Windows-444)
-![Experimental](https://img.shields.io/badge/status-experimental-orange)
+## Components
 
-> **Independent project.** This is not the official HyperFrames implementation or a general-purpose HTML/browser engine. Input HTML must follow the currently supported scene timing conventions.
+- Renderer: inherits HyperFrames Visual v2, JSON scene composition, keyframes, text, PNG/JPEG, shapes, transitions, optional Chromium HTML capture, AVI and H.264/AAC MP4.
+- Voice: Neo Lite from the pinned MIT-licensed Neo-TTS Git submodule. Supports ONNX/NEO single-speaker Piper VITS models; creates 24kHz mono WAV for the renderer.
+- MCP service: Python standard library, stdio and authenticated HTTP, with create/validate/render, voice synthesis, Wikimedia Commons and Openverse search and safe Commons download with attribution.
+- Video engine is buildable on Linux and Windows x64 from Linux. Neo Lite runtime is tested on Linux; a Windows Neo Lite distribution is not yet included.
 
-HyperFrames C++ combines a bounded HTML scene importer, a native software renderer, a browser-driven renderer (Chrome DevTools Protocol), and statically linked video/audio encoders. It exports AVI or MP4 **without invoking FFmpeg**.
+## Build the video engine
 
-**This repository contains engine source, build scripts, documentation and technical regression tests only.** It deliberately does not bundle video projects, finished videos, narration, demonstration photography or GSAP assets.
+Clone with submodules:
 
-## Capabilities
+    git clone --recurse-submodules https://github.com/ThowiLabs/GPTFrames.git
+    cd GPTFrames
 
-| Feature | Status |
-|---|---|
-| Native AVI RGB24 / RLE8 / MJPEG with PCM | Implemented |
-| Native MP4 H.264 + AAC | Experimental, implemented |
-| Up to 60 FPS, time-indexed animation sampling | Implemented; throughput varies |
-| Portrait output from 180×320 to 1080×1920 | Implemented, fixed 9:16 aspect |
-| HTML scene metadata importer | Supported subset only |
-| Native TrueType/UTF-8 text | Implemented |
-| CSS/HTML layout through litehtml | Experimental; limited CSS features |
-| Chrome/Chromium/Edge detection + CDP capture | Implemented; needs a browser installed |
-| CSS/JS/GSAP fidelity in browser mode | Uses original scripts supplied by the user |
-| Native MP3/M4A decoding | Not implemented; currently expects PCM WAV |
-| General websites, arbitrary JS DOM and aspect ratios | Not supported |
-| Windows x64 | Cross-compiles; real Windows runtime testing pending |
+Install C++17, CMake, Python3 and MinGW-w64 for Windows builds, then:
 
-The browser backend renders frames using the locally installed Chromium/Chrome/Edge and lets the C++ encoder write H.264/AAC MP4. The other renderers work without a browser. Neither path executes FFmpeg.
+    bash scripts/fetch-html-deps.sh
+    bash scripts/fetch-codecs.sh
+    python3 scripts/embed_fonts.py
+    cmake -S . -B build/gptframes-linux -DCMAKE_BUILD_TYPE=Release -DHFC_HTML_LAYOUT=ON -DHFC_NATIVE_MP4=ON -DHFC_BROWSER_CAPTURE=ON
+    cmake --build build/gptframes-linux -j3
+    build/gptframes-linux/hyperframes-cpp-native --project render examples/json-showcase-v2/showcase-v2.json video.mp4
 
-## Build
+Windows: cross-compile with CMAKE_SYSTEM_NAME=Windows and x86_64-w64-mingw32-gcc/g++.
 
-Requirements: C++17 GCC, Python 3 for build-time font embedding, DejaVu Sans and DejaVu Sans Bold installed locally, and Git/CMake to build optional third-party backends. MinGW-w64 is needed for Windows cross-compilation.
+## Optional Neo Lite speech
 
-On Debian/Ubuntu:
+On Debian/Ubuntu install espeak-ng, libespeak-ng-dev, libssl-dev, libjson-c-dev, libzstd-dev, cmake, C++17 and curl.
 
-```bash
-sudo apt update
-sudo apt install g++ gcc python3 fonts-dejavu-core git cmake make
-# Optional browser mode:
-sudo apt install chromium
-# Windows cross-compilation:
-sudo apt install gcc-mingw-w64-x86-64-win32 g++-mingw-w64-x86-64-win32
-```
+    bash scripts/build-neo-lite-linux.sh
 
-Clone and build the complete experimental Linux engine:
+Download a properly licensed Piper Spanish ONNX single-speaker voice with matching JSON into models/ (models are excluded from Git). Example model: es_ES-davefx-medium, listed at https://huggingface.co/rhasspy/piper-voices/tree/main/es/es_ES/davefx/medium
 
-```bash
-git clone https://github.com/ThowiLabs/hyperframes-cpp.git
-cd hyperframes-cpp
-./scripts/build-native-mp4.sh
-```
+    build/gptframes-linux/hyperframes-cpp-native --voice synth --model models/es_ES-davefx-medium.onnx --text-file examples/gptframes/narracion.txt --out voz-24000.wav --neo-lite "$PWD/scripts/neo-lite-local.sh"
 
-The main executable is `build/native-linux/hyperframes-cpp-native`. The build script fetches *pinned* litehtml, minih264, minimp4 and vo-aacenc source revisions and statically links them. For a lightweight AVI-only build without additional downloaded codec libraries:
+The C++ voice bridge invokes Neo Lite directly without a shell and checks/resamples WAV to 24000 Hz 16-bit mono. Model licenses, audio rights and voice consent must be checked separately. See docs/NEO_LITE.md.
 
-```bash
-./scripts/build-linux.sh
-# Output: ./hyperframes-linux
-```
+## MCP server
 
-For Windows x64 cross-compilation:
+Local MCP (stdio, no Python packages required):
 
-```bash
-./scripts/build-native-windows.sh
-# Output: ./build/native-windows/hyperframes-cpp-native.exe
-```
+    export GPTFRAMES_ENGINE="$PWD/build/gptframes-linux/hyperframes-cpp-native"
+    export GPTFRAMES_NEO_LITE="$PWD/scripts/neo-lite-local.sh"
+    python3 mcp/server.py --transport stdio
 
-Raw TTF files and the generated `font_embedded.hpp` are not tracked. The binary embeds necessary glyph data at build time. See [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md) for font and codec notices.
+Remote MCP is an optional authenticated HTTP transport bound to 127.0.0.1. It requires GPTFRAMES_MCP_TOKEN (a long secret) and HTTPS reverse proxy/tunnel. A separate registration/authentication step is required by the external MCP client. OAuth and GET SSE are not yet implemented; compatibility with client-specific connection flows is not guaranteed. Never expose the write tools without authentication. See docs/MCP.md.
 
-## Render your own composition
-
-The importer expects a local HTML file with consecutive `section.scene` blocks containing `data-start` and `data-duration`. Supported classic themes can also read `kicker`, `wordline`, `sub`, `barlabel` and selected CSS pixel properties.
-
-Minimal scene structure (illustration of **syntax**, not a bundled video project):
-
-```html
-<section class="scene" data-start="0" data-duration="5" style="--a:#47def5">
-  <div class="kicker">SECTION</div>
-  <div class="wordline">Example headline</div>
-  <div class="sub">Scene description</div>
-  <div class="barlabel">CHAPTER</div>
-</section>
-```
-
-Each scene normally has a corresponding WAV input (`segment-01.wav`, `segment-02.wav`, etc.): mono, signed 16-bit PCM, 24 kHz. Pass `-` for silence. Input HTML, audio and images remain **outside this repository**, under your own project directory.
-
-```bash
-# Inspect scene times and titles
-./build/native-linux/hyperframes-cpp-native --inspect /path/to/project/index.html
-
-# Check for a compatible browser
-./build/native-linux/hyperframes-cpp-native --browser-check
-# Optional: find only an already-running Chromium-family process
-./build/native-linux/hyperframes-cpp-native --browser-process-check
-
-# Render a browser frame at exactly t = 4 seconds (PNG)
-./build/native-linux/hyperframes-cpp-native --browser-frame \
-  /path/to/project/index.html 4 /tmp/frame.png
-
-# Export native MP4: 720x1280, 24 FPS, original CSS/JS from installed browser
-./build/native-linux/hyperframes-cpp-native \
-  /path/to/project/index.html /path/to/project/audio \
-  output.mp4 24 h264 browser 720x1280
-
-# Or export AVI using the native software theme
-./build/native-linux/hyperframes-cpp-native \
-  /path/to/project/index.html - \
-  output.avi 24 mjpeg classic 360x640
-```
-
-The optional final positional argument is a preview duration in seconds, e.g. `... browser 720x1280 5`.
-
-`browser` mode requires a complete **trusted local HTML project** with all its CSS, scripts and images present. Its JavaScript must expose `window.__timelines.main` with a `seek(t)` method to support deterministic animation capture. GSAP is not distributed. The browser backend currently supports Chromium-family browsers only; override detection with `HFC_BROWSER=/absolute/path/to/browser`.
-
-For a complete reference of browser behavior, security limitations and Windows build requirements, see [docs/BROWSER_MODE.md](docs/BROWSER_MODE.md). For codec, timeline and layout details, see [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md).
-
-## Repository structure
-
-```text
-main.cpp                  CLI, audio input and video muxing
-browser_detection.hpp     Browser discovery
-browser_capture.hpp       CDP/WebSocket frame capture
-html_composition.hpp      Bounded HTML scene/timing importer
-render_scene.hpp          Native classic renderer
-render_news.hpp           Native news renderer
-html_scene_engine.hpp     Experimental litehtml renderer
-native_mp4.hpp            H.264/AAC MP4 writer
-native_codecs/            Native codec C compilation units
-animation_timeline.hpp    Deterministic easing and tracks
-output_scale.hpp          Vertical output resampler
-vendor/                   Licenses and source headers
-scripts/                  Build and dependency fetch scripts
-tests/                    Unit tests and temporary synthetic fixtures
-contexto/, tareas/        Engineering history and outstanding work
-docs/                     Architecture, browser guide and roadmap
-```
+Image sources: Wikimedia Commons metadata-driven downloads with attribution sidecars; Openverse search results are discovery only, not automatically imported. Review third-party media licenses. See docs/IMAGE_SOURCES.md.
 
 ## Tests
 
-```bash
-bash tests/smoke-linux.sh
-bash tests/browser-integration.sh build/native-linux/hyperframes-cpp-native
-```
+    python3 -m unittest discover -s tests -p test_gptframes.py -v
+    bash tests/json-compositor.sh
+    bash tests/json-showcase-v2.sh
+    bash tests/remix-smoke.sh
 
-The smoke suite **generates its own synthetic HTML and PCM audio in a temporary directory**. The browser test uses a small, self-contained technical HTML fixture; no third-party animation library, photographs or finished video projects are committed. The browser test skips when no compatible installed browser is available. If installed, `ffprobe` is used **only to verify output**, never for rendering or encoding.
+## Licensing
 
-## Design and security
-
-- The browser is a deliberate *runtime dependency* **only** for browser-assisted mode. The C++ codecs do not require FFmpeg or Chromium.
-- Running arbitrary untrusted HTML is **not safe**; Chromium will execute JavaScript and may access the network. Use trusted local compositions only, preferably in a low-privilege environment.
-- The engine is currently experimental: AVI has a 32-bit container-size limit; native H.264/AAC codecs have performance and patent/distribution considerations; Windows has not been runtime-tested on a physical Windows installation.
-- Scene importing does not constitute complete DOM/CSS/GSAP compatibility. For exact browser visuals, use the browser mode with original JS/assets.
-- Audio accepts WAV PCM as described above; MP3/AAC input decoding and audio mixing are planned, not presently supported.
-
-See [docs/ROADMAP.md](docs/ROADMAP.md) and [SECURITY.md](SECURITY.md).
-
-
-
-## Showcase visual v2
-
-Nueva demostración con cuatro escenas de 24 segundos, iluminación procedimental, retículas, anillos, bordes redondeados, tipografía con sombras y una composición gráfica más cuidada. Cambia `examples/json-showcase-v2/showcase-v2.json` para personalizarlo sin recompilar. Documentación: [docs/GRAPHICS_V2.md](docs/GRAPHICS_V2.md).
-
-## Compositor JSON: videos configurables sin recompilar
-
-Esta rama incorpora un **formato de proyecto JSON** con escenas, capas de texto/imágenes/formas, keyframes, máscaras de transición (fade/wipe/iris/slide), interpolaciones y hasta 12 pistas WAV. Permite cambiar textos, imágenes, colores, posiciones, tiempos y animaciones sin modificar C++.
-
-```bash
-./build/remix-linux/hyperframes-cpp-native --project validate examples/json-compositor/showcase.json
-./build/remix-linux/hyperframes-cpp-native --project frame examples/json-compositor/showcase.json escena.png 8
-./build/remix-linux/hyperframes-cpp-native --project render examples/json-compositor/showcase.json video.mp4
-```
-
-Consulta [docs/JSON_COMPOSITOR.md](docs/JSON_COMPOSITOR.md) para el esquema, ejemplos y límites. Se conservan todos los modos de HyperFrames y Remix anteriores. La demostración y sus recursos se encuentran en `examples/json-compositor/`.
-
-## Remix: HyperFrames + compositor C++ de efectos
-
-La rama `feature/remix-hyperframes-remotion` incluye un compositor nativo de motion graphics integrado en el mismo ejecutable. Conserva `classic`, `news`, `html`, `browser`, AVI/MP4, importación HTML y todas las opciones previas. El modo `--fusion` combina cualquier composición HTML compatible con 81 segundos de efectos demostrativos, música procedural y 7 transiciones. El modo `--remix` exporta el showcase nativo completo de 148 segundos.
-
-Comandos básicos:
-```bash
-./build/native-linux/hyperframes-cpp-native --remix-list
-./build/native-linux/hyperframes-cpp-native --remix-frame escena.png 72
-./build/native-linux/hyperframes-cpp-native --remix video-remix.mp4 24 720x1280 148 proyecto-remix/audio
-./build/native-linux/hyperframes-cpp-native --fusion proyecto-remix/index.html proyecto-remix/audio fusion.mp4 24 classic 720x1280
-```
-
-La documentación completa de opciones, compilación cruzada y límites está en [docs/REMIX.md](docs/REMIX.md).
-
-## Releases and Agent Skill
-
-Download precompiled Linux/Windows x64 binaries and an Agent Skill from [the latest GitHub release](https://github.com/ThowiLabs/hyperframes-cpp/releases/latest). The binaries can run directly as `hyperframes-cpp-native` when placed in your `PATH`, or by absolute path. The Agent Skill at [`.claude/skills/hyperframes-cpp/SKILL.md`](.claude/skills/hyperframes-cpp/SKILL.md) teaches agents executable discovery, HTML/GSAP authoring, timed narration, TTS pronunciation rules (spell unfamiliar words and numbers phonetically for the selected voice), exports and quality checks.
-
-To install it for Claude Code and Agent Skills-compatible tooling after cloning:
-
-```bash
-bash scripts/install-skill.sh --claude --agents
-```
-
-Browser autodetection now checks `HFC_BROWSER`, `PATH`, common Linux/Windows install folders and executable paths of **running browser processes** (`/proc` on Linux and WinAPI on Windows). It does not attach to existing sessions; the compositor launches its own temporary headless browser.
-
-The [v1.0.1 release notes](docs/RELEASE-v1.0.1.md) explain the binary files and their limitations, including Windows cross-build status and the separately installed browser requirement.
-
-## Contributing
-
-Please read [CONTRIBUTING.md](CONTRIBUTING.md), [CODE_OF_CONDUCT.md](CODE_OF_CONDUCT.md) and [SECURITY.md](SECURITY.md). Technical regression tests and reproducible bug reports are welcome. **Do not submit video projects, copyrighted narrations, third-party GSAP distributions, compiled binaries or generated media to this repository.**
-
-## License
-
-Apache License 2.0, except third-party components that retain their independent licenses. See [LICENSE](LICENSE), [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md) and [assets/fonts/LICENSE.txt](assets/fonts/LICENSE.txt). H.264/AAC patent obligations and external GSAP/browser licenses must be reviewed separately.
+Core source is Apache-2.0 (LICENSE); Neo-TTS is an MIT submodule. Codec dependencies, ONNX Runtime, voice models and image licenses have their own obligations. This remains a prototype, not a complete video editor or an implementation of the React Remotion API.

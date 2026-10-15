@@ -10,6 +10,7 @@
 #include <fstream>
 #include <iostream>
 #include <limits>
+#include <map>
 #include <stdexcept>
 #include <string>
 #include <vector>
@@ -97,6 +98,7 @@ void text(int x,int y,string s,int scale,RGB c){for(char ch:s){if(ch==' '){x+=sc
 #endif
 #include "remix/remix_renderer.hpp"
 #include "compositor/json_project.hpp"
+#include "voice/neo_bridge.hpp"
 vector<int16_t> loadAudio(const string&dir,const vector<hf::Scene>&scenes,int seconds){
  vector<int16_t> result(size_t(seconds)*SR,0);
  if(dir=="-")return result;
@@ -144,6 +146,23 @@ std::vector<unsigned char> encodeJpeg(const std::vector<unsigned char>& bgr,int 
  return result;
 }
 int main(int argc,char**argv){try{
+ if(argc>=2 && string(argv[1])=="--voice"){
+  if(argc!=9&&argc!=11)throw runtime_error("Uso: --voice synth --model voz.onnx|voz.neo --text-file texto.txt --out voz.wav [--neo-lite ruta]");
+  if(string(argv[2])!="synth")throw runtime_error("Comando --voice admitido: synth");
+  map<string,string> opts;
+  for(int i=3;i<argc;i+=2){
+   string key=argv[i];if(key!="--model"&&key!="--text-file"&&key!="--out"&&key!="--neo-lite")
+    throw runtime_error("Opción de voz desconocida");
+   if(!opts.emplace(key,argv[i+1]).second)throw runtime_error("Opción de voz duplicada");
+  }
+  for(auto required:{"--model","--text-file","--out"})
+   if(!opts.count(required))throw runtime_error(string("Falta ")+required);
+  const char* configured=getenv("GPTFRAMES_NEO_LITE");
+  string engine=opts.count("--neo-lite")?opts.at("--neo-lite"):(configured?configured:"neo-lite");
+  gptvoice::synthesize(opts.at("--model"),opts.at("--text-file"),opts.at("--out"),engine);
+  cout<<"Voz generada con Neo Lite: "<<opts.at("--out")<<" (WAV PCM mono, 24000 Hz)\n";
+  return 0;
+ }
  if(argc>=4 && string(argv[1])=="--project"){
    string mode=argv[2],filename=argv[3];
    if(mode!="validate"&&mode!="frame"&&mode!="render")throw runtime_error("Modo project: validate, frame, render");
