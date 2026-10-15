@@ -96,6 +96,7 @@ void text(int x,int y,string s,int scale,RGB c){for(char ch:s){if(ch==' '){x+=sc
 #pragma GCC diagnostic pop
 #endif
 #include "remix/remix_renderer.hpp"
+#include "compositor/json_project.hpp"
 vector<int16_t> loadAudio(const string&dir,const vector<hf::Scene>&scenes,int seconds){
  vector<int16_t> result(size_t(seconds)*SR,0);
  if(dir=="-")return result;
@@ -143,6 +144,60 @@ std::vector<unsigned char> encodeJpeg(const std::vector<unsigned char>& bgr,int 
  return result;
 }
 int main(int argc,char**argv){try{
+ if(argc>=4 && string(argv[1])=="--project"){
+   string mode=argv[2],filename=argv[3];
+   if(mode!="validate"&&mode!="frame"&&mode!="render")throw runtime_error("Modo project: validate, frame, render");
+   const auto config=project::load(filename);
+   if(mode=="validate"){
+    if(argc!=4)throw runtime_error("Uso: --project validate proyecto.json");
+    cout<<"Proyecto válido: "<<config.scenes.size()<<" escenas, "<<config.duration<<"s, "
+        <<config.fps<<"fps, "<<config.width<<"x"<<config.height
+        <<", "<<config.audio.size()<<" pistas WAV\n";
+    return 0;
+   }
+   if(mode=="frame"){
+    if(argc!=6)throw runtime_error("Uso: --project frame proyecto.json imagen.png segundo");
+    size_t used=0;
+    double sec=stod(argv[5],&used);
+    if(used!=strlen(argv[5])||!isfinite(sec)||sec<0||sec>=config.duration)throw runtime_error("Segundo fuera de proyecto");
+    project::frame(config,sec);
+    vector<unsigned char> data=(config.width==W&&config.height==H)?pixels:output::resize(pixels,W,H,config.width,config.height);
+    vector<unsigned char> rgb(data);
+    for(size_t i=0;i<rgb.size();i+=3)std::swap(rgb[i],rgb[i+2]);
+    if(!stbi_write_png(argv[4],config.width,config.height,3,rgb.data(),config.width*3))
+      throw runtime_error("No se pudo guardar PNG");
+    cout<<"Proyecto frame: "<<argv[4]<<" ("<<sec<<"s)\n";return 0;
+   }
+   if(argc!=5&&argc!=6)throw runtime_error("Uso: --project render proyecto.json salida.mp4 [duracion]");
+#ifndef HFC_WITH_NATIVE_MP4
+   throw runtime_error("Render MP4 requiere HFC_NATIVE_MP4=ON");
+#else
+   double duration=config.duration;
+   if(argc==6){
+    size_t used=0;
+    duration=stod(argv[5],&used);
+    if(used!=strlen(argv[5])||!isfinite(duration)||duration<=0||duration>config.duration)
+      throw runtime_error("Duración del render fuera de rango");
+   }
+   const int count=int(std::ceil(duration*config.fps-0.00001));
+   const string outputPath=argv[4];
+   if(outputPath.size()<5||outputPath.substr(outputPath.size()-4)!=".mp4")
+     throw runtime_error("La salida del proyecto requiere .mp4");
+   auto audio=project::sound(config);
+   audio.resize(size_t(std::ceil(duration*SR)),0);
+   NativeMp4Writer writer(outputPath.c_str(),config.width,config.height,config.fps);
+   vector<unsigned char> scaled;
+   for(int i=0;i<count;i++){
+    project::frame(config,std::min(config.duration-1e-6,double(i)/config.fps));
+    if(config.width!=W||config.height!=H)scaled=output::resize(pixels,W,H,config.width,config.height);
+    writer.addVideo((config.width==W&&config.height==H)?pixels:scaled);
+    if(i%std::max(1,config.fps*4)==0)cerr<<"JSON project "<<i<<"/"<<count<<"\n";
+   }
+   writer.addAudio(audio);
+   cout<<"Proyecto JSON renderizado: "<<outputPath<<" ("<<duration<<"s, "<<config.fps<<"fps)\n";
+   return 0;
+#endif
+ }
  // El mismo ejecutable conserva la CLI HTML/AVI/browser y añade el compositor fusionado.
  if(argc==2 && string(argv[1])=="--remix-list"){
    for(size_t i=0;i<remix::scenes.size();++i){

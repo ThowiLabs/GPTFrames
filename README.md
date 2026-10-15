@@ -160,6 +160,18 @@ See [docs/ROADMAP.md](docs/ROADMAP.md) and [SECURITY.md](SECURITY.md).
 
 
 
+## Compositor JSON: videos configurables sin recompilar
+
+Esta rama incorpora un **formato de proyecto JSON** con escenas, capas de texto/imágenes/formas, keyframes, máscaras de transición (fade/wipe/iris/slide), interpolaciones y hasta 12 pistas WAV. Permite cambiar textos, imágenes, colores, posiciones, tiempos y animaciones sin modificar C++.
+
+```bash
+./build/remix-linux/hyperframes-cpp-native --project validate examples/json-compositor/showcase.json
+./build/remix-linux/hyperframes-cpp-native --project frame examples/json-compositor/showcase.json escena.png 8
+./build/remix-linux/hyperframes-cpp-native --project render examples/json-compositor/showcase.json video.mp4
+```
+
+Consulta [docs/JSON_COMPOSITOR.md](docs/JSON_COMPOSITOR.md) para el esquema, ejemplos y límites. Se conservan todos los modos de HyperFrames y Remix anteriores. La demostración y sus recursos se encuentran en `examples/json-compositor/`.
+
 ## Remix: HyperFrames + compositor C++ de efectos
 
 La rama `feature/remix-hyperframes-remotion` incluye un compositor nativo de motion graphics integrado en el mismo ejecutable. Conserva `classic`, `news`, `html`, `browser`, AVI/MP4, importación HTML y todas las opciones previas. El modo `--fusion` combina cualquier composición HTML compatible con 81 segundos de efectos demostrativos, música procedural y 7 transiciones. El modo `--remix` exporta el showcase nativo completo de 148 segundos.
