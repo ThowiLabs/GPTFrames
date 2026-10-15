@@ -18,3 +18,6 @@ Compilados GPTFrames C++ video Linux y Windows x64 desde Linux, Neo Lite Linux x
 Pruebas Windows reales de engine y Neo Lite; HTTPS/OAuth compatible con el cliente remoto, rate limits y job queue para producción. Repositorio privado GitHub requiere push de cambios y empaquetar. Modelo de voz no redistribuido. Openverse búsqueda solo; Commons descarga permitida.
 # Próximos pasos
 Regresiones, commit y push a ThowiLabs/GPTFrames; ZIP, video y docs. Registrar nueva versión tras prueba real Windows.
+
+## Verificación final adicional
+GitHub privado ThowiLabs/GPTFrames creado y commit 2566883 subido a main mediante integración GitHub del entorno. Motor Windows x64 compilado desde Linux. La suite Remix heredada dependía de un HTML de prueba no versionado; se incluyó tests/fixtures/remix-intro.html y se cambió la prueba de video de 2 segundos para usar audio silencioso. Tras ello pasaron todas las regresiones Remix, compositor JSON v1 y Visual v2. Demo pública solo estática: https://eb566652149a344563.gradio.live/. El servidor MCP no es público ni está conectado automáticamente a ningún cliente remoto; necesita registro y autenticación.
