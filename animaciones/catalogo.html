@@ -1,0 +1,549 @@
+<!doctype html><html lang="es"><head><meta charset="utf-8"><meta http-equiv="Content-Security-Policy" content="default-src &#39;none&#39;; script-src &#39;none&#39;; connect-src &#39;none&#39;; style-src &#39;unsafe-inline&#39;; img-src data:; font-src data:"><style>
+:root{--bg:#0d1117;--card-bg:#161b22;--border:#30363d;--text-main:#f0f6fc;--text-dim:#8b949e;--green:#2ea043;--cyan:#38bdf8;--gold:#f59e0b;--red:#ef4444;--purple:#a855f7;--ease-elastic:cubic-bezier(.34,1.56,.64,1);--ease-out:cubic-bezier(.16,1,.3,1)}
+*{box-sizing:border-box}html,body{margin:0;width:100%;height:100%;overflow:hidden}
+body{background:transparent;color:var(--text-main);font-family:system-ui,"Segoe UI",Arial,sans-serif}
+.motion-stage{position:relative;width:320px;height:300px;display:grid;place-items:center;overflow:visible}
+
+:root {--bg-main:#0a0d14;--card-bg:#131924;--border-color:#232d3f;
+--text-main:#f8fafc;--text-dim:#94a3b8;--c-neon-blue:#00e5ff;--c-pink:#ff007f;
+--c-green:#10b981;--c-yellow:#fbbf24;--c-red:#f43f5e;--c-purple:#8b5cf6;
+--ease-elastic:cubic-bezier(.34,1.56,.64,1);
+--ease-cinematic:cubic-bezier(.16,1,.3,1);}
+
+.p01 .stage{position:relative;width:186px;height:220px;display:grid;place-items:center}
+.p01 .wave{position:absolute;inset:21px 26px;border:3px solid var(--cyan);border-radius:32px;opacity:0;animation:exp 1.2s cubic-bezier(0,.5,.5,1) infinite}
+.p01 .wave.w2{animation-delay:-.4s}
+.p01 .phone{position:relative;z-index:2;width:93px;height:177px;padding:12px 8px;display:flex;flex-direction:column;align-items:center;background:#21262d;border:3px solid #596674;border-radius:22px;box-shadow:0 14px 36px #0009;animation:vibe .6s ease-in-out infinite}
+.p01 .notch{height:5px;width:31px;background:#30363d;border-radius:4px;margin-bottom:19px}
+.p01 .avatar{height:44px;width:44px;border-radius:50%;background:#30363d;display:grid;place-items:center;margin-bottom:25px}
+.p01 .call{height:40px;width:40px;border-radius:50%;background:var(--green);display:grid;place-items:center}
+@keyframes exp{0%{transform:scale(.9);opacity:.8}100%{transform:scale(1.45);opacity:0}}
+@keyframes vibe{0%,100%{transform:translate(0,0) rotate(0)}10%{transform:translate(-3px,2px) rotate(-3deg)}20%{transform:translate(3px,-2px) rotate(3deg)}30%{transform:translate(-3px,-1px) rotate(-2deg)}40%{transform:translate(3px,1px) rotate(2deg)}50%{transform:translate(-2px,2px) rotate(-1deg)}60%{transform:translate(2px,-2px) rotate(1deg)}70%{transform:translate(0,0) rotate(0)}}
+
+
+.p02 .check-svg{width:178px;height:178px;filter:drop-shadow(0 0 13px #2ea04355)}
+.p02 .circle{fill:none;stroke:var(--green);stroke-width:5;stroke-linecap:round;stroke-dasharray:283;stroke-dashoffset:283;transform-origin:50px 50px;animation:drawCircle .8s var(--ease-out) forwards}
+.p02 .tick{fill:none;stroke:#68f08a;stroke-width:6;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:60;stroke-dashoffset:60;animation:drawTick .5s var(--ease-elastic) .5s forwards}
+@keyframes drawCircle{to{stroke-dashoffset:0;transform:rotate(360deg)}}@keyframes drawTick{to{stroke-dashoffset:0}}
+
+
+.p03 .wrap{width:146px;height:180px;position:relative;display:flex;flex-direction:column;align-items:center;filter:drop-shadow(0 15px 20px #0007)}
+.p03 .shackle{width:78px;height:80px;border:12px solid #8b949e;border-bottom:0;border-radius:40px 40px 0 0;position:absolute;top:6px;transform-origin:left bottom;transform:translateY(-22px);animation:lock-snap 1.35s var(--ease-elastic) forwards}
+.p03 .body{width:127px;height:104px;background:linear-gradient(145deg,#36424e,#252d38);border:3px solid #566572;border-radius:18px;position:absolute;bottom:0;display:grid;place-items:center;box-shadow:0 10px 35px #0009;animation:lock-hit 1.35s var(--ease-out) forwards}
+.p03 .hole{width:13px;height:26px;background:#111a26;border-radius:6px}
+@keyframes lock-snap{0%{transform:translateY(-22px) rotate(-10deg);border-color:var(--gold)}40%{transform:translateY(-22px) rotate(0)}50%{transform:translateY(0);border-color:#8b949e}70%,100%{transform:translateY(0);border-color:var(--cyan)}}
+@keyframes lock-hit{0%,48%{transform:translateY(0);border-color:#566572}50%{transform:translateY(4px)}58%{transform:translateY(-3px)}70%,100%{transform:translateY(0);border-color:var(--cyan)}}
+
+
+.p04 .notify{width:295px;background:#21262d;border:1px solid #404953;border-radius:16px;padding:17px;display:flex;align-items:center;gap:14px;box-shadow:0 16px 33px #0009;transform:translateY(-65px);opacity:0;animation:notifyDrop .9s var(--ease-elastic) forwards}
+.p04 .icon{width:52px;height:52px;background:var(--purple);border-radius:13px;display:grid;place-items:center;flex-shrink:0;box-shadow:0 0 22px #a855f755}
+.p04 .txt h4{margin:0 0 6px;font-size:16px;color:#f0f6fc}.p04 .txt p{margin:0;color:#9aa9bb;font-size:12px;line-height:1.35}
+@keyframes notifyDrop{to{transform:translateY(0);opacity:1}}
+
+
+.p05 .bars{display:flex;align-items:flex-end;justify-content:center;gap:12px;height:135px}
+.p05 .bar{width:20px;height:100%;background:var(--cyan);border-radius:10px;transform-origin:bottom;transform:scaleY(.15)}
+.p05 .bar:nth-child(1){animation:jump .8s ease-in-out infinite alternate .1s}
+.p05 .bar:nth-child(2){animation:jump .6s ease-in-out infinite alternate .3s}
+.p05 .bar:nth-child(3){animation:jump .9s ease-in-out infinite alternate 0s}
+.p05 .bar:nth-child(4){animation:jump .7s ease-in-out infinite alternate .4s}
+.p05 .bar:nth-child(5){animation:jump .5s ease-in-out infinite alternate .2s}
+@keyframes jump{0%{transform:scaleY(.15);background:var(--cyan)}100%{transform:scaleY(1);background:var(--purple)}}
+
+
+.p06 .scan{width:210px;height:210px;position:relative;display:grid;place-items:center;overflow:hidden;border-radius:18px;background:#ffffff05;border:2px dashed #46505e;box-shadow:inset 0 0 34px #192638}
+.p06 .finger{width:142px;height:142px;fill:none;stroke:#a1aebf;stroke-width:1.6;stroke-linecap:round;filter:drop-shadow(0 0 11px #99accc44)}
+.p06 .laser{position:absolute;left:0;right:0;height:4px;background:var(--red);box-shadow:0 0 15px var(--red),0 0 7px #fff;top:0;animation:sweep 1.8s ease-in-out infinite}
+@keyframes sweep{0%,100%{top:0;opacity:0}15%{opacity:1}85%{opacity:1}50%{top:96%}}
+
+            .avatar-base {
+              width: 90px; height: 90px; border-radius: 50%;
+              background: var(--c-yellow); border: 3px solid #0f172a;
+              position: relative; display: flex; align-items: center; justify-content: center;
+            }
+            .anim-engine .char-neutral { animation: neutralFloat 3s ease-in-out infinite; }
+            .eyes-pair { display: flex; gap: 24px; margin-top: -12px; }
+            .eye-dot { width: 9px; height: 12px; background: #0f172a; border-radius: 50%; }
+            .anim-engine .eye-blink { animation: eyeBlink 3.5s infinite; }
+            .neutral-mouth { position: absolute; bottom: 22px; width: 22px; height: 4px; background: #0f172a; border-radius: 2px; }
+            @keyframes eyeBlink { 0%, 94%, 100% { transform: scaleY(1); } 97% { transform: scaleY(0.1); } }
+            @keyframes neutralFloat { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-4px); } }
+
+
+            .anim-engine .char-happy { animation: happyBounce 0.8s var(--ease-elastic) infinite alternate; }
+            .happy-eye { width: 14px; height: 8px; border: 3px solid #0f172a; border-bottom: none; border-radius: 14px 14px 0 0; }
+            .happy-mouth {
+              position: absolute; bottom: 16px; width: 34px; height: 18px;
+              background: #0f172a; border-radius: 0 0 34px 34px; overflow: hidden;
+            }
+            .happy-tongue { position: absolute; bottom: -3px; left: 8px; width: 18px; height: 12px; background: var(--c-pink); border-radius: 50%; }
+            @keyframes happyBounce { 0% { transform: translateY(0) scale(1); } 100% { transform: translateY(-8px) scale(1.05); } }
+
+
+            .thinking-container { position: relative; }
+            .thought-icon {
+              position: absolute; top: -24px; right: -20px;
+              font-weight: 900; font-size: 24px; color: var(--c-neon-blue); opacity: 0;
+            }
+            .anim-engine .thought-icon { animation: thoughtPop 2s ease-in-out infinite; }
+            .eye-think { width: 9px; height: 9px; background: #0f172a; border-radius: 50%; transform: translate(3px, -4px); }
+            .think-mouth { position: absolute; bottom: 22px; right: 26px; width: 10px; height: 10px; border: 3px solid #0f172a; border-radius: 50%; }
+            @keyframes thoughtPop { 0%, 100% { opacity: 0; transform: translateY(4px) scale(0.8); } 50% { opacity: 1; transform: translateY(-6px) scale(1.15); } }
+
+
+            .anim-engine .char-angry { animation: angryRage 0.6s ease-in-out infinite alternate; }
+            .angry-brow { position: absolute; width: 14px; height: 3px; background: #0f172a; top: 22px; }
+            .angry-brow.left { left: 20px; transform: rotate(26deg); }
+            .angry-brow.right { right: 20px; transform: rotate(-26deg); }
+            .angry-mouth { position: absolute; bottom: 18px; width: 24px; height: 7px; background: #0f172a; border-radius: 8px 8px 2px 2px; }
+            @keyframes angryRage {
+              0% { background: #f87171; transform: translate(-2px, 1px) rotate(-1deg); }
+              100% { background: var(--c-red); transform: translate(2px, -1px) rotate(1deg); }
+            }
+
+
+            .curse-wrapper { position: relative; }
+            .curse-badge {
+              position: absolute; top: -32px; left: -10px; background: #000;
+              color: var(--c-pink); border: 1px solid var(--border-color);
+              padding: 3px 8px; border-radius: 5px; font-weight: 900; font-size: 13px;
+              font-family: monospace; white-space: nowrap; opacity: 0;
+            }
+            .anim-engine .curse-badge { animation: curseGlitch 0.4s steps(2) infinite; }
+            .anim-engine .char-screaming { background: #fb7185; animation: screamShake 0.12s infinite; }
+            .scream-mouth {
+              position: absolute; bottom: 10px; width: 30px; height: 38px;
+              background: #0f172a; border-radius: 15px; border: 3px solid #fff;
+            }
+            @keyframes screamShake {
+              0% { transform: translate(-3px, 2px) rotate(-2deg); }
+              50% { transform: translate(3px, -2px) rotate(2deg); }
+              100% { transform: translate(-1px, -2px) rotate(0deg); }
+            }
+            @keyframes curseGlitch {
+              0% { opacity: 0; transform: scale(0.9) rotate(-3deg); }
+              50% { opacity: 1; transform: scale(1.1) rotate(3deg); }
+              100% { opacity: 1; transform: scale(1) rotate(0deg); }
+            }
+
+
+            .sleepy-z {
+              position: absolute; top: -15px; right: -10px;
+              font-family: monospace; font-weight: bold; font-size: 16px; color: var(--c-purple); opacity: 0;
+            }
+            .anim-engine .sleepy-z.z1 { animation: floatZ 2s infinite 0s; }
+            .anim-engine .sleepy-z.z2 { animation: floatZ 2s infinite 0.7s; }
+            .sleepy-line-eye { width: 14px; height: 3px; background: #0f172a; border-radius: 2px; }
+            .sleepy-mouth {
+              position: absolute; bottom: 20px; width: 12px; height: 12px;
+              background: #0f172a; border-radius: 50%;
+            }
+            @keyframes floatZ {
+              0% { opacity: 0; transform: translate(0, 0) scale(0.6); }
+              50% { opacity: 1; }
+              100% { opacity: 0; transform: translate(20px, -24px) scale(1.2); }
+            }
+
+
+            .server-chassis {
+              width: 100%; max-width: 270px; background: #0a0e17;
+              border: 2px solid #283347; border-radius: 8px; padding: 12px; display: flex; flex-direction: column; gap: 8px;
+            }
+            .server-row { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #1a2233; padding-bottom: 6px; }
+            .led-strip { display: flex; gap: 6px; }
+            .led-pin { width: 8px; height: 8px; border-radius: 50%; background: #1e293b; }
+            .led-power { background: var(--c-green); box-shadow: 0 0 6px var(--c-green); }
+            .anim-engine .led-io { animation: ledFlicker 0.22s infinite alternate; }
+            .anim-engine .led-net { animation: ledFlicker 0.15s infinite steps(2); }
+            .linux-terminal {
+              background: #000; padding: 6px 8px; border-radius: 4px;
+              font-family: monospace; font-size: 10px; color: #cbd5e1; line-height: 1.4;
+            }
+            .anim-engine .term-blink { animation: termBlink 0.8s infinite; }
+            @keyframes ledFlicker {
+              0%, 100% { background: #1e293b; box-shadow: none; }
+              50% { background: var(--c-yellow); box-shadow: 0 0 8px var(--c-yellow); }
+            }
+            @keyframes termBlink { 0%, 49% { opacity: 1; } 50%, 100% { opacity: 0; } }
+
+
+            .car-scene { width: 100%; height: 120px; display: flex; flex-direction: column; align-items: center; justify-content: center; overflow: hidden; }
+            .car-body-wrap { position: relative; width: 140px; height: 44px; }
+            .anim-engine .car-body-wrap { animation: carSuspension 0.4s ease-in-out infinite alternate; }
+            .car-svg { width: 100%; height: 100%; fill: var(--c-pink); }
+            .car-wheel {
+              position: absolute; bottom: -8px; width: 22px; height: 22px;
+              background: #1e293b; border: 3px dashed var(--c-neon-blue); border-radius: 50%;
+            }
+            .car-wheel.rear { left: 18px; }
+            .car-wheel.front { right: 18px; }
+            .anim-engine .car-wheel { animation: spinWheel 0.5s linear infinite; }
+            .car-road {
+              width: 100%; height: 2px;
+              background: repeating-linear-gradient(90deg, var(--c-neon-blue) 0px, var(--c-neon-blue) 15px, transparent 15px, transparent 35px);
+              margin-top: 8px;
+            }
+            .anim-engine .car-road { animation: roadScroll 0.4s linear infinite; }
+            @keyframes carSuspension { 0% { transform: translateY(0); } 100% { transform: translateY(-2px) rotate(0.6deg); } }
+            @keyframes spinWheel { 100% { transform: rotate(360deg); } }
+            @keyframes roadScroll { from { background-position: 0 0; } to { background-position: -35px 0; } }
+
+
+            .analog-clock {
+              width: 110px; height: 110px; border-radius: 50%;
+              border: 3px solid var(--border-color); background: #0c1017;
+              position: relative; box-shadow: inset 0 0 10px rgba(0,0,0,0.6);
+            }
+            .clock-center-pin {
+              width: 8px; height: 8px; background: var(--c-neon-blue); border-radius: 50%;
+              position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 5;
+            }
+            .clock-hand { position: absolute; bottom: 50%; left: 50%; transform-origin: bottom center; border-radius: 4px; }
+            .hand-h { width: 3px; height: 28px; background: #fff; }
+            .hand-m { width: 2px; height: 38px; background: var(--text-dim); }
+            .hand-s { width: 1.5px; height: 44px; background: var(--c-red); }
+            .anim-engine .hand-h { animation: handSpin 24s linear infinite; }
+            .anim-engine .hand-m { animation: handSpin 6s linear infinite; }
+            .anim-engine .hand-s { animation: handSpin 2s steps(60) infinite; }
+            @keyframes handSpin {
+              from { transform: translateX(-50%) rotate(0deg); }
+              to { transform: translateX(-50%) rotate(360deg); }
+            }
+
+
+            .tacho-wrap { position: relative; width: 120px; height: 75px; display: flex; justify-content: center; overflow: hidden; }
+            .tacho-svg { width: 120px; height: 120px; transform: rotate(-90deg); }
+            .tacho-bg { fill: none; stroke: rgba(255,255,255,0.08); stroke-width: 8; stroke-dasharray: 188; stroke-dashoffset: 62; }
+            .tacho-progress {
+              fill: none; stroke: var(--c-neon-blue); stroke-width: 8; stroke-linecap: round;
+              stroke-dasharray: 188; stroke-dashoffset: 188;
+            }
+            .anim-engine .tacho-progress { animation: tachoFill 1.8s var(--ease-cinematic) infinite alternate; }
+            .anim-engine .tacho-needle { animation: needleSweep 1.8s var(--ease-cinematic) infinite alternate; }
+            .tacho-needle {
+              position: absolute; bottom: 0; width: 3px; height: 50px; background: var(--c-pink);
+              transform-origin: bottom center; transform: rotate(-70deg);
+            }
+            @keyframes tachoFill { to { stroke-dashoffset: 75; } }
+            @keyframes needleSweep { to { transform: rotate(50deg); } }
+
+
+            .bell-wrap { position: relative; width: 60px; height: 60px; display: grid; place-items: center; }
+            .bell-svg { width: 44px; height: 44px; fill: none; stroke: var(--text-main); stroke-width: 2; transform-origin: top center; }
+            .bell-badge {
+              position: absolute; top: 2px; right: 6px; width: 14px; height: 14px;
+              background: var(--c-pink); border-radius: 50%; border: 2px solid var(--card-bg);
+            }
+            .anim-engine .bell-svg { animation: bellRinging 1.4s ease-in-out infinite; }
+            .anim-engine .bell-badge { animation: badgePop 1.4s var(--ease-elastic) infinite; }
+            @keyframes bellRinging {
+              0%, 100% { transform: rotate(0); }
+              10%, 30% { transform: rotate(18deg); }
+              20%, 40% { transform: rotate(-18deg); }
+              50% { transform: rotate(0); }
+            }
+            @keyframes badgePop { 0%, 50% { transform: scale(1); } 60% { transform: scale(1.4); } 70% { transform: scale(1); } }
+
+
+            .stage-box { position: relative; width: 100%; height: 150px; border-radius: 8px; overflow: hidden; }
+            .curtain-curt {
+              position: absolute; inset: 0; background: var(--c-pink); z-index: 2;
+            }
+            .anim-engine .curtain-curt { animation: curtainMotion 1.4s var(--ease-cinematic) forwards; }
+            .curtain-media {
+              width: 100%; height: 100%; background: linear-gradient(135deg, #1e3a8a, #9333ea);
+              display: grid; place-items: center; font-weight: bold; font-family: monospace;
+            }
+            .anim-engine .curtain-media { animation: zoomReveal 1.4s var(--ease-cinematic) forwards; }
+            @keyframes curtainMotion {
+              0% { transform: scaleX(0); transform-origin: left; }
+              45% { transform: scaleX(1); transform-origin: left; }
+              55% { transform: scaleX(1); transform-origin: right; }
+              100% { transform: scaleX(0); transform-origin: right; }
+            }
+            @keyframes zoomReveal {
+              0%, 45% { opacity: 0; transform: scale(1.15); }
+              50% { opacity: 1; }
+              100% { opacity: 1; transform: scale(1); }
+            }
+
+
+            .diag-wrap { position: relative; width: 100%; height: 150px; border-radius: 8px; overflow: hidden; }
+            .diag-part {
+              position: absolute; inset: 0; display: grid; place-items: center;
+              font-weight: 800; font-family: monospace; background: linear-gradient(135deg, #059669, #0284c7);
+            }
+            .anim-engine .diag-p1 {
+              clip-path: polygon(0 0, 100% 0, 0 100%);
+              animation: diagInTop 1s var(--ease-cinematic) forwards;
+            }
+            .anim-engine .diag-p2 {
+              clip-path: polygon(100% 0, 100% 100%, 0 100%);
+              animation: diagInBtm 1s var(--ease-cinematic) forwards;
+            }
+            @keyframes diagInTop {
+              from { transform: translate(-30%, -30%); opacity: 0; }
+              to { transform: translate(0, 0); opacity: 1; }
+            }
+            @keyframes diagInBtm {
+              from { transform: translate(30%, 30%); opacity: 0; }
+              to { transform: translate(0, 0); opacity: 1; }
+            }
+
+
+            .iris-frame { width: 100%; height: 150px; border-radius: 8px; overflow: hidden; background: #000; }
+            .iris-fill {
+              width: 100%; height: 100%; background: linear-gradient(135deg, #f59e0b, #ef4444);
+              display: grid; place-items: center; font-weight: 800; font-family: monospace;
+            }
+            .anim-engine .iris-fill { animation: irisScale 1.4s var(--ease-cinematic) forwards; }
+            @keyframes irisScale {
+              0% { clip-path: circle(0% at 50% 50%); transform: scale(1.2); }
+              100% { clip-path: circle(75% at 50% 50%); transform: scale(1); }
+            }
+
+
+            .chart-frame {
+              width: 220px; height: 110px; display: flex; align-items: flex-end;
+              justify-content: space-between; border-bottom: 2px solid var(--border-color);
+              border-left: 2px solid var(--border-color); position: relative; padding-left: 8px;
+            }
+            .metric-bar { width: 22px; background: var(--c-purple); border-radius: 3px 3px 0 0; transform-origin: bottom; transform: scaleY(0); }
+            .anim-engine .metric-bar:nth-child(1) { height: 40%; animation: barRise 1s var(--ease-cinematic) 0.1s forwards; }
+            .anim-engine .metric-bar:nth-child(2) { height: 75%; animation: barRise 1s var(--ease-cinematic) 0.25s forwards; }
+            .anim-engine .metric-bar:nth-child(3) { height: 55%; animation: barRise 1s var(--ease-cinematic) 0.4s forwards; }
+            .anim-engine .metric-bar:nth-child(4) { height: 95%; animation: barRise 1s var(--ease-cinematic) 0.55s forwards; }
+            .chart-overlay-svg { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; }
+            .chart-trendline { fill: none; stroke: var(--c-neon-blue); stroke-width: 3; stroke-dasharray: 300; stroke-dashoffset: 300; }
+            .anim-engine .chart-trendline { animation: lineTrace 1.6s var(--ease-cinematic) 0.3s forwards; }
+            @keyframes barRise { to { transform: scaleY(1); } }
+            @keyframes lineTrace { to { stroke-dashoffset: 0; } }
+
+
+            .radial-loader-svg { width: 75px; height: 75px; transform: rotate(-90deg); }
+            .radial-spin {
+              fill: none; stroke: var(--c-neon-blue); stroke-width: 6; stroke-linecap: round;
+              stroke-dasharray: 220; stroke-dashoffset: 220; filter: drop-shadow(0 0 6px var(--c-neon-blue));
+            }
+            .anim-engine .radial-spin { animation: spinCycle 2s cubic-bezier(0.4, 0, 0.2, 1) infinite; }
+            @keyframes spinCycle {
+              0% { stroke-dashoffset: 220; transform: rotate(0deg); transform-origin: 50% 50%; }
+              50% { stroke-dashoffset: 50; transform: rotate(180deg); transform-origin: 50% 50%; }
+              100% { stroke-dashoffset: 220; transform: rotate(720deg); transform-origin: 50% 50%; }
+            }
+
+
+            .bar-track { width: 85%; height: 10px; background: rgba(255,255,255,0.08); border-radius: 99px; overflow: hidden; }
+            .bar-lead {
+              height: 100%; width: 100%;
+              background: linear-gradient(90deg, var(--c-neon-blue), var(--c-pink), var(--c-yellow));
+              background-size: 200% 100%; transform-origin: left;
+            }
+            .anim-engine .bar-lead { animation: barFill 2s var(--ease-cinematic) infinite, shimmerSlide 1.5s linear infinite; }
+            @keyframes barFill { 0% { transform: scaleX(0); } 100% { transform: scaleX(1); } }
+            @keyframes shimmerSlide { 0% { background-position: 100% 0; } 100% { background-position: -100% 0; } }
+
+*{box-sizing:border-box}
+html,body{margin:0;width:100%;height:100%;overflow:hidden}
+body{background:transparent;color:#f8fafc;font-family:system-ui,"Segoe UI",Arial,sans-serif}
+.anim-engine{position:relative;width:320px;height:300px;display:grid;place-items:center}
+.asset-body{width:260px;height:220px;display:flex;flex-direction:column;align-items:center;justify-content:center;transform-origin:center}
+
+body{background:radial-gradient(ellipse at 25% 27%,#192537,#0a0d14 67%)}
+.head{position:absolute;top:20px;left:38px;right:38px;display:flex;align-items:center;justify-content:space-between;color:#afc2d2;font-size:12px;letter-spacing:1px;font-weight:800}
+.head strong{color:#00e5ff}.rule{position:absolute;top:52px;left:38px;right:38px;height:2px;background:#283a4d}
+.module{position:absolute;inset:0;visibility:hidden;display:flex;align-items:center;gap:29px;padding:74px 37px 40px 37px}
+.panel{width:385px;height:335px;border:1px solid #3a4e60;border-radius:23px;display:grid;place-items:center;background:radial-gradient(ellipse at 46% 40%,#1b3343,#121b28 75%);box-shadow:0 16px 42px #0005;flex:none;overflow:hidden}
+.information{min-width:0;width:344px}
+.index{font-size:12px;letter-spacing:1.4px;color:#55dbff;font-weight:780;margin:0 0 13px}
+.title{font-size:31px;font-weight:850;line-height:1.12;letter-spacing:-.55px;margin:0 0 20px;color:#f4fbff}
+.description{font-size:17px;line-height:1.4;color:#bfd0dc;margin:0 0 27px}
+.lbl{font-size:12px;color:#9bb0c3;letter-spacing:1.4px}
+.styled{font-size:15px;color:#f8c46b;font-weight:700;margin:7px 0 0}
+.foot{position:absolute;bottom:17px;left:39px;right:39px;display:flex;justify-content:space-between;color:#8197aa;font-size:11px}
+
+.module:nth-child(1){animation:show1 57.5s linear infinite}
+@keyframes show1{0%,0.00000%{visibility:hidden}0.00020%,4.34763%{visibility:visible}4.34783%,100%{visibility:hidden}}
+
+.module:nth-child(2){animation:show2 57.5s linear infinite}
+@keyframes show2{0%,4.34783%{visibility:hidden}4.34803%,8.69545%{visibility:visible}8.69565%,100%{visibility:hidden}}
+
+.module:nth-child(3){animation:show3 57.5s linear infinite}
+@keyframes show3{0%,8.69565%{visibility:hidden}8.69585%,13.04328%{visibility:visible}13.04348%,100%{visibility:hidden}}
+
+.module:nth-child(4){animation:show4 57.5s linear infinite}
+@keyframes show4{0%,13.04348%{visibility:hidden}13.04368%,17.39110%{visibility:visible}17.39130%,100%{visibility:hidden}}
+
+.module:nth-child(5){animation:show5 57.5s linear infinite}
+@keyframes show5{0%,17.39130%{visibility:hidden}17.39150%,21.73893%{visibility:visible}21.73913%,100%{visibility:hidden}}
+
+.module:nth-child(6){animation:show6 57.5s linear infinite}
+@keyframes show6{0%,21.73913%{visibility:hidden}21.73933%,26.08676%{visibility:visible}26.08696%,100%{visibility:hidden}}
+
+.module:nth-child(7){animation:show7 57.5s linear infinite}
+@keyframes show7{0%,26.08696%{visibility:hidden}26.08716%,30.43458%{visibility:visible}30.43478%,100%{visibility:hidden}}
+
+.module:nth-child(8){animation:show8 57.5s linear infinite}
+@keyframes show8{0%,30.43478%{visibility:hidden}30.43498%,34.78241%{visibility:visible}34.78261%,100%{visibility:hidden}}
+
+.module:nth-child(9){animation:show9 57.5s linear infinite}
+@keyframes show9{0%,34.78261%{visibility:hidden}34.78281%,39.13023%{visibility:visible}39.13043%,100%{visibility:hidden}}
+
+.module:nth-child(10){animation:show10 57.5s linear infinite}
+@keyframes show10{0%,39.13043%{visibility:hidden}39.13063%,43.47806%{visibility:visible}43.47826%,100%{visibility:hidden}}
+
+.module:nth-child(11){animation:show11 57.5s linear infinite}
+@keyframes show11{0%,43.47826%{visibility:hidden}43.47846%,47.82589%{visibility:visible}47.82609%,100%{visibility:hidden}}
+
+.module:nth-child(12){animation:show12 57.5s linear infinite}
+@keyframes show12{0%,47.82609%{visibility:hidden}47.82629%,52.17371%{visibility:visible}52.17391%,100%{visibility:hidden}}
+
+.module:nth-child(13){animation:show13 57.5s linear infinite}
+@keyframes show13{0%,52.17391%{visibility:hidden}52.17411%,56.52154%{visibility:visible}56.52174%,100%{visibility:hidden}}
+
+.module:nth-child(14){animation:show14 57.5s linear infinite}
+@keyframes show14{0%,56.52174%{visibility:hidden}56.52194%,60.86937%{visibility:visible}60.86957%,100%{visibility:hidden}}
+
+.module:nth-child(15){animation:show15 57.5s linear infinite}
+@keyframes show15{0%,60.86957%{visibility:hidden}60.86977%,65.21719%{visibility:visible}65.21739%,100%{visibility:hidden}}
+
+.module:nth-child(16){animation:show16 57.5s linear infinite}
+@keyframes show16{0%,65.21739%{visibility:hidden}65.21759%,69.56502%{visibility:visible}69.56522%,100%{visibility:hidden}}
+
+.module:nth-child(17){animation:show17 57.5s linear infinite}
+@keyframes show17{0%,69.56522%{visibility:hidden}69.56542%,73.91284%{visibility:visible}73.91304%,100%{visibility:hidden}}
+
+.module:nth-child(18){animation:show18 57.5s linear infinite}
+@keyframes show18{0%,73.91304%{visibility:hidden}73.91324%,78.26067%{visibility:visible}78.26087%,100%{visibility:hidden}}
+
+.module:nth-child(19){animation:show19 57.5s linear infinite}
+@keyframes show19{0%,78.26087%{visibility:hidden}78.26107%,82.60850%{visibility:visible}82.60870%,100%{visibility:hidden}}
+
+.module:nth-child(20){animation:show20 57.5s linear infinite}
+@keyframes show20{0%,82.60870%{visibility:hidden}82.60890%,86.95632%{visibility:visible}86.95652%,100%{visibility:hidden}}
+
+.module:nth-child(21){animation:show21 57.5s linear infinite}
+@keyframes show21{0%,86.95652%{visibility:hidden}86.95672%,91.30415%{visibility:visible}91.30435%,100%{visibility:hidden}}
+
+.module:nth-child(22){animation:show22 57.5s linear infinite}
+@keyframes show22{0%,91.30435%{visibility:hidden}91.30455%,95.65197%{visibility:visible}95.65217%,100%{visibility:hidden}}
+
+.module:nth-child(23){animation:show23 57.5s linear infinite}
+@keyframes show23{0%,95.65217%{visibility:hidden}95.65237%,99.99980%{visibility:visible}100.00000%,100%{visibility:hidden}}
+</style></head><body><header class="head"><span>GPTFRAMES / ANIMACIONES</span><strong>COLECCIÓN 01+02 · 23 MÓDULOS ÚNICOS</strong></header><div class="rule"></div><main data-segment-seconds="2.5"><section class="module" data-id="smartphone-vibrate"><div class="panel"><div class="motion-stage p01"><div class="stage"><div class="wave"></div><div class="wave w2"></div><div class="phone"><div class="notch"></div><div class="avatar"><svg width="24" height="24" viewBox="0 0 24 24" fill="#8b949e"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 4-6 8-6s8 2 8 6"/></svg></div><div class="call"><svg width="20" height="20" viewBox="0 0 24 24" fill="#fff"><path d="M6.62 10.79a15.05 15.05 0 006.59 6.59l2.2-2.2a1 1 0 011.02-.24 11.72 11.72 0 003.66.59 1 1 0 011 1v3.5a1 1 0 01-1 1A17 17 0 013 4a1 1 0 011-1h3.5a1 1 0 011 1 11.72 11.72 0 00.59 3.66 1 1 0 01-.24 1.02l-2.23 2.11z"/></svg></div></div></div></div></div><article class="information"><p class="index">01 / 23 · DISPOSITIVOS</p><h1 class="title">Teléfono vibrando</h1><p class="description">Llamada entrante: teléfono vibrando con ondas acústicas.</p><p class="lbl">ESTILO</p><p class="styled">dark / haptic / cyan</p></article></section><section class="module" data-id="success-checkmark"><div class="panel"><div class="motion-stage p02"><svg class="check-svg" viewBox="0 0 100 100"><circle class="circle" cx="50" cy="50" r="45"/><polyline class="tick" points="28,52 43,67 72,35"/></svg></div></div><article class="information"><p class="index">02 / 23 · ESTADOS</p><h1 class="title">Palomita de éxito</h1><p class="description">Un círculo se traza y después aparece la verificación.</p><p class="lbl">ESTILO</p><p class="styled">success / SVG / verde</p></article></section><section class="module" data-id="padlock-closing"><div class="panel"><div class="motion-stage p03"><div class="wrap"><div class="shackle"></div><div class="body"><div class="hole"></div></div></div></div></div><article class="information"><p class="index">03 / 23 · SEGURIDAD</p><h1 class="title">Candado cerrándose</h1><p class="description">El arco desciende y el cuerpo rebota en el cierre.</p><p class="lbl">ESTILO</p><p class="styled">security / elastic / cyan</p></article></section><section class="module" data-id="push-notification"><div class="panel"><div class="motion-stage p04"><div class="notify"><div class="icon"><svg width="25" height="25" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg></div><div class="txt"><h4>Nuevo mensaje</h4><p>Renderizado completado<br>exitosamente.</p></div></div></div></div><article class="information"><p class="index">04 / 23 · NOTIFICACIONES</p><h1 class="title">Notificación entrante</h1><p class="description">Aviso emergente con deslizamiento y rebote.</p><p class="lbl">ESTILO</p><p class="styled">UI / pop-in / púrpura</p></article></section><section class="module" data-id="audio-equalizer"><div class="panel"><div class="motion-stage p05"><div class="bars"><div class="bar"></div><div class="bar"></div><div class="bar"></div><div class="bar"></div><div class="bar"></div></div></div></div><article class="information"><p class="index">05 / 23 · AUDIO</p><h1 class="title">Ecualizador de audio</h1><p class="description">Cinco barras con amplitudes y colores oscilantes.</p><p class="lbl">ESTILO</p><p class="styled">audio / dynamic / cyan</p></article></section><section class="module" data-id="biometric-scanner"><div class="panel"><div class="motion-stage p06"><div class="scan"><svg class="finger" viewBox="0 0 24 24">
+<path d="M12 2a10 10 0 0 0-10 10c0 3 1.5 6 3.5 7.5"/>
+<path d="M12 6a6 6 0 0 0-6 6c0 2.5 1.5 4.5 3 5.5"/>
+<path d="M12 10a2 2 0 0 0-2 2c0 1.5.5 2.5 1.5 3"/>
+<path d="M16 12a4 4 0 0 1-.5 2"/>
+<path d="M19.5 9.5A8 8 0 0 1 20 12c0 2.5-1 5-2.5 6.5"/>
+</svg><div class="laser"></div></div></div></div><article class="information"><p class="index">06 / 23 · SEGURIDAD</p><h1 class="title">Escáner biométrico</h1><p class="description">Huella digital con barrido vertical de láser.</p><p class="lbl">ESTILO</p><p class="styled">biometric / laser / rojo</p></article></section><section class="module" data-id="avatar-neutral"><div class="panel"><div class="anim-engine"><div class="asset-body" style="transform:scale(2.0)"><div class="avatar-base char-neutral">
+            <div class="eyes-pair">
+              <div class="eye-dot eye-blink"></div>
+              <div class="eye-dot eye-blink"></div>
+            </div>
+            <div class="neutral-mouth"></div>
+          </div></div></div></div><article class="information"><p class="index">07 / 23 · PERSONAJES</p><h1 class="title">Avatar neutral</h1><p class="description">Personaje sereno con respiración ligera y parpadeo.</p><p class="lbl">ESTILO</p><p class="styled">personajes / neon / CSS</p></article></section><section class="module" data-id="avatar-happy"><div class="panel"><div class="anim-engine"><div class="asset-body" style="transform:scale(2.0)"><div class="avatar-base char-happy">
+            <div class="eyes-pair">
+              <div class="happy-eye"></div>
+              <div class="happy-eye"></div>
+            </div>
+            <div class="happy-mouth"><div class="happy-tongue"></div></div>
+          </div></div></div></div><article class="information"><p class="index">08 / 23 · PERSONAJES</p><h1 class="title">Avatar feliz</h1><p class="description">Rostro alegre que salta y sonríe.</p><p class="lbl">ESTILO</p><p class="styled">personajes / neon / CSS</p></article></section><section class="module" data-id="avatar-thinking"><div class="panel"><div class="anim-engine"><div class="asset-body" style="transform:scale(2.0)"><div class="thinking-container">
+            <div class="thought-icon">?</div>
+            <div class="avatar-base">
+              <div class="eyes-pair">
+                <div class="eye-think"></div>
+                <div class="eye-think"></div>
+              </div>
+              <div class="think-mouth"></div>
+            </div>
+          </div></div></div></div><article class="information"><p class="index">09 / 23 · PERSONAJES</p><h1 class="title">Avatar pensando</h1><p class="description">Personaje pensativo acompañado de una pregunta flotante.</p><p class="lbl">ESTILO</p><p class="styled">personajes / neon / CSS</p></article></section><section class="module" data-id="avatar-angry"><div class="panel"><div class="anim-engine"><div class="asset-body" style="transform:scale(2.0)"><div class="avatar-base char-angry">
+            <div class="angry-brow left"></div>
+            <div class="angry-brow right"></div>
+            <div class="eyes-pair">
+              <div class="eye-dot"></div>
+              <div class="eye-dot"></div>
+            </div>
+            <div class="angry-mouth"></div>
+          </div></div></div></div><article class="information"><p class="index">10 / 23 · PERSONAJES</p><h1 class="title">Avatar enojado</h1><p class="description">Expresión de enfado con temblor y cejas inclinadas.</p><p class="lbl">ESTILO</p><p class="styled">personajes / neon / CSS</p></article></section><section class="module" data-id="avatar-screaming"><div class="panel"><div class="anim-engine"><div class="asset-body" style="transform:scale(2.0)"><div class="curse-wrapper">
+            <div class="curse-badge">@#$%!*&</div>
+            <div class="avatar-base char-screaming">
+              <div class="eyes-pair" style="margin-top:-24px;">
+                <div class="eye-dot" style="transform:scale(1.2)"></div>
+                <div class="eye-dot" style="transform:scale(1.2)"></div>
+              </div>
+              <div class="scream-mouth"></div>
+            </div>
+          </div></div></div></div><article class="information"><p class="index">11 / 23 · PERSONAJES</p><h1 class="title">Avatar gritando</h1><p class="description">Reacción enérgica con sacudida y globo de símbolos.</p><p class="lbl">ESTILO</p><p class="styled">personajes / neon / CSS</p></article></section><section class="module" data-id="avatar-sleepy"><div class="panel"><div class="anim-engine"><div class="asset-body" style="transform:scale(2.0)"><div style="position:relative;">
+            <div class="sleepy-z z1">Z</div>
+            <div class="sleepy-z z2">z</div>
+            <div class="avatar-base" style="background:#cbd5e1;">
+              <div class="eyes-pair">
+                <div class="sleepy-line-eye"></div>
+                <div class="sleepy-line-eye"></div>
+              </div>
+              <div class="sleepy-mouth"></div>
+            </div>
+          </div></div></div></div><article class="information"><p class="index">12 / 23 · PERSONAJES</p><h1 class="title">Avatar durmiendo</h1><p class="description">Personaje somnoliento con letras Z ascendentes.</p><p class="lbl">ESTILO</p><p class="styled">personajes / neon / CSS</p></article></section><section class="module" data-id="linux-server"><div class="panel"><div class="anim-engine"><div class="asset-body" style="transform:scale(1.18)"><div class="server-chassis">
+            <div class="server-row">
+              <span style="font-family:monospace; font-size:10px; color:var(--text-dim);">srv-linux-node</span>
+              <div class="led-strip">
+                <div class="led-pin led-power"></div>
+                <div class="led-pin led-io"></div>
+                <div class="led-pin led-net"></div>
+              </div>
+            </div>
+            <div class="linux-terminal">
+              <div><span style="color:var(--c-green)">[ OK ]</span> Mounted /dev/nvme0</div>
+              <div>root@srv:~# sys_ready<span class="term-blink" style="display:inline-block;width:5px;height:10px;background:var(--c-green);vertical-align:middle;margin-left:2px;"></span></div>
+            </div>
+          </div></div></div></div><article class="information"><p class="index">13 / 23 · HARDWARE</p><h1 class="title">Servidor Linux</h1><p class="description">Rack Linux con LEDs, actividad y terminal parpadeante.</p><p class="lbl">ESTILO</p><p class="styled">hardware / neon / CSS</p></article></section><section class="module" data-id="moving-car"><div class="panel"><div class="anim-engine"><div class="asset-body" style="transform:scale(1.18)"><div class="car-scene">
+            <div class="car-body-wrap">
+              <svg class="car-svg" viewBox="0 0 150 48">
+                <path d="M10,36 L25,36 Q35,18 50,14 L85,14 Q100,14 115,24 L142,28 Q148,30 148,36 L145,42 L5,42 Z" />
+                <polygon points="52,16 82,16 82,26 44,26" fill="#131924" />
+                <polygon points="86,16 110,24 96,26 86,26" fill="#131924" />
+              </svg>
+              <div class="car-wheel rear"></div>
+              <div class="car-wheel front"></div>
+            </div>
+            <div class="car-road"></div>
+          </div></div></div></div><article class="information"><p class="index">14 / 23 · HARDWARE</p><h1 class="title">Automóvil animado</h1><p class="description">Vehículo estilizado con ruedas y carretera animadas.</p><p class="lbl">ESTILO</p><p class="styled">hardware / neon / CSS</p></article></section><section class="module" data-id="analog-clock"><div class="panel"><div class="anim-engine"><div class="asset-body" style="transform:scale(1.9)"><div class="analog-clock">
+            <div class="clock-center-pin"></div>
+            <div class="clock-hand hand-h"></div>
+            <div class="clock-hand hand-m"></div>
+            <div class="clock-hand hand-s"></div>
+          </div></div></div></div><article class="information"><p class="index">15 / 23 · HARDWARE</p><h1 class="title">Reloj analógico</h1><p class="description">Reloj de tres manecillas en movimiento constante.</p><p class="lbl">ESTILO</p><p class="styled">hardware / neon / CSS</p></article></section><section class="module" data-id="tachometer"><div class="panel"><div class="anim-engine"><div class="asset-body" style="transform:scale(1.9)"><div class="tacho-wrap">
+            <svg class="tacho-svg" viewBox="0 0 80 80">
+              <circle class="tacho-bg" cx="40" cy="40" r="30" />
+              <circle class="tacho-progress" cx="40" cy="40" r="30" />
+            </svg>
+            <div class="tacho-needle"></div>
+          </div></div></div></div><article class="information"><p class="index">16 / 23 · HARDWARE</p><h1 class="title">Tacómetro</h1><p class="description">Indicador de velocidad con aguja y círculo progresivo.</p><p class="lbl">ESTILO</p><p class="styled">hardware / neon / CSS</p></article></section><section class="module" data-id="notification-bell"><div class="panel"><div class="anim-engine"><div class="asset-body" style="transform:scale(2.3)"><div class="bell-wrap">
+            <svg class="bell-svg" viewBox="0 0 24 24">
+              <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
+              <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
+            </svg>
+            <div class="bell-badge"></div>
+          </div></div></div></div><article class="information"><p class="index">17 / 23 · NOTIFICACIONES</p><h1 class="title">Campana activa</h1><p class="description">Campana que oscila y muestra una insignia de alerta.</p><p class="lbl">ESTILO</p><p class="styled">notificaciones / neon / CSS</p></article></section><section class="module" data-id="curtain-wipe"><div class="panel"><div class="anim-engine"><div class="asset-body" style="transform:scale(1.15)"><div class="stage-box">
+            <div class="curtain-curt"></div>
+            <div class="curtain-media">ESCENA // 01</div>
+          </div></div></div></div><article class="information"><p class="index">18 / 23 · TRANSICIONES</p><h1 class="title">Cortina wipe</h1><p class="description">Cortina que cubre y descubre una escena.</p><p class="lbl">ESTILO</p><p class="styled">transiciones / neon / CSS</p></article></section><section class="module" data-id="diagonal-split"><div class="panel"><div class="anim-engine"><div class="asset-body" style="transform:scale(1.15)"><div class="diag-wrap">
+            <div class="diag-part diag-p1">DIAGONAL</div>
+            <div class="diag-part diag-p2">DIAGONAL</div>
+          </div></div></div></div><article class="information"><p class="index">19 / 23 · TRANSICIONES</p><h1 class="title">División diagonal</h1><p class="description">Transición que reúne dos fragmentos diagonales.</p><p class="lbl">ESTILO</p><p class="styled">transiciones / neon / CSS</p></article></section><section class="module" data-id="iris-reveal"><div class="panel"><div class="anim-engine"><div class="asset-body" style="transform:scale(1.15)"><div class="iris-frame">
+            <div class="iris-fill">EXPANSIÓN IRIS</div>
+          </div></div></div></div><article class="information"><p class="index">20 / 23 · TRANSICIONES</p><h1 class="title">Revelado iris</h1><p class="description">Máscara circular que revela progresivamente el contenido.</p><p class="lbl">ESTILO</p><p class="styled">transiciones / neon / CSS</p></article></section><section class="module" data-id="data-chart"><div class="panel"><div class="anim-engine"><div class="asset-body" style="transform:scale(1.18)"><div class="chart-frame">
+            <svg class="chart-overlay-svg" viewBox="0 0 220 110">
+              <path class="chart-trendline" d="M 10 90 Q 60 30, 110 60 T 210 10" />
+            </svg>
+            <div class="metric-bar"></div>
+            <div class="metric-bar"></div>
+            <div class="metric-bar"></div>
+            <div class="metric-bar"></div>
+          </div></div></div></div><article class="information"><p class="index">21 / 23 · DATOS</p><h1 class="title">Gráfica dinámica</h1><p class="description">Barras ascendentes acompañadas por una línea de tendencia.</p><p class="lbl">ESTILO</p><p class="styled">datos / neon / CSS</p></article></section><section class="module" data-id="radial-neon"><div class="panel"><div class="anim-engine"><div class="asset-body" style="transform:scale(1.9)"><svg class="radial-loader-svg" viewBox="0 0 80 80">
+            <circle cx="40" cy="40" r="32" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="6" />
+            <circle class="radial-spin" cx="40" cy="40" r="32" />
+          </svg></div></div></div><article class="information"><p class="index">22 / 23 · LOADERS</p><h1 class="title">Loader radial neón</h1><p class="description">Indicador radial luminoso con giro y trazado progresivo.</p><p class="lbl">ESTILO</p><p class="styled">loaders / neon / CSS</p></article></section><section class="module" data-id="shimmer-progress"><div class="panel"><div class="anim-engine"><div class="asset-body" style="transform:scale(1.5)"><div class="bar-track">
+            <div class="bar-lead"></div>
+          </div></div></div></div><article class="information"><p class="index">23 / 23 · LOADERS</p><h1 class="title">Barra shimmer</h1><p class="description">Barra de carga con brillo desplazándose sobre su gradiente.</p><p class="lbl">ESTILO</p><p class="styled">loaders / neon / CSS</p></article></section></main><footer class="foot"><span>HTML + CSS · SIN CDN · NAVEGADOR CDP</span><span>480p · 24 FPS</span></footer></body></html>

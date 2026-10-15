@@ -1,0 +1,172 @@
+{
+  "version": 1,
+  "canvas": {
+    "width": 1024,
+    "height": 576
+  },
+  "fps": 24,
+  "scenes": [
+    {
+      "start": 0.0,
+      "duration": 3.5,
+      "background": "#0D1628",
+      "layers": [
+        {
+          "type": "text",
+          "text": "MOTION SUITE EDITABLE",
+          "x": 35,
+          "y": 66,
+          "width": 460,
+          "height": 75,
+          "fontSize": 40,
+          "color": "#F5F8FF"
+        },
+        {
+          "type": "text",
+          "text": "Propiedades en JSON → render C++ + Chromium",
+          "x": 45,
+          "y": 164,
+          "width": 480,
+          "height": 115,
+          "fontSize": 23,
+          "color": "#8BCFEA"
+        },
+        {
+          "type": "html_widget",
+          "collection": "animaciones",
+          "preset": "editable-cpu",
+          "x": 550,
+          "y": 100,
+          "width": 430,
+          "height": 405,
+          "properties": {
+            "cpu_name": "Intel Core i5",
+            "cpu_model": "14600K 5.3GHz",
+            "cpu_socket": "LGA1700"
+          }
+        }
+      ]
+    },
+    {
+      "start": 3.5,
+      "duration": 3.5,
+      "background": "#0D1628",
+      "layers": [
+        {
+          "type": "text",
+          "text": "MOTION SUITE EDITABLE",
+          "x": 35,
+          "y": 66,
+          "width": 460,
+          "height": 75,
+          "fontSize": 40,
+          "color": "#F5F8FF"
+        },
+        {
+          "type": "text",
+          "text": "Propiedades en JSON → render C++ + Chromium",
+          "x": 45,
+          "y": 164,
+          "width": 480,
+          "height": 115,
+          "fontSize": 23,
+          "color": "#8BCFEA"
+        },
+        {
+          "type": "html_widget",
+          "collection": "animaciones",
+          "preset": "breaking-news-ticker",
+          "x": 550,
+          "y": 100,
+          "width": 430,
+          "height": 405,
+          "properties": {
+            "label": "TECNOLOGÍA",
+            "headline": "GPTFrames permite títulos editables",
+            "ticker": "+++ PRUEBA DE TEXTO EDITABLE +++ SIN HTML LIBRE +++"
+          }
+        }
+      ]
+    },
+    {
+      "start": 7.0,
+      "duration": 3.5,
+      "background": "#0D1628",
+      "layers": [
+        {
+          "type": "text",
+          "text": "MOTION SUITE EDITABLE",
+          "x": 35,
+          "y": 66,
+          "width": 460,
+          "height": 75,
+          "fontSize": 40,
+          "color": "#F5F8FF"
+        },
+        {
+          "type": "text",
+          "text": "Propiedades en JSON → render C++ + Chromium",
+          "x": 45,
+          "y": 164,
+          "width": 480,
+          "height": 115,
+          "fontSize": 23,
+          "color": "#8BCFEA"
+        },
+        {
+          "type": "html_widget",
+          "collection": "animaciones",
+          "preset": "browser-mockup",
+          "x": 550,
+          "y": 100,
+          "width": 430,
+          "height": 405,
+          "properties": {
+            "url": "gptframes.local/presentacion",
+            "image": "assets/demo-browser.png"
+          }
+        }
+      ]
+    },
+    {
+      "start": 10.5,
+      "duration": 3.5,
+      "background": "#0D1628",
+      "layers": [
+        {
+          "type": "text",
+          "text": "MOTION SUITE EDITABLE",
+          "x": 35,
+          "y": 66,
+          "width": 460,
+          "height": 75,
+          "fontSize": 40,
+          "color": "#F5F8FF"
+        },
+        {
+          "type": "text",
+          "text": "Propiedades en JSON → render C++ + Chromium",
+          "x": 45,
+          "y": 164,
+          "width": 480,
+          "height": 115,
+          "fontSize": 23,
+          "color": "#8BCFEA"
+        },
+        {
+          "type": "html_widget",
+          "collection": "animaciones",
+          "preset": "rf-transmit",
+          "x": 550,
+          "y": 100,
+          "width": 430,
+          "height": 405,
+          "properties": {
+            "signal_color": "#FF55AA"
+          }
+        }
+      ]
+    }
+  ],
+  "audio": []
+}

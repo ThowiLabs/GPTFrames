@@ -2,6 +2,9 @@
 #include "media.hpp"
 #include "process.hpp"
 #include "render_jobs.hpp"
+#include "asset_catalog.hpp"
+#include "animation_catalog.hpp"
+#include "animation_search.hpp"
 #include "tools.hpp"
 #include "../voice/neo_bridge.hpp"
 #include <optional>
@@ -94,6 +97,12 @@ public:
     Json run_tool(const std::string& name, const Json& args) {
         validate_arguments(name, args);
         std::lock_guard<std::mutex> lock(mutex_);
+        if (name == "search_animations") return search_animations(config_.root,args);
+        if (name == "list_animation_facets") return animation_facets(config_.root);
+        if (name == "list_animations") return list_animations_filtered(config_.root,args);
+        if (name == "describe_animation") return describe_animation(config_.root,args.at("id").get<std::string>());
+        if (name == "list_asset_presets") return list_asset_presets(config_.root,args.value("category",std::string{}));
+        if (name == "describe_asset_preset") return describe_asset_preset(config_.root,args.at("id").get<std::string>());
         if (name == "list_projects") {
             std::vector<std::string> names;
             if (fs::is_directory(config_.projects))

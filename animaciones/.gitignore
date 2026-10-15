@@ -1,0 +1,5 @@
+*.mp4
+qa-*
+check-*
+__pycache__/
+*.pyc

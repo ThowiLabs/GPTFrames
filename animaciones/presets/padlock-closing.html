@@ -1,0 +1,13 @@
+<!doctype html><html lang="es"><head><meta charset="utf-8"><meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'none'; connect-src 'none'; style-src 'unsafe-inline'; img-src data:; font-src data:;"><style>
+:root{--bg:#0d1117;--card-bg:#161b22;--border:#30363d;--text-main:#f0f6fc;--text-dim:#8b949e;--green:#2ea043;--cyan:#38bdf8;--gold:#f59e0b;--red:#ef4444;--purple:#a855f7;--ease-elastic:cubic-bezier(.34,1.56,.64,1);--ease-out:cubic-bezier(.16,1,.3,1)}
+*{box-sizing:border-box}html,body{margin:0;width:100%;height:100%;overflow:hidden}
+body{background:transparent;color:var(--text-main);font-family:system-ui,"Segoe UI",Arial,sans-serif}
+.motion-stage{position:relative;width:320px;height:300px;display:grid;place-items:center;overflow:visible}
+
+.p03 .wrap{width:146px;height:180px;position:relative;display:flex;flex-direction:column;align-items:center;filter:drop-shadow(0 15px 20px #0007)}
+.p03 .shackle{width:78px;height:80px;border:12px solid #8b949e;border-bottom:0;border-radius:40px 40px 0 0;position:absolute;top:6px;transform-origin:left bottom;transform:translateY(-22px);animation:lock-snap 1.35s var(--ease-elastic) forwards}
+.p03 .body{width:127px;height:104px;background:linear-gradient(145deg,#36424e,#252d38);border:3px solid #566572;border-radius:18px;position:absolute;bottom:0;display:grid;place-items:center;box-shadow:0 10px 35px #0009;animation:lock-hit 1.35s var(--ease-out) forwards}
+.p03 .hole{width:13px;height:26px;background:#111a26;border-radius:6px}
+@keyframes lock-snap{0%{transform:translateY(-22px) rotate(-10deg);border-color:var(--gold)}40%{transform:translateY(-22px) rotate(0)}50%{transform:translateY(0);border-color:#8b949e}70%,100%{transform:translateY(0);border-color:var(--cyan)}}
+@keyframes lock-hit{0%,48%{transform:translateY(0);border-color:#566572}50%{transform:translateY(4px)}58%{transform:translateY(-3px)}70%,100%{transform:translateY(0);border-color:var(--cyan)}}
+</style></head><body><div class="motion-stage p03"><div class="wrap"><div class="shackle"></div><div class="body"><div class="hole"></div></div></div></div></body></html>

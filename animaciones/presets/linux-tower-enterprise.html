@@ -1,0 +1,55 @@
+<!doctype html><html lang="es"><head><meta charset="utf-8"><meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'none'; connect-src 'none'; style-src 'unsafe-inline'; img-src data:; font-src data:"><style>*{box-sizing:border-box}html,body{margin:0;width:100%;height:100%;overflow:hidden}
+body{background:transparent;color:#f8fafc;font-family:system-ui,-apple-system,"Segoe UI",Arial,sans-serif}
+.anim-engine{width:100%;height:100%;display:flex;justify-content:center;align-items:center;overflow:hidden;position:relative}
+.stage{width:320px;height:275px;display:flex;flex-direction:column;align-items:center;justify-content:center;position:relative}
+:root {
+      --bg-deep: #080b12;
+      --card-bg: #101522;
+      --border: #20293d;
+      --text-main: #f8fafc;
+      --text-muted: #64748b;
+
+      --c-cyan: #00f0ff;
+      --c-win: #0078d4;
+      --c-linux: #f59e0b;
+      --c-green: #10b981;
+      --c-red: #ef4444;
+      --c-pink: #ff007f;
+
+      --ease-elastic: cubic-bezier(0.34, 1.56, 0.64, 1);
+      --ease-cinematic: cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+            .linux-tower {
+              width: 120px; height: 170px; background: #131822; border: 2px solid #2d384e;
+              border-radius: 8px; padding: 8px; display: flex; flex-direction: column; justify-content: space-between;
+              box-shadow: inset 0 0 15px rgba(0,0,0,0.8);
+            }
+            .tower-fan-vent {
+              width: 65px; height: 65px; border-radius: 50%; border: 2px dashed #2d384e;
+              margin: 4px auto; display: grid; place-items: center; position: relative;
+            }
+            .anim-engine .tower-fan-blades {
+              width: 48px; height: 48px; border-radius: 50%;
+              border: 3px solid var(--c-linux); border-left-color: transparent; border-right-color: transparent;
+              animation: fanSpin 0.7s linear infinite;
+            }
+            .tower-drive-stack { display: flex; flex-direction: column; gap: 3px; }
+            .tower-drive {
+              height: 10px; background: #0a0d14; border: 1px solid #20293d; border-radius: 2px;
+              display: flex; justify-content: space-between; align-items: center; padding: 0 4px;
+            }
+            .anim-engine .linux-led { animation: linuxBlink 0.2s infinite steps(2); }
+            @keyframes fanSpin { to { transform: rotate(360deg); } }
+            @keyframes linuxBlink { 0% { background: #334155; } 100% { background: var(--c-linux); box-shadow: 0 0 6px var(--c-linux); } }
+          </style></head><body><div class="anim-engine"><div class="stage"><div class="linux-tower">
+            <div style="font-size:8px; font-family:monospace; color:var(--c-linux); text-align:center;" data-field="hostname">LINUX NODE TOWER</div>
+            <div class="tower-fan-vent">
+              <div class="tower-fan-blades"></div>
+            </div>
+            <div class="tower-drive-stack">
+              <div class="tower-drive"><span style="font-size:7px;font-family:monospace;color:#64748b;" data-field="drive_1">nvme0</span><div class="linux-led" style="width:4px;height:4px;border-radius:50%;"></div></div>
+              <div class="tower-drive"><span style="font-size:7px;font-family:monospace;color:#64748b;" data-field="drive_2">nvme1</span><div class="linux-led" style="width:4px;height:4px;border-radius:50%;animation-duration:0.14s;"></div></div>
+            </div>
+          </div>
+        </div></div></body></html>

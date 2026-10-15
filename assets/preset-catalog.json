@@ -1,0 +1,408 @@
+{
+  "version": 1,
+  "source": "Original GPTFrames in-house designs",
+  "license": "Project license",
+  "count": 20,
+  "presets": [
+    {
+      "number": 1,
+      "id": "orbit-rings",
+      "name": "Orbit Rings",
+      "category": "Loader",
+      "description": "Anillos concéntricos de rotación inversa.",
+      "style": "tech / circular",
+      "backend": "browser",
+      "tags": [
+        "verificación",
+        "procesando"
+      ],
+      "preset_file": "assets/presets/orbit-rings.html",
+      "status": "candidate",
+      "config": {
+        "duration": 1.5,
+        "loop": true,
+        "accent": "#62e5ce"
+      }
+    },
+    {
+      "number": 2,
+      "id": "pulse-core",
+      "name": "Pulse Core",
+      "category": "Loader",
+      "description": "Núcleo que emite ondas luminosas de actividad.",
+      "style": "glow / minimal",
+      "backend": "browser",
+      "tags": [
+        "actividad",
+        "análisis"
+      ],
+      "preset_file": "assets/presets/pulse-core.html",
+      "status": "candidate",
+      "config": {
+        "duration": 1.5,
+        "loop": true,
+        "accent": "#62e5ce"
+      }
+    },
+    {
+      "number": 3,
+      "id": "dot-wave",
+      "name": "Dot Wave",
+      "category": "Loader",
+      "description": "Secuencia de siete puntos con movimiento ondulatorio.",
+      "style": "minimal / suave",
+      "backend": "browser",
+      "tags": [
+        "espera",
+        "escritura"
+      ],
+      "preset_file": "assets/presets/dot-wave.html",
+      "status": "candidate",
+      "config": {
+        "duration": 1.5,
+        "loop": true,
+        "accent": "#62e5ce"
+      }
+    },
+    {
+      "number": 4,
+      "id": "signal-bars",
+      "name": "Signal Bars",
+      "category": "Loader",
+      "description": "Indicadores de intensidad con oscilación irregular.",
+      "style": "dashboard / datos",
+      "backend": "browser",
+      "tags": [
+        "red",
+        "señal"
+      ],
+      "preset_file": "assets/presets/signal-bars.html",
+      "status": "candidate",
+      "config": {
+        "duration": 1.5,
+        "loop": true,
+        "accent": "#62e5ce"
+      }
+    },
+    {
+      "number": 5,
+      "id": "progress-capsule",
+      "name": "Progress Capsule",
+      "category": "Loader",
+      "description": "Barra encapsulada con avance y brillo móvil.",
+      "style": "editorial / progreso",
+      "backend": "browser",
+      "tags": [
+        "avance",
+        "carga"
+      ],
+      "preset_file": "assets/presets/progress-capsule.html",
+      "status": "candidate",
+      "config": {
+        "duration": 1.5,
+        "loop": true,
+        "accent": "#62e5ce"
+      }
+    },
+    {
+      "number": 6,
+      "id": "radar-sweep",
+      "name": "Radar Sweep",
+      "category": "Loader",
+      "description": "Barrido circular con puntos de detección.",
+      "style": "radar / seguridad",
+      "backend": "browser",
+      "tags": [
+        "búsqueda",
+        "escaneo"
+      ],
+      "preset_file": "assets/presets/radar-sweep.html",
+      "status": "candidate",
+      "config": {
+        "duration": 1.5,
+        "loop": true,
+        "accent": "#62e5ce"
+      }
+    },
+    {
+      "number": 7,
+      "id": "hex-spin",
+      "name": "Hex Spin",
+      "category": "Loader",
+      "description": "Doble hexágono giratorio con centro iluminado.",
+      "style": "geométrico / cyber",
+      "backend": "browser",
+      "tags": [
+        "cálculo",
+        "proceso"
+      ],
+      "preset_file": "assets/presets/hex-spin.html",
+      "status": "candidate",
+      "config": {
+        "duration": 1.5,
+        "loop": true,
+        "accent": "#62e5ce"
+      }
+    },
+    {
+      "number": 8,
+      "id": "shard-spinner",
+      "name": "Shard Spinner",
+      "category": "Loader",
+      "description": "Fragmentos orbitales con cadencia y reflejos.",
+      "style": "dinámico / premium",
+      "backend": "browser",
+      "tags": [
+        "energía",
+        "conexión"
+      ],
+      "preset_file": "assets/presets/shard-spinner.html",
+      "status": "candidate",
+      "config": {
+        "duration": 1.5,
+        "loop": true,
+        "accent": "#62e5ce"
+      }
+    },
+    {
+      "number": 9,
+      "id": "phone-verify",
+      "name": "Phone Verify",
+      "category": "Seguridad",
+      "description": "Teléfono estilizado con verificación contenida.",
+      "style": "security / claro",
+      "backend": "browser",
+      "tags": [
+        "móvil",
+        "autenticar"
+      ],
+      "preset_file": "assets/presets/phone-verify.html",
+      "status": "candidate",
+      "config": {
+        "duration": 1.5,
+        "loop": true,
+        "accent": "#62e5ce"
+      }
+    },
+    {
+      "number": 10,
+      "id": "lock-scan",
+      "name": "Lock Scan",
+      "category": "Seguridad",
+      "description": "Candado con arco móvil y lectura luminosa.",
+      "style": "seguridad / interfaz",
+      "backend": "browser",
+      "tags": [
+        "acceso",
+        "cierre"
+      ],
+      "preset_file": "assets/presets/lock-scan.html",
+      "status": "candidate",
+      "config": {
+        "duration": 1.5,
+        "loop": true,
+        "accent": "#62e5ce"
+      }
+    },
+    {
+      "number": 11,
+      "id": "shield-pulse",
+      "name": "Shield Pulse",
+      "category": "Seguridad",
+      "description": "Escudo con trazos y pulso protector.",
+      "style": "trust / tech",
+      "backend": "browser",
+      "tags": [
+        "protección",
+        "escudo"
+      ],
+      "preset_file": "assets/presets/shield-pulse.html",
+      "status": "candidate",
+      "config": {
+        "duration": 1.5,
+        "loop": true,
+        "accent": "#62e5ce"
+      }
+    },
+    {
+      "number": 12,
+      "id": "alert-beacon",
+      "name": "Alert Beacon",
+      "category": "Seguridad",
+      "description": "Baliza de alerta con ondas controladas.",
+      "style": "warning / editorial",
+      "backend": "browser",
+      "tags": [
+        "riesgo",
+        "alerta"
+      ],
+      "preset_file": "assets/presets/alert-beacon.html",
+      "status": "candidate",
+      "config": {
+        "duration": 1.5,
+        "loop": true,
+        "accent": "#62e5ce"
+      }
+    },
+    {
+      "number": 13,
+      "id": "toast-success",
+      "name": "Toast Success",
+      "category": "Notificación",
+      "description": "Confirmación emergente con icono y progreso.",
+      "style": "ui / éxito",
+      "backend": "browser",
+      "tags": [
+        "completado",
+        "bien"
+      ],
+      "preset_file": "assets/presets/toast-success.html",
+      "status": "candidate",
+      "config": {
+        "duration": 1.5,
+        "loop": true,
+        "accent": "#62e5ce"
+      }
+    },
+    {
+      "number": 14,
+      "id": "toast-warning",
+      "name": "Toast Warning",
+      "category": "Notificación",
+      "description": "Advertencia contextual con indicador de atención.",
+      "style": "ui / precaución",
+      "backend": "browser",
+      "tags": [
+        "advertencia",
+        "atención"
+      ],
+      "preset_file": "assets/presets/toast-warning.html",
+      "status": "candidate",
+      "config": {
+        "duration": 1.5,
+        "loop": true,
+        "accent": "#62e5ce"
+      }
+    },
+    {
+      "number": 15,
+      "id": "metric-card-glow",
+      "name": "Metric Card Glow",
+      "category": "Interfaz",
+      "description": "Métrica con líneas ascendentes y fondo luminoso.",
+      "style": "dashboard / métrica",
+      "backend": "browser",
+      "tags": [
+        "datos",
+        "crecimiento"
+      ],
+      "preset_file": "assets/presets/metric-card-glow.html",
+      "status": "candidate",
+      "config": {
+        "duration": 1.5,
+        "loop": true,
+        "accent": "#62e5ce"
+      }
+    },
+    {
+      "number": 16,
+      "id": "section-badge",
+      "name": "Section Badge",
+      "category": "Interfaz",
+      "description": "Etiqueta editorial con barrido discreto.",
+      "style": "editorial / label",
+      "backend": "browser",
+      "tags": [
+        "capítulo",
+        "etiqueta"
+      ],
+      "preset_file": "assets/presets/section-badge.html",
+      "status": "candidate",
+      "config": {
+        "duration": 1.5,
+        "loop": true,
+        "accent": "#62e5ce"
+      }
+    },
+    {
+      "number": 17,
+      "id": "info-chip",
+      "name": "Info Chip",
+      "category": "Interfaz",
+      "description": "Ficha informativa compacta con brillo suave.",
+      "style": "minimal / contexto",
+      "backend": "browser",
+      "tags": [
+        "información",
+        "apoyo"
+      ],
+      "preset_file": "assets/presets/info-chip.html",
+      "status": "candidate",
+      "config": {
+        "duration": 1.5,
+        "loop": true,
+        "accent": "#62e5ce"
+      }
+    },
+    {
+      "number": 18,
+      "id": "cta-glow-button",
+      "name": "CTA Glow Button",
+      "category": "Interfaz",
+      "description": "Botón de llamada a la acción con borde luminoso.",
+      "style": "moderno / CTA",
+      "backend": "browser",
+      "tags": [
+        "acción",
+        "continuar"
+      ],
+      "preset_file": "assets/presets/cta-glow-button.html",
+      "status": "candidate",
+      "config": {
+        "duration": 1.5,
+        "loop": true,
+        "accent": "#62e5ce"
+      }
+    },
+    {
+      "number": 19,
+      "id": "data-stream",
+      "name": "Data Stream",
+      "category": "Datos",
+      "description": "Columnas de partículas simulando transferencia.",
+      "style": "data / sci-fi",
+      "backend": "browser",
+      "tags": [
+        "flujo",
+        "transmisión"
+      ],
+      "preset_file": "assets/presets/data-stream.html",
+      "status": "candidate",
+      "config": {
+        "duration": 1.5,
+        "loop": true,
+        "accent": "#62e5ce"
+      }
+    },
+    {
+      "number": 20,
+      "id": "neural-network",
+      "name": "Neural Network",
+      "category": "Datos",
+      "description": "Nodos conectados con señales que recorren la red.",
+      "style": "sistema / conexiones",
+      "backend": "browser",
+      "tags": [
+        "red",
+        "inferencia"
+      ],
+      "preset_file": "assets/presets/neural-network.html",
+      "status": "candidate",
+      "config": {
+        "duration": 1.5,
+        "loop": true,
+        "accent": "#62e5ce"
+      }
+    }
+  ]
+}

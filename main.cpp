@@ -18,6 +18,8 @@
 #include <vector>
 #include "html_composition.hpp"
 #include "browser_detection.hpp"
+#include "compositor/rgba_blend.hpp"
+#include "compositor/asset_data_url.hpp"
 using namespace std;
 int W=720,H=1280;
 constexpr int SR=24000;
@@ -175,6 +177,103 @@ int main(int argc,char**argv){try{
    W=config.width; H=config.height;
    project::designWidth=config.width;project::designHeight=config.height;
    pixels.assign(static_cast<size_t>(W)*H*3,0);
+#ifdef HFC_WITH_BROWSER_CAPTURE
+   std::map<std::string,std::unique_ptr<browser::Capture>> browserCache;
+   std::map<std::string,std::string> browserPropertyCache;
+   nlohmann::json presetRegistry;
+   bool registryLoaded=false;
+   std::string registryCollection;
+#endif
+   // HTML widgets are always above native layers for this experimental backend.
+   // Only shipped, known presets are loadable; caller HTML is not accepted.
+   auto compositeWidgets=[&](std::vector<unsigned char>& target,double absoluteTime){
+      int index=project::sceneIndex(config,absoluteTime);
+      const auto& scene=config.scenes[size_t(index)];
+      const double sceneTime=absoluteTime-scene.start;
+      for(const auto& layer:scene.layers){
+       if(layer.type!="html_widget"||sceneTime<layer.from||
+          sceneTime>=layer.from+layer.duration)continue;
+#ifndef HFC_WITH_BROWSER_CAPTURE
+       throw std::runtime_error("HTML widgets require HFC_BROWSER_CAPTURE");
+#else
+       if(!registryLoaded || registryCollection!=layer.collection){
+        auto root=std::filesystem::current_path();
+        if(const char* configured=std::getenv("GPTFRAMES_ROOT"))root=configured;
+        const auto catalog=layer.collection=="animaciones"?root/"animaciones"/"catalogo.json":root/"assets"/"preset-catalog.json";
+        if(!std::filesystem::is_regular_file(catalog)||
+           std::filesystem::is_symlink(catalog)||
+           std::filesystem::file_size(catalog)>512*1024)
+         throw std::runtime_error("Trusted asset catalogue not found");
+        std::ifstream file(catalog);
+        presetRegistry=nlohmann::json::parse(file);
+        if(!presetRegistry.is_object()||!presetRegistry.contains("presets")||
+           !presetRegistry["presets"].is_array())throw std::runtime_error("Invalid asset catalogue");
+        registryLoaded=true;registryCollection=layer.collection;
+       }
+       const auto root=std::getenv("GPTFRAMES_ROOT")?
+          std::filesystem::path(std::getenv("GPTFRAMES_ROOT")):
+          std::filesystem::current_path();
+       bool found=false;
+       nlohmann::json editableSchema=nlohmann::json::object();
+       for(const auto& registered:presetRegistry["presets"]){
+        if(!registered.is_object()||registered.value("id",std::string{})!=layer.preset)continue;
+        const auto expected=(layer.collection=="animaciones"?std::string("animaciones/presets/"):std::string("assets/presets/"))+layer.preset+".html";
+        if(registered.value("preset_file",std::string{})!=expected)
+         throw std::runtime_error("Invalid preset registration");
+        editableSchema=registered.value("editable",nlohmann::json::object());
+        found=true;break;
+       }
+       if(!found)throw std::runtime_error("HTML widget preset not registered");
+       nlohmann::json checked=nlohmann::json::object();
+       for(auto it=layer.properties.begin();it!=layer.properties.end();++it){
+        if(!editableSchema.is_object()||!editableSchema.contains(it.key())||
+           !editableSchema[it.key()].is_object()||
+           !editableSchema[it.key()].contains("type"))
+         throw std::runtime_error("Property not exposed by this preset: "+it.key());
+        const auto type=editableSchema[it.key()]["type"].get<std::string>();
+        const std::string value=it.value().get<std::string>();
+        if(type=="text"){
+         if(value.size()>220)throw std::runtime_error("Editable text is too long");
+         checked[it.key()]=value;
+        }else if(type=="color"){
+         if(value.size()!=7||value[0]!='#'||!std::all_of(value.begin()+1,value.end(),
+           [](unsigned char ch){return std::isxdigit(ch)!=0;}))
+          throw std::runtime_error("Editable color must be #RRGGBB");
+         checked[it.key()]=value;
+        }else if(type=="image"){
+         const auto projectDir=std::filesystem::absolute(argv[3]).parent_path();
+         checked[it.key()]=gptframes_asset_data::safe_data_url(projectDir,value);
+        }else throw std::runtime_error("Unknown editable property type");
+       }
+
+       const double scale=double(W)/config.width;
+       const int left=int(std::lround(layer.base.x*scale));
+       const int top=int(std::lround(layer.base.y*scale));
+       const int rw=int(std::lround(layer.base.w*scale));
+       const int rh=int(std::lround(layer.base.h*scale));
+       if(rw<256||rh<144||rw>1920||rh>1080)
+        throw std::runtime_error("Widget dimensions outside browser limits");
+       const auto path=root/(layer.collection=="animaciones"?"animaciones":"assets")/"presets"/(layer.preset+".html");
+       if(std::filesystem::is_symlink(path)||!std::filesystem::is_regular_file(path))
+        throw std::runtime_error("Trusted preset file missing");
+       const auto key=layer.collection+":"+layer.preset+":"+std::to_string(rw)+"x"+std::to_string(rh);
+       auto it=browserCache.find(key);
+       if(it==browserCache.end()){
+        browserCache.clear(); // One active Chromium instance per scene.
+        browserPropertyCache.clear();
+        it=browserCache.emplace(key,std::make_unique<browser::Capture>(path.string(),rw,rh,true)).first;
+       }
+       const std::string signature=checked.dump();
+       if(!checked.empty()&&browserPropertyCache[key]!=signature){
+        it->second->setEditableProperties(checked);
+        browserPropertyCache[key]=signature;
+       }
+       std::vector<unsigned char> rgba;
+       it->second->renderRGBA(sceneTime-layer.from,rgba);
+       gptframes_rgba::over(target,W,H,rgba,rw,rh,left,top,layer.base.opacity);
+#endif
+      }
+   };
    if(mode=="lint"){
     if(argc!=4)throw runtime_error("Uso: --project lint proyecto.json");
     cout<<gptframes_quality::report(config).dump(2)<<"\n";
@@ -193,6 +292,7 @@ int main(int argc,char**argv){try{
     double sec=stod(argv[5],&used);
     if(used!=strlen(argv[5])||!isfinite(sec)||sec<0||sec>=config.duration)throw runtime_error("Segundo fuera de proyecto");
     project::frame(config,sec);
+    compositeWidgets(pixels,sec);
     vector<unsigned char> data=(config.width==W&&config.height==H)?pixels:output::resize(pixels,W,H,config.width,config.height);
     vector<unsigned char> rgb(data);
     for(size_t i=0;i<rgb.size();i+=3)std::swap(rgb[i],rgb[i+2]);
@@ -254,6 +354,7 @@ int main(int argc,char**argv){try{
     }
     for(int i=batch;i<end;i++){
      auto buffer=rendered[size_t(i-batch)].get();
+     compositeWidgets(buffer,double(i)/config.fps);
      writer.addVideo(buffer);
      if(i%std::max(1,config.fps*4)==0)
       cerr<<"JSON project "<<i<<"/"<<count<<"\n";
@@ -397,7 +498,7 @@ int main(int argc,char**argv){try{
 #else
   const double duration=stod(argv[4]);
   const int fps=stoi(argv[5]),vw=stoi(argv[6]),vh=stoi(argv[7]);
-  if(!isfinite(duration)||duration<=0||duration>10||fps<1||fps>30||
+  if(!isfinite(duration)||duration<=0||duration>90||fps<1||fps>30||
      vw<256||vw>1920||vh<144||vh>1080||vw%16||vh%2)
    throw runtime_error("Preview limits: <=10 seconds, <=30fps, 16-aligned width");
   const string out=argv[3];
@@ -415,6 +516,19 @@ int main(int argc,char**argv){try{
   cout<<"CSS widget MP4 "<<out<<" ("<<count<<" frames)"<<endl;
   return 0;
 #endif
+ }
+ if(argc==7 && string(argv[1])=="--browser-widget-alpha-frame"){
+  const int vw=stoi(argv[5]),vh=stoi(argv[6]);
+  const double t=stod(argv[3]);
+  if(!isfinite(t)||t<0||t>120||vw<256||vw>1920||vh<144||vh>1080)
+   throw runtime_error("Invalid RGBA capture dimensions/time");
+  browser::Capture widget(argv[2],vw,vh,true);
+  vector<unsigned char> rgba;
+  widget.renderRGBA(t,rgba);
+  if(!stbi_write_png(argv[4],vw,vh,4,rgba.data(),vw*4))
+   throw runtime_error("Could not export transparent PNG");
+  cout<<"RGBA PNG generated"<<endl;
+  return 0;
  }
  if(argc==7 && string(argv[1])=="--browser-widget-frame"){
   int vw=stoi(argv[5]),vh=stoi(argv[6]);

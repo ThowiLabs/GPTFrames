@@ -330,6 +330,7 @@ class Capture{
   session_=std::make_unique<Devtools>(child_->port());
   session_->command("Page.enable");
   session_->command("Runtime.enable");
+  if(cssTimeline_)session_->command("Emulation.setDefaultBackgroundColorOverride",{{"color",{{"r",0},{"g",0},{"b",0},{"a",0}}}});
   session_->command("Emulation.setDeviceMetricsOverride",
      {{"width",width_},{"height",height_},{"deviceScaleFactor",1},{"mobile",false}});
   auto path=fs::absolute(filename).generic_u8string();
@@ -357,7 +358,7 @@ class Capture{
     "Browser CSS document was not loaded" :
     "Browser page did not expose window.__timelines.main. Check that GSAP assets exist next to HTML.");
  }
- void render(double seconds,std::vector<unsigned char>& bgr){
+ void render(double seconds,std::vector<unsigned char>& bgr,bool rgbaOutput=false){
   if(seconds<0||!std::isfinite(seconds))throw std::invalid_argument("Invalid timeline time");
   auto code="(()=>{const t="+std::to_string(seconds)+
     "; const elements=[...document.querySelectorAll('.scene')];"+
@@ -367,9 +368,19 @@ class Capture{
     " elements.forEach((el,i)=>{el.style.visibility=i===active?'visible':'hidden';});"+
     " window.__timelines.main.pause();window.__timelines.main.seek(t,false);return active})()";
   if(cssTimeline_){
-   code="(()=>{const ms="+std::to_string(seconds*1000.)+"; "
+   code="(()=>{const ms="+std::to_string(seconds*1000.)+";"
+        "const host=document.querySelector('main[data-segment-seconds]');"
+        "const segment=host?Number(host.dataset.segmentSeconds)*1000:0;"
+        "const panels=host?Array.from(host.children):[];"
         "const tracks=document.getAnimations({subtree:true});"
-        "for(const track of tracks){track.pause();track.currentTime=ms;}"
+        "for(const track of tracks){"
+        "const target=track.effect?.target;"
+        "const panel=target?.closest?.('.module,.demo,.catalog-scene');"
+        "let time=ms;"
+        "if(panel&&target!==panel&&segment>0){"
+        "const idx=panels.indexOf(panel);"
+        "if(idx>=0)time=Math.max(0,ms-idx*segment);}"
+        "track.pause();track.currentTime=time;}"
         "return tracks.length;})()";
   }
   auto evaluated=session_->command("Runtime.evaluate",{{"expression",code},{"returnByValue",true}});
@@ -378,15 +389,42 @@ class Capture{
     {"format",cssTimeline_?"png":"jpeg"},{"quality",93},{"fromSurface",true},{"captureBeyondViewport",false}});
   auto encoded=base64(screenshot.at("data").get<std::string>());
   int w=0,h=0,c=0;
-  stbi_uc* pixels=stbi_load_from_memory(encoded.data(),static_cast<int>(encoded.size()),&w,&h,&c,3);
+  stbi_uc* pixels=stbi_load_from_memory(encoded.data(),static_cast<int>(encoded.size()),&w,&h,&c,rgbaOutput?4:3);
   if(!pixels)throw std::runtime_error("Unable to decode browser PNG screenshot");
   if(w!=width_||h!=height_){stbi_image_free(pixels);throw std::runtime_error(
        "Browser returned unexpected screenshot size "+std::to_string(w)+"x"+std::to_string(h));}
-  bgr.resize(size_t(width_)*height_*3);
-  for(size_t i=0;i<bgr.size();i+=3){
-   bgr[i]=pixels[i+2];bgr[i+1]=pixels[i+1];bgr[i+2]=pixels[i];
+  if(rgbaOutput){
+   bgr.assign(pixels,pixels+size_t(width_)*height_*4);
+  }else{
+   bgr.resize(size_t(width_)*height_*3);
+   for(size_t i=0;i<bgr.size();i+=3){
+    bgr[i]=pixels[i+2];bgr[i+1]=pixels[i+1];bgr[i+2]=pixels[i];
+   }
   }
   stbi_image_free(pixels);
+ }
+ void setEditableProperties(const json& properties){
+  if(!cssTimeline_||!properties.is_object()||properties.size()>16)
+   throw std::runtime_error("Invalid browser editable property set");
+  if(properties.empty())return;
+  const std::string script="(async()=>{const fields="+properties.dump()+
+    ";let updated=0;const pictures=[];for(const [key,value] of Object.entries(fields)){"+
+    "if(!/^[a-z][a-z0-9_]{0,63}$/.test(key)||typeof value!=='string')throw Error('Invalid property');"+
+    "if(key==='signal_color'){if(!/^#[0-9A-Fa-f]{6}$/.test(value))throw Error('Invalid color');"+
+    "document.documentElement.style.setProperty('--c-cyan',value);"+
+    "document.documentElement.style.setProperty('--c-green',value);updated++;continue;}"+
+    "const target=document.querySelector('[data-field=\\\"'+key+'\\\"]');"+
+    "if(!target)throw Error('Unknown property: '+key);"+
+    "if(target.tagName==='IMG'){if(!/^data:image\\/(png|jpeg|webp|svg\\+xml);/.test(value))throw Error('Local image expected');"+
+    "target.src=value;pictures.push(target.decode());}else{target.textContent=value;}updated++;}await Promise.all(pictures);return updated;})()";
+  auto response=session_->command("Runtime.evaluate",{{"expression",script},{"returnByValue",true},{"awaitPromise",true}});
+  if(response.contains("exceptionDetails")||!response.contains("result")||
+     response["result"].value("value",0)!=static_cast<int>(properties.size()))
+    throw std::runtime_error("Browser failed to apply editable properties");
+ }
+ void renderRGBA(double seconds,std::vector<unsigned char>& rgba){
+  if(!cssTimeline_)throw std::runtime_error("CSS capture required");
+  render(seconds,rgba,true);
  }
 };
 }

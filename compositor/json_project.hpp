@@ -30,7 +30,8 @@ struct Key {double at;Pose pose;std::string easing="linear";};
 struct Image {int width=0,height=0;std::vector<unsigned char> rgba;};
 struct Motion {std::string type="none";double amplitude=0,speed=0.5,phase=0;};
 struct Layer {
- std::string type,text,file;
+ std::string type,text,file,preset,collection="originales";
+ json properties=json::object();
  Motion motion;
  int layoutId=-1;
  Color color{240,247,252},stroke{240,247,252};
@@ -228,7 +229,7 @@ inline Config load(const std::string&filename){
    Layer layer;
    layer.layoutId=static_cast<int>(num(l,"__layoutId",-1,-1,100));
    layer.type=str(l,"type");
-   static const std::set<std::string> types={"rect","ellipse","text","image","line","ring","glow","grid","symbol","lottie"};
+   static const std::set<std::string> types={"rect","ellipse","text","image","line","ring","glow","grid","symbol","lottie","html_widget"};
    if(!types.count(layer.type))throw std::runtime_error("Capa desconocida: "+layer.type);
    layer.base=readPose(l,layer.base);
    if(l.contains("animation")){
@@ -267,6 +268,27 @@ inline Config load(const std::string&filename){
        (layer.verticalAlign!="top"&&layer.verticalAlign!="center"&&layer.verticalAlign!="bottom"))
        throw std::runtime_error("Alineacion de texto invalida");
     if(layer.base.rotation!=0)throw std::runtime_error("Rotación de texto no disponible; utilice posición y escala");
+   }
+   if(layer.type=="html_widget"){
+    layer.collection=str(l,"collection","originales");
+    if(layer.collection!="originales"&&layer.collection!="animaciones")
+     throw std::runtime_error("Unknown animation collection");
+    if(l.contains("properties")){
+     const auto& options=l.at("properties");
+     if(!options.is_object()||options.size()>16)
+      throw std::runtime_error("HTML widget properties require an object with <=16 entries");
+     for(auto it=options.begin();it!=options.end();++it){
+      if(it.key().empty()||it.key().size()>64||!
+         std::all_of(it.key().begin(),it.key().end(),
+          [](unsigned char c){return std::isalnum(c)||c=='_';})||
+         !it.value().is_string()||it.value().get<std::string>().size()>240)
+       throw std::runtime_error("Invalid editable HTML property");
+     }
+     layer.properties=options;
+    }
+    layer.preset=str(l,"preset");
+    if(layer.preset.empty()||layer.preset.size()>64||!std::all_of(layer.preset.begin(),layer.preset.end(),[](unsigned char c){return std::isalnum(c)||c=='-';}))throw std::runtime_error("Invalid browser preset");
+    if(layer.base.rotation!=0)throw std::runtime_error("CSS widgets do not support rotation");
    }
    if(layer.type=="lottie"){
 #ifdef HFC_WITH_THORVG
@@ -643,6 +665,7 @@ inline void drawScene(const Scene&s,double local){
   // The native writer therefore only rasterizes at the chosen output size.
   const double outputScale=double(W)/(designWidth?designWidth:W);
   p.x*=outputScale;p.y*=outputScale;p.scale*=outputScale;
+  if(l.type=="html_widget")continue; // Composited in RGBA by browser backend.
   if(l.type=="text")drawSmartText(font,l,p);
   else drawPixels(l,p,local-l.from);
  }

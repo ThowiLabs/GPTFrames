@@ -1,0 +1,54 @@
+<!doctype html><html lang="es"><head><meta charset="utf-8"><meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'none'; connect-src 'none'; style-src 'unsafe-inline'; img-src data:; font-src data:"><style>*{box-sizing:border-box}html,body{margin:0;width:100%;height:100%;overflow:hidden}
+body{background:transparent;color:#f8fafc;font-family:system-ui,-apple-system,"Segoe UI",Arial,sans-serif}
+.anim-engine{width:100%;height:100%;display:flex;justify-content:center;align-items:center;overflow:hidden;position:relative}
+.stage{width:320px;height:275px;display:flex;flex-direction:column;align-items:center;justify-content:center;position:relative}
+:root {
+      --bg-deep: #080b12;
+      --card-bg: #101522;
+      --border: #20293d;
+      --text-main: #f8fafc;
+      --text-muted: #64748b;
+
+      --c-cyan: #00f0ff;
+      --c-win: #0078d4;
+      --c-linux: #f59e0b;
+      --c-green: #10b981;
+      --c-red: #ef4444;
+      --c-pink: #ff007f;
+
+      --ease-elastic: cubic-bezier(0.34, 1.56, 0.64, 1);
+      --ease-cinematic: cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+            .browser-window {
+              width: 100%; max-width: 310px; background: #0f141f;
+              border: 1px solid var(--border); border-radius: 8px; overflow: hidden;
+              box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+            }
+            .browser-header {
+              height: 28px; background: #182030; display: flex; align-items: center;
+              padding: 0 10px; gap: 6px; border-bottom: 1px solid var(--border);
+            }
+            .dot { width: 8px; height: 8px; border-radius: 50%; }
+            .url-input {
+              flex: 1; height: 16px; background: #0b0f17; border-radius: 4px; margin-left: 6px;
+              font-size: 8px; font-family: monospace; color: var(--text-muted); display: flex; align-items: center; padding-left: 6px;
+            }
+            .browser-body { width: 100%; height: 145px; overflow: hidden; position: relative; }
+            .anim-engine .browser-body img {
+              width: 100%; height: 100%; object-fit: cover; transform: scale(1.15); opacity: 0;
+              animation: imageReveal 1.2s var(--ease-cinematic) forwards;
+            }
+            @keyframes imageReveal { to { transform: scale(1); opacity: 1; } }
+          </style></head><body><div class="anim-engine"><div class="stage"><div class="browser-window">
+            <div class="browser-header">
+              <div class="dot" style="background:#ef4444"></div>
+              <div class="dot" style="background:#f59e0b"></div>
+              <div class="dot" style="background:#10b981"></div>
+              <div class="url-input" data-field="url">gptframes.local/inicio</div>
+            </div>
+            <div class="browser-body">
+              <img src="data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22600%22%20height%3D%22320%22%3E%3Cdefs%3E%3ClinearGradient%20id%3D%22g%22%3E%3Cstop%20stop-color%3D%22%23124b70%22%2F%3E%3Cstop%20offset%3D%221%22%20stop-color%3D%22%23062238%22%2F%3E%3C%2FlinearGradient%3E%3C%2Fdefs%3E%3Crect%20width%3D%22600%22%20height%3D%22320%22%20fill%3D%22url%28%23g%29%22%2F%3E%3Cg%20fill%3D%22none%22%20stroke%3D%22%234be0ef%22%20stroke-width%3D%223%22%3E%3Crect%20x%3D%2265%22%20y%3D%2265%22%20width%3D%22190%22%20height%3D%22120%22%20rx%3D%2215%22%2F%3E%3Cpath%20d%3D%22M65%20105h190M270%20180h170M310%20150h130M310%20120h94%22%2F%3E%3C%2Fg%3E%3Ccircle%20cx%3D%22465%22%20cy%3D%22245%22%20r%3D%2238%22%20fill%3D%22%2318a5b4%22%20opacity%3D%22.5%22%2F%3E%3C%2Fsvg%3E" data-field="image" alt="Workspace CDN" />
+            </div>
+          </div>
+        </div></div></body></html>

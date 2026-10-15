@@ -1,0 +1,45 @@
+<!doctype html><html lang="es"><head><meta charset="utf-8"><meta http-equiv="Content-Security-Policy" content="default-src &#39;none&#39;; script-src &#39;none&#39;; connect-src &#39;none&#39;; style-src &#39;unsafe-inline&#39;; img-src data:; font-src data:"><style>*{box-sizing:border-box}
+html,body{margin:0;width:100%;height:100%;overflow:hidden}
+body{background:transparent;color:#f8fafc;font-family:system-ui,"Segoe UI",Arial,sans-serif}
+.anim-engine{position:relative;width:320px;height:300px;display:grid;place-items:center}
+.asset-body{width:260px;height:220px;display:flex;flex-direction:column;align-items:center;justify-content:center;transform-origin:center}
+
+:root {--bg-main:#0a0d14;--card-bg:#131924;--border-color:#232d3f;
+--text-main:#f8fafc;--text-dim:#94a3b8;--c-neon-blue:#00e5ff;--c-pink:#ff007f;
+--c-green:#10b981;--c-yellow:#fbbf24;--c-red:#f43f5e;--c-purple:#8b5cf6;
+--ease-elastic:cubic-bezier(.34,1.56,.64,1);
+--ease-cinematic:cubic-bezier(.16,1,.3,1);}
+
+            .avatar-base {
+              width: 90px; height: 90px; border-radius: 50%;
+              background: var(--c-yellow); border: 3px solid #0f172a;
+              position: relative; display: flex; align-items: center; justify-content: center;
+            }
+            .anim-engine .char-neutral { animation: neutralFloat 3s ease-in-out infinite; }
+            .eyes-pair { display: flex; gap: 24px; margin-top: -12px; }
+            .eye-dot { width: 9px; height: 12px; background: #0f172a; border-radius: 50%; }
+            .anim-engine .eye-blink { animation: eyeBlink 3.5s infinite; }
+            .neutral-mouth { position: absolute; bottom: 22px; width: 22px; height: 4px; background: #0f172a; border-radius: 2px; }
+            @keyframes eyeBlink { 0%, 94%, 100% { transform: scaleY(1); } 97% { transform: scaleY(0.1); } }
+            @keyframes neutralFloat { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-4px); } }
+
+
+            .thinking-container { position: relative; }
+            .thought-icon {
+              position: absolute; top: -24px; right: -20px;
+              font-weight: 900; font-size: 24px; color: var(--c-neon-blue); opacity: 0;
+            }
+            .anim-engine .thought-icon { animation: thoughtPop 2s ease-in-out infinite; }
+            .eye-think { width: 9px; height: 9px; background: #0f172a; border-radius: 50%; transform: translate(3px, -4px); }
+            .think-mouth { position: absolute; bottom: 22px; right: 26px; width: 10px; height: 10px; border: 3px solid #0f172a; border-radius: 50%; }
+            @keyframes thoughtPop { 0%, 100% { opacity: 0; transform: translateY(4px) scale(0.8); } 50% { opacity: 1; transform: translateY(-6px) scale(1.15); } }
+          </style></head><body><div class="anim-engine"><div class="asset-body" style="transform:scale(2.0)"><div class="thinking-container">
+            <div class="thought-icon">?</div>
+            <div class="avatar-base">
+              <div class="eyes-pair">
+                <div class="eye-think"></div>
+                <div class="eye-think"></div>
+              </div>
+              <div class="think-mouth"></div>
+            </div>
+          </div></div></div></body></html>

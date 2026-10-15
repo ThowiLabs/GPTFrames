@@ -1,0 +1,52 @@
+<!doctype html><html lang="es"><head><meta charset="utf-8"><meta http-equiv="Content-Security-Policy" content="default-src &#39;none&#39;; script-src &#39;none&#39;; connect-src &#39;none&#39;; style-src &#39;unsafe-inline&#39;; img-src data:; font-src data:"><style>*{box-sizing:border-box}
+html,body{margin:0;width:100%;height:100%;overflow:hidden}
+body{background:transparent;color:#f8fafc;font-family:system-ui,"Segoe UI",Arial,sans-serif}
+.anim-engine{position:relative;width:320px;height:300px;display:grid;place-items:center}
+.asset-body{width:260px;height:220px;display:flex;flex-direction:column;align-items:center;justify-content:center;transform-origin:center}
+
+:root {--bg-main:#0a0d14;--card-bg:#131924;--border-color:#232d3f;
+--text-main:#f8fafc;--text-dim:#94a3b8;--c-neon-blue:#00e5ff;--c-pink:#ff007f;
+--c-green:#10b981;--c-yellow:#fbbf24;--c-red:#f43f5e;--c-purple:#8b5cf6;
+--ease-elastic:cubic-bezier(.34,1.56,.64,1);
+--ease-cinematic:cubic-bezier(.16,1,.3,1);}
+
+            .avatar-base {
+              width: 90px; height: 90px; border-radius: 50%;
+              background: var(--c-yellow); border: 3px solid #0f172a;
+              position: relative; display: flex; align-items: center; justify-content: center;
+            }
+            .anim-engine .char-neutral { animation: neutralFloat 3s ease-in-out infinite; }
+            .eyes-pair { display: flex; gap: 24px; margin-top: -12px; }
+            .eye-dot { width: 9px; height: 12px; background: #0f172a; border-radius: 50%; }
+            .anim-engine .eye-blink { animation: eyeBlink 3.5s infinite; }
+            .neutral-mouth { position: absolute; bottom: 22px; width: 22px; height: 4px; background: #0f172a; border-radius: 2px; }
+            @keyframes eyeBlink { 0%, 94%, 100% { transform: scaleY(1); } 97% { transform: scaleY(0.1); } }
+            @keyframes neutralFloat { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-4px); } }
+
+
+            .analog-clock {
+              width: 110px; height: 110px; border-radius: 50%;
+              border: 3px solid var(--border-color); background: #0c1017;
+              position: relative; box-shadow: inset 0 0 10px rgba(0,0,0,0.6);
+            }
+            .clock-center-pin {
+              width: 8px; height: 8px; background: var(--c-neon-blue); border-radius: 50%;
+              position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 5;
+            }
+            .clock-hand { position: absolute; bottom: 50%; left: 50%; transform-origin: bottom center; border-radius: 4px; }
+            .hand-h { width: 3px; height: 28px; background: #fff; }
+            .hand-m { width: 2px; height: 38px; background: var(--text-dim); }
+            .hand-s { width: 1.5px; height: 44px; background: var(--c-red); }
+            .anim-engine .hand-h { animation: handSpin 24s linear infinite; }
+            .anim-engine .hand-m { animation: handSpin 6s linear infinite; }
+            .anim-engine .hand-s { animation: handSpin 2s steps(60) infinite; }
+            @keyframes handSpin {
+              from { transform: translateX(-50%) rotate(0deg); }
+              to { transform: translateX(-50%) rotate(360deg); }
+            }
+          </style></head><body><div class="anim-engine"><div class="asset-body" style="transform:scale(1.9)"><div class="analog-clock">
+            <div class="clock-center-pin"></div>
+            <div class="clock-hand hand-h"></div>
+            <div class="clock-hand hand-m"></div>
+            <div class="clock-hand hand-s"></div>
+          </div></div></div></body></html>

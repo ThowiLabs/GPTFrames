@@ -1,0 +1,1618 @@
+{
+  "version": 1,
+  "name": "Animaciones",
+  "description": "Colección de recursos visuales editables, categorizados y buscables.",
+  "total": 32,
+  "duration": 89.0,
+  "presets": [
+    {
+      "number": 1,
+      "id": "smartphone-vibrate",
+      "name": "Teléfono vibrando",
+      "category": "Dispositivos",
+      "description": "Llamada entrante: teléfono vibrando con ondas acústicas.",
+      "style": "dark / haptic / cyan",
+      "backend": "browser",
+      "collection": "animaciones",
+      "preset_file": "animaciones/presets/smartphone-vibrate.html",
+      "status": "candidate",
+      "duration": 2.5,
+      "motion": [
+        "rotación",
+        "deslizamiento",
+        "escala",
+        "opacidad",
+        "cambio de color"
+      ],
+      "type": "teléfono",
+      "usage": [
+        "vídeo explicativo",
+        "motion graphics"
+      ],
+      "tags": [
+        "llamada",
+        "entrante",
+        "vibracion",
+        "ondas",
+        "telefono",
+        "celular",
+        "vibrando",
+        "dispositivos",
+        "dark",
+        "haptic",
+        "cyan",
+        "acusticas"
+      ],
+      "css_keyframes": [
+        "exp",
+        "vibe"
+      ],
+      "searchable": true
+    },
+    {
+      "number": 2,
+      "id": "success-checkmark",
+      "name": "Palomita de éxito",
+      "category": "Estados",
+      "description": "Un círculo se traza y después aparece la verificación.",
+      "style": "success / SVG / verde",
+      "backend": "browser",
+      "collection": "animaciones",
+      "preset_file": "animaciones/presets/success-checkmark.html",
+      "status": "candidate",
+      "duration": 2.5,
+      "motion": [
+        "rotación",
+        "trazado",
+        "cambio de color"
+      ],
+      "type": "confirmación",
+      "usage": [
+        "vídeo explicativo",
+        "motion graphics"
+      ],
+      "tags": [
+        "palomita",
+        "check",
+        "tick",
+        "validado",
+        "confirmado",
+        "exito",
+        "estados",
+        "success",
+        "svg",
+        "verde",
+        "circulo",
+        "traza",
+        "despues",
+        "aparece",
+        "verificacion",
+        "confirmacion"
+      ],
+      "css_keyframes": [
+        "drawCircle",
+        "drawTick"
+      ],
+      "searchable": true
+    },
+    {
+      "number": 3,
+      "id": "padlock-closing",
+      "name": "Candado cerrándose",
+      "category": "Seguridad",
+      "description": "El arco desciende y el cuerpo rebota en el cierre.",
+      "style": "security / elastic / cyan",
+      "backend": "browser",
+      "collection": "animaciones",
+      "preset_file": "animaciones/presets/padlock-closing.html",
+      "status": "candidate",
+      "duration": 2.5,
+      "motion": [
+        "rotación",
+        "deslizamiento",
+        "cambio de color"
+      ],
+      "type": "candado",
+      "usage": [
+        "autenticación",
+        "privacidad",
+        "ciberseguridad"
+      ],
+      "tags": [
+        "bloqueo",
+        "candado",
+        "cerrar",
+        "seguridad",
+        "cerradura",
+        "cerrandose",
+        "security",
+        "elastic",
+        "cyan",
+        "arco",
+        "desciende",
+        "cuerpo",
+        "rebota",
+        "cierre"
+      ],
+      "css_keyframes": [
+        "lock-snap",
+        "lock-hit"
+      ],
+      "searchable": true
+    },
+    {
+      "number": 4,
+      "id": "push-notification",
+      "name": "Notificación entrante",
+      "category": "Notificaciones",
+      "description": "Aviso emergente con deslizamiento y rebote.",
+      "style": "UI / pop-in / púrpura",
+      "backend": "browser",
+      "collection": "animaciones",
+      "preset_file": "animaciones/presets/push-notification.html",
+      "status": "candidate",
+      "duration": 2.5,
+      "motion": [
+        "deslizamiento",
+        "opacidad",
+        "cambio de color"
+      ],
+      "type": "notificación",
+      "usage": [
+        "vídeo explicativo",
+        "motion graphics"
+      ],
+      "tags": [
+        "mensaje",
+        "alerta",
+        "notificacion",
+        "aviso",
+        "entrante",
+        "notificaciones",
+        "pop",
+        "purpura",
+        "emergente",
+        "deslizamiento",
+        "rebote"
+      ],
+      "css_keyframes": [
+        "notifyDrop"
+      ],
+      "searchable": true
+    },
+    {
+      "number": 5,
+      "id": "audio-equalizer",
+      "name": "Ecualizador de audio",
+      "category": "Audio",
+      "description": "Cinco barras con amplitudes y colores oscilantes.",
+      "style": "audio / dynamic / cyan",
+      "backend": "browser",
+      "collection": "animaciones",
+      "preset_file": "animaciones/presets/audio-equalizer.html",
+      "status": "candidate",
+      "duration": 2.5,
+      "motion": [
+        "cambio de color",
+        "rebote"
+      ],
+      "type": "ecualizador",
+      "usage": [
+        "vídeo explicativo",
+        "motion graphics"
+      ],
+      "tags": [
+        "ondas de audio",
+        "visualizador",
+        "musica",
+        "voz",
+        "barras",
+        "ecualizador",
+        "audio",
+        "dynamic",
+        "cyan",
+        "cinco",
+        "amplitudes",
+        "colores",
+        "oscilantes"
+      ],
+      "css_keyframes": [
+        "jump"
+      ],
+      "searchable": true
+    },
+    {
+      "number": 6,
+      "id": "biometric-scanner",
+      "name": "Escáner biométrico",
+      "category": "Seguridad",
+      "description": "Huella digital con barrido vertical de láser.",
+      "style": "biometric / laser / rojo",
+      "backend": "browser",
+      "collection": "animaciones",
+      "preset_file": "animaciones/presets/biometric-scanner.html",
+      "status": "candidate",
+      "duration": 2.5,
+      "motion": [
+        "opacidad",
+        "cambio de color",
+        "barrido"
+      ],
+      "type": "escáner",
+      "usage": [
+        "autenticación",
+        "privacidad",
+        "ciberseguridad"
+      ],
+      "tags": [
+        "biometria",
+        "huella",
+        "laser",
+        "identidad",
+        "reconocimiento",
+        "escaner",
+        "biometrico",
+        "seguridad",
+        "biometric",
+        "rojo",
+        "digital",
+        "barrido",
+        "vertical"
+      ],
+      "css_keyframes": [
+        "sweep"
+      ],
+      "searchable": true
+    },
+    {
+      "number": 7,
+      "id": "avatar-neutral",
+      "name": "Avatar neutral",
+      "category": "Personajes",
+      "description": "Personaje sereno con respiración ligera y parpadeo.",
+      "style": "personajes / neon / CSS",
+      "backend": "browser",
+      "collection": "animaciones",
+      "preset_file": "animaciones/presets/avatar-neutral.html",
+      "status": "candidate",
+      "duration": 2.5,
+      "origin": "Adaptado del HTML facilitado por el usuario",
+      "motion": [
+        "deslizamiento",
+        "parpadeo",
+        "cambio de color"
+      ],
+      "type": "personaje",
+      "usage": [
+        "reacciones",
+        "explicación",
+        "emociones"
+      ],
+      "tags": [
+        "expresión",
+        "emoción",
+        "avatar",
+        "neutral",
+        "reaccion",
+        "carita",
+        "personajes",
+        "neon",
+        "personaje",
+        "sereno",
+        "respiracion",
+        "ligera",
+        "parpadeo"
+      ],
+      "css_keyframes": [
+        "eyeBlink",
+        "neutralFloat"
+      ],
+      "searchable": true
+    },
+    {
+      "number": 8,
+      "id": "avatar-happy",
+      "name": "Avatar feliz",
+      "category": "Personajes",
+      "description": "Rostro alegre que salta y sonríe.",
+      "style": "personajes / neon / CSS",
+      "backend": "browser",
+      "collection": "animaciones",
+      "preset_file": "animaciones/presets/avatar-happy.html",
+      "status": "candidate",
+      "duration": 2.5,
+      "origin": "Adaptado del HTML facilitado por el usuario",
+      "motion": [
+        "deslizamiento",
+        "escala",
+        "parpadeo",
+        "cambio de color",
+        "rebote"
+      ],
+      "type": "personaje",
+      "usage": [
+        "reacciones",
+        "explicación",
+        "emociones"
+      ],
+      "tags": [
+        "expresión",
+        "emoción",
+        "avatar",
+        "happy",
+        "reaccion",
+        "carita",
+        "feliz",
+        "personajes",
+        "neon",
+        "rostro",
+        "alegre",
+        "salta",
+        "sonrie",
+        "personaje"
+      ],
+      "css_keyframes": [
+        "eyeBlink",
+        "neutralFloat",
+        "happyBounce"
+      ],
+      "searchable": true
+    },
+    {
+      "number": 9,
+      "id": "avatar-thinking",
+      "name": "Avatar pensando",
+      "category": "Personajes",
+      "description": "Personaje pensativo acompañado de una pregunta flotante.",
+      "style": "personajes / neon / CSS",
+      "backend": "browser",
+      "collection": "animaciones",
+      "preset_file": "animaciones/presets/avatar-thinking.html",
+      "status": "candidate",
+      "duration": 2.5,
+      "origin": "Adaptado del HTML facilitado por el usuario",
+      "motion": [
+        "deslizamiento",
+        "escala",
+        "opacidad",
+        "parpadeo",
+        "cambio de color",
+        "rebote"
+      ],
+      "type": "personaje",
+      "usage": [
+        "reacciones",
+        "explicación",
+        "emociones"
+      ],
+      "tags": [
+        "expresión",
+        "emoción",
+        "avatar",
+        "thinking",
+        "reaccion",
+        "carita",
+        "pensando",
+        "personajes",
+        "neon",
+        "personaje",
+        "pensativo",
+        "acompanado",
+        "pregunta",
+        "flotante"
+      ],
+      "css_keyframes": [
+        "eyeBlink",
+        "neutralFloat",
+        "thoughtPop"
+      ],
+      "searchable": true
+    },
+    {
+      "number": 10,
+      "id": "avatar-angry",
+      "name": "Avatar enojado",
+      "category": "Personajes",
+      "description": "Expresión de enfado con temblor y cejas inclinadas.",
+      "style": "personajes / neon / CSS",
+      "backend": "browser",
+      "collection": "animaciones",
+      "preset_file": "animaciones/presets/avatar-angry.html",
+      "status": "candidate",
+      "duration": 2.5,
+      "origin": "Adaptado del HTML facilitado por el usuario",
+      "motion": [
+        "rotación",
+        "deslizamiento",
+        "parpadeo",
+        "cambio de color"
+      ],
+      "type": "personaje",
+      "usage": [
+        "reacciones",
+        "explicación",
+        "emociones"
+      ],
+      "tags": [
+        "expresión",
+        "emoción",
+        "avatar",
+        "angry",
+        "reaccion",
+        "carita",
+        "enojado",
+        "personajes",
+        "neon",
+        "expresion",
+        "enfado",
+        "temblor",
+        "cejas",
+        "inclinadas",
+        "personaje"
+      ],
+      "css_keyframes": [
+        "eyeBlink",
+        "neutralFloat",
+        "angryRage"
+      ],
+      "searchable": true
+    },
+    {
+      "number": 11,
+      "id": "avatar-screaming",
+      "name": "Avatar gritando",
+      "category": "Personajes",
+      "description": "Reacción enérgica con sacudida y globo de símbolos.",
+      "style": "personajes / neon / CSS",
+      "backend": "browser",
+      "collection": "animaciones",
+      "preset_file": "animaciones/presets/avatar-screaming.html",
+      "status": "candidate",
+      "duration": 2.5,
+      "origin": "Adaptado del HTML facilitado por el usuario",
+      "motion": [
+        "rotación",
+        "deslizamiento",
+        "escala",
+        "opacidad",
+        "parpadeo",
+        "cambio de color"
+      ],
+      "type": "personaje",
+      "usage": [
+        "reacciones",
+        "explicación",
+        "emociones"
+      ],
+      "tags": [
+        "expresión",
+        "emoción",
+        "avatar",
+        "screaming",
+        "reaccion",
+        "carita",
+        "gritando",
+        "personajes",
+        "neon",
+        "energica",
+        "sacudida",
+        "globo",
+        "simbolos",
+        "personaje"
+      ],
+      "css_keyframes": [
+        "eyeBlink",
+        "neutralFloat",
+        "screamShake",
+        "curseGlitch"
+      ],
+      "searchable": true
+    },
+    {
+      "number": 12,
+      "id": "avatar-sleepy",
+      "name": "Avatar durmiendo",
+      "category": "Personajes",
+      "description": "Personaje somnoliento con letras Z ascendentes.",
+      "style": "personajes / neon / CSS",
+      "backend": "browser",
+      "collection": "animaciones",
+      "preset_file": "animaciones/presets/avatar-sleepy.html",
+      "status": "candidate",
+      "duration": 2.5,
+      "origin": "Adaptado del HTML facilitado por el usuario",
+      "motion": [
+        "deslizamiento",
+        "escala",
+        "opacidad",
+        "parpadeo",
+        "cambio de color"
+      ],
+      "type": "personaje",
+      "usage": [
+        "reacciones",
+        "explicación",
+        "emociones"
+      ],
+      "tags": [
+        "expresión",
+        "emoción",
+        "avatar",
+        "sleepy",
+        "reaccion",
+        "carita",
+        "durmiendo",
+        "personajes",
+        "neon",
+        "personaje",
+        "somnoliento",
+        "letras",
+        "ascendentes"
+      ],
+      "css_keyframes": [
+        "eyeBlink",
+        "neutralFloat",
+        "floatZ"
+      ],
+      "searchable": true
+    },
+    {
+      "number": 13,
+      "id": "linux-server",
+      "name": "Servidor Linux",
+      "category": "Hardware",
+      "description": "Rack Linux con LEDs, actividad y terminal parpadeante.",
+      "style": "hardware / neon / CSS",
+      "backend": "browser",
+      "collection": "animaciones",
+      "preset_file": "animaciones/presets/linux-server.html",
+      "status": "candidate",
+      "duration": 2.5,
+      "origin": "Adaptado del HTML facilitado por el usuario",
+      "motion": [
+        "deslizamiento",
+        "opacidad",
+        "parpadeo",
+        "cambio de color"
+      ],
+      "type": "servidor",
+      "usage": [
+        "educación tecnológica",
+        "infraestructura",
+        "hardware"
+      ],
+      "tags": [
+        "rack",
+        "linux",
+        "infraestructura",
+        "computacion",
+        "servidor",
+        "hardware",
+        "neon",
+        "leds",
+        "actividad",
+        "terminal",
+        "parpadeante"
+      ],
+      "css_keyframes": [
+        "eyeBlink",
+        "neutralFloat",
+        "ledFlicker",
+        "termBlink"
+      ],
+      "searchable": true
+    },
+    {
+      "number": 14,
+      "id": "moving-car",
+      "name": "Automóvil animado",
+      "category": "Hardware",
+      "description": "Vehículo estilizado con ruedas y carretera animadas.",
+      "style": "hardware / neon / CSS",
+      "backend": "browser",
+      "collection": "animaciones",
+      "preset_file": "animaciones/presets/moving-car.html",
+      "status": "candidate",
+      "duration": 2.5,
+      "origin": "Adaptado del HTML facilitado por el usuario",
+      "motion": [
+        "rotación",
+        "deslizamiento",
+        "parpadeo",
+        "cambio de color"
+      ],
+      "type": "vehículo",
+      "usage": [
+        "educación tecnológica",
+        "infraestructura",
+        "hardware"
+      ],
+      "tags": [
+        "automovil",
+        "animado",
+        "hardware",
+        "neon",
+        "vehiculo",
+        "estilizado",
+        "ruedas",
+        "carretera",
+        "animadas"
+      ],
+      "css_keyframes": [
+        "eyeBlink",
+        "neutralFloat",
+        "carSuspension",
+        "spinWheel",
+        "roadScroll"
+      ],
+      "searchable": true
+    },
+    {
+      "number": 15,
+      "id": "analog-clock",
+      "name": "Reloj analógico",
+      "category": "Hardware",
+      "description": "Reloj de tres manecillas en movimiento constante.",
+      "style": "hardware / neon / CSS",
+      "backend": "browser",
+      "collection": "animaciones",
+      "preset_file": "animaciones/presets/analog-clock.html",
+      "status": "candidate",
+      "duration": 2.5,
+      "origin": "Adaptado del HTML facilitado por el usuario",
+      "motion": [
+        "rotación",
+        "deslizamiento",
+        "parpadeo",
+        "cambio de color"
+      ],
+      "type": "reloj",
+      "usage": [
+        "educación tecnológica",
+        "infraestructura",
+        "hardware"
+      ],
+      "tags": [
+        "reloj",
+        "analogico",
+        "hardware",
+        "neon",
+        "tres",
+        "manecillas",
+        "movimiento",
+        "constante"
+      ],
+      "css_keyframes": [
+        "eyeBlink",
+        "neutralFloat",
+        "handSpin"
+      ],
+      "searchable": true
+    },
+    {
+      "number": 16,
+      "id": "tachometer",
+      "name": "Tacómetro",
+      "category": "Hardware",
+      "description": "Indicador de velocidad con aguja y círculo progresivo.",
+      "style": "hardware / neon / CSS",
+      "backend": "browser",
+      "collection": "animaciones",
+      "preset_file": "animaciones/presets/tachometer.html",
+      "status": "candidate",
+      "duration": 2.5,
+      "origin": "Adaptado del HTML facilitado por el usuario",
+      "motion": [
+        "rotación",
+        "deslizamiento",
+        "parpadeo",
+        "trazado",
+        "cambio de color",
+        "barrido"
+      ],
+      "type": "medidor",
+      "usage": [
+        "educación tecnológica",
+        "infraestructura",
+        "hardware"
+      ],
+      "tags": [
+        "tacometro",
+        "hardware",
+        "neon",
+        "indicador",
+        "velocidad",
+        "aguja",
+        "circulo",
+        "progresivo",
+        "medidor"
+      ],
+      "css_keyframes": [
+        "eyeBlink",
+        "neutralFloat",
+        "tachoFill",
+        "needleSweep"
+      ],
+      "searchable": true
+    },
+    {
+      "number": 17,
+      "id": "notification-bell",
+      "name": "Campana activa",
+      "category": "Notificaciones",
+      "description": "Campana que oscila y muestra una insignia de alerta.",
+      "style": "notificaciones / neon / CSS",
+      "backend": "browser",
+      "collection": "animaciones",
+      "preset_file": "animaciones/presets/notification-bell.html",
+      "status": "candidate",
+      "duration": 2.5,
+      "origin": "Adaptado del HTML facilitado por el usuario",
+      "motion": [
+        "rotación",
+        "deslizamiento",
+        "escala",
+        "parpadeo",
+        "cambio de color",
+        "rebote"
+      ],
+      "type": "notificación",
+      "usage": [
+        "vídeo explicativo",
+        "motion graphics"
+      ],
+      "tags": [
+        "campana",
+        "activa",
+        "notificaciones",
+        "neon",
+        "oscila",
+        "muestra",
+        "insignia",
+        "alerta",
+        "notificacion"
+      ],
+      "css_keyframes": [
+        "eyeBlink",
+        "neutralFloat",
+        "bellRinging",
+        "badgePop"
+      ],
+      "searchable": true
+    },
+    {
+      "number": 18,
+      "id": "curtain-wipe",
+      "name": "Cortina wipe",
+      "category": "Transiciones",
+      "description": "Cortina que cubre y descubre una escena.",
+      "style": "transiciones / neon / CSS",
+      "backend": "browser",
+      "collection": "animaciones",
+      "preset_file": "animaciones/presets/curtain-wipe.html",
+      "status": "candidate",
+      "duration": 2.5,
+      "origin": "Adaptado del HTML facilitado por el usuario",
+      "motion": [
+        "deslizamiento",
+        "escala",
+        "opacidad",
+        "parpadeo",
+        "cambio de color"
+      ],
+      "type": "transición",
+      "usage": [
+        "vídeo explicativo",
+        "motion graphics"
+      ],
+      "tags": [
+        "cortina",
+        "wipe",
+        "transiciones",
+        "neon",
+        "cubre",
+        "descubre",
+        "escena",
+        "transicion"
+      ],
+      "css_keyframes": [
+        "eyeBlink",
+        "neutralFloat",
+        "curtainMotion",
+        "zoomReveal"
+      ],
+      "searchable": true
+    },
+    {
+      "number": 19,
+      "id": "diagonal-split",
+      "name": "División diagonal",
+      "category": "Transiciones",
+      "description": "Transición que reúne dos fragmentos diagonales.",
+      "style": "transiciones / neon / CSS",
+      "backend": "browser",
+      "collection": "animaciones",
+      "preset_file": "animaciones/presets/diagonal-split.html",
+      "status": "candidate",
+      "duration": 2.5,
+      "origin": "Adaptado del HTML facilitado por el usuario",
+      "motion": [
+        "deslizamiento",
+        "opacidad",
+        "parpadeo",
+        "cambio de color"
+      ],
+      "type": "transición",
+      "usage": [
+        "vídeo explicativo",
+        "motion graphics"
+      ],
+      "tags": [
+        "division",
+        "diagonal",
+        "transiciones",
+        "neon",
+        "transicion",
+        "reune",
+        "dos",
+        "fragmentos",
+        "diagonales"
+      ],
+      "css_keyframes": [
+        "eyeBlink",
+        "neutralFloat",
+        "diagInTop",
+        "diagInBtm"
+      ],
+      "searchable": true
+    },
+    {
+      "number": 20,
+      "id": "iris-reveal",
+      "name": "Revelado iris",
+      "category": "Transiciones",
+      "description": "Máscara circular que revela progresivamente el contenido.",
+      "style": "transiciones / neon / CSS",
+      "backend": "browser",
+      "collection": "animaciones",
+      "preset_file": "animaciones/presets/iris-reveal.html",
+      "status": "candidate",
+      "duration": 2.5,
+      "origin": "Adaptado del HTML facilitado por el usuario",
+      "motion": [
+        "deslizamiento",
+        "escala",
+        "parpadeo",
+        "cambio de color"
+      ],
+      "type": "transición",
+      "usage": [
+        "vídeo explicativo",
+        "motion graphics"
+      ],
+      "tags": [
+        "revelado",
+        "iris",
+        "transiciones",
+        "neon",
+        "mascara",
+        "circular",
+        "revela",
+        "progresivamente",
+        "contenido",
+        "transicion"
+      ],
+      "css_keyframes": [
+        "eyeBlink",
+        "neutralFloat",
+        "irisScale"
+      ],
+      "searchable": true
+    },
+    {
+      "number": 21,
+      "id": "data-chart",
+      "name": "Gráfica dinámica",
+      "category": "Datos",
+      "description": "Barras ascendentes acompañadas por una línea de tendencia.",
+      "style": "datos / neon / CSS",
+      "backend": "browser",
+      "collection": "animaciones",
+      "preset_file": "animaciones/presets/data-chart.html",
+      "status": "candidate",
+      "duration": 2.5,
+      "origin": "Adaptado del HTML facilitado por el usuario",
+      "motion": [
+        "deslizamiento",
+        "parpadeo",
+        "trazado",
+        "cambio de color"
+      ],
+      "type": "gráfica",
+      "usage": [
+        "vídeo explicativo",
+        "motion graphics"
+      ],
+      "tags": [
+        "grafica",
+        "dinamica",
+        "datos",
+        "neon",
+        "barras",
+        "ascendentes",
+        "acompanadas",
+        "linea",
+        "tendencia"
+      ],
+      "css_keyframes": [
+        "eyeBlink",
+        "neutralFloat",
+        "barRise",
+        "lineTrace"
+      ],
+      "searchable": true
+    },
+    {
+      "number": 22,
+      "id": "radial-neon",
+      "name": "Loader radial neón",
+      "category": "Loaders",
+      "description": "Indicador radial luminoso con giro y trazado progresivo.",
+      "style": "loaders / neon / CSS",
+      "backend": "browser",
+      "collection": "animaciones",
+      "preset_file": "animaciones/presets/radial-neon.html",
+      "status": "candidate",
+      "duration": 2.5,
+      "origin": "Adaptado del HTML facilitado por el usuario",
+      "motion": [
+        "rotación",
+        "deslizamiento",
+        "parpadeo",
+        "trazado",
+        "cambio de color"
+      ],
+      "type": "loader",
+      "usage": [
+        "vídeo explicativo",
+        "motion graphics"
+      ],
+      "tags": [
+        "loader",
+        "radial",
+        "neon",
+        "loaders",
+        "indicador",
+        "luminoso",
+        "giro",
+        "trazado",
+        "progresivo"
+      ],
+      "css_keyframes": [
+        "eyeBlink",
+        "neutralFloat",
+        "spinCycle"
+      ],
+      "searchable": true
+    },
+    {
+      "number": 23,
+      "id": "shimmer-progress",
+      "name": "Barra shimmer",
+      "category": "Loaders",
+      "description": "Barra de carga con brillo desplazándose sobre su gradiente.",
+      "style": "loaders / neon / CSS",
+      "backend": "browser",
+      "collection": "animaciones",
+      "preset_file": "animaciones/presets/shimmer-progress.html",
+      "status": "candidate",
+      "duration": 2.5,
+      "origin": "Adaptado del HTML facilitado por el usuario",
+      "motion": [
+        "deslizamiento",
+        "parpadeo",
+        "cambio de color",
+        "barrido"
+      ],
+      "type": "loader",
+      "usage": [
+        "vídeo explicativo",
+        "motion graphics"
+      ],
+      "tags": [
+        "barra",
+        "shimmer",
+        "loaders",
+        "neon",
+        "carga",
+        "brillo",
+        "desplazandose",
+        "gradiente",
+        "loader"
+      ],
+      "css_keyframes": [
+        "eyeBlink",
+        "neutralFloat",
+        "barFill",
+        "shimmerSlide"
+      ],
+      "searchable": true
+    },
+    {
+      "number": 24,
+      "id": "rf-transmit",
+      "name": "Antena RF — transmisión",
+      "category": "Radiofrecuencia",
+      "type": "antena",
+      "description": "Ondas circulares que salen exactamente del nodo emisor.",
+      "style": "dark / premium / tech",
+      "backend": "browser",
+      "collection": "animaciones",
+      "preset_file": "animaciones/presets/rf-transmit.html",
+      "status": "candidate",
+      "duration": 3.5,
+      "batch": "master-motion-suite-03",
+      "editable": {
+        "signal_color": {
+          "type": "color",
+          "label": "Color de señal",
+          "css_var": "--c-cyan"
+        }
+      },
+      "tags": [
+        "antena",
+        "rf",
+        "emitir",
+        "transmisión",
+        "señal",
+        "torre",
+        "wireless",
+        "antena emisor",
+        "transmisión rf",
+        "radiofrecuencia",
+        "ondas salientes",
+        "transmision",
+        "dark",
+        "premium",
+        "tech",
+        "ondas",
+        "circulares",
+        "salen",
+        "exactamente",
+        "nodo",
+        "emisor"
+      ],
+      "motion": [
+        "onda",
+        "expansión",
+        "opacidad",
+        "ondas"
+      ],
+      "aliases": [],
+      "usage": [
+        "educación",
+        "tecnología",
+        "documental"
+      ],
+      "css_keyframes": [
+        "emitFromTip"
+      ],
+      "searchable": true
+    },
+    {
+      "number": 25,
+      "id": "rf-receive",
+      "name": "Antena RF — recepción",
+      "category": "Radiofrecuencia",
+      "type": "antena",
+      "description": "Ondas convergentes hacia el nodo receptor.",
+      "style": "dark / premium / tech",
+      "backend": "browser",
+      "collection": "animaciones",
+      "preset_file": "animaciones/presets/rf-receive.html",
+      "status": "candidate",
+      "duration": 3.5,
+      "batch": "master-motion-suite-03",
+      "editable": {
+        "signal_color": {
+          "type": "color",
+          "label": "Color de señal",
+          "css_var": "--c-green"
+        }
+      },
+      "tags": [
+        "antena",
+        "rf",
+        "recibir",
+        "recepción",
+        "señal",
+        "torre",
+        "wireless",
+        "antena receptor",
+        "recepción rf",
+        "radiofrecuencia",
+        "ondas entrantes",
+        "recepcion",
+        "dark",
+        "premium",
+        "tech",
+        "ondas",
+        "convergentes",
+        "hacia",
+        "nodo",
+        "receptor"
+      ],
+      "motion": [
+        "onda",
+        "convergencia",
+        "opacidad",
+        "trazado",
+        "ondas"
+      ],
+      "aliases": [],
+      "usage": [
+        "educación",
+        "tecnología",
+        "documental"
+      ],
+      "css_keyframes": [
+        "convergeToTip"
+      ],
+      "searchable": true
+    },
+    {
+      "number": 26,
+      "id": "browser-mockup",
+      "name": "Ventana de navegador",
+      "category": "Mockups",
+      "type": "navegador",
+      "description": "Ventana con barras de control, URL e imagen revelada.",
+      "style": "dark / premium / tech",
+      "backend": "browser",
+      "collection": "animaciones",
+      "preset_file": "animaciones/presets/browser-mockup.html",
+      "status": "candidate",
+      "duration": 3.5,
+      "batch": "master-motion-suite-03",
+      "editable": {
+        "url": {
+          "type": "text",
+          "label": "Dirección web"
+        },
+        "image": {
+          "type": "image",
+          "label": "Imagen de pantalla"
+        }
+      },
+      "tags": [
+        "web",
+        "browser",
+        "pagina",
+        "ventana",
+        "imagen",
+        "captura",
+        "url",
+        "página web",
+        "imagen editable",
+        "web browser",
+        "screenshot",
+        "navegador",
+        "mockups",
+        "dark",
+        "premium",
+        "tech",
+        "barras",
+        "control",
+        "revelada"
+      ],
+      "motion": [
+        "zoom",
+        "fade-in",
+        "escala",
+        "opacidad",
+        "cambio de color"
+      ],
+      "aliases": [],
+      "usage": [
+        "educación",
+        "tecnología",
+        "documental"
+      ],
+      "css_keyframes": [
+        "imageReveal"
+      ],
+      "searchable": true
+    },
+    {
+      "number": 27,
+      "id": "smartphone-media",
+      "name": "Pantalla de smartphone",
+      "category": "Mockups",
+      "type": "telefono",
+      "description": "Mockup de teléfono con una imagen que aparece desde abajo.",
+      "style": "dark / premium / tech",
+      "backend": "browser",
+      "collection": "animaciones",
+      "preset_file": "animaciones/presets/smartphone-media.html",
+      "status": "candidate",
+      "duration": 3.5,
+      "batch": "master-motion-suite-03",
+      "editable": {
+        "image": {
+          "type": "image",
+          "label": "Imagen de pantalla"
+        }
+      },
+      "tags": [
+        "smartphone",
+        "celular",
+        "telefono",
+        "pantalla",
+        "imagen",
+        "movil",
+        "imagen editable",
+        "mockups",
+        "dark",
+        "premium",
+        "tech",
+        "mockup",
+        "aparece",
+        "abajo"
+      ],
+      "motion": [
+        "deslizamiento",
+        "fade-in",
+        "opacidad"
+      ],
+      "aliases": [],
+      "usage": [
+        "educación",
+        "tecnología",
+        "documental"
+      ],
+      "css_keyframes": [
+        "phoneMediaReveal"
+      ],
+      "searchable": true
+    },
+    {
+      "number": 28,
+      "id": "linux-tower-enterprise",
+      "name": "Servidor Linux torre",
+      "category": "Hardware",
+      "type": "servidor",
+      "description": "Torre Linux enterprise con ventilador y LEDs de discos NVMe.",
+      "style": "dark / premium / tech",
+      "backend": "browser",
+      "collection": "animaciones",
+      "preset_file": "animaciones/presets/linux-tower-enterprise.html",
+      "status": "candidate",
+      "duration": 3.5,
+      "batch": "master-motion-suite-03",
+      "editable": {
+        "hostname": {
+          "type": "text",
+          "label": "Nombre del equipo"
+        },
+        "drive_1": {
+          "type": "text",
+          "label": "Disco superior"
+        },
+        "drive_2": {
+          "type": "text",
+          "label": "Disco inferior"
+        }
+      },
+      "tags": [
+        "linux",
+        "servidor",
+        "torre",
+        "nvme",
+        "hardware",
+        "ventilador",
+        "rack",
+        "servidor linux",
+        "torre linux",
+        "refrigeracion",
+        "dark",
+        "premium",
+        "tech",
+        "enterprise",
+        "leds",
+        "discos"
+      ],
+      "motion": [
+        "rotación",
+        "parpadeo"
+      ],
+      "aliases": [],
+      "usage": [
+        "educación",
+        "tecnología",
+        "documental"
+      ],
+      "css_keyframes": [
+        "fanSpin",
+        "linuxBlink"
+      ],
+      "searchable": true
+    },
+    {
+      "number": 29,
+      "id": "windows-server-datacenter",
+      "name": "Windows Server Datacenter",
+      "category": "Hardware",
+      "type": "servidor",
+      "description": "Rack con servicios Hyper-V, IIS y Active Directory.",
+      "style": "dark / premium / tech",
+      "backend": "browser",
+      "collection": "animaciones",
+      "preset_file": "animaciones/presets/windows-server-datacenter.html",
+      "status": "candidate",
+      "duration": 3.5,
+      "batch": "master-motion-suite-03",
+      "editable": {
+        "system_name": {
+          "type": "text",
+          "label": "Versión de Windows"
+        },
+        "service_1": {
+          "type": "text",
+          "label": "Primer servicio"
+        },
+        "status_1": {
+          "type": "text",
+          "label": "Estado del primero"
+        },
+        "service_2": {
+          "type": "text",
+          "label": "Segundo servicio"
+        },
+        "status_2": {
+          "type": "text",
+          "label": "Estado del segundo"
+        },
+        "service_3": {
+          "type": "text",
+          "label": "Tercer servicio"
+        },
+        "status_3": {
+          "type": "text",
+          "label": "Estado del tercero"
+        }
+      },
+      "tags": [
+        "windows",
+        "servidor",
+        "hyper-v",
+        "iis",
+        "active directory",
+        "datacenter",
+        "dashboard",
+        "windows server",
+        "servidor windows",
+        "ad ds",
+        "server",
+        "hardware",
+        "dark",
+        "premium",
+        "tech",
+        "rack",
+        "servicios",
+        "hyper",
+        "active",
+        "directory"
+      ],
+      "motion": [
+        "pulso",
+        "deslizamiento",
+        "opacidad",
+        "parpadeo"
+      ],
+      "aliases": [],
+      "usage": [
+        "educación",
+        "tecnología",
+        "documental"
+      ],
+      "css_keyframes": [
+        "winGlow"
+      ],
+      "searchable": true
+    },
+    {
+      "number": 30,
+      "id": "editable-cpu",
+      "name": "CPU personalizable",
+      "category": "Hardware",
+      "type": "procesador",
+      "description": "Microprocesador con modelo, frecuencia y socket editables.",
+      "style": "dark / premium / tech",
+      "backend": "browser",
+      "collection": "animaciones",
+      "preset_file": "animaciones/presets/editable-cpu.html",
+      "status": "candidate",
+      "duration": 3.5,
+      "batch": "master-motion-suite-03",
+      "editable": {
+        "cpu_name": {
+          "type": "text",
+          "label": "Nombre del CPU"
+        },
+        "cpu_model": {
+          "type": "text",
+          "label": "Modelo del CPU"
+        },
+        "cpu_socket": {
+          "type": "text",
+          "label": "Socket"
+        }
+      },
+      "tags": [
+        "cpu",
+        "procesador",
+        "intel",
+        "xeon",
+        "core i5",
+        "hardware",
+        "circuito",
+        "intel xeon",
+        "intel core i5",
+        "microprocesador",
+        "lga 2011",
+        "socket",
+        "personalizable",
+        "dark",
+        "premium",
+        "tech",
+        "modelo",
+        "frecuencia",
+        "editables"
+      ],
+      "motion": [
+        "circuito",
+        "recorrido",
+        "trazado"
+      ],
+      "aliases": [],
+      "usage": [
+        "educación",
+        "tecnología",
+        "documental"
+      ],
+      "css_keyframes": [
+        "flowElectricity"
+      ],
+      "searchable": true
+    },
+    {
+      "number": 31,
+      "id": "laptop-boot",
+      "name": "Encendido de laptop",
+      "category": "Hardware",
+      "type": "portatil",
+      "description": "Computadora portátil con secuencia de encendido y luz de teclado.",
+      "style": "dark / premium / tech",
+      "backend": "browser",
+      "collection": "animaciones",
+      "preset_file": "animaciones/presets/laptop-boot.html",
+      "status": "candidate",
+      "duration": 3.5,
+      "batch": "master-motion-suite-03",
+      "editable": {
+        "boot_title": {
+          "type": "text",
+          "label": "Mensaje del sistema"
+        },
+        "boot_status": {
+          "type": "text",
+          "label": "Estado de arranque"
+        }
+      },
+      "tags": [
+        "laptop",
+        "computadora",
+        "portatil",
+        "arranque",
+        "boot",
+        "teclado",
+        "encendido",
+        "hardware",
+        "dark",
+        "premium",
+        "tech",
+        "secuencia",
+        "luz"
+      ],
+      "motion": [
+        "revelado",
+        "iluminación",
+        "opacidad"
+      ],
+      "aliases": [],
+      "usage": [
+        "educación",
+        "tecnología",
+        "documental"
+      ],
+      "css_keyframes": [
+        "bootSequence",
+        "kbdBacklight"
+      ],
+      "searchable": true
+    },
+    {
+      "number": 32,
+      "id": "breaking-news-ticker",
+      "name": "Cintillo informativo",
+      "category": "Noticias",
+      "type": "cintillo",
+      "description": "Titular superior y marquesina de noticias en movimiento.",
+      "style": "dark / premium / tech",
+      "backend": "browser",
+      "collection": "animaciones",
+      "preset_file": "animaciones/presets/breaking-news-ticker.html",
+      "status": "candidate",
+      "duration": 3.5,
+      "batch": "master-motion-suite-03",
+      "editable": {
+        "label": {
+          "type": "text",
+          "label": "Etiqueta"
+        },
+        "headline": {
+          "type": "text",
+          "label": "Titular"
+        },
+        "ticker": {
+          "type": "text",
+          "label": "Texto desplazable"
+        }
+      },
+      "tags": [
+        "noticias",
+        "cintillo",
+        "breaking news",
+        "marquee",
+        "titular",
+        "texto",
+        "ticker",
+        "broadcast",
+        "noticiero",
+        "marquesina",
+        "última hora",
+        "texto editable",
+        "informativo",
+        "dark",
+        "premium",
+        "tech",
+        "superior",
+        "movimiento"
+      ],
+      "motion": [
+        "desplazamiento",
+        "parpadeo",
+        "deslizamiento",
+        "opacidad",
+        "cambio de color"
+      ],
+      "aliases": [],
+      "usage": [
+        "educación",
+        "tecnología",
+        "documental"
+      ],
+      "css_keyframes": [
+        "newsCrawl",
+        "recBlink"
+      ],
+      "searchable": true
+    }
+  ],
+  "deduplicated": [
+    "phone-vibrate",
+    "success-checkmark",
+    "padlock-closing",
+    "audio-equalizer"
+  ]
+}

@@ -82,10 +82,46 @@ int main(int argc, char** argv) {
         const auto r = service.rpc(request(2, "tools/list"));
         std::set<std::string> names;
         for (const auto& t : (*r)["result"]["tools"]) names.insert(t["name"].get<std::string>());
-        require(names == std::set<std::string>{"list_projects", "create_project", "validate_project", "preview_frame",
+        require(names == std::set<std::string>{"search_animations","list_animation_facets","list_animations","describe_animation","list_asset_presets","describe_asset_preset","list_projects", "create_project", "validate_project", "preview_frame",
                 "render_video", "synthesize_voice", "search_images", "download_commons_image",
                 "list_voice_models", "review_layout", "start_render", "render_status", "cancel_render",
                 "read_project", "save_project"}, "Tool mismatch");
+    });
+    test("catalogue of numbered presets", [&] {
+        const auto all=service.run_tool("list_asset_presets",Json::object());
+        require(all["total"]==20,"Expected 20 original assets");
+        require(all["presets"][0]["number"]==1,"Numbering must start at 1");
+        require(all["presets"][19]["number"]==20,"Numbering must end at 20");
+        const auto type=service.run_tool("list_asset_presets",{{"category","Seguridad"}});
+        require(type["total"]==4,"Expected four security designs");
+        const auto item=service.run_tool("describe_asset_preset",{{"id","orbit-rings"}});
+        require(item["name"]=="Orbit Rings" && item["description"].is_string(),"Preset detail invalid");
+        rejects([&] { service.run_tool("describe_asset_preset",{{"id","not-present"}}); });
+    });
+    test("deduplicated animation library", [&] {
+        const auto all=service.run_tool("list_animations",Json::object());
+        require(all["total"]==32,"Expected 32 unique animations");
+        require(all["presets"][0]["number"]==1,"Expected numbered animation");
+        require(all["presets"][5]["id"]=="biometric-scanner","Six original modules were displaced");
+        require(all["presets"][22]["id"]=="shimmer-progress","Last imported animation mismatch");
+        const auto group=service.run_tool("list_animations",{{"category","Seguridad"}});
+        require(group["total"]==2,"Expected two initial security animations");
+        const auto characters=service.run_tool("list_animations",{{"category","Personajes"}});
+        require(characters["total"]==6,"Expected six new character assets");
+        const auto cpu=service.run_tool("search_animations",{{"query","procesador Xeon"}});
+        require(cpu["total"]>=1 && cpu["results"][0]["id"]=="editable-cpu","CPU rank failed");
+        const auto rf=service.run_tool("search_animations",{{"query","antena rf"},{"category","Radiofrecuencia"}});
+        require(rf["total"]==2,"RF filters failed");
+        const auto marquee=service.run_tool("search_animations",{{"query","cintillo noticias"}});
+        require(marquee["total"]>=1 && marquee["results"][0]["id"]=="breaking-news-ticker","News ticker rank failed");
+        const auto types=service.run_tool("list_animations",{{"type","servidor"}});
+        require(types["total"]>=2,"Asset type filter failed");
+        const auto facets=service.run_tool("list_animation_facets",Json::object());
+        require(facets["total"]==32 && facets["category"].is_array() && facets["tags"].is_array(),"Facet index invalid");
+        rejects([&]{service.run_tool("search_animations",{{"query"," "}});});
+        const auto item=service.run_tool("describe_animation",{{"id","smartphone-vibrate"}});
+        require(item["name"]=="Teléfono vibrando","Wrong animation");
+        rejects([&] {service.run_tool("describe_animation",{{"id","invalid"}});});
     });
     test("unknown method and invalid params", [&] {
         require((*service.rpc(request(3, "shutdown")))["error"]["code"] == -32601, "Unknown method accepted");

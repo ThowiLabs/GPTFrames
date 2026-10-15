@@ -1,0 +1,572 @@
+<!doctype html><html lang="es"><head><meta charset="utf-8"><meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'none'; connect-src 'none'; style-src 'unsafe-inline'; img-src data:; font-src data:"><style>*{box-sizing:border-box}html,body{margin:0;width:100%;height:100%;overflow:hidden}
+body{background:transparent;color:#f8fafc;font-family:system-ui,-apple-system,"Segoe UI",Arial,sans-serif}
+.anim-engine{width:100%;height:100%;display:flex;justify-content:center;align-items:center;overflow:hidden;position:relative}
+.stage{width:320px;height:275px;display:flex;flex-direction:column;align-items:center;justify-content:center;position:relative}
+:root {
+      --bg-deep: #080b12;
+      --card-bg: #101522;
+      --border: #20293d;
+      --text-main: #f8fafc;
+      --text-muted: #64748b;
+
+      --c-cyan: #00f0ff;
+      --c-win: #0078d4;
+      --c-linux: #f59e0b;
+      --c-green: #10b981;
+      --c-red: #ef4444;
+      --c-pink: #ff007f;
+
+      --ease-elastic: cubic-bezier(0.34, 1.56, 0.64, 1);
+      --ease-cinematic: cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+            .rf-svg-container { width: 180px; height: 160px; }
+            .anim-engine .tx-ring {
+              animation: emitFromTip 2s var(--ease-cinematic) infinite;
+              transform-origin: 50px 30px;
+            }
+            .anim-engine .tx-ring.d1 { animation-delay: 0s; }
+            .anim-engine .tx-ring.d2 { animation-delay: 0.65s; }
+            .anim-engine .tx-ring.d3 { animation-delay: 1.3s; }
+            @keyframes emitFromTip {
+              0% { r: 2px; opacity: 1; stroke-width: 3; }
+              100% { r: 48px; opacity: 0; stroke-width: 1; }
+            }
+
+*{box-sizing:border-box}html,body{margin:0;width:100%;height:100%;overflow:hidden}
+body{background:transparent;color:#f8fafc;font-family:system-ui,-apple-system,"Segoe UI",Arial,sans-serif}
+.anim-engine{width:100%;height:100%;display:flex;justify-content:center;align-items:center;overflow:hidden;position:relative}
+.stage{width:320px;height:275px;display:flex;flex-direction:column;align-items:center;justify-content:center;position:relative}
+:root {
+      --bg-deep: #080b12;
+      --card-bg: #101522;
+      --border: #20293d;
+      --text-main: #f8fafc;
+      --text-muted: #64748b;
+
+      --c-cyan: #00f0ff;
+      --c-win: #0078d4;
+      --c-linux: #f59e0b;
+      --c-green: #10b981;
+      --c-red: #ef4444;
+      --c-pink: #ff007f;
+
+      --ease-elastic: cubic-bezier(0.34, 1.56, 0.64, 1);
+      --ease-cinematic: cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+            .anim-engine .rx-ring {
+              animation: convergeToTip 2s ease-in infinite;
+              transform-origin: 50px 30px;
+            }
+            .anim-engine .rx-ring.d1 { animation-delay: 0s; }
+            .anim-engine .rx-ring.d2 { animation-delay: 0.65s; }
+            .anim-engine .rx-ring.d3 { animation-delay: 1.3s; }
+            @keyframes convergeToTip {
+              0% { r: 48px; opacity: 0; stroke-dasharray: 4, 3; stroke-width: 1.5; }
+              30% { opacity: 0.8; }
+              100% { r: 2px; opacity: 0; stroke-dasharray: 2, 2; stroke-width: 3; }
+            }
+
+*{box-sizing:border-box}html,body{margin:0;width:100%;height:100%;overflow:hidden}
+body{background:transparent;color:#f8fafc;font-family:system-ui,-apple-system,"Segoe UI",Arial,sans-serif}
+.anim-engine{width:100%;height:100%;display:flex;justify-content:center;align-items:center;overflow:hidden;position:relative}
+.stage{width:320px;height:275px;display:flex;flex-direction:column;align-items:center;justify-content:center;position:relative}
+:root {
+      --bg-deep: #080b12;
+      --card-bg: #101522;
+      --border: #20293d;
+      --text-main: #f8fafc;
+      --text-muted: #64748b;
+
+      --c-cyan: #00f0ff;
+      --c-win: #0078d4;
+      --c-linux: #f59e0b;
+      --c-green: #10b981;
+      --c-red: #ef4444;
+      --c-pink: #ff007f;
+
+      --ease-elastic: cubic-bezier(0.34, 1.56, 0.64, 1);
+      --ease-cinematic: cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+            .browser-window {
+              width: 100%; max-width: 310px; background: #0f141f;
+              border: 1px solid var(--border); border-radius: 8px; overflow: hidden;
+              box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+            }
+            .browser-header {
+              height: 28px; background: #182030; display: flex; align-items: center;
+              padding: 0 10px; gap: 6px; border-bottom: 1px solid var(--border);
+            }
+            .dot { width: 8px; height: 8px; border-radius: 50%; }
+            .url-input {
+              flex: 1; height: 16px; background: #0b0f17; border-radius: 4px; margin-left: 6px;
+              font-size: 8px; font-family: monospace; color: var(--text-muted); display: flex; align-items: center; padding-left: 6px;
+            }
+            .browser-body { width: 100%; height: 145px; overflow: hidden; position: relative; }
+            .anim-engine .browser-body img {
+              width: 100%; height: 100%; object-fit: cover; transform: scale(1.15); opacity: 0;
+              animation: imageReveal 1.2s var(--ease-cinematic) forwards;
+            }
+            @keyframes imageReveal { to { transform: scale(1); opacity: 1; } }
+
+*{box-sizing:border-box}html,body{margin:0;width:100%;height:100%;overflow:hidden}
+body{background:transparent;color:#f8fafc;font-family:system-ui,-apple-system,"Segoe UI",Arial,sans-serif}
+.anim-engine{width:100%;height:100%;display:flex;justify-content:center;align-items:center;overflow:hidden;position:relative}
+.stage{width:320px;height:275px;display:flex;flex-direction:column;align-items:center;justify-content:center;position:relative}
+:root {
+      --bg-deep: #080b12;
+      --card-bg: #101522;
+      --border: #20293d;
+      --text-main: #f8fafc;
+      --text-muted: #64748b;
+
+      --c-cyan: #00f0ff;
+      --c-win: #0078d4;
+      --c-linux: #f59e0b;
+      --c-green: #10b981;
+      --c-red: #ef4444;
+      --c-pink: #ff007f;
+
+      --ease-elastic: cubic-bezier(0.34, 1.56, 0.64, 1);
+      --ease-cinematic: cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+            .mobile-frame {
+              width: 110px; height: 190px; background: #131926; border: 3px solid #334155;
+              border-radius: 24px; padding: 4px; position: relative; box-shadow: 0 10px 30px rgba(0,0,0,0.6);
+            }
+            .notch {
+              position: absolute; top: 7px; left: 50%; transform: translateX(-50%);
+              width: 30px; height: 6px; background: #000; border-radius: 8px; z-index: 10;
+            }
+            .mobile-screen { width: 100%; height: 100%; border-radius: 18px; overflow: hidden; background: #000; }
+            .anim-engine .mobile-screen img {
+              width: 100%; height: 100%; object-fit: cover; opacity: 0; transform: translateY(15px);
+              animation: phoneMediaReveal 1s var(--ease-elastic) forwards;
+            }
+            @keyframes phoneMediaReveal { to { opacity: 1; transform: translateY(0); } }
+
+*{box-sizing:border-box}html,body{margin:0;width:100%;height:100%;overflow:hidden}
+body{background:transparent;color:#f8fafc;font-family:system-ui,-apple-system,"Segoe UI",Arial,sans-serif}
+.anim-engine{width:100%;height:100%;display:flex;justify-content:center;align-items:center;overflow:hidden;position:relative}
+.stage{width:320px;height:275px;display:flex;flex-direction:column;align-items:center;justify-content:center;position:relative}
+:root {
+      --bg-deep: #080b12;
+      --card-bg: #101522;
+      --border: #20293d;
+      --text-main: #f8fafc;
+      --text-muted: #64748b;
+
+      --c-cyan: #00f0ff;
+      --c-win: #0078d4;
+      --c-linux: #f59e0b;
+      --c-green: #10b981;
+      --c-red: #ef4444;
+      --c-pink: #ff007f;
+
+      --ease-elastic: cubic-bezier(0.34, 1.56, 0.64, 1);
+      --ease-cinematic: cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+            .linux-tower {
+              width: 120px; height: 170px; background: #131822; border: 2px solid #2d384e;
+              border-radius: 8px; padding: 8px; display: flex; flex-direction: column; justify-content: space-between;
+              box-shadow: inset 0 0 15px rgba(0,0,0,0.8);
+            }
+            .tower-fan-vent {
+              width: 65px; height: 65px; border-radius: 50%; border: 2px dashed #2d384e;
+              margin: 4px auto; display: grid; place-items: center; position: relative;
+            }
+            .anim-engine .tower-fan-blades {
+              width: 48px; height: 48px; border-radius: 50%;
+              border: 3px solid var(--c-linux); border-left-color: transparent; border-right-color: transparent;
+              animation: fanSpin 0.7s linear infinite;
+            }
+            .tower-drive-stack { display: flex; flex-direction: column; gap: 3px; }
+            .tower-drive {
+              height: 10px; background: #0a0d14; border: 1px solid #20293d; border-radius: 2px;
+              display: flex; justify-content: space-between; align-items: center; padding: 0 4px;
+            }
+            .anim-engine .linux-led { animation: linuxBlink 0.2s infinite steps(2); }
+            @keyframes fanSpin { to { transform: rotate(360deg); } }
+            @keyframes linuxBlink { 0% { background: #334155; } 100% { background: var(--c-linux); box-shadow: 0 0 6px var(--c-linux); } }
+
+*{box-sizing:border-box}html,body{margin:0;width:100%;height:100%;overflow:hidden}
+body{background:transparent;color:#f8fafc;font-family:system-ui,-apple-system,"Segoe UI",Arial,sans-serif}
+.anim-engine{width:100%;height:100%;display:flex;justify-content:center;align-items:center;overflow:hidden;position:relative}
+.stage{width:320px;height:275px;display:flex;flex-direction:column;align-items:center;justify-content:center;position:relative}
+:root {
+      --bg-deep: #080b12;
+      --card-bg: #101522;
+      --border: #20293d;
+      --text-main: #f8fafc;
+      --text-muted: #64748b;
+
+      --c-cyan: #00f0ff;
+      --c-win: #0078d4;
+      --c-linux: #f59e0b;
+      --c-green: #10b981;
+      --c-red: #ef4444;
+      --c-pink: #ff007f;
+
+      --ease-elastic: cubic-bezier(0.34, 1.56, 0.64, 1);
+      --ease-cinematic: cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+            .win-server {
+              width: 100%; max-width: 270px; background: #0c121d; border: 2px solid var(--c-win);
+              border-radius: 6px; padding: 12px; display: flex; flex-direction: column; gap: 8px;
+              box-shadow: 0 0 15px rgba(0, 120, 212, 0.2);
+            }
+            .win-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #1a2536; padding-bottom: 6px; }
+            .win-logo-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 2px; width: 14px; height: 14px; }
+            .win-tile { background: var(--c-win); }
+            .win-metrics { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; }
+            .win-card-metric {
+              background: #141c2b; border: 1px solid #223047; padding: 6px; border-radius: 4px;
+              text-align: center; font-size: 8px; font-family: monospace;
+            }
+            .anim-engine .win-pulse-indicator { animation: winGlow 1.6s ease-in-out infinite alternate; }
+            @keyframes winGlow { from { opacity: 0.5; } to { opacity: 1; filter: drop-shadow(0 0 4px var(--c-win)); } }
+
+*{box-sizing:border-box}html,body{margin:0;width:100%;height:100%;overflow:hidden}
+body{background:transparent;color:#f8fafc;font-family:system-ui,-apple-system,"Segoe UI",Arial,sans-serif}
+.anim-engine{width:100%;height:100%;display:flex;justify-content:center;align-items:center;overflow:hidden;position:relative}
+.stage{width:320px;height:275px;display:flex;flex-direction:column;align-items:center;justify-content:center;position:relative}
+:root {
+      --bg-deep: #080b12;
+      --card-bg: #101522;
+      --border: #20293d;
+      --text-main: #f8fafc;
+      --text-muted: #64748b;
+
+      --c-cyan: #00f0ff;
+      --c-win: #0078d4;
+      --c-linux: #f59e0b;
+      --c-green: #10b981;
+      --c-red: #ef4444;
+      --c-pink: #ff007f;
+
+      --ease-elastic: cubic-bezier(0.34, 1.56, 0.64, 1);
+      --ease-cinematic: cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+            .cpu-socket {
+              width: 140px; height: 140px; background: #064e3b; border: 3px solid #047857;
+              border-radius: 12px; position: relative; display: grid; place-items: center;
+              box-shadow: 0 8px 24px rgba(0,0,0,0.6);
+            }
+            .cpu-ihs {
+              width: 90px; height: 90px; background: linear-gradient(135deg, #cbd5e1, #64748b, #94a3b8);
+              border-radius: 6px; border: 2px solid #475569; display: flex; flex-direction: column;
+              align-items: center; justify-content: center; text-align: center; position: relative;
+            }
+            .cpu-name-text {
+              font-family: monospace; font-weight: 900; font-size: 13px; color: #0f172a; letter-spacing: 0.5px;
+            }
+            .cpu-sub { font-size: 8px; font-family: monospace; color: #1e293b; margin-top: 2px; }
+            .anim-engine .circuit-trace {
+              position: absolute; stroke: var(--c-cyan); stroke-width: 2; fill: none;
+              stroke-dasharray: 20; stroke-dashoffset: 40;
+              animation: flowElectricity 1.2s linear infinite;
+            }
+            @keyframes flowElectricity { to { stroke-dashoffset: 0; } }
+
+*{box-sizing:border-box}html,body{margin:0;width:100%;height:100%;overflow:hidden}
+body{background:transparent;color:#f8fafc;font-family:system-ui,-apple-system,"Segoe UI",Arial,sans-serif}
+.anim-engine{width:100%;height:100%;display:flex;justify-content:center;align-items:center;overflow:hidden;position:relative}
+.stage{width:320px;height:275px;display:flex;flex-direction:column;align-items:center;justify-content:center;position:relative}
+:root {
+      --bg-deep: #080b12;
+      --card-bg: #101522;
+      --border: #20293d;
+      --text-main: #f8fafc;
+      --text-muted: #64748b;
+
+      --c-cyan: #00f0ff;
+      --c-win: #0078d4;
+      --c-linux: #f59e0b;
+      --c-green: #10b981;
+      --c-red: #ef4444;
+      --c-pink: #ff007f;
+
+      --ease-elastic: cubic-bezier(0.34, 1.56, 0.64, 1);
+      --ease-cinematic: cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+            .laptop-wrap { width: 180px; display: flex; flex-direction: column; align-items: center; }
+            .laptop-screen-bezel {
+              width: 160px; height: 100px; background: #0c1017; border: 3px solid #334155;
+              border-radius: 8px 8px 2px 2px; position: relative; overflow: hidden;
+            }
+            .laptop-display-content {
+              width: 100%; height: 100%; background: #000;
+              display: flex; flex-direction: column; align-items: center; justify-content: center;
+            }
+            .anim-engine .laptop-display-content {
+              animation: bootSequence 3.2s var(--ease-cinematic) forwards;
+            }
+            .laptop-base {
+              width: 190px; height: 12px; background: #1e293b; border-radius: 2px 2px 8px 8px;
+              border: 1px solid #475569; position: relative; display: flex; justify-content: center;
+            }
+            .anim-engine .laptop-keyboard-glow {
+              width: 90px; height: 3px; background: var(--c-cyan); border-radius: 2px; margin-top: 2px;
+              animation: kbdBacklight 2s forwards;
+            }
+            @keyframes bootSequence {
+              0% { background: #000; }
+              25% { background: #000; }
+              40% { background: #0f172a; } /* Pantalla encendida con logo */
+              65% { background: radial-gradient(circle, #1e3a8a 0%, #0284c7 100%); } /* Escritorio */
+              100% { background: radial-gradient(circle, #1e3a8a 0%, #0284c7 100%); }
+            }
+            @keyframes kbdBacklight {
+              0% { opacity: 0; box-shadow: none; }
+              40% { opacity: 1; box-shadow: 0 0 8px var(--c-cyan); }
+              100% { opacity: 0.8; box-shadow: 0 0 5px var(--c-cyan); }
+            }
+
+*{box-sizing:border-box}html,body{margin:0;width:100%;height:100%;overflow:hidden}
+body{background:transparent;color:#f8fafc;font-family:system-ui,-apple-system,"Segoe UI",Arial,sans-serif}
+.anim-engine{width:100%;height:100%;display:flex;justify-content:center;align-items:center;overflow:hidden;position:relative}
+.stage{width:320px;height:275px;display:flex;flex-direction:column;align-items:center;justify-content:center;position:relative}
+:root {
+      --bg-deep: #080b12;
+      --card-bg: #101522;
+      --border: #20293d;
+      --text-main: #f8fafc;
+      --text-muted: #64748b;
+
+      --c-cyan: #00f0ff;
+      --c-win: #0078d4;
+      --c-linux: #f59e0b;
+      --c-green: #10b981;
+      --c-red: #ef4444;
+      --c-pink: #ff007f;
+
+      --ease-elastic: cubic-bezier(0.34, 1.56, 0.64, 1);
+      --ease-cinematic: cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+        .news-broadcast-bar {
+          width: 100%;
+          background: #0b0f17;
+          border: 1px solid var(--border);
+          border-radius: 8px;
+          overflow: hidden;
+          box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+          display: flex;
+          flex-direction: column;
+        }
+        .news-upper-row {
+          background: #111827;
+          display: flex;
+          align-items: center;
+          padding: 8px 14px;
+          border-bottom: 2px solid var(--c-red);
+        }
+        .breaking-tag {
+          background: var(--c-red);
+          color: #fff;
+          font-weight: 900;
+          font-size: 11px;
+          padding: 3px 8px;
+          border-radius: 3px;
+          letter-spacing: 1px;
+          display: flex;
+          align-items: center;
+          gap: 6px;
+        }
+        .anim-engine .pulse-rec-dot {
+          width: 6px; height: 6px; background: #fff; border-radius: 50%;
+          animation: recBlink 0.9s infinite alternate;
+        }
+        .news-main-headline {
+          margin-left: 14px;
+          font-size: 13px;
+          font-weight: 700;
+          color: #fff;
+          letter-spacing: 0.5px;
+        }
+        /* Marquesina continua inferior */
+        .marquee-track-container {
+          height: 32px;
+          background: #030712;
+          display: flex;
+          align-items: center;
+          overflow: hidden;
+          position: relative;
+        }
+        .marquee-content {
+          display: flex;
+          white-space: nowrap;
+          font-family: monospace;
+          font-size: 11px;
+          color: var(--c-cyan);
+          letter-spacing: 1px;
+        }
+        .anim-engine .marquee-content {
+          animation: newsCrawl 18s linear infinite;
+        }
+        @keyframes newsCrawl {
+          0% { transform: translateX(100%); }
+          100% { transform: translateX(-100%); }
+        }
+        @keyframes recBlink {
+          from { opacity: 0.2; }
+          to { opacity: 1; }
+        }
+
+html,body{height:100%;width:100%;margin:0;padding:0;overflow:hidden}
+body{background:radial-gradient(ellipse at 25% 35%,#1c2940,#080b12 68%)!important;font-family:system-ui,"Segoe UI",Arial,sans-serif;color:#f6faff}
+header{position:absolute;top:17px;left:32px;right:32px;display:flex;justify-content:space-between;align-items:center;font-size:12px;font-weight:760;color:#acc3d0;letter-spacing:1.2px}
+header strong{color:#45e6ed}.rule{position:absolute;top:51px;left:32px;right:32px;height:2px;background:#344458}
+.module{position:absolute;inset:0;visibility:hidden;display:flex;gap:34px;align-items:center;padding:68px 37px 37px}
+.preview{width:385px;height:339px;flex-shrink:0;border-radius:24px;background:radial-gradient(ellipse at 48% 40%,#1b3141,#0e1726 78%);box-shadow:0 15px 50px #0007;border:1px solid #314a5d;display:flex;align-items:center;justify-content:center;overflow:hidden}
+.preview .anim-engine{width:320px!important;height:280px!important;flex-shrink:0;transform-origin:center}
+.preview.large .anim-engine{transform:scale(1.45)}.preview.medium .anim-engine{transform:scale(1.14)}
+.preview.ticker .anim-engine{width:700px!important;transform:scale(.52);flex-shrink:0}
+.copy{width:365px;min-width:0}
+.index{font-size:13px;font-weight:800;letter-spacing:1.1px;color:#45e5ed;margin:0 0 15px}
+.name{font-size:31px;line-height:1.15;letter-spacing:-.7px;margin:0 0 18px;font-weight:850;color:#f7faff}
+.description{font-size:16px;line-height:1.42;color:#bbd0de;margin:0 0 18px}
+.label{font-size:11px;color:#8da5b9;text-transform:uppercase;letter-spacing:1.4px;margin:0 0 7px}
+.tags{font-size:12px;color:#f2c988;line-height:1.4;margin:0 0 20px}
+.fields{font-size:11px;color:#9edee0;line-height:1.4}
+footer{position:absolute;left:34px;right:34px;bottom:16px;color:#8ea5bb;display:flex;justify-content:space-between;font-size:11px}
+
+.module:nth-child(1){animation:show1 31.5s linear infinite}
+@keyframes show1{0%,0.00000%{visibility:hidden}0.00020%,11.11091%{visibility:visible}11.11111%,100%{visibility:hidden}}
+
+.module:nth-child(2){animation:show2 31.5s linear infinite}
+@keyframes show2{0%,11.11111%{visibility:hidden}11.11131%,22.22202%{visibility:visible}22.22222%,100%{visibility:hidden}}
+
+.module:nth-child(3){animation:show3 31.5s linear infinite}
+@keyframes show3{0%,22.22222%{visibility:hidden}22.22242%,33.33313%{visibility:visible}33.33333%,100%{visibility:hidden}}
+
+.module:nth-child(4){animation:show4 31.5s linear infinite}
+@keyframes show4{0%,33.33333%{visibility:hidden}33.33353%,44.44424%{visibility:visible}44.44444%,100%{visibility:hidden}}
+
+.module:nth-child(5){animation:show5 31.5s linear infinite}
+@keyframes show5{0%,44.44444%{visibility:hidden}44.44464%,55.55536%{visibility:visible}55.55556%,100%{visibility:hidden}}
+
+.module:nth-child(6){animation:show6 31.5s linear infinite}
+@keyframes show6{0%,55.55556%{visibility:hidden}55.55576%,66.66647%{visibility:visible}66.66667%,100%{visibility:hidden}}
+
+.module:nth-child(7){animation:show7 31.5s linear infinite}
+@keyframes show7{0%,66.66667%{visibility:hidden}66.66687%,77.77758%{visibility:visible}77.77778%,100%{visibility:hidden}}
+
+.module:nth-child(8){animation:show8 31.5s linear infinite}
+@keyframes show8{0%,77.77778%{visibility:hidden}77.77798%,88.88869%{visibility:visible}88.88889%,100%{visibility:hidden}}
+
+.module:nth-child(9){animation:show9 31.5s linear infinite}
+@keyframes show9{0%,88.88889%{visibility:hidden}88.88909%,99.99980%{visibility:visible}100.00000%,100%{visibility:hidden}}
+</style></head><body><header><span>GPTFRAMES / ANIMACIONES EDITABLES</span><strong>COLECCIÓN 03 · 9 PRESETS</strong></header><div class="rule"></div><main data-segment-seconds="3.5"><section class="module" data-id="rf-transmit"><div class="preview large"><div class="anim-engine"><div class="stage"><svg class="rf-svg-container" viewBox="0 0 100 100">
+            <!-- Ondas ancladas exactamente al centro (50, 30) -->
+            <circle class="tx-ring d1" cx="50" cy="30" r="2" fill="none" stroke="var(--c-cyan)" />
+            <circle class="tx-ring d2" cx="50" cy="30" r="2" fill="none" stroke="var(--c-cyan)" />
+            <circle class="tx-ring d3" cx="50" cy="30" r="2" fill="none" stroke="var(--c-cyan)" />
+            <!-- Torre Física -->
+            <circle cx="50" cy="30" r="4.5" fill="var(--c-cyan)" />
+            <line x1="50" y1="34" x2="50" y2="92" stroke="#94a3b8" stroke-width="2.5" />
+            <line x1="50" y1="42" x2="30" y2="92" stroke="#64748b" stroke-width="2" />
+            <line x1="50" y1="42" x2="70" y2="92" stroke="#64748b" stroke-width="2" />
+            <line x1="38" y1="65" x2="62" y2="65" stroke="#64748b" stroke-width="2" />
+          </svg>
+        </div></div></div><article class="copy"><p class="index">01 / 09 · RADIOFRECUENCIA</p><h1 class="name">Antena RF — transmisión</h1><p class="description">Ondas circulares que salen exactamente del nodo emisor.</p><p class="label">Tags</p><p class="tags">antena, rf, emitir, transmisión</p><p class="label">Campos editables</p><p class="fields">signal_color</p></article></section><section class="module" data-id="rf-receive"><div class="preview large"><div class="anim-engine"><div class="stage"><svg class="rf-svg-container" viewBox="0 0 100 100">
+            <!-- Ondas convergiendo a (50, 30) -->
+            <circle class="rx-ring d1" cx="50" cy="30" r="48" fill="none" stroke="var(--c-green)" />
+            <circle class="rx-ring d2" cx="50" cy="30" r="48" fill="none" stroke="var(--c-green)" />
+            <circle class="rx-ring d3" cx="50" cy="30" r="48" fill="none" stroke="var(--c-green)" />
+            <!-- Torre Física -->
+            <circle cx="50" cy="30" r="4.5" fill="var(--c-green)" />
+            <line x1="50" y1="34" x2="50" y2="92" stroke="#94a3b8" stroke-width="2.5" />
+            <line x1="50" y1="42" x2="30" y2="92" stroke="#64748b" stroke-width="2" />
+            <line x1="50" y1="42" x2="70" y2="92" stroke="#64748b" stroke-width="2" />
+            <line x1="38" y1="65" x2="62" y2="65" stroke="#64748b" stroke-width="2" />
+          </svg>
+        </div></div></div><article class="copy"><p class="index">02 / 09 · RADIOFRECUENCIA</p><h1 class="name">Antena RF — recepción</h1><p class="description">Ondas convergentes hacia el nodo receptor.</p><p class="label">Tags</p><p class="tags">antena, rf, recibir, recepción</p><p class="label">Campos editables</p><p class="fields">signal_color</p></article></section><section class="module" data-id="browser-mockup"><div class="preview medium"><div class="anim-engine"><div class="stage"><div class="browser-window">
+            <div class="browser-header">
+              <div class="dot" style="background:#ef4444"></div>
+              <div class="dot" style="background:#f59e0b"></div>
+              <div class="dot" style="background:#10b981"></div>
+              <div class="url-input" data-field="url">gptframes.local/inicio</div>
+            </div>
+            <div class="browser-body">
+              <img src="data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22600%22%20height%3D%22320%22%3E%3Cdefs%3E%3ClinearGradient%20id%3D%22g%22%3E%3Cstop%20stop-color%3D%22%23124b70%22%2F%3E%3Cstop%20offset%3D%221%22%20stop-color%3D%22%23062238%22%2F%3E%3C%2FlinearGradient%3E%3C%2Fdefs%3E%3Crect%20width%3D%22600%22%20height%3D%22320%22%20fill%3D%22url%28%23g%29%22%2F%3E%3Cg%20fill%3D%22none%22%20stroke%3D%22%234be0ef%22%20stroke-width%3D%223%22%3E%3Crect%20x%3D%2265%22%20y%3D%2265%22%20width%3D%22190%22%20height%3D%22120%22%20rx%3D%2215%22%2F%3E%3Cpath%20d%3D%22M65%20105h190M270%20180h170M310%20150h130M310%20120h94%22%2F%3E%3C%2Fg%3E%3Ccircle%20cx%3D%22465%22%20cy%3D%22245%22%20r%3D%2238%22%20fill%3D%22%2318a5b4%22%20opacity%3D%22.5%22%2F%3E%3C%2Fsvg%3E" data-field="image" alt="Workspace CDN" />
+            </div>
+          </div>
+        </div></div></div><article class="copy"><p class="index">03 / 09 · MOCKUPS</p><h1 class="name">Ventana de navegador</h1><p class="description">Ventana con barras de control, URL e imagen revelada.</p><p class="label">Tags</p><p class="tags">web, browser, pagina, ventana</p><p class="label">Campos editables</p><p class="fields">url, image</p></article></section><section class="module" data-id="smartphone-media"><div class="preview medium"><div class="anim-engine"><div class="stage"><div class="mobile-frame">
+            <div class="notch"></div>
+            <div class="mobile-screen">
+              <img src="data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22260%22%20height%3D%22460%22%3E%3Cdefs%3E%3ClinearGradient%20id%3D%22g%22%3E%3Cstop%20stop-color%3D%22%233b126b%22%2F%3E%3Cstop%20offset%3D%221%22%20stop-color%3D%22%23080f34%22%2F%3E%3C%2FlinearGradient%3E%3C%2Fdefs%3E%3Crect%20width%3D%22260%22%20height%3D%22460%22%20fill%3D%22url%28%23g%29%22%2F%3E%3Cg%20stroke%3D%22%235fe9ff%22%20stroke-width%3D%224%22%20fill%3D%22none%22%3E%3Ccircle%20cx%3D%22130%22%20cy%3D%22190%22%20r%3D%2283%22%2F%3E%3Cpath%20d%3D%22M36%20330h188M52%20350h155M90%20380h80%22%2F%3E%3C%2Fg%3E%3Ccircle%20cx%3D%22130%22%20cy%3D%22190%22%20r%3D%2227%22%20fill%3D%22%2348a4ff%22%20opacity%3D%22.7%22%2F%3E%3C%2Fsvg%3E" data-field="image" alt="Cyber Neon CDN" />
+            </div>
+          </div>
+        </div></div></div><article class="copy"><p class="index">04 / 09 · MOCKUPS</p><h1 class="name">Pantalla de smartphone</h1><p class="description">Mockup de teléfono con una imagen que aparece desde abajo.</p><p class="label">Tags</p><p class="tags">smartphone, celular, telefono, pantalla</p><p class="label">Campos editables</p><p class="fields">image</p></article></section><section class="module" data-id="linux-tower-enterprise"><div class="preview medium"><div class="anim-engine"><div class="stage"><div class="linux-tower">
+            <div style="font-size:8px; font-family:monospace; color:var(--c-linux); text-align:center;" data-field="hostname">LINUX NODE TOWER</div>
+            <div class="tower-fan-vent">
+              <div class="tower-fan-blades"></div>
+            </div>
+            <div class="tower-drive-stack">
+              <div class="tower-drive"><span style="font-size:7px;font-family:monospace;color:#64748b;" data-field="drive_1">nvme0</span><div class="linux-led" style="width:4px;height:4px;border-radius:50%;"></div></div>
+              <div class="tower-drive"><span style="font-size:7px;font-family:monospace;color:#64748b;" data-field="drive_2">nvme1</span><div class="linux-led" style="width:4px;height:4px;border-radius:50%;animation-duration:0.14s;"></div></div>
+            </div>
+          </div>
+        </div></div></div><article class="copy"><p class="index">05 / 09 · HARDWARE</p><h1 class="name">Servidor Linux torre</h1><p class="description">Torre Linux enterprise con ventilador y LEDs de discos NVMe.</p><p class="label">Tags</p><p class="tags">linux, servidor, torre, nvme</p><p class="label">Campos editables</p><p class="fields">hostname, drive_1, drive_2</p></article></section><section class="module" data-id="windows-server-datacenter"><div class="preview medium"><div class="anim-engine"><div class="stage"><div class="win-server">
+            <div class="win-header">
+              <div style="display:flex;align-items:center;gap:6px;">
+                <div class="win-logo-grid">
+                  <div class="win-tile"></div><div class="win-tile"></div>
+                  <div class="win-tile"></div><div class="win-tile"></div>
+                </div>
+                <span style="font-size:10px; font-family:monospace; color:#fff;" data-field="system_name">Windows Server 2025</span>
+              </div>
+              <div class="win-pulse-indicator" style="width:6px; height:6px; background:var(--c-win); border-radius:50%;"></div>
+            </div>
+            <div class="win-metrics">
+              <div class="win-card-metric"><span data-field="service_1" style="color:#64748b;">Hyper-V</span><br><strong style="color:var(--c-green);" data-field="status_1">ACTIVE</strong></div>
+              <div class="win-card-metric"><span data-field="service_2" style="color:#64748b;">IIS Core</span><br><strong style="color:var(--c-win);" data-field="status_2">RUNNING</strong></div>
+              <div class="win-card-metric"><span data-field="service_3" style="color:#64748b;">AD DS</span><br><strong style="color:var(--c-green);" data-field="status_3">SYNCED</strong></div>
+            </div>
+          </div>
+        </div></div></div><article class="copy"><p class="index">06 / 09 · HARDWARE</p><h1 class="name">Windows Server Datacenter</h1><p class="description">Rack con servicios Hyper-V, IIS y Active Directory.</p><p class="label">Tags</p><p class="tags">windows, servidor, hyper-v, iis</p><p class="label">Campos editables</p><p class="fields">system_name, service_1, status_1, service_2, status_2, service_3, status_3</p></article></section><section class="module" data-id="editable-cpu"><div class="preview large"><div class="anim-engine"><div class="stage"><div class="cpu-socket">
+            <!-- Pistas de energía -->
+            <svg style="position:absolute; inset:0; width:100%; height:100%;" viewBox="0 0 100 100">
+              <path class="circuit-trace" d="M10,25 L30,25 L30,40" />
+              <path class="circuit-trace" d="M90,75 L70,75 L70,60" />
+              <path class="circuit-trace" d="M25,90 L25,70 L40,70" />
+            </svg>
+            <div class="cpu-ihs">
+              <span class="cpu-name-text" data-field="cpu_name">Intel Xeon</span>
+              <span class="cpu-sub" data-field="cpu_model">E5-2699 v4</span>
+              <span style="font-size:7px; color:#334155; margin-top:4px;" data-field="cpu_socket">LGA-2011-v3</span>
+            </div>
+          </div>
+        </div></div></div><article class="copy"><p class="index">07 / 09 · HARDWARE</p><h1 class="name">CPU personalizable</h1><p class="description">Microprocesador con modelo, frecuencia y socket editables.</p><p class="label">Tags</p><p class="tags">cpu, procesador, intel, xeon</p><p class="label">Campos editables</p><p class="fields">cpu_name, cpu_model, cpu_socket</p></article></section><section class="module" data-id="laptop-boot"><div class="preview large"><div class="anim-engine"><div class="stage"><div class="laptop-wrap">
+            <div class="laptop-screen-bezel">
+              <div class="laptop-display-content">
+                <span style="font-family:monospace; font-size:11px; font-weight:bold; color:#fff;" data-field="boot_title">SYSTEM BOOT</span>
+                <span style="font-size:8px; font-family:monospace; color:var(--c-cyan);" data-field="boot_status">READY</span>
+              </div>
+            </div>
+            <div class="laptop-base">
+              <div class="laptop-keyboard-glow"></div>
+            </div>
+          </div>
+        </div></div></div><article class="copy"><p class="index">08 / 09 · HARDWARE</p><h1 class="name">Encendido de laptop</h1><p class="description">Computadora portátil con secuencia de encendido y luz de teclado.</p><p class="label">Tags</p><p class="tags">laptop, computadora, portatil, arranque</p><p class="label">Campos editables</p><p class="fields">boot_title, boot_status</p></article></section><section class="module" data-id="breaking-news-ticker"><div class="preview ticker"><div class="anim-engine"><div class="stage" style="width:100%;max-width:800px"><div class="news-broadcast-bar">
+        <div class="news-upper-row">
+          <div class="breaking-tag">
+            <div class="pulse-rec-dot"></div>
+            <span data-field="label">ÚLTIMA HORA</span>
+          </div>
+          <div class="news-main-headline" data-field="headline">NUEVA VERSIÓN DE KERNEL LINUX DISPONIBLE PARA SERVIDORES ENTERPRISE</div>
+        </div>
+        <div class="marquee-track-container">
+          <div class="marquee-content" data-field="ticker">
+            +++ [MERCADOS]: TECH INDEX +3.4% +++ [SERVIDOR]: CLUSTER PROCESANDO 40 Gbps SIN PÉRDIDAS +++ [SISTEMA]: DESPLIEGUES AUTOMATIZADOS AL 100% COMPLETADOS +++
+          </div>
+        </div>
+      </div></div></div></div><article class="copy"><p class="index">09 / 09 · NOTICIAS</p><h1 class="name">Cintillo informativo</h1><p class="description">Titular superior y marquesina de noticias en movimiento.</p><p class="label">Tags</p><p class="tags">noticias, cintillo, breaking news, marquee</p><p class="label">Campos editables</p><p class="fields">label, headline, ticker</p></article></section></main><footer><span>HTML/CSS + TAGS / MOTOR C++ + CHROMIUM</span><span>848×480 · 24 FPS</span></footer></body></html>

@@ -1,0 +1,66 @@
+<!doctype html><html lang="es"><head><meta charset="utf-8"><meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'none'; connect-src 'none'; style-src 'unsafe-inline'; img-src data:; font-src data:"><style>*{box-sizing:border-box}html,body{margin:0;width:100%;height:100%;overflow:hidden}
+body{background:transparent;color:#f8fafc;font-family:system-ui,-apple-system,"Segoe UI",Arial,sans-serif}
+.anim-engine{width:100%;height:100%;display:flex;justify-content:center;align-items:center;overflow:hidden;position:relative}
+.stage{width:320px;height:275px;display:flex;flex-direction:column;align-items:center;justify-content:center;position:relative}
+:root {
+      --bg-deep: #080b12;
+      --card-bg: #101522;
+      --border: #20293d;
+      --text-main: #f8fafc;
+      --text-muted: #64748b;
+
+      --c-cyan: #00f0ff;
+      --c-win: #0078d4;
+      --c-linux: #f59e0b;
+      --c-green: #10b981;
+      --c-red: #ef4444;
+      --c-pink: #ff007f;
+
+      --ease-elastic: cubic-bezier(0.34, 1.56, 0.64, 1);
+      --ease-cinematic: cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+            .laptop-wrap { width: 180px; display: flex; flex-direction: column; align-items: center; }
+            .laptop-screen-bezel {
+              width: 160px; height: 100px; background: #0c1017; border: 3px solid #334155;
+              border-radius: 8px 8px 2px 2px; position: relative; overflow: hidden;
+            }
+            .laptop-display-content {
+              width: 100%; height: 100%; background: #000;
+              display: flex; flex-direction: column; align-items: center; justify-content: center;
+            }
+            .anim-engine .laptop-display-content {
+              animation: bootSequence 3.2s var(--ease-cinematic) forwards;
+            }
+            .laptop-base {
+              width: 190px; height: 12px; background: #1e293b; border-radius: 2px 2px 8px 8px;
+              border: 1px solid #475569; position: relative; display: flex; justify-content: center;
+            }
+            .anim-engine .laptop-keyboard-glow {
+              width: 90px; height: 3px; background: var(--c-cyan); border-radius: 2px; margin-top: 2px;
+              animation: kbdBacklight 2s forwards;
+            }
+            @keyframes bootSequence {
+              0% { background: #000; }
+              25% { background: #000; }
+              40% { background: #0f172a; } /* Pantalla encendida con logo */
+              65% { background: radial-gradient(circle, #1e3a8a 0%, #0284c7 100%); } /* Escritorio */
+              100% { background: radial-gradient(circle, #1e3a8a 0%, #0284c7 100%); }
+            }
+            @keyframes kbdBacklight {
+              0% { opacity: 0; box-shadow: none; }
+              40% { opacity: 1; box-shadow: 0 0 8px var(--c-cyan); }
+              100% { opacity: 0.8; box-shadow: 0 0 5px var(--c-cyan); }
+            }
+          </style></head><body><div class="anim-engine"><div class="stage"><div class="laptop-wrap">
+            <div class="laptop-screen-bezel">
+              <div class="laptop-display-content">
+                <span style="font-family:monospace; font-size:11px; font-weight:bold; color:#fff;" data-field="boot_title">SYSTEM BOOT</span>
+                <span style="font-size:8px; font-family:monospace; color:var(--c-cyan);" data-field="boot_status">READY</span>
+              </div>
+            </div>
+            <div class="laptop-base">
+              <div class="laptop-keyboard-glow"></div>
+            </div>
+          </div>
+        </div></div></body></html>

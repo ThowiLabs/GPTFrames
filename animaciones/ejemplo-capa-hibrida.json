@@ -1,0 +1,65 @@
+{
+  "version": 1,
+  "canvas": {
+    "width": 1024,
+    "height": 576
+  },
+  "fps": 24,
+  "scenes": [
+    {
+      "start": 0,
+      "duration": 2,
+      "background": "#0d1117",
+      "layers": [
+        {
+          "type": "text",
+          "text": "MOTION STUDIO",
+          "x": 46,
+          "y": 66,
+          "width": 440,
+          "height": 75,
+          "fontSize": 50,
+          "color": "#F0F6FC"
+        },
+        {
+          "type": "text",
+          "text": "Capa CSS con fondo transparente",
+          "x": 48,
+          "y": 151,
+          "width": 470,
+          "height": 100,
+          "fontSize": 27,
+          "color": "#38BDF8"
+        },
+        {
+          "type": "rect",
+          "x": 38,
+          "y": 294,
+          "width": 428,
+          "height": 4,
+          "color": "#2EA043"
+        },
+        {
+          "type": "text",
+          "text": "La animacion se combina con capas C++.",
+          "x": 48,
+          "y": 331,
+          "width": 480,
+          "height": 90,
+          "fontSize": 23,
+          "color": "#9BA9B7"
+        },
+        {
+          "type": "html_widget",
+          "collection": "animaciones",
+          "preset": "success-checkmark",
+          "x": 605,
+          "y": 114,
+          "width": 360,
+          "height": 360
+        }
+      ]
+    }
+  ],
+  "audio": []
+}
