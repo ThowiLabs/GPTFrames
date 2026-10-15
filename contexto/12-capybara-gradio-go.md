@@ -18,3 +18,6 @@ README.md, docs/CAPYBARA_1080P_VIDEO.md, docs/GO_GRADIO_MCP.md, tunnel/*, exampl
 
 ## Pendiente
 Hacer commit/push GitHub de feature. Probar autenticación OAuth desde cliente ChatGPT real con PIN privado. Publicación Gradio temporal. Probar Windows en máquina real. Para soporte horizontal 16:9 nativo, refactorizar framebuffer del compositor JSON C++.
+
+### Mejoras de entrega
+El sitio de video 1080p se movió de Python http.server a cmd/gptframes-media Go; rango local 206 comprobado pero túnel Gradio del reproductor elimina Range (HTTP 200), documento de límite. Tests Go nuevos: archivo PIN privado y estable, puente fail-closed antes de OAuth, rechazo de puerto ocupado. Video de 243s por URL temporal distinta del MCP OAuth.

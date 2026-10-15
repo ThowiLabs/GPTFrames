@@ -12,3 +12,5 @@
 - [x] Publicar visor y descarga del documental.
 - [ ] Autorizar desde la UI real de ChatGPT (requiere acción del usuario).
 - [ ] Validación Windows real de Go y Neo Lite.
+- [x] Añadir servidor de video Go con HTTP Range local.
+- [x] Añadir tests de PIN, fail-closed y backend ocupado.

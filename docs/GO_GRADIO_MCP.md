@@ -37,3 +37,6 @@ El transporte Gradio **no agrega autenticación por sí solo**: la capa OAuth Go
 No publicar el archivo PIN ni el estado OAuth. No habilitar una ruta pública para esos archivos. Los resultados de render exponen rutas locales, no enlaces firmados: el sitio estático del documental se sirve mediante otro túnel separado de las herramientas MCP.
 
 El protocolo MCP remoto puede cambiar y la compatibilidad de la experiencia de conectar en ChatGPT debe comprobarse con el flujo real de autorización de la plataforma. El software no se registra por sí solo como un plugin ni conecta la cuenta sin consentimiento.
+
+## Servidor de video independiente
+Se añadió cmd/gptframes-media, un servidor HTTP Go con net/http.FileServer que admite Range 206 Partial Content en loopback para streaming y descarga eficiente de videos. Nunca comparte el puerto MCP ni expone el PIN. Se probó Range local con solicitudes bytes=0-99 y bytes=100-199 que obtuvieron HTTP 206. El túnel Gradio público devuelve HTTP 200 a Range, probablemente por el intermediario; la descarga MP4 y reproducción progresiva funcionan, pero saltar a capítulos puede requerir buffering. Para búsqueda de segmentos/seek estricto en producción usar un hosting que preserve cabeceras Range.

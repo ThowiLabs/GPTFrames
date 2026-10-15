@@ -62,6 +62,13 @@ Se adaptaron componentes del propio [kagssh-go](https://github.com/ThowiLabs/kag
     cd tunnel && go test ./... && go build -o ../build/gptframes-tunnel-go ./cmd/gptframes-tunnel
     cd .. && ./build/gptframes-tunnel-go --port 18885 --backend-port 18886
 
+La descarga del documental Full HD también tiene servidor nativo Go opcional con soporte HTTP Range local:
+
+    cd tunnel && go build -o ../build/gptframes-media-go ./cmd/gptframes-media
+    cd .. && ./build/gptframes-media-go --port 18989 --root examples/go-rust-cpp-1080p/public
+
+El servidor de video es **separado** del gateway MCP OAuth. Algunos proxies Gradio no preservan las cabeceras Range, lo cual puede limitar los saltos de reproducción hasta que se descargue suficiente video.
+
 La URL temporal tiene formato https://subdominio.gradio.live/mcp. Se requiere registrar el MCP desde ChatGPT y completar la autorización OAuth; no se enlaza automáticamente la cuenta. El archivo de PIN es privado (0600). [Documentación y limitaciones](docs/GO_GRADIO_MCP.md).
 
 ## Tests
