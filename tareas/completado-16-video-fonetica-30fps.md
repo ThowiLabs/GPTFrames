@@ -8,7 +8,7 @@
 - [x] Insertar CTA visual animada SUSCRÍBETE A HIRCOIR y cierre hablado.
 - [x] Cambiar a 30 FPS a 1920x1080 y validar preview 34s.
 - [x] Test automatizado de contenido y ausencia de marca/captions.
-- [ ] Finalizar render de 7290 fotogramas.
-- [ ] Comprobar duración/códecs/FPS y decodificación ffmpeg.
-- [ ] Publicar reproductor v3 y MP4 por enlace temporal HTTPS.
-- [ ] Commit y push de rama GitHub privada, sin subir secretos ni NEO.
+- [x] Finalizar render de 7290 fotogramas.
+- [x] Comprobar duración/códecs/FPS y decodificación ffmpeg.
+- [x] Publicar reproductor v3 y MP4 por enlace temporal HTTPS.
+- [x] Commit y push de rama GitHub privada, sin subir secretos ni NEO.

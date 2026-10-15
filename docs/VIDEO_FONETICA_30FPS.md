@@ -24,3 +24,11 @@ No se incluyen en Git checkpoints ONNX/NEO, credenciales HF, PIN OAuth ni audios
 
 ## Limitaciones
 La pronunciación aproximada no equivale a un diccionario fonético de eSpeak/IPA; para matices de voz se requieren revisiones auditivas. La nueva codificación a 30fps incrementa el número de fotogramas de 5832 a 7290 y su costo de render.
+
+## Entrega validada
+El render final se completó sin errores: 243.000000 segundos, 1920×1080, 30/1 FPS, 7290 fotogramas H.264 y una pista AAC, 41,698,059 bytes. FFmpeg decodificó íntegramente audio/video con exit code 0. La extracción de t=240 s muestra el CTA «SUSCRÍBETE A HIRCOIR» y el contenedor MP4 no tiene pistas de subtítulos. La tabla animada también pasó inspección visual.
+
+Reproducción pública temporal: https://9409cf3846cd3d9be6.gradio.live/v3/
+Video: https://9409cf3846cd3d9be6.gradio.live/v3/Go-Rust-Cpp-Capybara-30fps-SinSubtitulos.mp4
+Audio WAV: https://9409cf3846cd3d9be6.gradio.live/v3/capybara-fonetica-30fps.wav
+El sitio raíz también redirige a /v3/. El sitio es de lectura exclusivamente; no expone las herramientas MCP ni el modelo de voz.

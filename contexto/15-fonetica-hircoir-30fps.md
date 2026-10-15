@@ -12,3 +12,6 @@ Mismo modelo .neo compilado de checkpoint HirCoir epoch268-step110398, no se pub
 La reconstrucción produjo 13 archivos de voz fonética mediante Neo Lite y mezcla WAV de 243s, PCM 24 kHz mono, -17.6dB medio / -0.4dB pico. Primer segmento visual 1920x1080 30fps, captura comprobada sin marcas, sin subtítulos. Primera vista previa 34s H264/AAC 30fps 1020 cuadros, URL temporal https://9409cf3846cd3d9be6.gradio.live/v3/adelanto-Capybara-30fps.mp4 . Pantalla CTA inspeccionada; HTML de las 13 escenas sin GPTFRAMES, 13 fondos y capas reconstruidos. Test fonético sin subtítulos pasó.
 # Pendientes
 Finalizar render completo de 13 segmentos, ffprobe/decodificar completa, copiar MP4 a public/v3, compartir descarga temporal y documentar commit/push. Probar pronunciación con escucha humana, diccionario IPA de phonemizer si procede.
+
+# Verificación final
+13 segmentos exportados a 30fps. MP4 final output/motion-30fps/Go-Rust-Cpp-Capybara-30fps-SinSubtitulos.mp4 41,698,059 bytes, H.264 (7290 cuadros), AAC, 1920x1080, 243s. Reproductor HTTPS /v3/, audio WAV y video verificados HTTP 200, enlace temporal. FFmpeg decodificación de los 7290 cuadros y audio exit0. Pistas subtítulos ninguna. Captura del frame t=240 s mostró CTA correcto. Página inicial redirige automáticamente a /v3/.
