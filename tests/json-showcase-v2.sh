@@ -13,19 +13,7 @@ cmp "$tmp/a.png" "$tmp/b.png"
 if cmp -s "$tmp/a.png" "$tmp/c.png"; then echo "No hay diferencia entre escenas";exit 1;fi
 mkdir -p "$tmp/assets"
 cp examples/json-showcase-v2/assets/* "$tmp/assets/"
-python3 - "$project" "$tmp" <<'PY'
-import json,sys,pathlib
-src=json.loads(pathlib.Path(sys.argv[1]).read_text())
-assert {l["type"] for s in src["scenes"] for l in s["layers"]} >= {"glow","ring","grid","rect","text","line","ellipse"}
-p=pathlib.Path(sys.argv[2])
-s=json.loads(json.dumps(src))
-for l in s["scenes"][0]["layers"]:
- if l.get("type")=="rect" and "radius" in l: l["radius"]=99999;break
-(p/"invalid-radius.json").write_text(json.dumps(s))
-s=json.loads(json.dumps(src))
-s["scenes"][0]["background"]="#GGGGGG"
-(p/"invalid-color.json").write_text(json.dumps(s))
-PY
+sh scripts/test-fixtures.sh json "$project" "$tmp" showcase
 for broken in invalid-radius.json invalid-color.json; do
  if "$app" --project validate "$tmp/$broken" >/dev/null 2>&1;then echo "Validación falló: $broken";exit 1;fi
 done

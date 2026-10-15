@@ -11,21 +11,7 @@ fixture="examples/json-compositor/showcase.json"
 cmp "$tmp/frame-a.png" "$tmp/frame-b.png"
 "$app" --project frame "$fixture" "$tmp/frame-c.png" 8 > /dev/null
 ! cmp -s "$tmp/frame-a.png" "$tmp/frame-c.png"
-python3 - "$fixture" "$tmp" <<'PY'
-from pathlib import Path
-import json,sys
-source=Path(sys.argv[1])
-out=Path(sys.argv[2])
-data=json.loads(source.read_text())
-data["scenes"][0]["layers"][1]["text"]="TEXTO MODIFICADO"
-(out/"modified.json").write_text(json.dumps(data,ensure_ascii=False))
-data=json.loads(source.read_text())
-data["scenes"][1]["start"]=7
-(out/"wrong-order.json").write_text(json.dumps(data,ensure_ascii=False))
-data=json.loads(source.read_text())
-data["scenes"][0]["layers"][4]["src"]="../private.png"
-(out/"traversal.json").write_text(json.dumps(data,ensure_ascii=False))
-PY
+sh scripts/test-fixtures.sh json "$fixture" "$tmp" compositor
 mkdir -p "$tmp/assets"
 cp examples/json-compositor/assets/* "$tmp/assets/"
 "$app" --project frame "$tmp/modified.json" "$tmp/changed.png" 2 > /dev/null

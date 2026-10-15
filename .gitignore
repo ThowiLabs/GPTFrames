@@ -24,8 +24,6 @@ font_embedded.hpp
 
 # Local development
 .DS_Store
-__pycache__/
-*.pyc
 .env
 .env.*
 !.env.example
@@ -33,7 +31,7 @@ build/
 dist/
 .cache/
 
-third_party/_sources/
+third_party/_sources
 
 # Keep user compositions outside the engine repository
 samples/

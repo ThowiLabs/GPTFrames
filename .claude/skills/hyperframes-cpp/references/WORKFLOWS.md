@@ -64,7 +64,7 @@ This is a *technical illustration*, not a video project committed to the engine 
 }
 ```
 
-This JSON is optional production metadata used by a **user-created** generation script, NOT a format directly supported by the engine executable.
+This specific JSON example is optional production metadata, not the engine project schema. Native projects use the version-1 scenes/layers schema documented in docs/JSON_COMPOSITOR.md and the --project CLI.
 
 TTS can mistake:
 - `22` vs `2.2`: “veintidós” versus “dos punto dos”.
@@ -76,16 +76,11 @@ TTS can mistake:
 
 Test with the exact TTS provider/voice; do not apply untested phonetic substitutions automatically. Code blocks and names on screen should stay technically accurate.
 
-## Audio conversion during preproduction
+## Native voice and audio
 
-HyperFrames v1.0.0 accepts WAV PCM signed 16-bit, mono, 24 kHz. If the TTS generated MP3, any approved decoder may produce WAV. An optional **preparation only** example, when FFmpeg is available:
+Use `hyperframes-cpp-native --voice synth --model models/voz.onnx --text-file narracion.txt --out voz.wav --neo-lite /path/to/neo-lite` or the C++ MCP `synthesize_voice` tool. The native bridge validates the WAV output and resamples it to mono PCM signed 16-bit at 24 kHz. Models and their configurations must be installed locally with permission to use them.
 
-```bash
-ffmpeg -hide_banner -loglevel error -y -i voice.mp3 \
-  -ac 1 -ar 24000 -c:a pcm_s16le assets/audio/segment-01.wav
-```
-
-FFmpeg is **not required** by the C++ MP4 renderer; preparation and delivery are different workflows. Music and sound effects must currently be mixed with the narration WAV before export. Always respect media rights.
+JSON projects can attach up to 12 WAV audio tracks with individual `start` and `gain` values. The HTML scene workflow expects `segment-01.wav` etc. Compressed audio decoding, automatic ducking and word alignment are pending. Do not introduce interpreter-based TTS helpers. Always retain source and license information for music and effects.
 
 ## Browser troubleshooting
 

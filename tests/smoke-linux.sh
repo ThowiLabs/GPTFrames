@@ -4,9 +4,9 @@ cd "$(dirname "$0")/.."
 tmp="$(mktemp -d)"
 trap 'rm -rf "$tmp"' EXIT
 original="$tmp/generic-scenes.html"
-python3 tests/generate_scene_fixture.py "$original"
-if [[ ! -f font_embedded.hpp ]]; then python3 scripts/embed_fonts.py; fi
-python3 tests/generate_audio_fixture.py "$tmp/audio-fixtures" >/dev/null
+sh scripts/test-fixtures.sh scene "$original"
+if [[ ! -f font_embedded.hpp ]]; then sh scripts/embed-fonts.sh; fi
+sh scripts/test-fixtures.sh audio "$tmp/audio-fixtures" >/dev/null
 echo "[0/10] Unit tests: deterministic animation and resolution scaling"
 g++ -std=c++17 -O2 -Wall -Wextra -Werror -pedantic tests/timeline_test.cpp -o "$tmp/animation-tests"
 g++ -std=c++17 -O2 -Wall -Wextra -Werror -pedantic tests/output_scale_test.cpp -o "$tmp/output-tests"
@@ -34,14 +34,7 @@ for fps in 0 61 abc 12fps; do
 done
 echo "[5/7] Renderizar AVI sin audio y comprobar que HTML controla fotogramas"
 cp "$original" "$tmp/cambiado.html"
-python3 - "$tmp/cambiado.html" <<'PY'
-from pathlib import Path
-import sys
-p=Path(sys.argv[1]);s=p.read_text()
-assert 'VIDEO NATIVO' in s
-s=s.replace('VIDEO NATIVO','VIDEO DISTINTO')
-p.write_text(s)
-PY
+sh scripts/test-fixtures.sh replace "$tmp/cambiado.html" "$tmp/cambiado.html" "VIDEO NATIVO" "VIDEO DISTINTO"
 "$tmp/hyperframes" --inspect "$tmp/cambiado.html" > "$tmp/escenas-cambiadas.txt"
 grep -q 'VIDEO DISTINTO' "$tmp/escenas-cambiadas.txt"
 "$tmp/hyperframes" "$original" - "$tmp/original.avi" 1 > /dev/null 2>&1
@@ -105,15 +98,7 @@ if "$tmp/hyperframes" "$original" - "$tmp/invalid-size.avi" 1 mjpeg news 720x720
   echo "ERROR: invalid output aspect ratio accepted" >&2; exit 1
 fi
 echo "[11/11] CSS edit changes classic output"
-python3 - "$original" "$tmp/edited-css.html" <<'PYCSS'
-from pathlib import Path
-import sys
-source = Path(sys.argv[1]).read_text()
-assert "font-size:68px;line-height" in source
-source = source.replace("font-size:68px;line-height",
-                        "font-size:40px;line-height", 1)
-Path(sys.argv[2]).write_text(source)
-PYCSS
+sh scripts/test-fixtures.sh replace "$original" "$tmp/edited-css.html" "font-size:68px;line-height" "font-size:40px;line-height" 1
 "$tmp/hyperframes" "$tmp/edited-css.html" - "$tmp/css-change.avi" 1 mjpeg classic >/dev/null 2>&1
 "$tmp/hyperframes" "$original" - "$tmp/css-original.avi" 1 mjpeg classic >/dev/null 2>&1
 if cmp -s "$tmp/css-change.avi" "$tmp/css-original.avi"; then

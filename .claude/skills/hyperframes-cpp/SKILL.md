@@ -5,7 +5,7 @@ description: Build, narrate and render 9:16 HTML/CSS/GSAP videos using HyperFram
 
 # HyperFrames C++ — video production skill
 
-HyperFrames C++ is a C++17 command-line video renderer with a native compositor and a browser-assisted HTML/CSS/JavaScript compositor. It can encode MP4/H.264/AAC and AVI without running FFmpeg during export. It does **not** synthesize speech, read generic JSON projects, or decode arbitrary audio formats by itself. The `browser` theme requires an installed Chromium, Chrome or Edge.
+HyperFrames C++ is a C++17 command-line video renderer with a native compositor and a browser-assisted HTML/CSS/JavaScript compositor. It can encode MP4/H.264/AAC and AVI without running FFmpeg during export. It supports version-1 native JSON projects and optional speech synthesis through native Neo Lite. Native audio input remains PCM WAV; arbitrary compressed audio is not decoded by this CLI. The `browser` theme requires an installed Chromium, Chrome or Edge.
 
 **Never put a user's video project, photographs, narration, generated video or third-party GSAP inside the engine's `main` branch.** Use a separate project directory.
 
@@ -72,7 +72,7 @@ my-video/
   output.mp4                  # generated result
 ```
 
-**Important:** the current CLI reads the **HTML** and audio directory. A `timeline.json` may support your own preparation script but there is **no** `hyperframes-cpp-native render project.json` command today.
+**Choose the input route explicitly.** Native JSON uses `hyperframes-cpp-native --project validate|frame|render project.json ...`. HTML/browser uses the positional CLI below. A freeform `timeline.json` is production metadata, not the native JSON schema. The compiled `gptframes-mcp` service preserves its eight tools; its render tool currently selects the native JSON route.
 
 Use HTML sections with `class="scene"`, `data-start`, `data-duration` (seconds), sequential start times, and optional text hooks `.kicker`, `.wordline`, `.sub`, `.barlabel` for the native themes. Browser compositions should define a paused GSAP timeline at `window.__timelines.main` with `pause()` and `seek(seconds)`. Keep all scripts/photos local. Prefer 720×1280 portrait for mobile videos. **The GSAP library is not part of the engine**, has a separate license and must be supplied correctly by the video project.
 
@@ -102,7 +102,7 @@ Examples to verify by **listening to actual samples**:
 
 Pronunciation varies by voice/provider. Test acronyms/English product names, write phonetically only where necessary, and do **not** alter on-screen terminal commands to imitate speech. For accents, choose deliberate phrasing, spelling and punctuation. Write numbers **as words** when needed to control TTS; distinguish decimals, versions, ports, prices and dates.
 
-For each scene, synthesize the voice, measure its **actual** length, add a modest pause (~0.6–1s), then fill `data-start` and `data-duration`. Never invent durations. Check first, middle and final sections. TTS may output MP3/M4A; the current native audio input expects `segment-01.wav` etc., **mono PCM signed 16-bit, 24 kHz**. Audio conversion or TTS may use external tools (FFmpeg/SoX) in **preproduction**. Only the C++ video export is FFmpeg-free. The engine is not a multitrack audio editor; pre-mix music/effects if necessary.
+For each scene, synthesize the voice, measure its **actual** length, add a modest pause (~0.6–1s), then fill `data-start` and `data-duration`. Never invent durations. Check first, middle and final sections. Use the native `--voice synth` command or C++ MCP `synthesize_voice` tool with a local licensed Neo Lite model. The bridge produces **mono PCM signed 16-bit, 24 kHz** WAV. Native JSON projects support up to 12 WAV tracks with `start` and `gain`; the HTML scene workflow uses `segment-01.wav` etc. Compressed MP3/M4A import, automatic ducking and word alignment are not implemented. Keep project logic in C++; installed-browser compositions remain HTML/CSS/JavaScript.
 
 ## CLI reference
 
@@ -159,4 +159,4 @@ Do not confuse `html` (limited litehtml compositor) with `browser` (real CSS/JS)
 
 [Releases](https://github.com/ThowiLabs/hyperframes-cpp/releases/latest) · [Browser guide](https://github.com/ThowiLabs/hyperframes-cpp/blob/main/docs/BROWSER_MODE.md) · [Third-party notices](https://github.com/ThowiLabs/hyperframes-cpp/blob/main/THIRD_PARTY_NOTICES.md).
 
-The native MP4 encoder is experimental. The browser is required for browser mode, and generic sites without supported timed scenes are not accepted. The CLI cannot currently decode MP3/M4A input, mix arbitrary audio tracks, synthesize TTS or render from a generic JSON manifest directly. H.264/AAC patent obligations and GSAP licensing require independent review.
+The native MP4 encoder is experimental. The browser is required for browser mode, and generic sites without supported timed scenes are not accepted. The native project route mixes up to 12 PCM WAV tracks and supports Neo Lite voice synthesis and version-1 JSON manifests. MP3/M4A decoding, advanced mixing, arbitrary JSON schemas and renderer parity with the original frameworks remain outside the current scope. H.264/AAC patent obligations and GSAP licensing require independent review.

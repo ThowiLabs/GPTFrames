@@ -24,7 +24,7 @@ If no suitable browser is installed, browser mode returns an actionable error. T
 On Debian/Ubuntu (build-time requirements only):
 
 ```bash
-sudo apt install g++ gcc make cmake python3 git fonts-dejavu-core
+sudo apt install g++ gcc make cmake git fonts-dejavu-core libcurl4-openssl-dev
 # Only for testing browser-backed mode:
 sudo apt install chromium
 ./scripts/build-native-mp4.sh

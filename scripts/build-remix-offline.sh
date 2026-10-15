@@ -8,7 +8,7 @@ for dep in third_party/_sources/litehtml/CMakeLists.txt third_party/_sources/min
  fi
 done
 if [ ! -f font_embedded.hpp ]; then
- python3 scripts/embed_fonts.py
+ sh scripts/embed-fonts.sh
 fi
 cmake -S . -B build/remix-linux -DCMAKE_BUILD_TYPE=Release -DHFC_HTML_LAYOUT=ON -DHFC_NATIVE_MP4=ON -DHFC_BROWSER_CAPTURE=ON
 cmake --build build/remix-linux -j3

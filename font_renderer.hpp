@@ -2,7 +2,11 @@
 #include <map>
 #define STB_TRUETYPE_IMPLEMENTATION
 #include "vendor/stb/stb_truetype.h"
+#ifdef HFC_CONFIGURED_FONTS
+#include <font_embedded.hpp>
+#else
 #include "font_embedded.hpp"
+#endif
 
 // DejaVu Sans original (se declara en el CSS). Fuente incrustada en binario,
 // con rasterización alpha TrueType sin bibliotecas compartidas.

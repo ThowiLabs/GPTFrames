@@ -10,7 +10,7 @@ Copyright Sean Barrett and contributors. The upstream [stb](https://github.com/n
 
 ## DejaVu Sans
 
-The font family used at **build time** is DejaVu Sans and DejaVu Sans Bold. Its complete copyright and licensing notice is reproduced in `assets/fonts/LICENSE.txt`. Local system fonts are embedded in the compiled executable by `scripts/embed_fonts.py`. Raw TTF files and the generated `font_embedded.hpp` are not distributed through this repository.
+The font family used at **build time** is DejaVu Sans and DejaVu Sans Bold. Its complete copyright and licensing notice is reproduced in `assets/fonts/LICENSE.txt`. Local system fonts are embedded in the compiled executable by the native `tools/embed_fonts.cpp` host utility. Raw TTF files and the generated `font_embedded.hpp` are not distributed through this repository.
 
 The public example screenshots may include glyphs rendered from DejaVu Sans.
 
@@ -30,3 +30,11 @@ The upstream HyperFrames project is a separate project and is not affiliated wit
 - GSAP (when present in **user-supplied** HTML) has its own license at https://gsap.com/standard-license. GSAP assets are not bundled into this repository.
 
 Permissive source licensing does not remove H.264/AAC patent or distribution obligations. This code is not legal advice or a guarantee of patent clearance.
+
+
+## Native MCP networking
+
+- cpp-httplib v0.61.0: MIT, Copyright Yuji Hirose and contributors. Vendored header and license in vendor/httplib/. Source: https://github.com/yhirose/cpp-httplib/tree/v0.61.0.
+- httplib.h SHA-256: bc77114769db3b3c97e4a6d753dab797c3cadaaa48beead3806298b09702df18.
+- Linux HTTPS clients link system libcurl, under the curl license: https://curl.se/docs/copyright.html. Its linked native dependencies retain their own licenses.
+- Windows HTTPS clients use the operating system WinHTTP API.
