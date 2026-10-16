@@ -1,0 +1,1 @@
+Modular no significa microservicios. Estos módulos pueden vivir en un mismo proceso y desplegarse juntos, sin llamadas por red.

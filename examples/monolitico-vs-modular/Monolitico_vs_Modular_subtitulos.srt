@@ -1,0 +1,27 @@
+1
+00:00:00,000 --> 00:00:08,000
+¿Qué cambia entre código monolítico y modular? Imagina una tienda en Python. Las dos versiones funcionan, pero se organizan distinto.
+
+2
+00:00:08,000 --> 00:00:16,000
+En este ejemplo de monolito poco modular, una misma función cobra, actualiza el inventario y envía una notificación. Toda la lógica está mezclada.
+
+3
+00:00:16,000 --> 00:00:24,000
+Al modificar el cobro, puedes afectar otras partes. También resulta difícil probar cada responsabilidad sin ejecutar la función completa.
+
+4
+00:00:24,000 --> 00:00:32,000
+En el diseño modular, pagos, inventario y notificaciones viven en archivos separados. Cada módulo tiene una tarea bien definida.
+
+5
+00:00:32,000 --> 00:00:40,000
+El archivo principal solo los coordina. Ahora podemos probar pagos por separado y reutilizar inventario sin duplicar el código.
+
+6
+00:00:40,000 --> 00:00:48,000
+Modular no significa microservicios. Estos módulos pueden vivir en un mismo proceso y desplegarse juntos, sin llamadas por red.
+
+7
+00:00:48,000 --> 00:00:56,000
+La clave no es hacer más archivos por hacerlo. Es separar responsabilidades cuando eso vuelve el código más claro y fácil de mantener.

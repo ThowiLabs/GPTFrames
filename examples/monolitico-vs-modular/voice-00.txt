@@ -1,0 +1,1 @@
+¿Qué cambia entre código monolítico y modular? Imagina una tienda en Python. Las dos versiones funcionan, pero se organizan distinto.

@@ -1,0 +1,1 @@
+En este ejemplo de monolito poco modular, una misma función cobra, actualiza el inventario y envía una notificación. Toda la lógica está mezclada.

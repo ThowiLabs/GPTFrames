@@ -1,0 +1,1 @@
+El archivo principal solo los coordina. Ahora podemos probar pagos por separado y reutilizar inventario sin duplicar el código.

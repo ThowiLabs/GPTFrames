@@ -1,0 +1,1 @@
+En el diseño modular, pagos, inventario y notificaciones viven en archivos separados. Cada módulo tiene una tarea bien definida.

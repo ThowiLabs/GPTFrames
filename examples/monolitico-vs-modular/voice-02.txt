@@ -1,0 +1,1 @@
+Al modificar el cobro, puedes afectar otras partes. También resulta difícil probar cada responsabilidad sin ejecutar la función completa.

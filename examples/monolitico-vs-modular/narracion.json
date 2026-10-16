@@ -1,0 +1,51 @@
+[
+  {
+    "scene": 0,
+    "text": "¿Qué cambia entre código monolítico y modular? Imagina una tienda en Python. Las dos versiones funcionan, pero se organizan distinto.",
+    "duration": 8,
+    "voice_duration": 7.182,
+    "audio_atempo": 1.0
+  },
+  {
+    "scene": 1,
+    "text": "En este ejemplo de monolito poco modular, una misma función cobra, actualiza el inventario y envía una notificación. Toda la lógica está mezclada.",
+    "duration": 8,
+    "voice_duration": 8.252,
+    "audio_atempo": 1.1167
+  },
+  {
+    "scene": 2,
+    "text": "Al modificar el cobro, puedes afectar otras partes. También resulta difícil probar cada responsabilidad sin ejecutar la función completa.",
+    "duration": 8,
+    "voice_duration": 7.378,
+    "audio_atempo": 1.0
+  },
+  {
+    "scene": 3,
+    "text": "En el diseño modular, pagos, inventario y notificaciones viven en archivos separados. Cada módulo tiene una tarea bien definida.",
+    "duration": 8,
+    "voice_duration": 7.323,
+    "audio_atempo": 1.0
+  },
+  {
+    "scene": 4,
+    "text": "El archivo principal solo los coordina. Ahora podemos probar pagos por separado y reutilizar inventario sin duplicar el código.",
+    "duration": 8,
+    "voice_duration": 6.457,
+    "audio_atempo": 1.0
+  },
+  {
+    "scene": 5,
+    "text": "Modular no significa microservicios. Estos módulos pueden vivir en un mismo proceso y desplegarse juntos, sin llamadas por red.",
+    "duration": 8,
+    "voice_duration": 7.076,
+    "audio_atempo": 1.0
+  },
+  {
+    "scene": 6,
+    "text": "La clave no es hacer más archivos por hacerlo. Es separar responsabilidades cuando eso vuelve el código más claro y fácil de mantener.",
+    "duration": 8,
+    "voice_duration": 6.782,
+    "audio_atempo": 1.0
+  }
+]

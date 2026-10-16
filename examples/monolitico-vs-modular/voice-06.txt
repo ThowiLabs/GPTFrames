@@ -1,0 +1,1 @@
+La clave no es hacer más archivos por hacerlo. Es separar responsabilidades cuando eso vuelve el código más claro y fácil de mantener.
