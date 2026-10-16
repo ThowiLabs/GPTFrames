@@ -4,6 +4,10 @@
 
 The canonical skill is `.claude/skills/hyperframes-cpp/SKILL.md`. Copy that **entire folder**, including `references/`, to `~/.claude/skills/hyperframes-cpp/` and/or `~/.agents/skills/hyperframes-cpp/`. The release contains a portable skill ZIP and installer. Do not copy only the Markdown file when it references this document.
 
+## Narration-led motion workflow (required)
+
+Read [NARRATED_MOTION.md](NARRATED_MOTION.md) before authoring a narrated video. The composition steps below describe mechanics; they are insufficient without phrase-based states and meaningful per-element actions. Build the beat map after synthesizing/measuring audio, adapt/register assets if their internal timing cannot match it, and validate cues around each important reveal. Use a unique output path per render attempt, wait for all writers to finish, and verify the encoded MP4 before replacing a delivered file.
+
 ## Composition workflow
 
 1. Write a short storyboard with 1 clear idea per scene. Collect target duration, format, FPS and sources.

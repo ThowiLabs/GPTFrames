@@ -3,6 +3,12 @@
 Utilizar estas instrucciones al autorar y revisar proyectos nuevos con herramientas MCP.
 No equivale a sincronización fonética exacta ni sustituye a la revisión del vídeo.
 
+## Estándar obligatorio de edición sincronizada
+
+Para todo video narrado, construir la explicación por elementos al ritmo de la voz, salvo petición expresa de tratamiento estático. Leer y aplicar el procedimiento canónico en [.claude/skills/hyperframes-cpp/references/NARRATED_MOTION.md](../.claude/skills/hyperframes-cpp/references/NARRATED_MOTION.md).
+
+Exigir mapa de beats y `motion_events.json` con anclas habladas, elementos, tiempos locales y procedencia del timing. Mostrar operandos, relaciones, paquetes y resultados en el orden narrado. No aceptar una diapositiva completa con un loop decorativo como montaje terminado. Adaptar o registrar variantes de recursos cuando sus tiempos no coincidan con la voz. Revisar el MP4 con audio y bloquear entrega ante anticipaciones, estados estáticos injustificados o solapamientos. Esta es una obligación editorial del agente, no un filtro estético automático del motor.
+
 ## Prompt de dirección y control de calidad
 
 Crea un documental tecnológico profesional, narrativo y legible, con composición

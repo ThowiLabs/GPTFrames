@@ -82,7 +82,7 @@ int main(int argc, char** argv) {
         auto legacy=service.rpc(request(10,"initialize"));
         require(legacy && (*legacy)["result"]["instructions"].is_string(),"Legacy instructions absent");
         auto message=(*legacy)["result"]["instructions"].get<std::string>();
-        for(auto term:{"search_animations","describe_animation","html_widget","preview_frame","fit=contain","detected-unverified"})
+        for(auto term:{"search_animations","describe_animation","html_widget","preview_frame","fit=contain","detected-unverified","MOTION SINCRONIZADO","motion_events.json","BLOQUEAR ENTREGA","ruta temporal UNICA","MP4 final con audio"})
             require(message.find(term)!=std::string::npos,std::string("Missing instruction ")+term);
         auto modern=service.rpc(request(11,"server/discover"),"2026-07-28");
         require(modern && (*modern)["result"]["instructions"]==message,"Modern instructions absent");
@@ -93,6 +93,11 @@ int main(int argc, char** argv) {
                 if(item["name"]==term)updated=item["description"].get<std::string>().find("html_widget")!=std::string::npos
                     || (std::string(term)=="search_animations"&&item["description"].get<std::string>().find("OBLIGATORIO")!=std::string::npos);
             require(updated,std::string("Tool lacks HTML directive: ")+term);
+            if(std::string(term)!="search_animations")
+                for(const auto& item:(*list)["result"]["tools"])
+                    if(item["name"]==term)
+                        require(item["description"].get<std::string>().find("MOTION SINCRONIZADO")!=std::string::npos,
+                                std::string("Tool lacks narrated motion directive: ")+term);
         }
     });
     test("all native tool contracts preserved", [&] {
@@ -145,7 +150,12 @@ int main(int argc, char** argv) {
     });
     test("deduplicated animation library", [&] {
         const auto all=service.run_tool("list_animations",Json::object());
-        require(all["total"]==95,"Expected 95 unique animations");
+        require(all["total"]==98,"Expected 98 unique animations, including three GPU teaching assets");
+        std::set<std::string> animation_ids;
+        for(const auto& preset:all["presets"])
+            require(animation_ids.insert(preset["id"].get<std::string>()).second,"Duplicate animation ID");
+        for(const auto id:{"cpu-vs-gpu-parallel","gpu-pixels","gpu-matrix-multiply"})
+            require(animation_ids.count(id)==1,std::string("Missing GPU teaching asset ")+id);
         require(all["presets"][0]["number"]==1,"Expected numbered animation");
         require(all["presets"][5]["id"]=="biometric-scanner","Six original modules were displaced");
         require(all["presets"][22]["id"]=="shimmer-progress","Last imported animation mismatch");
@@ -179,7 +189,7 @@ int main(int argc, char** argv) {
         const auto types=service.run_tool("list_animations",{{"type","servidor"}});
         require(types["total"]>=2,"Asset type filter failed");
         const auto facets=service.run_tool("list_animation_facets",Json::object());
-        require(facets["total"]==95 && facets["category"].is_array() && facets["tags"].is_array(),"Facet index invalid");
+        require(facets["total"]==all["total"] && facets["category"].is_array() && facets["tags"].is_array(),"Facet index invalid");
         rejects([&]{service.run_tool("search_animations",{{"query"," "}});});
         const auto item=service.run_tool("describe_animation",{{"id","smartphone-vibrate"}});
         require(item["name"]=="Teléfono vibrando","Wrong animation");

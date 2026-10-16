@@ -2,8 +2,8 @@
   "version": 1,
   "name": "Animaciones",
   "description": "Colección de recursos visuales editables, categorizados y buscables.",
-  "total": 95,
-  "duration": 308.9,
+  "total": 98,
+  "duration": 344.9,
   "presets": [
     {
       "number": 1,
@@ -5041,6 +5041,412 @@
       "source_collection": "animaciones/source_languages_08.html",
       "source_module_id": "sql",
       "states": 5
+    },
+    {
+      "number": 96,
+      "id": "cpu-vs-gpu-parallel",
+      "name": "CPU y GPU: trabajo en paralelo",
+      "category": "Hardware y GPU",
+      "type": "diagrama educativo",
+      "description": "Comparación conceptual de 32 tareas: lotes de cuatro frente a una cuadrícula paralela; no representa un benchmark.",
+      "style": "dark / cyan / violet / SVG",
+      "backend": "browser",
+      "collection": "animaciones",
+      "preset_file": "animaciones/presets/cpu-vs-gpu-parallel.html",
+      "status": "reviewed",
+      "duration": 12,
+      "loop": false,
+      "batch": "gpu-ia-09",
+      "origin": "HTML proporcionado por el usuario",
+      "source_filename": "cpu-vs-gpu-parallel.html",
+      "editable": {
+        "title": {
+          "type": "text",
+          "label": "Título",
+          "default": "Procesamiento de 32 Tareas: CPU vs GPU"
+        },
+        "disclaimer": {
+          "type": "text",
+          "label": "Nota de la demostración",
+          "default": "Representación simplificada, no benchmark · Los bloques no representan cantidades reales de núcleos"
+        },
+        "cpu_title": {
+          "type": "text",
+          "label": "Título de CPU",
+          "default": "CPU: 4 unidades versátiles"
+        },
+        "cpu_desc": {
+          "type": "text",
+          "label": "Descripción de CPU",
+          "default": "Reparte el trabajo en lotes de cuatro tareas"
+        },
+        "cpu_queue_label": {
+          "type": "text",
+          "label": "Cola de tareas de CPU",
+          "default": "Cola de entrada (32 tareas idénticas):"
+        },
+        "cpu_cores_label": {
+          "type": "text",
+          "label": "Unidades de CPU",
+          "default": "Unidades de trabajo activas:"
+        },
+        "cpu_progress_label": {
+          "type": "text",
+          "label": "Progreso de CPU",
+          "default": "Progreso (8 lotes secuenciales de 4 tareas):"
+        },
+        "cpu_status_text": {
+          "type": "text",
+          "label": "Estado de CPU en proceso",
+          "default": "Procesando lotes de cuatro tareas"
+        },
+        "cpu_status_complete": {
+          "type": "text",
+          "label": "Estado de CPU completado",
+          "default": "32/32 tareas completadas"
+        },
+        "gpu_title": {
+          "type": "text",
+          "label": "Título de GPU",
+          "default": "GPU: Cuadrícula de unidades"
+        },
+        "gpu_desc": {
+          "type": "text",
+          "label": "Descripción de GPU",
+          "default": "Muchas tareas similares se ejecutan en paralelo"
+        },
+        "gpu_grid_label": {
+          "type": "text",
+          "label": "Cuadrícula de GPU",
+          "default": "Matriz de cómputo (32 unidades simultáneas):"
+        },
+        "gpu_progress_label": {
+          "type": "text",
+          "label": "Progreso de GPU",
+          "default": "Progreso (lote masivo simultáneo):"
+        },
+        "gpu_status_text": {
+          "type": "text",
+          "label": "Estado de GPU completado",
+          "default": "32/32 tareas completadas en paralelo"
+        }
+      },
+      "tags": [
+        "cpu",
+        "gpu",
+        "paralelismo",
+        "parallel",
+        "tareas",
+        "procesador",
+        "lotes",
+        "computacion",
+        "SVG",
+        "CSS"
+      ],
+      "aliases": [
+        "cpu vs gpu parallel"
+      ],
+      "motion": [
+        "opacidad",
+        "cambio de color",
+        "progreso",
+        "revelado por fases"
+      ],
+      "usage": [
+        "educación",
+        "tecnología",
+        "documental"
+      ],
+      "css_keyframes": [
+        "fadeIn",
+        "cpuPulse",
+        "cpuProgress",
+        "gpuBatch",
+        "gpuProgress",
+        "cpuStatusSwap",
+        "gpuBadgeAnim",
+        "cpuComplete"
+      ],
+      "searchable": true,
+      "aspect_ratio": "848:480",
+      "renderable": true,
+      "reviewed_on": "2026-10-16",
+      "source_sha256": "630a86fdf8ad4be78c7a5b0d5e04b23a0699a7adc7a84b06d8f746c19cb2318a"
+    },
+    {
+      "number": 97,
+      "id": "gpu-pixels",
+      "name": "GPU: de geometría a píxeles",
+      "category": "Hardware y GPU",
+      "type": "diagrama educativo",
+      "description": "Secuencia visual de geometría, fragmentos calculados en paralelo e imagen terminada.",
+      "style": "dark / cyan / violet / SVG",
+      "backend": "browser",
+      "collection": "animaciones",
+      "preset_file": "animaciones/presets/gpu-pixels.html",
+      "status": "reviewed",
+      "duration": 12,
+      "loop": false,
+      "batch": "gpu-ia-09",
+      "origin": "HTML proporcionado por el usuario",
+      "source_filename": "gpu-pixels.html",
+      "editable": {
+        "label_geom": {
+          "type": "text",
+          "label": "Etiqueta de geometría",
+          "default": "«Geometría»"
+        },
+        "label_frag": {
+          "type": "text",
+          "label": "Etiqueta de fragmentos",
+          "default": "«Fragmentos»"
+        },
+        "label_img": {
+          "type": "text",
+          "label": "Etiqueta de imagen",
+          "default": "«Imagen»"
+        },
+        "desc_geom": {
+          "type": "text",
+          "label": "Explicación de geometría",
+          "default": "Fase 1: Los vértices definen la geometría 3D en primitivas poligonales."
+        },
+        "desc_frag": {
+          "type": "text",
+          "label": "Explicación de fragmentos",
+          "default": "Fase 2: La GPU interpola y calcula colores por grupos paralelos de fragmentos."
+        },
+        "desc_img": {
+          "type": "text",
+          "label": "Explicación de imagen",
+          "default": "Fase 3: Imagen terminada lista para desplegarse en pantalla."
+        },
+        "disclaimer": {
+          "type": "text",
+          "label": "Nota de la demostración",
+          "default": "Simplificación del proceso gráfico · El cómputo paralelo procesa fragmentos concurrentemente, sin implicar un núcleo físico por píxel"
+        }
+      },
+      "tags": [
+        "gpu",
+        "graficos",
+        "gráficos",
+        "pixel",
+        "píxeles",
+        "shader",
+        "fragmentos",
+        "triangulos",
+        "geometria",
+        "paralelismo",
+        "computacion",
+        "SVG",
+        "CSS"
+      ],
+      "aliases": [
+        "gpu pixels"
+      ],
+      "motion": [
+        "opacidad",
+        "cambio de color",
+        "progreso",
+        "revelado por fases"
+      ],
+      "usage": [
+        "educación",
+        "tecnología",
+        "documental"
+      ],
+      "css_keyframes": [
+        "tabGlow1",
+        "geomLayerAnim",
+        "tabGlow2",
+        "fragLayerAnim",
+        "tileCalcA",
+        "tileCalcB",
+        "tileCalcC",
+        "tileCalcD",
+        "tabGlow3",
+        "imgLayerAnim",
+        "showDesc1",
+        "showDesc2",
+        "showDesc3"
+      ],
+      "searchable": true,
+      "aspect_ratio": "848:480",
+      "renderable": true,
+      "reviewed_on": "2026-10-16",
+      "source_sha256": "a82388a99aa28f33f2ab2b54e5ee497a6242f0ee33e444dce19c561d61cfa685"
+    },
+    {
+      "number": 98,
+      "id": "gpu-matrix-multiply",
+      "name": "GPU: multiplicación de matrices",
+      "category": "IA y cálculo",
+      "type": "diagrama educativo",
+      "description": "Producto de matrices 2x2 con producto escalar detallado y resultados independientes en paralelo.",
+      "style": "dark / cyan / violet / SVG",
+      "backend": "browser",
+      "collection": "animaciones",
+      "preset_file": "animaciones/presets/gpu-matrix-multiply.html",
+      "status": "reviewed",
+      "duration": 12,
+      "loop": false,
+      "batch": "gpu-ia-09",
+      "origin": "HTML proporcionado por el usuario",
+      "source_filename": "ai_studio_code (2).html",
+      "editable": {
+        "title": {
+          "type": "text",
+          "label": "Título",
+          "default": "Multiplicación de Matrices en GPU"
+        },
+        "subtitle": {
+          "type": "text",
+          "label": "Subtítulo",
+          "default": "Tanto los gráficos 3D como las redes neuronales ejecutan productos escalares independientes"
+        },
+        "matrix_a_label": {
+          "type": "text",
+          "label": "Nombre de la matriz A",
+          "default": "Matriz A"
+        },
+        "matrix_b_label": {
+          "type": "text",
+          "label": "Nombre de la matriz B",
+          "default": "Matriz B"
+        },
+        "matrix_c_label": {
+          "type": "text",
+          "label": "Nombre de la matriz C",
+          "default": "Matriz C (Salida)"
+        },
+        "step1_title": {
+          "type": "text",
+          "label": "Título del paso 1",
+          "default": "Paso 1: Producto escalar de la primera celda (C₁₁)"
+        },
+        "step1_desc": {
+          "type": "text",
+          "label": "Descripción del paso 1",
+          "default": "Se empareja la primera fila de A con la primera columna de B término a término:"
+        },
+        "step1_formula": {
+          "type": "text",
+          "label": "Fórmula del paso 1",
+          "default": "1×5 + 2×7 = 19"
+        },
+        "step2_title": {
+          "type": "text",
+          "label": "Título del paso 2",
+          "default": "Paso 2: Resolución paralela de las celdas independientes en la GPU"
+        },
+        "step2_desc": {
+          "type": "text",
+          "label": "Descripción del paso 2",
+          "default": "Estas celdas pueden calcularse en paralelo; el reparto real depende del hardware."
+        },
+        "t1_title": {
+          "type": "text",
+          "label": "T1 title",
+          "default": "Unidad 1 ➔ Celda C₁₂"
+        },
+        "t1_sub": {
+          "type": "text",
+          "label": "T1 sub",
+          "default": "Fila 1 (A) × Columna 2 (B)"
+        },
+        "t1_math": {
+          "type": "text",
+          "label": "T1 math",
+          "default": "1×6 + 2×8 = 22"
+        },
+        "t2_title": {
+          "type": "text",
+          "label": "T2 title",
+          "default": "Unidad 2 ➔ Celda C₂₁"
+        },
+        "t2_sub": {
+          "type": "text",
+          "label": "T2 sub",
+          "default": "Fila 2 (A) × Columna 1 (B)"
+        },
+        "t2_math": {
+          "type": "text",
+          "label": "T2 math",
+          "default": "3×5 + 4×7 = 43"
+        },
+        "t3_title": {
+          "type": "text",
+          "label": "T3 title",
+          "default": "Unidad 3 ➔ Celda C₂₂"
+        },
+        "t3_sub": {
+          "type": "text",
+          "label": "T3 sub",
+          "default": "Fila 2 (A) × Columna 2 (B)"
+        },
+        "t3_math": {
+          "type": "text",
+          "label": "T3 math",
+          "default": "3×6 + 4×8 = 50"
+        },
+        "conclusion_l1": {
+          "type": "text",
+          "label": "Conclusión: primera línea",
+          "default": "Las redes neuronales combinan muchas multiplicaciones y sumas."
+        },
+        "conclusion_l2": {
+          "type": "text",
+          "label": "Conclusión: segunda línea",
+          "default": "Las GPU aprovechan el paralelismo y, según el modelo, unidades especializadas."
+        }
+      },
+      "tags": [
+        "gpu",
+        "ia",
+        "inteligencia artificial",
+        "matriz",
+        "matrices",
+        "matrix",
+        "multiplicacion",
+        "producto escalar",
+        "red neuronal",
+        "tensor",
+        "paralelismo",
+        "computacion",
+        "SVG",
+        "CSS"
+      ],
+      "aliases": [
+        "gpu matrix multiply"
+      ],
+      "motion": [
+        "opacidad",
+        "cambio de color",
+        "progreso",
+        "revelado por fases"
+      ],
+      "usage": [
+        "educación",
+        "tecnología",
+        "documental"
+      ],
+      "css_keyframes": [
+        "introSeq",
+        "hlStep1A",
+        "hlStep1B",
+        "step1Box",
+        "showC11",
+        "step2Box",
+        "hlParallelGrid",
+        "showParallelC",
+        "showConcl"
+      ],
+      "searchable": true,
+      "aspect_ratio": "848:480",
+      "renderable": true,
+      "reviewed_on": "2026-10-16",
+      "source_sha256": "8a51af3dcb6785a3a49f5da0fc3ef5756823876ff24582641fe6dc64c64f8b06"
     }
   ],
   "deduplicated": [

@@ -97,3 +97,10 @@ resolución 848×480 y 24 FPS.
 
 `../docs/LINUX_MOTION_HOT_RELOAD.md` documenta tanto el catálogo como
 el sistema nuevo de actualización en caliente de recursos del MCP.
+
+
+## Colección 09 — GPU e IA
+
+Se añaden los recursos **96–98**: `cpu-vs-gpu-parallel`, `gpu-pixels` y `gpu-matrix-multiply`. Cada uno dura 12 segundos, usa HTML/CSS/SVG offline y expone textos editables. El catálogo principal suma **98 animaciones registradas**, además de los 20 recursos originales de `assets/`.
+
+Los archivos aportados se revisaron y adaptaron al capturador: propiedades con guion bajo, estados de progreso correctos, texto dentro del panel y transformaciones SVG conservadas. Véase `../docs/GPU_IA_RESOURCES.md` y `ejemplo-gpu-ia.json` para integrarlos como `html_widget` sin reiniciar el servicio ni recompilar el motor.
