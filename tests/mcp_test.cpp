@@ -150,12 +150,19 @@ int main(int argc, char** argv) {
     });
     test("deduplicated animation library", [&] {
         const auto all=service.run_tool("list_animations",Json::object());
-        require(all["total"]==98,"Expected 98 unique animations, including three GPU teaching assets");
+        require(all["total"]==99,"Expected 99 unique animations, including animated charts");
         std::set<std::string> animation_ids;
         for(const auto& preset:all["presets"])
             require(animation_ids.insert(preset["id"].get<std::string>()).second,"Duplicate animation ID");
         for(const auto id:{"cpu-vs-gpu-parallel","gpu-pixels","gpu-matrix-multiply"})
             require(animation_ids.count(id)==1,std::string("Missing GPU teaching asset ")+id);
+        const auto chart=service.run_tool("describe_animation",{{"id","chart-bars-vertical"}});
+        require(animation_ids.count("chart-bars-vertical")==1,"Chart missing from catalog");
+        require(chart["editable"]["image"]["type"]=="image" &&
+                chart["editable"].contains("category_4") &&
+                !chart["editable"].contains("value_1"),"Chart live-edit contract invalid");
+        const auto charts=service.run_tool("search_animations",{{"query","barras"},{"category","Gráficas y datos"}});
+        require(charts["total"]>=1 && charts["results"][0]["id"]=="chart-bars-vertical","Chart discovery failed");
         require(all["presets"][0]["number"]==1,"Expected numbered animation");
         require(all["presets"][5]["id"]=="biometric-scanner","Six original modules were displaced");
         require(all["presets"][22]["id"]=="shimmer-progress","Last imported animation mismatch");

@@ -1,0 +1,31 @@
+{
+  "version": 1,
+  "fps": 24,
+  "canvas": {
+    "width": 1280,
+    "height": 720
+  },
+  "scenes": [
+    {
+      "start": 0,
+      "duration": 12,
+      "background": "#070E19",
+      "gradient": "#0C2235",
+      "layers": [
+        {
+          "type": "html_widget",
+          "collection": "animaciones",
+          "preset": "chart-bars-vertical",
+          "x": 0,
+          "y": 0,
+          "width": 1280,
+          "height": 720,
+          "duration": 12,
+          "properties": {
+            "title": "Comparar con barras de colores"
+          }
+        }
+      ]
+    }
+  ]
+}

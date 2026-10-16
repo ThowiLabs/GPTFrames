@@ -25,3 +25,7 @@ Native `symbol` support is deliberately limited (phone/check/lock/angry-person) 
 **Audio:** Neo Lite is a separately compiled TTS engine. Current models are in `models/`; use `list_voice_models` to discover `.neo`. The repository itself does not redistribute voice models. Voice synthesis may take time; check the result WAV for actual duration, sample rate, channel count and pronunciation.
 
 Safety: HTML from unknown sources is `detected-unverified` until validated and registered. Do not load untrusted remote pages in a root Chromium without OS-level sandboxing. Read all media licenses before publishing. Do not attribute originality without evidence, nor remove attribution required by a license.
+
+## Animated data charts
+
+`chart-bars-vertical` (Gráficas y datos): colored vertical bars, text fields and optional image. Author numerical variants with `tools/generate_bar_chart.py`. See [ANIMATED_CHARTS.md](ANIMATED_CHARTS.md) for exact data, image and cue contracts. Total collection now 99 animations, plus 20 original assets.

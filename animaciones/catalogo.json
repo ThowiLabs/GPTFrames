@@ -2,8 +2,8 @@
   "version": 1,
   "name": "Animaciones",
   "description": "Colección de recursos visuales editables, categorizados y buscables.",
-  "total": 98,
-  "duration": 344.9,
+  "total": 99,
+  "duration": 356.9,
   "presets": [
     {
       "number": 1,
@@ -5447,6 +5447,111 @@
       "renderable": true,
       "reviewed_on": "2026-10-16",
       "source_sha256": "8a51af3dcb6785a3a49f5da0fc3ef5756823876ff24582641fe6dc64c64f8b06"
+    },
+    {
+      "number": 99,
+      "id": "chart-bars-vertical",
+      "name": "Gráfica de barras verticales",
+      "category": "Gráficas y datos",
+      "description": "Barras de colores desde cero, textos por fase y una imagen opcional. Geometría y conclusiones derivadas de datos JSON; regenerar al cambiar valores.",
+      "style": "dark / cyan / violet / green",
+      "backend": "browser",
+      "collection": "animaciones",
+      "preset_file": "animaciones/presets/chart-bars-vertical.html",
+      "status": "reviewed",
+      "renderable": true,
+      "duration": 12,
+      "loop": false,
+      "type": "gráfica",
+      "motion": [
+        "crecimiento de barras",
+        "revelado de categorías",
+        "revelado de valores",
+        "énfasis del resultado"
+      ],
+      "usage": [
+        "comparación",
+        "porcentajes",
+        "explicación narrada"
+      ],
+      "tags": [
+        "grafica",
+        "barras",
+        "chart",
+        "datos",
+        "porcentajes",
+        "colores",
+        "imagen",
+        "estadistica",
+        "comparacion"
+      ],
+      "aliases": [
+        "bar chart",
+        "gráfico de barras"
+      ],
+      "css_keyframes": [
+        "reveal",
+        "grow",
+        "highlight"
+      ],
+      "searchable": true,
+      "editable": {
+        "title": {
+          "type": "text",
+          "default": "Comparar métodos con datos ilustrativos"
+        },
+        "subtitle": {
+          "type": "text",
+          "default": "La altura de cada barra corresponde al valor de su categoría."
+        },
+        "tag": {
+          "type": "text",
+          "default": "DATOS ILUSTRATIVOS"
+        },
+        "unit": {
+          "type": "text",
+          "default": "Unidades por segundo"
+        },
+        "source": {
+          "type": "text",
+          "default": "Ejemplo didáctico · Sin mediciones de hardware real"
+        },
+        "image_caption": {
+          "type": "text",
+          "default": "Ilustración de apoyo"
+        },
+        "comparison": {
+          "type": "text",
+          "default": "4,79 × respecto a Método A"
+        },
+        "conclusion": {
+          "type": "text",
+          "default": "Método D equivale a 4,79 veces Método A."
+        },
+        "category_1": {
+          "type": "text",
+          "default": "Método A"
+        },
+        "category_2": {
+          "type": "text",
+          "default": "Método B"
+        },
+        "category_3": {
+          "type": "text",
+          "default": "Método C"
+        },
+        "category_4": {
+          "type": "text",
+          "default": "Método D"
+        },
+        "image": {
+          "type": "image",
+          "label": "Imagen opcional PNG/JPEG/WebP en assets/",
+          "default": ""
+        }
+      },
+      "source_sha256": "ad65db98d2a55a9b1d2c071cc1c44fc88dc9a603ffdccf55a6989183cf1fd134",
+      "origin": "HTML aportado por el usuario, Gemini; adaptado a SVG/CSS determinista y datos ilustrativos"
     }
   ],
   "deduplicated": [

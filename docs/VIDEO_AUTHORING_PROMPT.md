@@ -107,3 +107,7 @@ Ver guía de uso, configuración y límites en docs/MOTION_STUDIO.md.
 - La skill canónica es `.claude/skills/hyperframes-cpp/SKILL.md`;
   contiene el inventario actual de 23 herramientas MCP, selección de presets,
   recursos CSS/HTML, modelos Neo Lite, límites y checklist de calidad.
+
+## Animated charts
+
+Use the reviewed `chart-bars-vertical` with colors, labels and optional image. Follow [.claude/skills/hyperframes-cpp/references/ANIMATED_CHARTS.md](../.claude/skills/hyperframes-cpp/references/ANIMATED_CHARTS.md): regenerate numerical geometry from data, register the variant, synchronize each bar/value/conclusion to actual voice, and preserve illustrative-data labeling. Native MCP live properties do not recalculate bar geometry.

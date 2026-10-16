@@ -1,0 +1,35 @@
+{
+  "title": "Comparar métodos con datos ilustrativos",
+  "subtitle": "La altura de cada barra corresponde al valor de su categoría.",
+  "tag": "DATOS ILUSTRATIVOS",
+  "unit": "Unidades por segundo",
+  "source": "Ejemplo didáctico · Sin mediciones de hardware real",
+  "image_caption": "Ilustración de apoyo",
+  "axis_max": 200,
+  "tick_step": 50,
+  "categories": [
+    {
+      "label": "Método A",
+      "value": 38,
+      "color": "#94A3B8"
+    },
+    {
+      "label": "Método B",
+      "value": 65,
+      "color": "#22D3EE"
+    },
+    {
+      "label": "Método C",
+      "value": 124,
+      "color": "#C084FC"
+    },
+    {
+      "label": "Método D",
+      "value": 182,
+      "color": "#34D399"
+    }
+  ],
+  "summary_mode": "ratio",
+  "value_suffix": "",
+  "duration": 12
+}

@@ -17,6 +17,10 @@ Search and reuse relevant assets, but adapt/register a reviewed variant or autho
 
 Block delivery for premature results, static completed diagrams during enumeration, filler loops, cue failures, overlapping captions or unexplained dead segments. Inspect actual frames around beats, watch/listen to encoded output and full-decode the finished MP4. The agent performs this review under the user's production request; do not invent a separate user-approval requirement.
 
+## Animated data charts
+
+Read **references/ANIMATED_CHARTS.md** when using graphs. The reviewed `chart-bars-vertical` supports colored vertical bars, editable labels and an optional contain-fitted image. Generate numerical SVG geometry from data with `tools/generate_bar_chart.py`; changing a text number does not recalculate bars. Register variants, synchronize categories, bar growth, values and computed conclusion to measured voice, and verify both image layouts. Illustrative data must stay labeled. Only declared text/image fields are live MCP properties.
+
 ## Discover your actual tools BEFORE designing
 
 1. Locate compiled engine (for this repo: `build/native-full/hyperframes-cpp-native`). Verify options with `--browser-check` and project documentation; older builds may not support newer features.

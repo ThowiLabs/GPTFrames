@@ -56,3 +56,7 @@ ni reinicies el túnel HTTPS. Preserva los archivos privados del directorio
 Los tests en `tests/mcp_test.cpp` comprueban que el campo
 `instructions` aparece en ambos protocolos y que los metadatos de
 las herramientas principales anuncian el flujo Browser-First.
+
+## Animated charts
+
+Use the reviewed `chart-bars-vertical` with colors, labels and optional image. Follow [.claude/skills/hyperframes-cpp/references/ANIMATED_CHARTS.md](../.claude/skills/hyperframes-cpp/references/ANIMATED_CHARTS.md): regenerate numerical geometry from data, register the variant, synchronize each bar/value/conclusion to actual voice, and preserve illustrative-data labeling. Native MCP live properties do not recalculate bar geometry.
