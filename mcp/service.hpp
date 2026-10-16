@@ -7,6 +7,7 @@
 #include "animation_search.hpp"
 #include "resource_monitor.hpp"
 #include "tools.hpp"
+#include "authoring_instructions.hpp"
 #include "../voice/neo_bridge.hpp"
 #include <optional>
 
@@ -88,7 +89,7 @@ class Service {
         atomic_write(staged / "project.json", read_file(fixture / "showcase-v2.json"), false);
         fs::rename(staged, target);
         return {{"project", name}, {"project_json", (target / "project.json").u8string()},
-                {"tip", "Personaliza project.json para animar textos, imagenes y keyframes."}};
+                {"tip", "BROWSER-FIRST: primero resource_status, list_animation_facets y search_animations por escena; comprueba IDs/campos con describe_animation y añade capas html_widget (collection=animaciones). Luego validate_project, review_layout y preview_frame antes del render. El proyecto inicial es solo un ejemplo nativo, NO el estilo final."}};
     }
 public:
     explicit Service(Config config, MediaClient media = MediaClient{})
@@ -248,7 +249,7 @@ public:
                 {"supportedVersions", Json::array({"2026-07-28", "2025-11-25", "2025-06-18"})},
                 {"capabilities", {{"tools", {{"listChanged", false}}}}},
                 {"_meta", {{"io.modelcontextprotocol/serverInfo", {{"name", "gptframes"}, {"title", "GPTFrames"}, {"version", "0.2.0"}}}}},
-                {"ttlMs", 30000}, {"cacheScope", "private"}};
+                {"ttlMs", 30000}, {"cacheScope", "private"}, {"instructions", authoring_instructions()}};
         else if (method == "initialize") {
             auto version = transport_version.empty() ? std::string("2025-06-18") : transport_version;
             const auto params = request.value("params", Json::object());
@@ -258,7 +259,7 @@ public:
                     ? requested : "2025-11-25";
             }
             response["result"] = {{"protocolVersion", version}, {"capabilities", {{"tools", {{"listChanged", false}}}}},
-                                  {"serverInfo", {{"name", "gptframes"}, {"version", "0.2.0"}}}};
+                                  {"serverInfo", {{"name", "gptframes"}, {"version", "0.2.0"}}}, {"instructions", authoring_instructions()}};
         }
         else if (method == "ping") response["result"] = Json::object();
         else if (method == "tools/list") response["result"] = {{"tools", tool_definitions()}};

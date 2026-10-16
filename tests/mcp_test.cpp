@@ -78,6 +78,23 @@ int main(int argc, char** argv) {
         require(r && (*r)["result"]["serverInfo"]["name"] == "gptframes", "Wrong server");
         require((*r)["result"]["protocolVersion"] == "2025-06-18", "Wrong protocol");
     });
+    test("server browser-first guidance in both protocols", [&] {
+        auto legacy=service.rpc(request(10,"initialize"));
+        require(legacy && (*legacy)["result"]["instructions"].is_string(),"Legacy instructions absent");
+        auto message=(*legacy)["result"]["instructions"].get<std::string>();
+        for(auto term:{"search_animations","describe_animation","html_widget","preview_frame","fit=contain","detected-unverified"})
+            require(message.find(term)!=std::string::npos,std::string("Missing instruction ")+term);
+        auto modern=service.rpc(request(11,"server/discover"),"2026-07-28");
+        require(modern && (*modern)["result"]["instructions"]==message,"Modern instructions absent");
+        auto list=service.rpc(request(12,"tools/list"));
+        for(auto term:{"search_animations","create_project","save_project","start_render"}){
+            bool updated=false;
+            for(const auto& item:(*list)["result"]["tools"])
+                if(item["name"]==term)updated=item["description"].get<std::string>().find("html_widget")!=std::string::npos
+                    || (std::string(term)=="search_animations"&&item["description"].get<std::string>().find("OBLIGATORIO")!=std::string::npos);
+            require(updated,std::string("Tool lacks HTML directive: ")+term);
+        }
+    });
     test("all native tool contracts preserved", [&] {
         const auto r = service.rpc(request(2, "tools/list"));
         std::set<std::string> names;

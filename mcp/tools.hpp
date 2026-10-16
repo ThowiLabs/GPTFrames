@@ -15,7 +15,7 @@ inline const Json& tool_definitions() {
  },
  {
   "name": "resource_status",
-  "description": "Show current background filesystem scan for installed voices, animation files, images, audio, video and Lottie resources.",
+  "description": "PASO 1 OBLIGATORIO en la creacion de videos: inspeccionar inventario de animaciones HTML/CSS/SVG, modelos Neo y medios instalados antes de diseñar escenas. Se actualiza en caliente.",
   "inputSchema": {
    "type": "object",
    "properties": {},
@@ -24,7 +24,7 @@ inline const Json& tool_definitions() {
  },
  {
   "name": "search_animations",
-  "description": "Search indexed animations by meaning, text, category, type and CSS-derived motion tags. Returns ranked safe preset IDs, editable fields and descriptions. No arbitrary HTML execution.",
+  "description": "PASO OBLIGATORIO ANTES DE DISEÑAR CADA ESCENA: buscar presets HTML/CSS/SVG por concepto narrado y sinonimos. Priorizar presets registrados relevantes sobre rectangulos/tarjetas nativas basicas. Retorna IDs, etiquetas, campos editables y ranking; confirmar detalles con describe_animation antes de componer. No ejecutar HTML arbitrario.",
   "inputSchema": {
    "type": "object",
    "properties": {
@@ -63,7 +63,7 @@ inline const Json& tool_definitions() {
  },
  {
   "name": "list_animation_facets",
-  "description": "Discover available animation categories, asset types, tags and CSS motion effects with counts for filter UI.",
+  "description": "PASO 2 OBLIGATORIO: identificar categorias, tipos, tags y estilos CSS disponibles antes de elegir efectos para el guion. No suponer una cantidad fija de recursos.",
   "inputSchema": {
    "type": "object",
    "properties": {},
@@ -72,7 +72,7 @@ inline const Json& tool_definitions() {
  },
  {
   "name": "list_animations",
-  "description": "Live discover new HTML animations. Curated presets are renderable; newly found unregistered HTML is marked detected-unverified and never executed. Filter by category/type/tags.",
+  "description": "Consultar la biblioteca real de animaciones HTML/CSS/SVG disponibles y filtrar por categoria/tipo/tag/motion. Solo los presets registrados y revisados se pueden renderizar; detected-unverified es exclusivamente descubrimiento, no autorizacion.",
   "inputSchema": {
    "type": "object",
    "properties": {
@@ -103,7 +103,7 @@ inline const Json& tool_definitions() {
  },
  {
   "name": "describe_animation",
-  "description": "Describe one curated user-provided HTML/CSS animation by ID.",
+  "description": "PASO OBLIGATORIO tras search_animations: confirmar que el ID HTML/CSS/SVG esta registrado, que es adecuado para la escena y cuales son sus campos editable, duracion, categoria y movimientos. Solo copiar propiedades existentes a html_widget; no inventarlas.",
   "inputSchema": {
    "type": "object",
    "properties": {
@@ -162,7 +162,7 @@ inline const Json& tool_definitions() {
  },
  {
   "name": "create_project",
-  "description": "Create an editable native video project. Plan narration, visual cues, existing verified presets and source assets first. For images default to fit=contain, use cover only for intentional background crops; never obscure photos behind opaque cards. Supports reactive cards, symbols, still chromaKey and optional ThorVG Lottie. Run review_layout and inspect multiple frame previews before any final render. See the installed hyperframes-cpp skill and docs/VIDEO_AUTHORING_PROMPT.md.",
+  "description": "BROWSER-FIRST OBLIGATORIO: crea el proyecto EDITABLE, pero la plantilla inicial C++ solo es un punto de partida. ANTES de diseñar sus escenas llama resource_status, list_animation_facets, search_animations y describe_animation; sustituye visuales basicos por capas html_widget con presets registrados de animaciones. Para videos narrados sincroniza TTS y animaciones. Imagenes importantes fit=contain. Tras componer llama validate_project, review_layout, preview_frame para cada escena y SOLO entonces render. Consulta instrucciones MCP en initialize.",
   "inputSchema": {
    "type": "object",
    "properties": {
@@ -180,7 +180,7 @@ inline const Json& tool_definitions() {
  },
  {
   "name": "validate_project",
-  "description": "Validate native scenes, timing, speech cues, image chromaKey, motion symbols and optional ThorVG Lottie JSON with safe project paths.",
+  "description": "PASO DE CONTROL antes del render: validar JSON de todas las escenas, incluyendo capas html_widget referidas a presets registrados y campos editables legitimos. Validar no significa aprobar la composicion visual: ejecutar review_layout y preview_frame despues.",
   "inputSchema": {
    "type": "object",
    "properties": {
@@ -196,7 +196,7 @@ inline const Json& tool_definitions() {
  },
  {
   "name": "preview_frame",
-  "description": "Render actual PNG pixels at the requested second. Inspect early, middle and late moments of EVERY scene and around speech cue changes; verify uncropped images, readable labels and no overlay obstruction.",
+  "description": "VISUAL QA OBLIGATORIO PARA html_widget: previsualizar el preset HTML/SVG realmente insertado y su secuencia a inicio/medio/final de cada escena, incluyendo cambios de voz; verificar imagen completa, tipografia, animacion y ausencias de capas que tapen contenido. No aceptar solo el JSON.",
   "inputSchema": {
    "type": "object",
    "properties": {
@@ -218,7 +218,7 @@ inline const Json& tool_definitions() {
  },
  {
   "name": "render_video",
-  "description": "Render native H.264/AAC MP4. Before calling, run review_layout and inspect real frame previews for ALL scenes. Fix image_cropped/image_occluded/image_distorted, text_collision and outside_canvas warnings. Use fit=contain for logos/photos with key content. Preserve atomic voice cues and narration alignment. A successful render does not mean professional visual quality.",
+  "description": "RENDER SOLO TRAS BROWSER-FIRST: busca y selecciona las animaciones existentes por escena (search_animations, describe_animation), inserta html_widget registrados para el contenido pertinente y utiliza capas nativas solo como complemento. Antes del render ejecuta validate_project, review_layout y preview_frame en todas las escenas, verifica tiempos de narracion y evita recortes, oclusiones, deformaciones y textos truncados. Salida H.264/AAC sin garantia automatica de calidad visual.",
   "inputSchema": {
    "type": "object",
    "properties": {
@@ -337,7 +337,7 @@ inline const Json& tool_definitions() {
  },
  {
   "name": "review_layout",
-  "description": "Audit layout before rendering, including cropped/warped/obscured images (image_cropped, image_distorted, image_occluded), text legibility, contrast, collisions and bounds. Warning-free lint alone is not visual approval: preview early/middle/late moments of every scene, including reactive cues.",
+  "description": "GATE BROWSER-FIRST: audita composicion antes de renderizar y comprueba que las escenas didacticas usen html_widget registrados cuando haya presets relevantes; revisar image_cropped/image_distorted/image_occluded, texto legible, contraste, colisiones y limites. Lint no sustituye preview_frame en principio/mitad/final de todas las escenas.",
   "inputSchema": {
    "type": "object",
    "properties": {
@@ -353,7 +353,7 @@ inline const Json& tool_definitions() {
  },
  {
   "name": "start_render",
-  "description": "Start asynchronous native MP4 rendering with private progress/download. First validate/lint and inspect voice-cue frames; ensure all grouped decorations remain anchored, speech and graphics are aligned, and scene transitions are subtle.",
+  "description": "RENDER SOLO DESPUES DEL GATE BROWSER-FIRST: documentar los presets HTML/CSS/SVG que se han seleccionado y estan efectivamente insertados como capas html_widget; validar el JSON y revisar fotogramas de cada escena con review_layout/preview_frame; sincronizar con narracion y no tapar fotos o textos. Trabajos largos se revisan con render_status. No afirmar calidad automatica solo por exportar.",
   "inputSchema": {
    "type": "object",
    "properties": {
@@ -422,7 +422,7 @@ inline const Json& tool_definitions() {
  },
  {
   "name": "save_project",
-  "description": "Validate and atomically save editable JSON, rejecting stale ETags and unsafe media paths. For voice-driven scenes preserve cueIndex and cueOffset; keep card background, icon, accent and caption within one atomic group.",
+  "description": "Guardar JSON editable por ETag. BROWSER-FIRST: insertar capas html_widget reales con collection=animaciones (o originales), preset=ID verificado por describe_animation y properties SOLO de editable; priorizar la biblioteca existente sobre tarjetas C++ vacias. Mantener grupos/cueIndex sincronizados con la narracion; no se admite HTML remoto o no registrado.",
   "inputSchema": {
    "type": "object",
    "properties": {
