@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'none'; connect-src 'none'; style-src 'unsafe-inline'; img-src data:; font-src data:">
+  <title>Multiplicación de Matrices en GPU</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body {
+      width: 100%;
+      height: 100%;
+      background: transparent;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    }
+    .stage {
+      width: min(100vw, calc(100vh * 848 / 480));
+      max-width: none;
+      aspect-ratio: 848 / 480;
+      position: relative;
+    }
+    svg {
+      width: 100%;
+      height: 100%;
+      display: block;
+    }
+
+    /* Tipografía y estilos base */
+    .title { font-size: 19px; font-weight: 700; fill: #ffffff; }
+    .subtitle { font-size: 12px; fill: #94a3b8; }
+    .matrix-title { font-size: 13px; font-weight: 700; }
+    .operator { font-size: 26px; font-weight: 600; fill: #64748b; }
+    .matrix-num { font-size: 21px; font-weight: 700; fill: #ffffff; font-family: "SF Mono", "Segoe UI Mono", Menlo, Consolas, monospace; }
+    .calc-title { font-size: 14px; font-weight: 700; }
+    .calc-sub { font-size: 11.5px; fill: #94a3b8; }
+    .math-formula { font-size: 18px; font-weight: 700; font-family: "SF Mono", "Segoe UI Mono", Menlo, Consolas, monospace; }
+    .card-title { font-size: 12px; font-weight: 700; fill: #c084fc; }
+    .card-sub { font-size: 10.5px; fill: #94a3b8; }
+    .card-math { font-size: 12px; font-weight: 700; font-family: "SF Mono", "Segoe UI Mono", Menlo, Consolas, monospace; fill: #ffffff; }
+    .concl-text { font-size: 11.5px; font-weight: 600; fill: #e2e8f0; }
+
+    /* Animaciones CSS a 12s lineales/suaves para control con getAnimations() */
+    .intro-fade {
+      animation: introSeq 12s ease-out forwards;
+    }
+    @keyframes introSeq {
+      0% { opacity: 0; }
+      8%, 100% { opacity: 1; }
+    }
+
+    /* Resaltes Paso 1: Fila 1 de A (cian) y Columna 1 de B (violeta) */
+    .hl-step1-a {
+      animation: hlStep1A 12s ease-in-out forwards;
+    }
+    @keyframes hlStep1A {
+      0%, 12% { opacity: 0; }
+      16%, 45% { opacity: 1; stroke: #00e5ff; fill: rgba(0, 229, 255, 0.18); }
+      49%, 100% { opacity: 0; }
+    }
+
+    .hl-step1-b {
+      animation: hlStep1B 12s ease-in-out forwards;
+    }
+    @keyframes hlStep1B {
+      0%, 12% { opacity: 0; }
+      16%, 45% { opacity: 1; stroke: #c084fc; fill: rgba(192, 132, 252, 0.18); }
+      49%, 100% { opacity: 0; }
+    }
+
+    /* Contenedor del Paso 1 (1×5 + 2×7 = 19) */
+    .container-step1 {
+      animation: step1Box 12s ease-in-out forwards;
+    }
+    @keyframes step1Box {
+      0%, 12% { opacity: 0; }
+      16%, 44% { opacity: 1; }
+      48%, 100% { opacity: 0; pointer-events: none; }
+    }
+
+    /* Aparición del valor 19 en C11 */
+    .val-c11 {
+      animation: showC11 12s ease-out forwards;
+    }
+    @keyframes showC11 {
+      0%, 28% { opacity: 0; transform: scale(0.6); }
+      34%, 100% { opacity: 1; transform: scale(1); fill: #38bdf8; }
+    }
+
+    /* Contenedor del Paso 2: Ejecución Paralela simultánea */
+    .container-step2 {
+      animation: step2Box 12s ease-in-out forwards;
+    }
+    @keyframes step2Box {
+      0%, 48% { opacity: 0; }
+      53%, 100% { opacity: 1; }
+    }
+
+    /* Resaltes paralelos en matrices A y B */
+    .hl-parallel-grid {
+      animation: hlParallelGrid 12s ease-in-out forwards;
+    }
+    @keyframes hlParallelGrid {
+      0%, 50% { opacity: 0; }
+      54%, 82% { opacity: 1; stroke: #a855f7; fill: rgba(168, 85, 247, 0.15); }
+      88%, 100% { opacity: 0.25; stroke: #64748b; fill: transparent; }
+    }
+
+    /* Aparición concurrente de C12 (22), C21 (43) y C22 (50) */
+    .val-parallel-c {
+      animation: showParallelC 12s ease-out forwards;
+    }
+    @keyframes showParallelC {
+      0%, 65% { opacity: 0; transform: scale(0.6); }
+      72%, 100% { opacity: 1; transform: scale(1); fill: #c084fc; }
+    }
+
+    /* Conclusión sostenida */
+    .concl-box {
+      animation: showConcl 12s ease-out forwards;
+    }
+    @keyframes showConcl {
+      0%, 78% { opacity: 0; }
+      84%, 100% { opacity: 1; }
+    }
+  .val-c11,.val-parallel-c {transform-box:fill-box;transform-origin:center;}
+  </style>
+</head>
+<body>
+  <div class="stage">
+    <svg viewBox="0 0 848 480">
+      <!-- Encabezado -->
+      <g class="intro-fade" transform="translate(424, 30)">
+        <text text-anchor="middle" class="title" data-field="title">Multiplicación de Matrices en GPU</text>
+        <text y="20" text-anchor="middle" class="subtitle" data-field="subtitle">Tanto los gráficos 3D como las redes neuronales ejecutan productos escalares independientes</text>
+      </g>
+
+      <!-- SECCIÓN SUPERIOR: Ecuación A × B = C -->
+      <g transform="translate(0, 75)">
+        <!-- Matriz A -->
+        <g transform="translate(164, 0)">
+          <text x="65" y="16" text-anchor="middle" class="matrix-title" fill="#00e5ff" data-field="matrix_a_label">Matriz A</text>
+          <!-- Corchetes vectoriales -->
+          <path d="M 17 32 L 8 32 L 8 108 L 17 108" fill="none" stroke="#64748b" stroke-width="2" stroke-linecap="round"/>
+          <path d="M 113 32 L 122 32 L 122 108 L 113 108" fill="none" stroke="#64748b" stroke-width="2" stroke-linecap="round"/>
+          <!-- Elementos de A -->
+          <text x="41" y="58" class="matrix-num" text-anchor="middle">1</text>
+          <text x="89" y="58" class="matrix-num" text-anchor="middle">2</text>
+          <text x="41" y="96" class="matrix-num" text-anchor="middle">3</text>
+          <text x="89" y="96" class="matrix-num" text-anchor="middle">4</text>
+
+          <!-- Resalte Paso 1: Fila 1 de A -->
+          <rect class="hl-step1-a" x="20" y="38" width="90" height="28" rx="5" stroke-width="1.8"/>
+          <!-- Resalte Paralelo: Fila 2 de A -->
+          <rect class="hl-parallel-grid" x="20" y="76" width="90" height="28" rx="5" stroke-width="1.8"/>
+        </g>
+
+        <!-- Operador de Multiplicación -->
+        <text x="319" y="78" class="operator" text-anchor="middle">×</text>
+
+        <!-- Matriz B -->
+        <g transform="translate(344, 0)">
+          <text x="65" y="16" text-anchor="middle" class="matrix-title" fill="#c084fc" data-field="matrix_b_label">Matriz B</text>
+          <!-- Corchetes vectoriales -->
+          <path d="M 17 32 L 8 32 L 8 108 L 17 108" fill="none" stroke="#64748b" stroke-width="2" stroke-linecap="round"/>
+          <path d="M 113 32 L 122 32 L 122 108 L 113 108" fill="none" stroke="#64748b" stroke-width="2" stroke-linecap="round"/>
+          <!-- Elementos de B -->
+          <text x="41" y="58" class="matrix-num" text-anchor="middle">5</text>
+          <text x="89" y="58" class="matrix-num" text-anchor="middle">6</text>
+          <text x="41" y="96" class="matrix-num" text-anchor="middle">7</text>
+          <text x="89" y="96" class="matrix-num" text-anchor="middle">8</text>
+
+          <!-- Resalte Paso 1: Columna 1 de B -->
+          <rect class="hl-step1-b" x="23" y="36" width="36" height="68" rx="5" stroke-width="1.8"/>
+          <!-- Resalte Paralelo: Columna 2 de B -->
+          <rect class="hl-parallel-grid" x="71" y="36" width="36" height="68" rx="5" stroke-width="1.8"/>
+        </g>
+
+        <!-- Signo Igual -->
+        <text x="499" y="78" class="operator" text-anchor="middle">=</text>
+
+        <!-- Matriz C (Resultado) -->
+        <g transform="translate(524, 0)">
+          <text x="80" y="16" text-anchor="middle" class="matrix-title" fill="#ffffff" data-field="matrix_c_label">Matriz C (Salida)</text>
+          <!-- Corchetes vectoriales -->
+          <path d="M 17 32 L 8 32 L 8 108 L 17 108" fill="none" stroke="#64748b" stroke-width="2" stroke-linecap="round"/>
+          <path d="M 143 32 L 152 32 L 152 108 L 143 108" fill="none" stroke="#64748b" stroke-width="2" stroke-linecap="round"/>
+
+          <!-- Celda C11 (19) -->
+          <rect x="24" y="38" width="48" height="28" rx="4" fill="#0f172a" stroke="#1e293b"/>
+          <text class="val-c11 matrix-num" x="48" y="59" text-anchor="middle">19</text>
+
+          <!-- Celda C12 (22) -->
+          <rect x="88" y="38" width="48" height="28" rx="4" fill="#0f172a" stroke="#1e293b"/>
+          <text class="val-parallel-c matrix-num" x="112" y="59" text-anchor="middle">22</text>
+
+          <!-- Celda C21 (43) -->
+          <rect x="24" y="76" width="48" height="28" rx="4" fill="#0f172a" stroke="#1e293b"/>
+          <text class="val-parallel-c matrix-num" x="48" y="97" text-anchor="middle">43</text>
+
+          <!-- Celda C22 (50) -->
+          <rect x="88" y="76" width="48" height="28" rx="4" fill="#0f172a" stroke="#1e293b"/>
+          <text class="val-parallel-c matrix-num" x="112" y="97" text-anchor="middle">50</text>
+        </g>
+      </g>
+
+      <!-- SECCIÓN INFERIOR: Panel Demostrativo de Cómputo -->
+      <g transform="translate(44, 218)">
+        <!-- Fondo del panel contenedor -->
+        <rect width="760" height="236" rx="12" fill="#0c0e1a" fill-opacity="0.9" stroke="#334155" stroke-width="1.2" />
+
+        <!-- PASO 1 (0s a 5.2s): Cálculo detallado del primer producto escalar -->
+        <g class="container-step1" transform="translate(30, 20)">
+          <text class="calc-title" x="0" y="16" fill="#00e5ff" data-field="step1_title">Paso 1: Producto escalar de la primera celda (C₁₁)</text>
+          <text class="calc-sub" x="0" y="38" data-field="step1_desc">Se empareja la primera fila de A con la primera columna de B término a término:</text>
+
+          <g transform="translate(0, 56)">
+            <rect width="700" height="74" rx="8" fill="#071b26" stroke="#00e5ff" stroke-opacity="0.5" stroke-width="1.5" />
+            <text class="math-formula" x="350" y="44" text-anchor="middle" fill="#00e5ff" data-field="step1_formula">
+              1×5 + 2×7 = 19
+            </text>
+          </g>
+        </g>
+
+        <!-- PASO 2 (5.2s a 12s): Productos escalares independientes en paralelo -->
+        <g class="container-step2" transform="translate(24, 16)">
+          <text class="calc-title" x="6" y="16" fill="#c084fc" data-field="step2_title">Paso 2: Resolución paralela de las celdas independientes en la GPU</text>
+          <text class="calc-sub" x="6" y="34" data-field="step2_desc">Estas celdas pueden calcularse en paralelo; el reparto real depende del hardware.</text>
+
+          <!-- Tarjetas concurrentes para C12, C21 y C22 -->
+          <!-- Hilo C12 -->
+          <g transform="translate(6, 46)">
+            <rect width="224" height="74" rx="6" fill="#180e29" stroke="#a855f7" stroke-width="1.2" />
+            <text class="card-title" x="12" y="20" data-field="t1_title">Unidad 1 ➔ Celda C₁₂</text>
+            <text class="card-sub" x="12" y="38" data-field="t1_sub">Fila 1 (A) × Columna 2 (B)</text>
+            <text class="card-math" x="12" y="58" data-field="t1_math">1×6 + 2×8 = 22</text>
+          </g>
+
+          <!-- Hilo C21 -->
+          <g transform="translate(244, 46)">
+            <rect width="224" height="74" rx="6" fill="#180e29" stroke="#a855f7" stroke-width="1.2" />
+            <text class="card-title" x="12" y="20" data-field="t2_title">Unidad 2 ➔ Celda C₂₁</text>
+            <text class="card-sub" x="12" y="38" data-field="t2_sub">Fila 2 (A) × Columna 1 (B)</text>
+            <text class="card-math" x="12" y="58" data-field="t2_math">3×5 + 4×7 = 43</text>
+          </g>
+
+          <!-- Hilo C22 -->
+          <g transform="translate(482, 46)">
+            <rect width="224" height="74" rx="6" fill="#180e29" stroke="#a855f7" stroke-width="1.2" />
+            <text class="card-title" x="12" y="20" data-field="t3_title">Unidad 3 ➔ Celda C₂₂</text>
+            <text class="card-sub" x="12" y="38" data-field="t3_sub">Fila 2 (A) × Columna 2 (B)</text>
+            <text class="card-math" x="12" y="58" data-field="t3_math">3×6 + 4×8 = 50</text>
+          </g>
+
+          <!-- Conclusión Sostenida (dividida en dos líneas para evitar recortes a 848×480) -->
+          <g class="concl-box" transform="translate(6, 134)">
+            <rect width="700" height="52" rx="6" fill="#120920" stroke="#7e22ce" stroke-width="1" />
+            <text x="350" y="22" text-anchor="middle" class="concl-text" data-field="conclusion_l1">
+              Las redes neuronales combinan muchas multiplicaciones y sumas.
+            </text>
+            <text x="350" y="39" text-anchor="middle" class="concl-text" fill="#a855f7" data-field="conclusion_l2">
+              Las GPU aprovechan el paralelismo y, según el modelo, unidades especializadas.
+            </text>
+          </g>
+        </g>
+      </g>
+    </svg>
+  </div>
+</body>
+</html>

@@ -1,0 +1,65 @@
+{
+  "version": 1,
+  "fps": 24,
+  "canvas": {
+    "width": 1280,
+    "height": 720
+  },
+  "scenes": [
+    {
+      "start": 0,
+      "duration": 12,
+      "background": "#081321",
+      "layers": [
+        {
+          "type": "html_widget",
+          "collection": "animaciones",
+          "preset": "cpu-vs-gpu-parallel",
+          "x": 0,
+          "y": 0,
+          "width": 1280,
+          "height": 720,
+          "start": 0,
+          "duration": 12
+        }
+      ]
+    },
+    {
+      "start": 12,
+      "duration": 12,
+      "background": "#081321",
+      "layers": [
+        {
+          "type": "html_widget",
+          "collection": "animaciones",
+          "preset": "gpu-pixels",
+          "x": 0,
+          "y": 0,
+          "width": 1280,
+          "height": 720,
+          "start": 0,
+          "duration": 12
+        }
+      ]
+    },
+    {
+      "start": 24,
+      "duration": 12,
+      "background": "#081321",
+      "layers": [
+        {
+          "type": "html_widget",
+          "collection": "animaciones",
+          "preset": "gpu-matrix-multiply",
+          "x": 0,
+          "y": 0,
+          "width": 1280,
+          "height": 720,
+          "start": 0,
+          "duration": 12
+        }
+      ]
+    }
+  ],
+  "audio": []
+}

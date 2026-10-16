@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'none'; connect-src 'none'; style-src 'unsafe-inline'; img-src data:; font-src data:">
+  <title>CPU vs GPU: Paralelismo y Lotes</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body {
+      width: 100%;
+      height: 100%;
+      background: transparent;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    }
+    .stage {
+      width: min(100vw, calc(100vh * 848 / 480));
+      max-width: none;
+      aspect-ratio: 848 / 480;
+      position: relative;
+    }
+    svg {
+      width: 100%;
+      height: 100%;
+      display: block;
+    }
+
+    /* Estilos base de texto y paneles */
+    .title { font-size: 19px; font-weight: 700; fill: #ffffff; }
+    .subtitle { font-size: 11.5px; fill: #94a3b8; }
+    .panel-title-cpu { font-size: 15px; font-weight: 700; fill: #00e5ff; }
+    .panel-title-gpu { font-size: 15px; font-weight: 700; fill: #c084fc; }
+    .label-sub { font-size: 11px; fill: #cbd5e1; }
+    .counter-text { font-size: 12px; font-weight: 600; font-family: monospace; }
+    .badge-text { font-size: 10.5px; font-weight: 600; }
+
+    /* Animaciones maestras sincronizadas a 12s */
+    .fade-enter {
+      animation: fadeIn 12s ease-in-out forwards;
+    }
+    @keyframes fadeIn {
+      0% { opacity: 0; transform: translateY(-4px); }
+      8% { opacity: 1; transform: translateY(0); }
+      100% { opacity: 1; transform: translateY(0); }
+    }
+
+    /* CPU: Ejecución por lotes sucesivos (8 lotes de 4 tareas) */
+    .cpu-core-active {
+      animation: cpuPulse 12s ease-in-out forwards;
+    }
+    @keyframes cpuPulse {
+      0%, 12% { fill: rgba(0, 229, 255, 0.08); stroke: #00e5ff; }
+      14%, 23% { fill: rgba(0, 229, 255, 0.45); stroke: #ffffff; }
+      25%, 34% { fill: rgba(0, 229, 255, 0.45); stroke: #ffffff; }
+      36%, 45% { fill: rgba(0, 229, 255, 0.45); stroke: #ffffff; }
+      47%, 56% { fill: rgba(0, 229, 255, 0.45); stroke: #ffffff; }
+      58%, 67% { fill: rgba(0, 229, 255, 0.45); stroke: #ffffff; }
+      69%, 78% { fill: rgba(0, 229, 255, 0.45); stroke: #ffffff; }
+      80%, 89% { fill: rgba(0, 229, 255, 0.45); stroke: #ffffff; }
+      91%, 97% { fill: rgba(0, 229, 255, 0.45); stroke: #ffffff; }
+      98%, 100% { fill: rgba(0, 229, 255, 0.15); stroke: #00e5ff; }
+    }
+
+    .cpu-progress-bar {
+      animation: cpuProgress 12s linear forwards;
+    }
+    @keyframes cpuProgress {
+      0%, 14% { width: 0px; }
+      24% { width: 40px; }
+      35% { width: 80px; }
+      46% { width: 120px; }
+      57% { width: 160px; }
+      68% { width: 200px; }
+      79% { width: 240px; }
+      90% { width: 280px; }
+      97%, 100% { width: 320px; }
+    }
+
+    /* GPU: Ejecución paralela masiva (32 tareas simultáneas) */
+    .gpu-unit-active {
+      animation: gpuBatch 12s ease-in-out forwards;
+    }
+    @keyframes gpuBatch {
+      0%, 14% { fill: rgba(192, 132, 252, 0.1); stroke: #7e22ce; }
+      18%, 46% { fill: rgba(192, 132, 252, 0.55); stroke: #ffffff; }
+      48%, 100% { fill: rgba(52, 211, 153, 0.25); stroke: #34d399; }
+    }
+
+    .gpu-progress-bar {
+      animation: gpuProgress 12s ease-out forwards;
+    }
+    @keyframes gpuProgress {
+      0%, 16% { width: 0px; }
+      44%, 100% { width: 320px; }
+    }
+
+    /* Textos dinámicos de estado */
+    .status-text-cpu {
+      animation: cpuStatusSwap 12s step-end forwards;
+    }
+    @keyframes cpuStatusSwap {
+      0% { opacity: 0; }
+      14%, 96% { opacity: 1; }
+      97%, 100% { opacity: 0; }
+    }
+
+    .gpu-badge-final {
+      animation: gpuBadgeAnim 12s ease-out forwards;
+    }
+    @keyframes gpuBadgeAnim {
+      0%, 46% { opacity: 0; transform: scale(0.9); }
+      50%, 100% { opacity: 1; transform: scale(1); }
+    }
+  .cpu-status-final {animation: cpuComplete 12s step-end forwards;}
+    @keyframes cpuComplete {0%, 96% {opacity:0} 97%, 100% {opacity:1}}
+  </style>
+</head>
+<body>
+  <div class="stage">
+    <svg viewBox="0 0 848 480">
+      <!-- Título y Disclaimer -->
+      <g class="fade-enter">
+        <text x="424" y="34" text-anchor="middle" class="title" data-field="title">Procesamiento de 32 Tareas: CPU vs GPU</text>
+        <text x="424" y="53" text-anchor="middle" class="subtitle" data-field="disclaimer">Representación simplificada, no benchmark · Los bloques no representan cantidades reales de núcleos</text>
+      </g>
+
+      <!-- Panel Izquierdo: CPU -->
+      <g transform="translate(40, 70)">
+        <rect width="368" height="375" rx="12" fill="#071924" fill-opacity="0.8" stroke="#00e5ff" stroke-opacity="0.35" stroke-width="1.5" />
+        <text x="24" y="32" class="panel-title-cpu" data-field="cpu_title">CPU: 4 unidades versátiles</text>
+        <text x="24" y="50" class="label-sub" data-field="cpu_desc">Reparte el trabajo en lotes de cuatro tareas</text>
+
+        <!-- Cola restante de 32 tareas -->
+        <text x="24" y="82" class="label-sub" style="font-weight:600;" data-field="cpu_queue_label">Cola de entrada (32 tareas idénticas):</text>
+        <g transform="translate(24, 94)">
+          <!-- Representación de las 32 tareas en 8 lotes de 4 -->
+          <!-- Fila 0 -->
+          <rect x="0" y="0" width="30" height="9" rx="2" fill="#00e5ff" opacity="0.6"/>
+          <rect x="36" y="0" width="30" height="9" rx="2" fill="#00e5ff" opacity="0.6"/>
+          <rect x="72" y="0" width="30" height="9" rx="2" fill="#00e5ff" opacity="0.6"/>
+          <rect x="108" y="0" width="30" height="9" rx="2" fill="#00e5ff" opacity="0.6"/>
+          <!-- Fila 1 -->
+          <rect x="156" y="0" width="30" height="9" rx="2" fill="#00e5ff" opacity="0.6"/>
+          <rect x="192" y="0" width="30" height="9" rx="2" fill="#00e5ff" opacity="0.6"/>
+          <rect x="228" y="0" width="30" height="9" rx="2" fill="#00e5ff" opacity="0.6"/>
+          <rect x="264" y="0" width="30" height="9" rx="2" fill="#00e5ff" opacity="0.6"/>
+          <!-- Fila 2 -->
+          <rect x="0" y="14" width="30" height="9" rx="2" fill="#00e5ff" opacity="0.45"/>
+          <rect x="36" y="14" width="30" height="9" rx="2" fill="#00e5ff" opacity="0.45"/>
+          <rect x="72" y="14" width="30" height="9" rx="2" fill="#00e5ff" opacity="0.45"/>
+          <rect x="108" y="14" width="30" height="9" rx="2" fill="#00e5ff" opacity="0.45"/>
+          <!-- Fila 3 -->
+          <rect x="156" y="14" width="30" height="9" rx="2" fill="#00e5ff" opacity="0.45"/>
+          <rect x="192" y="14" width="30" height="9" rx="2" fill="#00e5ff" opacity="0.45"/>
+          <rect x="228" y="14" width="30" height="9" rx="2" fill="#00e5ff" opacity="0.45"/>
+          <rect x="264" y="14" width="30" height="9" rx="2" fill="#00e5ff" opacity="0.45"/>
+          <!-- Fila 4 -->
+          <rect x="0" y="28" width="30" height="9" rx="2" fill="#00e5ff" opacity="0.3"/>
+          <rect x="36" y="28" width="30" height="9" rx="2" fill="#00e5ff" opacity="0.3"/>
+          <rect x="72" y="28" width="30" height="9" rx="2" fill="#00e5ff" opacity="0.3"/>
+          <rect x="108" y="28" width="30" height="9" rx="2" fill="#00e5ff" opacity="0.3"/>
+          <!-- Fila 5 -->
+          <rect x="156" y="28" width="30" height="9" rx="2" fill="#00e5ff" opacity="0.3"/>
+          <rect x="192" y="28" width="30" height="9" rx="2" fill="#00e5ff" opacity="0.3"/>
+          <rect x="228" y="28" width="30" height="9" rx="2" fill="#00e5ff" opacity="0.3"/>
+          <rect x="264" y="28" width="30" height="9" rx="2" fill="#00e5ff" opacity="0.3"/>
+          <!-- Fila 6 -->
+          <rect x="0" y="42" width="30" height="9" rx="2" fill="#00e5ff" opacity="0.2"/>
+          <rect x="36" y="42" width="30" height="9" rx="2" fill="#00e5ff" opacity="0.2"/>
+          <rect x="72" y="42" width="30" height="9" rx="2" fill="#00e5ff" opacity="0.2"/>
+          <rect x="108" y="42" width="30" height="9" rx="2" fill="#00e5ff" opacity="0.2"/>
+          <!-- Fila 7 -->
+          <rect x="156" y="42" width="30" height="9" rx="2" fill="#00e5ff" opacity="0.2"/>
+          <rect x="192" y="42" width="30" height="9" rx="2" fill="#00e5ff" opacity="0.2"/>
+          <rect x="228" y="42" width="30" height="9" rx="2" fill="#00e5ff" opacity="0.2"/>
+          <rect x="264" y="42" width="30" height="9" rx="2" fill="#00e5ff" opacity="0.2"/>
+        </g>
+
+        <!-- 4 Unidades de trabajo CPU -->
+        <text x="24" y="176" class="label-sub" style="font-weight:600;" data-field="cpu_cores_label">Unidades de trabajo activas:</text>
+        <g transform="translate(24, 188)">
+          <rect class="cpu-core-active" x="0" y="0" width="70" height="62" rx="6" stroke="#00e5ff" stroke-width="1.5" />
+          <text x="35" y="28" text-anchor="middle" fill="#00e5ff" font-size="11" font-weight="700">U1</text>
+          <text x="35" y="46" text-anchor="middle" fill="#e2e8f0" font-size="9.5">Tarea [n]</text>
+
+          <rect class="cpu-core-active" x="80" y="0" width="70" height="62" rx="6" stroke="#00e5ff" stroke-width="1.5" />
+          <text x="115" y="28" text-anchor="middle" fill="#00e5ff" font-size="11" font-weight="700">U2</text>
+          <text x="115" y="46" text-anchor="middle" fill="#e2e8f0" font-size="9.5">Tarea [n+1]</text>
+
+          <rect class="cpu-core-active" x="160" y="0" width="70" height="62" rx="6" stroke="#00e5ff" stroke-width="1.5" />
+          <text x="195" y="28" text-anchor="middle" fill="#00e5ff" font-size="11" font-weight="700">U3</text>
+          <text x="195" y="46" text-anchor="middle" fill="#e2e8f0" font-size="9.5">Tarea [n+2]</text>
+
+          <rect class="cpu-core-active" x="240" y="0" width="70" height="62" rx="6" stroke="#00e5ff" stroke-width="1.5" />
+          <text x="275" y="28" text-anchor="middle" fill="#00e5ff" font-size="11" font-weight="700">U4</text>
+          <text x="275" y="46" text-anchor="middle" fill="#e2e8f0" font-size="9.5">Tarea [n+3]</text>
+        </g>
+
+        <!-- Barra de progreso acumulado -->
+        <g transform="translate(24, 280)">
+          <text x="0" y="0" class="label-sub" data-field="cpu_progress_label">Progreso (8 lotes secuenciales de 4 tareas):</text>
+          <rect x="0" y="10" width="320" height="12" rx="6" fill="#0f172a" stroke="#1e293b" />
+          <rect class="cpu-progress-bar" x="0" y="10" height="12" rx="6" fill="#00e5ff" />
+          <text x="0" y="42" class="status-text-cpu counter-text" fill="#00e5ff" data-field="cpu_status_text">Procesando lotes de cuatro tareas</text>
+          <text x="0" y="42" class="cpu-status-final counter-text" fill="#00e5ff" data-field="cpu_status_complete">32/32 tareas completadas</text>
+        </g>
+      </g>
+
+      <!-- Panel Derecho: GPU -->
+      <g transform="translate(440, 70)">
+        <rect width="368" height="375" rx="12" fill="#180e28" fill-opacity="0.8" stroke="#c084fc" stroke-opacity="0.35" stroke-width="1.5" />
+        <text x="24" y="32" class="panel-title-gpu" data-field="gpu_title">GPU: Cuadrícula de unidades</text>
+        <text x="24" y="50" class="label-sub" data-field="gpu_desc">Muchas tareas similares se ejecutan en paralelo</text>
+
+        <!-- Matriz de 32 micro-unidades (4 filas x 8 columnas) -->
+        <text x="24" y="82" class="label-sub" style="font-weight:600;" data-field="gpu_grid_label">Matriz de cómputo (32 unidades simultáneas):</text>
+        <g transform="translate(24, 94)">
+          <!-- Fila 0 -->
+          <rect class="gpu-unit-active" x="0" y="0" width="34" height="28" rx="4" stroke="#a855f7" stroke-width="1.2"/>
+          <rect class="gpu-unit-active" x="41" y="0" width="34" height="28" rx="4" stroke="#a855f7" stroke-width="1.2"/>
+          <rect class="gpu-unit-active" x="82" y="0" width="34" height="28" rx="4" stroke="#a855f7" stroke-width="1.2"/>
+          <rect class="gpu-unit-active" x="123" y="0" width="34" height="28" rx="4" stroke="#a855f7" stroke-width="1.2"/>
+          <rect class="gpu-unit-active" x="164" y="0" width="34" height="28" rx="4" stroke="#a855f7" stroke-width="1.2"/>
+          <rect class="gpu-unit-active" x="205" y="0" width="34" height="28" rx="4" stroke="#a855f7" stroke-width="1.2"/>
+          <rect class="gpu-unit-active" x="246" y="0" width="34" height="28" rx="4" stroke="#a855f7" stroke-width="1.2"/>
+          <rect class="gpu-unit-active" x="287" y="0" width="34" height="28" rx="4" stroke="#a855f7" stroke-width="1.2"/>
+          <!-- Fila 1 -->
+          <rect class="gpu-unit-active" x="0" y="34" width="34" height="28" rx="4" stroke="#a855f7" stroke-width="1.2"/>
+          <rect class="gpu-unit-active" x="41" y="34" width="34" height="28" rx="4" stroke="#a855f7" stroke-width="1.2"/>
+          <rect class="gpu-unit-active" x="82" y="34" width="34" height="28" rx="4" stroke="#a855f7" stroke-width="1.2"/>
+          <rect class="gpu-unit-active" x="123" y="34" width="34" height="28" rx="4" stroke="#a855f7" stroke-width="1.2"/>
+          <rect class="gpu-unit-active" x="164" y="34" width="34" height="28" rx="4" stroke="#a855f7" stroke-width="1.2"/>
+          <rect class="gpu-unit-active" x="205" y="34" width="34" height="28" rx="4" stroke="#a855f7" stroke-width="1.2"/>
+          <rect class="gpu-unit-active" x="246" y="34" width="34" height="28" rx="4" stroke="#a855f7" stroke-width="1.2"/>
+          <rect class="gpu-unit-active" x="287" y="34" width="34" height="28" rx="4" stroke="#a855f7" stroke-width="1.2"/>
+          <!-- Fila 2 -->
+          <rect class="gpu-unit-active" x="0" y="68" width="34" height="28" rx="4" stroke="#a855f7" stroke-width="1.2"/>
+          <rect class="gpu-unit-active" x="41" y="68" width="34" height="28" rx="4" stroke="#a855f7" stroke-width="1.2"/>
+          <rect class="gpu-unit-active" x="82" y="68" width="34" height="28" rx="4" stroke="#a855f7" stroke-width="1.2"/>
+          <rect class="gpu-unit-active" x="123" y="68" width="34" height="28" rx="4" stroke="#a855f7" stroke-width="1.2"/>
+          <rect class="gpu-unit-active" x="164" y="68" width="34" height="28" rx="4" stroke="#a855f7" stroke-width="1.2"/>
+          <rect class="gpu-unit-active" x="205" y="68" width="34" height="28" rx="4" stroke="#a855f7" stroke-width="1.2"/>
+          <rect class="gpu-unit-active" x="246" y="68" width="34" height="28" rx="4" stroke="#a855f7" stroke-width="1.2"/>
+          <rect class="gpu-unit-active" x="287" y="68" width="34" height="28" rx="4" stroke="#a855f7" stroke-width="1.2"/>
+          <!-- Fila 3 -->
+          <rect class="gpu-unit-active" x="0" y="102" width="34" height="28" rx="4" stroke="#a855f7" stroke-width="1.2"/>
+          <rect class="gpu-unit-active" x="41" y="102" width="34" height="28" rx="4" stroke="#a855f7" stroke-width="1.2"/>
+          <rect class="gpu-unit-active" x="82" y="102" width="34" height="28" rx="4" stroke="#a855f7" stroke-width="1.2"/>
+          <rect class="gpu-unit-active" x="123" y="102" width="34" height="28" rx="4" stroke="#a855f7" stroke-width="1.2"/>
+          <rect class="gpu-unit-active" x="164" y="102" width="34" height="28" rx="4" stroke="#a855f7" stroke-width="1.2"/>
+          <rect class="gpu-unit-active" x="205" y="102" width="34" height="28" rx="4" stroke="#a855f7" stroke-width="1.2"/>
+          <rect class="gpu-unit-active" x="246" y="102" width="34" height="28" rx="4" stroke="#a855f7" stroke-width="1.2"/>
+          <rect class="gpu-unit-active" x="287" y="102" width="34" height="28" rx="4" stroke="#a855f7" stroke-width="1.2"/>
+        </g>
+
+        <!-- Barra de progreso GPU -->
+        <g transform="translate(24, 280)">
+          <text x="0" y="0" class="label-sub" data-field="gpu_progress_label">Progreso (lote masivo simultáneo):</text>
+          <rect x="0" y="10" width="320" height="12" rx="6" fill="#0f172a" stroke="#1e293b" />
+          <rect class="gpu-progress-bar" x="0" y="10" height="12" rx="6" fill="#c084fc" />
+          <g class="gpu-badge-final">
+            <text x="0" y="42" class="counter-text" fill="#34d399" data-field="gpu_status_text">32/32 tareas completadas en paralelo</text>
+          </g>
+        </g>
+      </g>
+    </svg>
+  </div>
+</body>
+</html>
