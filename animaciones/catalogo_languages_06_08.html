@@ -1,0 +1,1654 @@
+<!doctype html><html lang="es"><head><meta charset="utf-8"><meta http-equiv="Content-Security-Policy" content="default-src &#39;none&#39;; script-src &#39;none&#39;; connect-src &#39;none&#39;; style-src &#39;unsafe-inline&#39;; img-src data:; font-src data:;"><style>
+:root{--bg:#080e18;--card:#121d2d;--panel:#0e1827;--surface:#1b2939;--muted:#8fa9bc;--edge:#294159;--line:#344c66;--cyan:#5bdcf5;--green:#55dfae;--amber:#ffcb81;--purple:#b9a3ff;
+--border-color:#30363d;--border-bright:#484f58;--text-main:#e6edf3;--text-muted:#8b949e;
+--accent-cyan:#00e3ff;--accent-green:#42dea9;--accent-amber:#ffbd6b;--accent-violet:#a855f7;--accent-red:#f85149;
+--accent-blue:#58a6ff;--accent-yellow:#d29922;--success:#3fb950;--warning:#d29922;--danger:#f85149;
+--bg-surface:#151e2d;--bg-card:#21262d;--bg-panel:#0e1827;--bg-overlay:#1f242c}
+*{box-sizing:border-box}
+html,body{width:100%;height:100%;margin:0;overflow:hidden}
+body{background:radial-gradient(ellipse at 20% 14%,#18293f,#080e18 67%,#050a12);color:#eaf5fc;font-family:system-ui,Arial,sans-serif}
+.collection-header{position:absolute;inset:15px 26px auto;display:flex;justify-content:space-between;align-items:center;color:#8baec1;font-size:10px;letter-spacing:1px;font-weight:800}
+.collection-header strong{color:#65e8c6}
+.progress-line{position:absolute;top:42px;left:26px;right:26px;background:#294159;height:2px}
+.catalog{position:absolute;inset:0;overflow:hidden}
+.module{position:absolute;inset:0;padding:55px 26px 27px;visibility:hidden;display:flex;flex-direction:column;gap:8px}
+.module-header{display:flex;align-items:baseline;gap:12px;min-height:29px}
+.index{color:#6de6c8;font:800 12px ui-monospace,Consolas,monospace;white-space:nowrap}
+.headline{font-size:24px;letter-spacing:-.5px;color:#edf7ff;font-weight:840;margin:0;line-height:1.2}
+.kind{margin-left:auto;font:750 9px ui-monospace,Consolas,monospace;letter-spacing:.4px;color:#8facc2;border:1px solid #314d65;border-radius:13px;padding:5px 10px;white-space:nowrap}
+.description{margin:0;color:#aec4d4;font-size:12px;line-height:1.36;height:32px;max-width:785px;overflow:hidden}
+.main-layout{display:flex;gap:13px;min-height:0;flex:1}
+.visual-card{position:relative;background:#0b1524;border:1px solid #36516b;border-radius:14px;overflow:hidden;flex:1;min-width:0}
+.visual-card .pane-title,.source-card .pane-title{height:30px;border-bottom:1px solid #2d4157;display:flex;align-items:center;justify-content:space-between;padding:0 12px;color:#83abc4;font:750 10px ui-monospace,Consolas,monospace;letter-spacing:.45px;background:#111e30}
+.visual-card .pane-title span:last-child{color:#61e1ba}
+.source-card .pane-title span:last-child{max-width:124px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;text-align:right}
+.visual-stage{position:absolute;top:30px;bottom:0;left:0;right:0}
+.phase{position:absolute;inset:0;opacity:0;visibility:hidden;display:flex;align-items:center;justify-content:center}
+.diagram-svg,.diagram-svg-root{display:block;width:100%;height:100%;overflow:visible}
+.source-card{position:relative;width:260px;flex:0 0 260px;min-width:0;background:#0b1524;border:1px solid #36516b;border-radius:14px;overflow:hidden}
+.code-scroll{position:absolute;inset:30px 0 0;overflow:hidden;padding:7px 7px 5px 0;background:#080f1e}
+.code-line{display:flex;gap:4px;align-items:baseline;font:10px/1.53 ui-monospace,Consolas,monospace;min-height:15.3px;white-space:pre}
+.code-line .ln{flex:0 0 23px;text-align:right;color:#42637b}
+.code-line .ct{min-width:0;display:block;color:#e0eaf8}
+.code-line .ct span{white-space:pre}
+.kw,.tok-kw,.c-kw{color:#c3aaff;font-weight:700}
+.fn,.tok-fn,.c-fn{color:#77e3d1}.tp{color:#83c8ff}
+.st,.tok-str,.c-str{color:#b4d6ff}.num,.tok-num,.c-num{color:#ffc879}.cm,.tok-cmt,.c-cm{color:#8298a8}
+.vr,.tok-op,.c-hl{color:#e5b9fb}
+.code-scroll .code-line{padding-right:3px}
+.code-scroll .code-line:nth-child(n+17){opacity:.55}
+.code-more{position:absolute;bottom:0;left:0;right:0;background:linear-gradient(transparent,#0b1524 90%);height:22px;pointer-events:none}
+.execution-bar{height:30px;flex:0 0 30px;background:#102238;border:1px solid #274c68;border-radius:8px;padding:7px 10px;color:#a8e3e5;display:flex;justify-content:space-between;align-items:center;gap:13px}
+.log{font:10.2px ui-monospace,Consolas,monospace;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.execution-tag{font:800 9px ui-monospace,Consolas,monospace;color:#8ddbbf;white-space:nowrap}
+footer{position:absolute;bottom:9px;right:26px;color:#57768d;font:9px ui-monospace,Consolas,monospace}
+/* architecture SVG vocabulary */
+.node-box{fill:#132236;stroke:#334e67;stroke-width:1.5}
+.node-box.active,.node-box.highlight{fill:#1e344a;stroke:#58a6ff}
+.node-box.success{fill:#15372d;stroke:#44e2a9}
+.node-box.warning{fill:#3a2d1c;stroke:#eab977}
+.node-box.error{fill:#401a26;stroke:#ff6675}
+.svg-label{fill:#dceef8;font:600 12px ui-monospace,Consolas,monospace}
+.svg-sub{fill:#95acc1;font:10px ui-monospace,Consolas,monospace}
+.packet{fill:#5ce6fa;filter:drop-shadow(0 0 5px #35dafb)}
+/* runtime SVG vocabulary */
+.node-text{fill:#e2edf9;font:11px ui-monospace,Consolas,monospace}
+.node-subtext{fill:#9fb0c2;font:9px ui-monospace,Consolas,monospace}
+.conn-line{stroke:#526b84;stroke-width:1.7;fill:none}
+.conn-line.active,.svg-path.flowing{stroke:#5ad8fe;stroke-dasharray:6 4;animation:motionDash 1s linear infinite}
+.conn-line.error{stroke:#fa6868}
+@keyframes motionDash{to{stroke-dashoffset:-20}}
+/* languages SVG vocabulary */
+.svg-box{fill:#1a2739;stroke:#39516a;stroke-width:1.6}
+.svg-box.active{stroke:#58a6ff;fill:#1d354c}
+.svg-box.success{stroke:#36d6a7;fill:#14382f}
+.svg-box.warning{stroke:#facc80;fill:#3a291b}
+.svg-text{fill:#e8f3fb;font:700 11px ui-monospace,Consolas,monospace;text-anchor:middle;dominant-baseline:middle}
+.svg-subtext{fill:#a2b5c8;font:9px ui-monospace,Consolas,monospace;text-anchor:middle;dominant-baseline:middle}
+.svg-path{fill:none;stroke:#51708c;stroke-width:1.7}
+
+@keyframes phase_21_0{0%,19.9000%{opacity:1;visibility:visible}20.0000%,100%{opacity:0;visibility:hidden}}
+.phase-21-0{animation:phase_21_0 4s linear both}
+@keyframes phase_21_1{0%,19.9000%{opacity:0;visibility:hidden}20.0000%,39.9000%{opacity:1;visibility:visible}40.0000%,100%{opacity:0;visibility:hidden}}
+.phase-21-1{animation:phase_21_1 4s linear both}
+@keyframes phase_21_2{0%,39.9000%{opacity:0;visibility:hidden}40.0000%,59.9000%{opacity:1;visibility:visible}60.0000%,100%{opacity:0;visibility:hidden}}
+.phase-21-2{animation:phase_21_2 4s linear both}
+@keyframes phase_21_3{0%,59.9000%{opacity:0;visibility:hidden}60.0000%,79.9000%{opacity:1;visibility:visible}80.0000%,100%{opacity:0;visibility:hidden}}
+.phase-21-3{animation:phase_21_3 4s linear both}
+@keyframes phase_21_4{0%,79.9000%{opacity:0;visibility:hidden}80.0000%,99.9000%{opacity:1;visibility:visible}100.0000%,100%{opacity:0;visibility:hidden}}
+.phase-21-4{animation:phase_21_4 4s linear both}
+@keyframes log_21_0{0%,19.9000%{opacity:1;visibility:visible}20.0000%,100%{opacity:0;visibility:hidden}}
+.log-21-0{animation:log_21_0 4s linear both}
+@keyframes log_21_1{0%,19.9000%{opacity:0;visibility:hidden}20.0000%,39.9000%{opacity:1;visibility:visible}40.0000%,100%{opacity:0;visibility:hidden}}
+.log-21-1{animation:log_21_1 4s linear both}
+@keyframes log_21_2{0%,39.9000%{opacity:0;visibility:hidden}40.0000%,59.9000%{opacity:1;visibility:visible}60.0000%,100%{opacity:0;visibility:hidden}}
+.log-21-2{animation:log_21_2 4s linear both}
+@keyframes log_21_3{0%,59.9000%{opacity:0;visibility:hidden}60.0000%,79.9000%{opacity:1;visibility:visible}80.0000%,100%{opacity:0;visibility:hidden}}
+.log-21-3{animation:log_21_3 4s linear both}
+@keyframes log_21_4{0%,79.9000%{opacity:0;visibility:hidden}80.0000%,99.9000%{opacity:1;visibility:visible}100.0000%,100%{opacity:0;visibility:hidden}}
+.log-21-4{animation:log_21_4 4s linear both}
+@keyframes phase_22_0{0%,19.9000%{opacity:1;visibility:visible}20.0000%,100%{opacity:0;visibility:hidden}}
+.phase-22-0{animation:phase_22_0 4s linear both}
+@keyframes phase_22_1{0%,19.9000%{opacity:0;visibility:hidden}20.0000%,39.9000%{opacity:1;visibility:visible}40.0000%,100%{opacity:0;visibility:hidden}}
+.phase-22-1{animation:phase_22_1 4s linear both}
+@keyframes phase_22_2{0%,39.9000%{opacity:0;visibility:hidden}40.0000%,59.9000%{opacity:1;visibility:visible}60.0000%,100%{opacity:0;visibility:hidden}}
+.phase-22-2{animation:phase_22_2 4s linear both}
+@keyframes phase_22_3{0%,59.9000%{opacity:0;visibility:hidden}60.0000%,79.9000%{opacity:1;visibility:visible}80.0000%,100%{opacity:0;visibility:hidden}}
+.phase-22-3{animation:phase_22_3 4s linear both}
+@keyframes phase_22_4{0%,79.9000%{opacity:0;visibility:hidden}80.0000%,99.9000%{opacity:1;visibility:visible}100.0000%,100%{opacity:0;visibility:hidden}}
+.phase-22-4{animation:phase_22_4 4s linear both}
+@keyframes log_22_0{0%,19.9000%{opacity:1;visibility:visible}20.0000%,100%{opacity:0;visibility:hidden}}
+.log-22-0{animation:log_22_0 4s linear both}
+@keyframes log_22_1{0%,19.9000%{opacity:0;visibility:hidden}20.0000%,39.9000%{opacity:1;visibility:visible}40.0000%,100%{opacity:0;visibility:hidden}}
+.log-22-1{animation:log_22_1 4s linear both}
+@keyframes log_22_2{0%,39.9000%{opacity:0;visibility:hidden}40.0000%,59.9000%{opacity:1;visibility:visible}60.0000%,100%{opacity:0;visibility:hidden}}
+.log-22-2{animation:log_22_2 4s linear both}
+@keyframes log_22_3{0%,59.9000%{opacity:0;visibility:hidden}60.0000%,79.9000%{opacity:1;visibility:visible}80.0000%,100%{opacity:0;visibility:hidden}}
+.log-22-3{animation:log_22_3 4s linear both}
+@keyframes log_22_4{0%,79.9000%{opacity:0;visibility:hidden}80.0000%,99.9000%{opacity:1;visibility:visible}100.0000%,100%{opacity:0;visibility:hidden}}
+.log-22-4{animation:log_22_4 4s linear both}
+@keyframes phase_23_0{0%,19.9000%{opacity:1;visibility:visible}20.0000%,100%{opacity:0;visibility:hidden}}
+.phase-23-0{animation:phase_23_0 4s linear both}
+@keyframes phase_23_1{0%,19.9000%{opacity:0;visibility:hidden}20.0000%,39.9000%{opacity:1;visibility:visible}40.0000%,100%{opacity:0;visibility:hidden}}
+.phase-23-1{animation:phase_23_1 4s linear both}
+@keyframes phase_23_2{0%,39.9000%{opacity:0;visibility:hidden}40.0000%,59.9000%{opacity:1;visibility:visible}60.0000%,100%{opacity:0;visibility:hidden}}
+.phase-23-2{animation:phase_23_2 4s linear both}
+@keyframes phase_23_3{0%,59.9000%{opacity:0;visibility:hidden}60.0000%,79.9000%{opacity:1;visibility:visible}80.0000%,100%{opacity:0;visibility:hidden}}
+.phase-23-3{animation:phase_23_3 4s linear both}
+@keyframes phase_23_4{0%,79.9000%{opacity:0;visibility:hidden}80.0000%,99.9000%{opacity:1;visibility:visible}100.0000%,100%{opacity:0;visibility:hidden}}
+.phase-23-4{animation:phase_23_4 4s linear both}
+@keyframes log_23_0{0%,19.9000%{opacity:1;visibility:visible}20.0000%,100%{opacity:0;visibility:hidden}}
+.log-23-0{animation:log_23_0 4s linear both}
+@keyframes log_23_1{0%,19.9000%{opacity:0;visibility:hidden}20.0000%,39.9000%{opacity:1;visibility:visible}40.0000%,100%{opacity:0;visibility:hidden}}
+.log-23-1{animation:log_23_1 4s linear both}
+@keyframes log_23_2{0%,39.9000%{opacity:0;visibility:hidden}40.0000%,59.9000%{opacity:1;visibility:visible}60.0000%,100%{opacity:0;visibility:hidden}}
+.log-23-2{animation:log_23_2 4s linear both}
+@keyframes log_23_3{0%,59.9000%{opacity:0;visibility:hidden}60.0000%,79.9000%{opacity:1;visibility:visible}80.0000%,100%{opacity:0;visibility:hidden}}
+.log-23-3{animation:log_23_3 4s linear both}
+@keyframes log_23_4{0%,79.9000%{opacity:0;visibility:hidden}80.0000%,99.9000%{opacity:1;visibility:visible}100.0000%,100%{opacity:0;visibility:hidden}}
+.log-23-4{animation:log_23_4 4s linear both}
+@keyframes phase_24_0{0%,19.9000%{opacity:1;visibility:visible}20.0000%,100%{opacity:0;visibility:hidden}}
+.phase-24-0{animation:phase_24_0 4s linear both}
+@keyframes phase_24_1{0%,19.9000%{opacity:0;visibility:hidden}20.0000%,39.9000%{opacity:1;visibility:visible}40.0000%,100%{opacity:0;visibility:hidden}}
+.phase-24-1{animation:phase_24_1 4s linear both}
+@keyframes phase_24_2{0%,39.9000%{opacity:0;visibility:hidden}40.0000%,59.9000%{opacity:1;visibility:visible}60.0000%,100%{opacity:0;visibility:hidden}}
+.phase-24-2{animation:phase_24_2 4s linear both}
+@keyframes phase_24_3{0%,59.9000%{opacity:0;visibility:hidden}60.0000%,79.9000%{opacity:1;visibility:visible}80.0000%,100%{opacity:0;visibility:hidden}}
+.phase-24-3{animation:phase_24_3 4s linear both}
+@keyframes phase_24_4{0%,79.9000%{opacity:0;visibility:hidden}80.0000%,99.9000%{opacity:1;visibility:visible}100.0000%,100%{opacity:0;visibility:hidden}}
+.phase-24-4{animation:phase_24_4 4s linear both}
+@keyframes log_24_0{0%,19.9000%{opacity:1;visibility:visible}20.0000%,100%{opacity:0;visibility:hidden}}
+.log-24-0{animation:log_24_0 4s linear both}
+@keyframes log_24_1{0%,19.9000%{opacity:0;visibility:hidden}20.0000%,39.9000%{opacity:1;visibility:visible}40.0000%,100%{opacity:0;visibility:hidden}}
+.log-24-1{animation:log_24_1 4s linear both}
+@keyframes log_24_2{0%,39.9000%{opacity:0;visibility:hidden}40.0000%,59.9000%{opacity:1;visibility:visible}60.0000%,100%{opacity:0;visibility:hidden}}
+.log-24-2{animation:log_24_2 4s linear both}
+@keyframes log_24_3{0%,59.9000%{opacity:0;visibility:hidden}60.0000%,79.9000%{opacity:1;visibility:visible}80.0000%,100%{opacity:0;visibility:hidden}}
+.log-24-3{animation:log_24_3 4s linear both}
+@keyframes log_24_4{0%,79.9000%{opacity:0;visibility:hidden}80.0000%,99.9000%{opacity:1;visibility:visible}100.0000%,100%{opacity:0;visibility:hidden}}
+.log-24-4{animation:log_24_4 4s linear both}
+@keyframes phase_25_0{0%,19.9000%{opacity:1;visibility:visible}20.0000%,100%{opacity:0;visibility:hidden}}
+.phase-25-0{animation:phase_25_0 4s linear both}
+@keyframes phase_25_1{0%,19.9000%{opacity:0;visibility:hidden}20.0000%,39.9000%{opacity:1;visibility:visible}40.0000%,100%{opacity:0;visibility:hidden}}
+.phase-25-1{animation:phase_25_1 4s linear both}
+@keyframes phase_25_2{0%,39.9000%{opacity:0;visibility:hidden}40.0000%,59.9000%{opacity:1;visibility:visible}60.0000%,100%{opacity:0;visibility:hidden}}
+.phase-25-2{animation:phase_25_2 4s linear both}
+@keyframes phase_25_3{0%,59.9000%{opacity:0;visibility:hidden}60.0000%,79.9000%{opacity:1;visibility:visible}80.0000%,100%{opacity:0;visibility:hidden}}
+.phase-25-3{animation:phase_25_3 4s linear both}
+@keyframes phase_25_4{0%,79.9000%{opacity:0;visibility:hidden}80.0000%,99.9000%{opacity:1;visibility:visible}100.0000%,100%{opacity:0;visibility:hidden}}
+.phase-25-4{animation:phase_25_4 4s linear both}
+@keyframes log_25_0{0%,19.9000%{opacity:1;visibility:visible}20.0000%,100%{opacity:0;visibility:hidden}}
+.log-25-0{animation:log_25_0 4s linear both}
+@keyframes log_25_1{0%,19.9000%{opacity:0;visibility:hidden}20.0000%,39.9000%{opacity:1;visibility:visible}40.0000%,100%{opacity:0;visibility:hidden}}
+.log-25-1{animation:log_25_1 4s linear both}
+@keyframes log_25_2{0%,39.9000%{opacity:0;visibility:hidden}40.0000%,59.9000%{opacity:1;visibility:visible}60.0000%,100%{opacity:0;visibility:hidden}}
+.log-25-2{animation:log_25_2 4s linear both}
+@keyframes log_25_3{0%,59.9000%{opacity:0;visibility:hidden}60.0000%,79.9000%{opacity:1;visibility:visible}80.0000%,100%{opacity:0;visibility:hidden}}
+.log-25-3{animation:log_25_3 4s linear both}
+@keyframes log_25_4{0%,79.9000%{opacity:0;visibility:hidden}80.0000%,99.9000%{opacity:1;visibility:visible}100.0000%,100%{opacity:0;visibility:hidden}}
+.log-25-4{animation:log_25_4 4s linear both}
+@keyframes phase_26_0{0%,19.9000%{opacity:1;visibility:visible}20.0000%,100%{opacity:0;visibility:hidden}}
+.phase-26-0{animation:phase_26_0 4s linear both}
+@keyframes phase_26_1{0%,19.9000%{opacity:0;visibility:hidden}20.0000%,39.9000%{opacity:1;visibility:visible}40.0000%,100%{opacity:0;visibility:hidden}}
+.phase-26-1{animation:phase_26_1 4s linear both}
+@keyframes phase_26_2{0%,39.9000%{opacity:0;visibility:hidden}40.0000%,59.9000%{opacity:1;visibility:visible}60.0000%,100%{opacity:0;visibility:hidden}}
+.phase-26-2{animation:phase_26_2 4s linear both}
+@keyframes phase_26_3{0%,59.9000%{opacity:0;visibility:hidden}60.0000%,79.9000%{opacity:1;visibility:visible}80.0000%,100%{opacity:0;visibility:hidden}}
+.phase-26-3{animation:phase_26_3 4s linear both}
+@keyframes phase_26_4{0%,79.9000%{opacity:0;visibility:hidden}80.0000%,99.9000%{opacity:1;visibility:visible}100.0000%,100%{opacity:0;visibility:hidden}}
+.phase-26-4{animation:phase_26_4 4s linear both}
+@keyframes log_26_0{0%,19.9000%{opacity:1;visibility:visible}20.0000%,100%{opacity:0;visibility:hidden}}
+.log-26-0{animation:log_26_0 4s linear both}
+@keyframes log_26_1{0%,19.9000%{opacity:0;visibility:hidden}20.0000%,39.9000%{opacity:1;visibility:visible}40.0000%,100%{opacity:0;visibility:hidden}}
+.log-26-1{animation:log_26_1 4s linear both}
+@keyframes log_26_2{0%,39.9000%{opacity:0;visibility:hidden}40.0000%,59.9000%{opacity:1;visibility:visible}60.0000%,100%{opacity:0;visibility:hidden}}
+.log-26-2{animation:log_26_2 4s linear both}
+@keyframes log_26_3{0%,59.9000%{opacity:0;visibility:hidden}60.0000%,79.9000%{opacity:1;visibility:visible}80.0000%,100%{opacity:0;visibility:hidden}}
+.log-26-3{animation:log_26_3 4s linear both}
+@keyframes log_26_4{0%,79.9000%{opacity:0;visibility:hidden}80.0000%,99.9000%{opacity:1;visibility:visible}100.0000%,100%{opacity:0;visibility:hidden}}
+.log-26-4{animation:log_26_4 4s linear both}
+@keyframes phase_27_0{0%,19.9000%{opacity:1;visibility:visible}20.0000%,100%{opacity:0;visibility:hidden}}
+.phase-27-0{animation:phase_27_0 4s linear both}
+@keyframes phase_27_1{0%,19.9000%{opacity:0;visibility:hidden}20.0000%,39.9000%{opacity:1;visibility:visible}40.0000%,100%{opacity:0;visibility:hidden}}
+.phase-27-1{animation:phase_27_1 4s linear both}
+@keyframes phase_27_2{0%,39.9000%{opacity:0;visibility:hidden}40.0000%,59.9000%{opacity:1;visibility:visible}60.0000%,100%{opacity:0;visibility:hidden}}
+.phase-27-2{animation:phase_27_2 4s linear both}
+@keyframes phase_27_3{0%,59.9000%{opacity:0;visibility:hidden}60.0000%,79.9000%{opacity:1;visibility:visible}80.0000%,100%{opacity:0;visibility:hidden}}
+.phase-27-3{animation:phase_27_3 4s linear both}
+@keyframes phase_27_4{0%,79.9000%{opacity:0;visibility:hidden}80.0000%,99.9000%{opacity:1;visibility:visible}100.0000%,100%{opacity:0;visibility:hidden}}
+.phase-27-4{animation:phase_27_4 4s linear both}
+@keyframes log_27_0{0%,19.9000%{opacity:1;visibility:visible}20.0000%,100%{opacity:0;visibility:hidden}}
+.log-27-0{animation:log_27_0 4s linear both}
+@keyframes log_27_1{0%,19.9000%{opacity:0;visibility:hidden}20.0000%,39.9000%{opacity:1;visibility:visible}40.0000%,100%{opacity:0;visibility:hidden}}
+.log-27-1{animation:log_27_1 4s linear both}
+@keyframes log_27_2{0%,39.9000%{opacity:0;visibility:hidden}40.0000%,59.9000%{opacity:1;visibility:visible}60.0000%,100%{opacity:0;visibility:hidden}}
+.log-27-2{animation:log_27_2 4s linear both}
+@keyframes log_27_3{0%,59.9000%{opacity:0;visibility:hidden}60.0000%,79.9000%{opacity:1;visibility:visible}80.0000%,100%{opacity:0;visibility:hidden}}
+.log-27-3{animation:log_27_3 4s linear both}
+@keyframes log_27_4{0%,79.9000%{opacity:0;visibility:hidden}80.0000%,99.9000%{opacity:1;visibility:visible}100.0000%,100%{opacity:0;visibility:hidden}}
+.log-27-4{animation:log_27_4 4s linear both}
+@keyframes phase_28_0{0%,19.9000%{opacity:1;visibility:visible}20.0000%,100%{opacity:0;visibility:hidden}}
+.phase-28-0{animation:phase_28_0 4s linear both}
+@keyframes phase_28_1{0%,19.9000%{opacity:0;visibility:hidden}20.0000%,39.9000%{opacity:1;visibility:visible}40.0000%,100%{opacity:0;visibility:hidden}}
+.phase-28-1{animation:phase_28_1 4s linear both}
+@keyframes phase_28_2{0%,39.9000%{opacity:0;visibility:hidden}40.0000%,59.9000%{opacity:1;visibility:visible}60.0000%,100%{opacity:0;visibility:hidden}}
+.phase-28-2{animation:phase_28_2 4s linear both}
+@keyframes phase_28_3{0%,59.9000%{opacity:0;visibility:hidden}60.0000%,79.9000%{opacity:1;visibility:visible}80.0000%,100%{opacity:0;visibility:hidden}}
+.phase-28-3{animation:phase_28_3 4s linear both}
+@keyframes phase_28_4{0%,79.9000%{opacity:0;visibility:hidden}80.0000%,99.9000%{opacity:1;visibility:visible}100.0000%,100%{opacity:0;visibility:hidden}}
+.phase-28-4{animation:phase_28_4 4s linear both}
+@keyframes log_28_0{0%,19.9000%{opacity:1;visibility:visible}20.0000%,100%{opacity:0;visibility:hidden}}
+.log-28-0{animation:log_28_0 4s linear both}
+@keyframes log_28_1{0%,19.9000%{opacity:0;visibility:hidden}20.0000%,39.9000%{opacity:1;visibility:visible}40.0000%,100%{opacity:0;visibility:hidden}}
+.log-28-1{animation:log_28_1 4s linear both}
+@keyframes log_28_2{0%,39.9000%{opacity:0;visibility:hidden}40.0000%,59.9000%{opacity:1;visibility:visible}60.0000%,100%{opacity:0;visibility:hidden}}
+.log-28-2{animation:log_28_2 4s linear both}
+@keyframes log_28_3{0%,59.9000%{opacity:0;visibility:hidden}60.0000%,79.9000%{opacity:1;visibility:visible}80.0000%,100%{opacity:0;visibility:hidden}}
+.log-28-3{animation:log_28_3 4s linear both}
+@keyframes log_28_4{0%,79.9000%{opacity:0;visibility:hidden}80.0000%,99.9000%{opacity:1;visibility:visible}100.0000%,100%{opacity:0;visibility:hidden}}
+.log-28-4{animation:log_28_4 4s linear both}
+@keyframes phase_29_0{0%,19.9000%{opacity:1;visibility:visible}20.0000%,100%{opacity:0;visibility:hidden}}
+.phase-29-0{animation:phase_29_0 4s linear both}
+@keyframes phase_29_1{0%,19.9000%{opacity:0;visibility:hidden}20.0000%,39.9000%{opacity:1;visibility:visible}40.0000%,100%{opacity:0;visibility:hidden}}
+.phase-29-1{animation:phase_29_1 4s linear both}
+@keyframes phase_29_2{0%,39.9000%{opacity:0;visibility:hidden}40.0000%,59.9000%{opacity:1;visibility:visible}60.0000%,100%{opacity:0;visibility:hidden}}
+.phase-29-2{animation:phase_29_2 4s linear both}
+@keyframes phase_29_3{0%,59.9000%{opacity:0;visibility:hidden}60.0000%,79.9000%{opacity:1;visibility:visible}80.0000%,100%{opacity:0;visibility:hidden}}
+.phase-29-3{animation:phase_29_3 4s linear both}
+@keyframes phase_29_4{0%,79.9000%{opacity:0;visibility:hidden}80.0000%,99.9000%{opacity:1;visibility:visible}100.0000%,100%{opacity:0;visibility:hidden}}
+.phase-29-4{animation:phase_29_4 4s linear both}
+@keyframes log_29_0{0%,19.9000%{opacity:1;visibility:visible}20.0000%,100%{opacity:0;visibility:hidden}}
+.log-29-0{animation:log_29_0 4s linear both}
+@keyframes log_29_1{0%,19.9000%{opacity:0;visibility:hidden}20.0000%,39.9000%{opacity:1;visibility:visible}40.0000%,100%{opacity:0;visibility:hidden}}
+.log-29-1{animation:log_29_1 4s linear both}
+@keyframes log_29_2{0%,39.9000%{opacity:0;visibility:hidden}40.0000%,59.9000%{opacity:1;visibility:visible}60.0000%,100%{opacity:0;visibility:hidden}}
+.log-29-2{animation:log_29_2 4s linear both}
+@keyframes log_29_3{0%,59.9000%{opacity:0;visibility:hidden}60.0000%,79.9000%{opacity:1;visibility:visible}80.0000%,100%{opacity:0;visibility:hidden}}
+.log-29-3{animation:log_29_3 4s linear both}
+@keyframes log_29_4{0%,79.9000%{opacity:0;visibility:hidden}80.0000%,99.9000%{opacity:1;visibility:visible}100.0000%,100%{opacity:0;visibility:hidden}}
+.log-29-4{animation:log_29_4 4s linear both}
+@keyframes phase_30_0{0%,19.9000%{opacity:1;visibility:visible}20.0000%,100%{opacity:0;visibility:hidden}}
+.phase-30-0{animation:phase_30_0 4s linear both}
+@keyframes phase_30_1{0%,19.9000%{opacity:0;visibility:hidden}20.0000%,39.9000%{opacity:1;visibility:visible}40.0000%,100%{opacity:0;visibility:hidden}}
+.phase-30-1{animation:phase_30_1 4s linear both}
+@keyframes phase_30_2{0%,39.9000%{opacity:0;visibility:hidden}40.0000%,59.9000%{opacity:1;visibility:visible}60.0000%,100%{opacity:0;visibility:hidden}}
+.phase-30-2{animation:phase_30_2 4s linear both}
+@keyframes phase_30_3{0%,59.9000%{opacity:0;visibility:hidden}60.0000%,79.9000%{opacity:1;visibility:visible}80.0000%,100%{opacity:0;visibility:hidden}}
+.phase-30-3{animation:phase_30_3 4s linear both}
+@keyframes phase_30_4{0%,79.9000%{opacity:0;visibility:hidden}80.0000%,99.9000%{opacity:1;visibility:visible}100.0000%,100%{opacity:0;visibility:hidden}}
+.phase-30-4{animation:phase_30_4 4s linear both}
+@keyframes log_30_0{0%,19.9000%{opacity:1;visibility:visible}20.0000%,100%{opacity:0;visibility:hidden}}
+.log-30-0{animation:log_30_0 4s linear both}
+@keyframes log_30_1{0%,19.9000%{opacity:0;visibility:hidden}20.0000%,39.9000%{opacity:1;visibility:visible}40.0000%,100%{opacity:0;visibility:hidden}}
+.log-30-1{animation:log_30_1 4s linear both}
+@keyframes log_30_2{0%,39.9000%{opacity:0;visibility:hidden}40.0000%,59.9000%{opacity:1;visibility:visible}60.0000%,100%{opacity:0;visibility:hidden}}
+.log-30-2{animation:log_30_2 4s linear both}
+@keyframes log_30_3{0%,59.9000%{opacity:0;visibility:hidden}60.0000%,79.9000%{opacity:1;visibility:visible}80.0000%,100%{opacity:0;visibility:hidden}}
+.log-30-3{animation:log_30_3 4s linear both}
+@keyframes log_30_4{0%,79.9000%{opacity:0;visibility:hidden}80.0000%,99.9000%{opacity:1;visibility:visible}100.0000%,100%{opacity:0;visibility:hidden}}
+.log-30-4{animation:log_30_4 4s linear both}.log-stage .log{position:absolute;inset:0;display:block;line-height:17px;}
+.catalog>.module:nth-child(1){animation:show_module_0 40s linear infinite}
+@keyframes show_module_0{0%,0.0000%{visibility:hidden;opacity:0}0.0001%,9.9999%{visibility:visible;opacity:1}10.0000%,100%{visibility:hidden;opacity:0}}
+
+.catalog>.module:nth-child(2){animation:show_module_1 40s linear infinite}
+@keyframes show_module_1{0%,10.0000%{visibility:hidden;opacity:0}10.0001%,19.9999%{visibility:visible;opacity:1}20.0000%,100%{visibility:hidden;opacity:0}}
+
+.catalog>.module:nth-child(3){animation:show_module_2 40s linear infinite}
+@keyframes show_module_2{0%,20.0000%{visibility:hidden;opacity:0}20.0001%,29.9999%{visibility:visible;opacity:1}30.0000%,100%{visibility:hidden;opacity:0}}
+
+.catalog>.module:nth-child(4){animation:show_module_3 40s linear infinite}
+@keyframes show_module_3{0%,30.0000%{visibility:hidden;opacity:0}30.0001%,39.9999%{visibility:visible;opacity:1}40.0000%,100%{visibility:hidden;opacity:0}}
+
+.catalog>.module:nth-child(5){animation:show_module_4 40s linear infinite}
+@keyframes show_module_4{0%,40.0000%{visibility:hidden;opacity:0}40.0001%,49.9999%{visibility:visible;opacity:1}50.0000%,100%{visibility:hidden;opacity:0}}
+
+.catalog>.module:nth-child(6){animation:show_module_5 40s linear infinite}
+@keyframes show_module_5{0%,50.0000%{visibility:hidden;opacity:0}50.0001%,59.9999%{visibility:visible;opacity:1}60.0000%,100%{visibility:hidden;opacity:0}}
+
+.catalog>.module:nth-child(7){animation:show_module_6 40s linear infinite}
+@keyframes show_module_6{0%,60.0000%{visibility:hidden;opacity:0}60.0001%,69.9999%{visibility:visible;opacity:1}70.0000%,100%{visibility:hidden;opacity:0}}
+
+.catalog>.module:nth-child(8){animation:show_module_7 40s linear infinite}
+@keyframes show_module_7{0%,70.0000%{visibility:hidden;opacity:0}70.0001%,79.9999%{visibility:visible;opacity:1}80.0000%,100%{visibility:hidden;opacity:0}}
+
+.catalog>.module:nth-child(9){animation:show_module_8 40s linear infinite}
+@keyframes show_module_8{0%,80.0000%{visibility:hidden;opacity:0}80.0001%,89.9999%{visibility:visible;opacity:1}90.0000%,100%{visibility:hidden;opacity:0}}
+
+.catalog>.module:nth-child(10){animation:show_module_9 40s linear infinite}
+@keyframes show_module_9{0%,90.0000%{visibility:hidden;opacity:0}90.0001%,99.9999%{visibility:visible;opacity:1}100.0000%,100%{visibility:hidden;opacity:0}}
+</style></head><body><header class="collection-header"><span>GPTFRAMES / COLECCIÓN 2026</span><strong>LENGUAJES DE PROGRAMACIÓN · 10 PRESETS</strong></header><div class="progress-line"></div><main class="catalog" data-segment-seconds="4"><section class="module" data-id="language-python"><div class="module-header"><span class="index">01/10 · 21/30</span><h1 class="headline" data-field="title">Python</h1><span class="kind">LENGUAJES DE PROGRAMACIÓN</span></div><p class="description" data-field="description">Funciones, Clases, Decoradores y Módulos</p><div class="main-layout"><div class="visual-card"><div class="pane-title"><span>VISUALIZACIÓN DE EJECUCIÓN</span><span>ETAPAS 05</span></div><div class="visual-stage"><div class="phase phase-21-0">
+            <svg class="diagram-svg-root" class="visual-svg" viewBox="0 0 540 260">
+              <!-- Módulo importado -->
+              <rect class="svg-box active" x="20" y="20" width="130" height="60"/>
+              <text class="svg-text" x="85" y="45"><tspan data-field="modname">sys_metric</tspan>.py</text>
+              <text class="svg-subtext" x="85" y="62">MÓDULO CARGADO</text>
+
+              <!-- Conexión hacia Decorador -->
+              <line class="svg-path " x1="150" y1="50" x2="200" y2="50"/>
+
+              <!-- Envoltorio Decorador -->
+              <rect class="svg-box " x="200" y="20" width="140" height="70"/>
+              <text class="svg-text" x="270" y="45">@<tspan data-field="decname">trace_perf</tspan></text>
+              <text class="svg-subtext" x="270" y="62">WRAPPER FUNCTION</text>
+
+              <!-- Conexión a Clase -->
+              <line class="svg-path " x1="270" y1="90" x2="270" y2="130"/>
+
+              <!-- Clase & Instancia -->
+              <rect class="svg-box " x="180" y="130" width="180" height="100"/>
+              <text class="svg-text" x="270" y="155">class <tspan data-field="classname">DataPipeline</tspan></text>
+              <text class="svg-subtext" x="270" y="172">MÉTODO: <tspan data-field="fnname">transform_records</tspan>()</text>
+              <rect x="195" y="185" width="150" height="30" rx="4" fill="#161b22" stroke="#30363d"/>
+              <text class="svg-text" x="270" y="203" style="font-size:10px;">self.dataset -> Evaluado</text>
+
+              <!-- Conexión a Retorno -->
+              <line class="svg-path " x1="360" y1="180" x2="410" y2="180"/>
+
+              <!-- Resultado -->
+              <rect class="svg-box " x="410" y="150" width="110" height="60"/>
+              <text class="svg-text" x="465" y="175">Retorno: 30</text>
+              <text class="svg-subtext" x="465" y="192">RESULTADO OK</text>
+            </svg>
+          <span class="sr-only" style="display:none">[PY_EXEC] Importando módulo de espacio de nombres: &#x27;sys_metric&#x27;...</span></div><div class="phase phase-21-1">
+            <svg class="diagram-svg-root" class="visual-svg" viewBox="0 0 540 260">
+              <!-- Módulo importado -->
+              <rect class="svg-box active" x="20" y="20" width="130" height="60"/>
+              <text class="svg-text" x="85" y="45"><tspan data-field="modname">sys_metric</tspan>.py</text>
+              <text class="svg-subtext" x="85" y="62">MÓDULO CARGADO</text>
+
+              <!-- Conexión hacia Decorador -->
+              <line class="svg-path " x1="150" y1="50" x2="200" y2="50"/>
+
+              <!-- Envoltorio Decorador -->
+              <rect class="svg-box " x="200" y="20" width="140" height="70"/>
+              <text class="svg-text" x="270" y="45">@<tspan data-field="decname">trace_perf</tspan></text>
+              <text class="svg-subtext" x="270" y="62">WRAPPER FUNCTION</text>
+
+              <!-- Conexión a Clase -->
+              <line class="svg-path " x1="270" y1="90" x2="270" y2="130"/>
+
+              <!-- Clase & Instancia -->
+              <rect class="svg-box " x="180" y="130" width="180" height="100"/>
+              <text class="svg-text" x="270" y="155">class <tspan data-field="classname">DataPipeline</tspan></text>
+              <text class="svg-subtext" x="270" y="172">MÉTODO: <tspan data-field="fnname">transform_records</tspan>()</text>
+              <rect x="195" y="185" width="150" height="30" rx="4" fill="#161b22" stroke="#30363d"/>
+              <text class="svg-text" x="270" y="203" style="font-size:10px;">self.dataset -> Evaluado</text>
+
+              <!-- Conexión a Retorno -->
+              <line class="svg-path " x1="360" y1="180" x2="410" y2="180"/>
+
+              <!-- Resultado -->
+              <rect class="svg-box " x="410" y="150" width="110" height="60"/>
+              <text class="svg-text" x="465" y="175">Retorno: 30</text>
+              <text class="svg-subtext" x="465" y="192">RESULTADO OK</text>
+            </svg>
+          <span class="sr-only" style="display:none">[PY_EXEC] Importando módulo de espacio de nombres: &#x27;sys_metric&#x27;...</span></div><div class="phase phase-21-2">
+            <svg class="diagram-svg-root" class="visual-svg" viewBox="0 0 540 260">
+              <!-- Módulo importado -->
+              <rect class="svg-box active" x="20" y="20" width="130" height="60"/>
+              <text class="svg-text" x="85" y="45"><tspan data-field="modname">sys_metric</tspan>.py</text>
+              <text class="svg-subtext" x="85" y="62">MÓDULO CARGADO</text>
+
+              <!-- Conexión hacia Decorador -->
+              <line class="svg-path flowing" x1="150" y1="50" x2="200" y2="50"/>
+
+              <!-- Envoltorio Decorador -->
+              <rect class="svg-box active" x="200" y="20" width="140" height="70"/>
+              <text class="svg-text" x="270" y="45">@<tspan data-field="decname">trace_perf</tspan></text>
+              <text class="svg-subtext" x="270" y="62">WRAPPER FUNCTION</text>
+
+              <!-- Conexión a Clase -->
+              <line class="svg-path " x1="270" y1="90" x2="270" y2="130"/>
+
+              <!-- Clase & Instancia -->
+              <rect class="svg-box " x="180" y="130" width="180" height="100"/>
+              <text class="svg-text" x="270" y="155">class <tspan data-field="classname">DataPipeline</tspan></text>
+              <text class="svg-subtext" x="270" y="172">MÉTODO: <tspan data-field="fnname">transform_records</tspan>()</text>
+              <rect x="195" y="185" width="150" height="30" rx="4" fill="#161b22" stroke="#30363d"/>
+              <text class="svg-text" x="270" y="203" style="font-size:10px;">self.dataset -> Evaluado</text>
+
+              <!-- Conexión a Retorno -->
+              <line class="svg-path " x1="360" y1="180" x2="410" y2="180"/>
+
+              <!-- Resultado -->
+              <rect class="svg-box " x="410" y="150" width="110" height="60"/>
+              <text class="svg-text" x="465" y="175">Retorno: 30</text>
+              <text class="svg-subtext" x="465" y="192">RESULTADO OK</text>
+            </svg>
+          <span class="sr-only" style="display:none">[PY_EXEC] Decorador &#x27;@trace_perf&#x27; intercepta definición de &#x27;transform_records&#x27;.</span></div><div class="phase phase-21-3">
+            <svg class="diagram-svg-root" class="visual-svg" viewBox="0 0 540 260">
+              <!-- Módulo importado -->
+              <rect class="svg-box active" x="20" y="20" width="130" height="60"/>
+              <text class="svg-text" x="85" y="45"><tspan data-field="modname">sys_metric</tspan>.py</text>
+              <text class="svg-subtext" x="85" y="62">MÓDULO CARGADO</text>
+
+              <!-- Conexión hacia Decorador -->
+              <line class="svg-path flowing" x1="150" y1="50" x2="200" y2="50"/>
+
+              <!-- Envoltorio Decorador -->
+              <rect class="svg-box active" x="200" y="20" width="140" height="70"/>
+              <text class="svg-text" x="270" y="45">@<tspan data-field="decname">trace_perf</tspan></text>
+              <text class="svg-subtext" x="270" y="62">WRAPPER FUNCTION</text>
+
+              <!-- Conexión a Clase -->
+              <line class="svg-path flowing" x1="270" y1="90" x2="270" y2="130"/>
+
+              <!-- Clase & Instancia -->
+              <rect class="svg-box active" x="180" y="130" width="180" height="100"/>
+              <text class="svg-text" x="270" y="155">class <tspan data-field="classname">DataPipeline</tspan></text>
+              <text class="svg-subtext" x="270" y="172">MÉTODO: <tspan data-field="fnname">transform_records</tspan>()</text>
+              <rect x="195" y="185" width="150" height="30" rx="4" fill="#161b22" stroke="#58a6ff"/>
+              <text class="svg-text" x="270" y="203" style="font-size:10px;">self.dataset -> Evaluado</text>
+
+              <!-- Conexión a Retorno -->
+              <line class="svg-path " x1="360" y1="180" x2="410" y2="180"/>
+
+              <!-- Resultado -->
+              <rect class="svg-box " x="410" y="150" width="110" height="60"/>
+              <text class="svg-text" x="465" y="175">Retorno: 30</text>
+              <text class="svg-subtext" x="465" y="192">RESULTADO OK</text>
+            </svg>
+          <span class="sr-only" style="display:none">[PY_EXEC] Instanciando &#x27;DataPipeline&#x27; en heap: 0x7f9a2b00.</span></div><div class="phase phase-21-4">
+            <svg class="diagram-svg-root" class="visual-svg" viewBox="0 0 540 260">
+              <!-- Módulo importado -->
+              <rect class="svg-box active" x="20" y="20" width="130" height="60"/>
+              <text class="svg-text" x="85" y="45"><tspan data-field="modname">sys_metric</tspan>.py</text>
+              <text class="svg-subtext" x="85" y="62">MÓDULO CARGADO</text>
+
+              <!-- Conexión hacia Decorador -->
+              <line class="svg-path flowing" x1="150" y1="50" x2="200" y2="50"/>
+
+              <!-- Envoltorio Decorador -->
+              <rect class="svg-box active" x="200" y="20" width="140" height="70"/>
+              <text class="svg-text" x="270" y="45">@<tspan data-field="decname">trace_perf</tspan></text>
+              <text class="svg-subtext" x="270" y="62">WRAPPER FUNCTION</text>
+
+              <!-- Conexión a Clase -->
+              <line class="svg-path flowing" x1="270" y1="90" x2="270" y2="130"/>
+
+              <!-- Clase & Instancia -->
+              <rect class="svg-box active" x="180" y="130" width="180" height="100"/>
+              <text class="svg-text" x="270" y="155">class <tspan data-field="classname">DataPipeline</tspan></text>
+              <text class="svg-subtext" x="270" y="172">MÉTODO: <tspan data-field="fnname">transform_records</tspan>()</text>
+              <rect x="195" y="185" width="150" height="30" rx="4" fill="#161b22" stroke="#58a6ff"/>
+              <text class="svg-text" x="270" y="203" style="font-size:10px;">self.dataset -> Evaluado</text>
+
+              <!-- Conexión a Retorno -->
+              <line class="svg-path flowing" x1="360" y1="180" x2="410" y2="180"/>
+
+              <!-- Resultado -->
+              <rect class="svg-box success" x="410" y="150" width="110" height="60"/>
+              <text class="svg-text" x="465" y="175">Retorno: 30</text>
+              <text class="svg-subtext" x="465" y="192">RESULTADO OK</text>
+            </svg>
+          <span class="sr-only" style="display:none">[PY_EXEC] transform_records() completado. Salida producida: 30.</span></div></div></div><div class="source-card"><div class="pane-title"><span>CÓDIGO / INSPECTOR</span><span data-field="file">analytics_pipeline.py</span></div><div class="code-scroll"><div class="code-line"><span class="ln">01</span><span class="ct"><span class="kw">import</span> <span class="editable" data-key="modName"><span data-field="modname">sys_metric</span></span></span></div><div class="code-line"><span class="ln">02</span><span class="ct">&#160;</span></div><div class="code-line"><span class="ln">03</span><span class="ct"><span class="kw">def</span> <span class="fn editable" data-key="decName"><span data-field="decname">trace_perf</span></span>(wrapped_fn):</span></div><div class="code-line"><span class="ln">04</span><span class="ct">    <span class="kw">def</span> <span class="fn">wrapper</span>(*args, **kwargs):</span></div><div class="code-line"><span class="ln">05</span><span class="ct">        print(<span class="st">"--> Interceptando ejecución"</span>)</span></div><div class="code-line"><span class="ln">06</span><span class="ct">        <span class="kw">return</span> wrapped_fn(*args, **kwargs)</span></div><div class="code-line"><span class="ln">07</span><span class="ct">    <span class="kw">return</span> wrapper</span></div><div class="code-line"><span class="ln">08</span><span class="ct">&#160;</span></div><div class="code-line"><span class="ln">09</span><span class="ct"><span class="kw">class</span> <span class="tp editable" data-key="className"><span data-field="classname">DataPipeline</span></span>:</span></div><div class="code-line"><span class="ln">10</span><span class="ct">    @<span class="fn editable" data-key="decName"><span data-field="decname">trace_perf</span></span></span></div><div class="code-line"><span class="ln">11</span><span class="ct">    <span class="kw">def</span> <span class="fn editable" data-key="fnName"><span data-field="fnname">transform_records</span></span>(self, <span class="vr editable" data-key="argName"><span data-field="argname">dataset</span></span>):</span></div><div class="code-line"><span class="ln">12</span><span class="ct">        <span class="kw">return</span> len(<span class="vr editable" data-key="argName"><span data-field="argname">dataset</span></span>) * 10</span></div><div class="code-line"><span class="ln">13</span><span class="ct">&#160;</span></div><div class="code-line"><span class="ln">14</span><span class="ct">pipe = <span class="tp editable" data-key="className"><span data-field="classname">DataPipeline</span></span>()</span></div><div class="code-line"><span class="ln">15</span><span class="ct">res = pipe.<span class="fn editable" data-key="fnName"><span data-field="fnname">transform_records</span></span>([10, 20, 30])</span></div></div><div class="code-more"></div></div></div><div class="execution-bar"><div class="log-stage" style="position:relative;height:100%;flex:1;overflow:hidden"><span class="log phase log-21-0">[PY_EXEC] Importando módulo de espacio de nombres: &#x27;sys_metric&#x27;...</span><span class="log phase log-21-1">[PY_EXEC] Importando módulo de espacio de nombres: &#x27;sys_metric&#x27;...</span><span class="log phase log-21-2">[PY_EXEC] Decorador &#x27;@trace_perf&#x27; intercepta definición de &#x27;transform_records&#x27;.</span><span class="log phase log-21-3">[PY_EXEC] Instanciando &#x27;DataPipeline&#x27; en heap: 0x7f9a2b00.</span><span class="log phase log-21-4">[PY_EXEC] transform_records() completado. Salida producida: 30.</span></div><span class="execution-tag">DEMO · 4s</span></div></section><section class="module" data-id="language-javascript"><div class="module-header"><span class="index">02/10 · 22/30</span><h1 class="headline" data-field="title">JavaScript</h1><span class="kind">LENGUAJES DE PROGRAMACIÓN</span></div><p class="description" data-field="description">Event Loop, Callbacks, Promises y Async/Await</p><div class="main-layout"><div class="visual-card"><div class="pane-title"><span>VISUALIZACIÓN DE EJECUCIÓN</span><span>ETAPAS 05</span></div><div class="visual-stage"><div class="phase phase-22-0">
+            <svg class="diagram-svg-root" class="visual-svg" viewBox="0 0 540 260">
+              <!-- CALL STACK -->
+              <rect class="svg-box active" x="20" y="30" width="130" height="180"/>
+              <text class="svg-text" x="85" y="55">CALL STACK</text>
+              <rect x="30" y="80" width="110" height="30" rx="3" fill="#161b22" stroke="#58a6ff"/>
+              <text class="svg-text" x="85" y="98" style="font-size:10px;"><tspan data-field="fnasync">requestPayload</tspan>()</text>
+              
+
+              <!-- WEB APIs -->
+              <rect class="svg-box " x="190" y="30" width="140" height="80"/>
+              <text class="svg-text" x="260" y="55">WEB API / NODE</text>
+              <text class="svg-subtext" x="260" y="75"><tspan data-field="promisevar">netTask</tspan>: fetch()</text>
+
+              <!-- MICROTASK QUEUE -->
+              <rect class="svg-box " x="190" y="130" width="140" height="80"/>
+              <text class="svg-text" x="260" y="155">MICROTASK QUEUE</text>
+              <text class="svg-subtext" x="260" y="175">Promise.resolve(<tspan data-field="datavar">rawMetrics</tspan>)</text>
+
+              <!-- EVENT LOOP RING -->
+              <circle cx="420" cy="120" r="50" fill="#1f242c" stroke="#30363d" stroke-width="2"/>
+              <path d="M 420 70 A 50 50 0 0 1 470 120" fill="none" stroke="#bc8cff" stroke-width="3" stroke-dasharray="6 6"/>
+              <text class="svg-text" x="420" y="115">EVENT</text>
+              <text class="svg-text" x="420" y="132">LOOP</text>
+
+              <!-- RUTA DE FLUJO -->
+              <path class="svg-path " d="M 330 170 L 370 170 L 420 170"/>
+            </svg>
+          <span class="sr-only" style="display:none">[JS_CONSOLE] 1. Inicio síncrono</span></div><div class="phase phase-22-1">
+            <svg class="diagram-svg-root" class="visual-svg" viewBox="0 0 540 260">
+              <!-- CALL STACK -->
+              <rect class="svg-box active" x="20" y="30" width="130" height="180"/>
+              <text class="svg-text" x="85" y="55">CALL STACK</text>
+              <rect x="30" y="80" width="110" height="30" rx="3" fill="#161b22" stroke="#58a6ff"/>
+              <text class="svg-text" x="85" y="98" style="font-size:10px;"><tspan data-field="fnasync">requestPayload</tspan>()</text>
+              
+
+              <!-- WEB APIs -->
+              <rect class="svg-box " x="190" y="30" width="140" height="80"/>
+              <text class="svg-text" x="260" y="55">WEB API / NODE</text>
+              <text class="svg-subtext" x="260" y="75"><tspan data-field="promisevar">netTask</tspan>: fetch()</text>
+
+              <!-- MICROTASK QUEUE -->
+              <rect class="svg-box " x="190" y="130" width="140" height="80"/>
+              <text class="svg-text" x="260" y="155">MICROTASK QUEUE</text>
+              <text class="svg-subtext" x="260" y="175">Promise.resolve(<tspan data-field="datavar">rawMetrics</tspan>)</text>
+
+              <!-- EVENT LOOP RING -->
+              <circle cx="420" cy="120" r="50" fill="#1f242c" stroke="#30363d" stroke-width="2"/>
+              <path d="M 420 70 A 50 50 0 0 1 470 120" fill="none" stroke="#bc8cff" stroke-width="3" stroke-dasharray="6 6"/>
+              <text class="svg-text" x="420" y="115">EVENT</text>
+              <text class="svg-text" x="420" y="132">LOOP</text>
+
+              <!-- RUTA DE FLUJO -->
+              <path class="svg-path " d="M 330 170 L 370 170 L 420 170"/>
+            </svg>
+          <span class="sr-only" style="display:none">[JS_CONSOLE] 1. Inicio síncrono</span></div><div class="phase phase-22-2">
+            <svg class="diagram-svg-root" class="visual-svg" viewBox="0 0 540 260">
+              <!-- CALL STACK -->
+              <rect class="svg-box " x="20" y="30" width="130" height="180"/>
+              <text class="svg-text" x="85" y="55">CALL STACK</text>
+              <rect x="30" y="80" width="110" height="30" rx="3" fill="#161b22" stroke="#30363d"/>
+              <text class="svg-text" x="85" y="98" style="font-size:10px;">global()</text>
+              
+
+              <!-- WEB APIs -->
+              <rect class="svg-box active" x="190" y="30" width="140" height="80"/>
+              <text class="svg-text" x="260" y="55">WEB API / NODE</text>
+              <text class="svg-subtext" x="260" y="75"><tspan data-field="promisevar">netTask</tspan>: fetch()</text>
+
+              <!-- MICROTASK QUEUE -->
+              <rect class="svg-box " x="190" y="130" width="140" height="80"/>
+              <text class="svg-text" x="260" y="155">MICROTASK QUEUE</text>
+              <text class="svg-subtext" x="260" y="175">Promise.resolve(<tspan data-field="datavar">rawMetrics</tspan>)</text>
+
+              <!-- EVENT LOOP RING -->
+              <circle cx="420" cy="120" r="50" fill="#1f242c" stroke="#30363d" stroke-width="2"/>
+              <path d="M 420 70 A 50 50 0 0 1 470 120" fill="none" stroke="#bc8cff" stroke-width="3" stroke-dasharray="6 6"/>
+              <text class="svg-text" x="420" y="115">EVENT</text>
+              <text class="svg-text" x="420" y="132">LOOP</text>
+
+              <!-- RUTA DE FLUJO -->
+              <path class="svg-path " d="M 330 170 L 370 170 L 420 170"/>
+            </svg>
+          <span class="sr-only" style="display:none">[JS_CONSOLE] 2. Pila principal libre (await delega a Web APIs)</span></div><div class="phase phase-22-3">
+            <svg class="diagram-svg-root" class="visual-svg" viewBox="0 0 540 260">
+              <!-- CALL STACK -->
+              <rect class="svg-box " x="20" y="30" width="130" height="180"/>
+              <text class="svg-text" x="85" y="55">CALL STACK</text>
+              <rect x="30" y="80" width="110" height="30" rx="3" fill="#161b22" stroke="#30363d"/>
+              <text class="svg-text" x="85" y="98" style="font-size:10px;">global()</text>
+              
+
+              <!-- WEB APIs -->
+              <rect class="svg-box " x="190" y="30" width="140" height="80"/>
+              <text class="svg-text" x="260" y="55">WEB API / NODE</text>
+              <text class="svg-subtext" x="260" y="75"><tspan data-field="promisevar">netTask</tspan>: fetch()</text>
+
+              <!-- MICROTASK QUEUE -->
+              <rect class="svg-box active" x="190" y="130" width="140" height="80"/>
+              <text class="svg-text" x="260" y="155">MICROTASK QUEUE</text>
+              <text class="svg-subtext" x="260" y="175">Promise.resolve(<tspan data-field="datavar">rawMetrics</tspan>)</text>
+
+              <!-- EVENT LOOP RING -->
+              <circle cx="420" cy="120" r="50" fill="#1f242c" stroke="#bc8cff" stroke-width="2"/>
+              <path d="M 420 70 A 50 50 0 0 1 470 120" fill="none" stroke="#bc8cff" stroke-width="3" stroke-dasharray="6 6"/>
+              <text class="svg-text" x="420" y="115">EVENT</text>
+              <text class="svg-text" x="420" y="132">LOOP</text>
+
+              <!-- RUTA DE FLUJO -->
+              <path class="svg-path flowing" d="M 330 170 L 370 170 L 420 170"/>
+            </svg>
+          <span class="sr-only" style="display:none">[JS_EVENT_LOOP] Microtask agregada para netTask. Tick evaluado.</span></div><div class="phase phase-22-4">
+            <svg class="diagram-svg-root" class="visual-svg" viewBox="0 0 540 260">
+              <!-- CALL STACK -->
+              <rect class="svg-box active" x="20" y="30" width="130" height="180"/>
+              <text class="svg-text" x="85" y="55">CALL STACK</text>
+              <rect x="30" y="80" width="110" height="30" rx="3" fill="#161b22" stroke="#30363d"/>
+              <text class="svg-text" x="85" y="98" style="font-size:10px;">global()</text>
+              <rect x="30" y="120" width="110" height="30" rx="3" fill="#1a2c20" stroke="#3fb950"/><text class="svg-text" x="85" y="138" style="font-size:10px;">resume: <tspan data-field="fnasync">requestPayload</tspan></text>
+
+              <!-- WEB APIs -->
+              <rect class="svg-box " x="190" y="30" width="140" height="80"/>
+              <text class="svg-text" x="260" y="55">WEB API / NODE</text>
+              <text class="svg-subtext" x="260" y="75"><tspan data-field="promisevar">netTask</tspan>: fetch()</text>
+
+              <!-- MICROTASK QUEUE -->
+              <rect class="svg-box " x="190" y="130" width="140" height="80"/>
+              <text class="svg-text" x="260" y="155">MICROTASK QUEUE</text>
+              <text class="svg-subtext" x="260" y="175">Promise.resolve(<tspan data-field="datavar">rawMetrics</tspan>)</text>
+
+              <!-- EVENT LOOP RING -->
+              <circle cx="420" cy="120" r="50" fill="#1f242c" stroke="#bc8cff" stroke-width="2"/>
+              <path d="M 420 70 A 50 50 0 0 1 470 120" fill="none" stroke="#bc8cff" stroke-width="3" stroke-dasharray="6 6"/>
+              <text class="svg-text" x="420" y="115">EVENT</text>
+              <text class="svg-text" x="420" y="132">LOOP</text>
+
+              <!-- RUTA DE FLUJO -->
+              <path class="svg-path flowing" d="M 330 170 L 370 170 L 420 170"/>
+            </svg>
+          <span class="sr-only" style="display:none">[JS_CONSOLE] 3. Microtask resuelta. rawMetrics desempaquetado.</span></div></div></div><div class="source-card"><div class="pane-title"><span>CÓDIGO / INSPECTOR</span><span data-field="file">engine_loop.js</span></div><div class="code-scroll"><div class="code-line"><span class="ln">01</span><span class="ct"><span class="kw">async function</span> <span class="fn editable" data-key="fnAsync"><span data-field="fnasync">requestPayload</span></span>(uri) {</span></div><div class="code-line"><span class="ln">02</span><span class="ct">    console.log(<span class="st">"1. Inicio síncrono"</span>);</span></div><div class="code-line"><span class="ln">03</span><span class="ct">    <span class="kw">const</span> <span class="vr editable" data-key="promiseVar"><span data-field="promisevar">netTask</span></span> = fetch(uri);</span></div><div class="code-line"><span class="ln">04</span><span class="ct">    <span class="kw">const</span> <span class="vr editable" data-key="dataVar"><span data-field="datavar">rawMetrics</span></span> = <span class="kw">await</span> <span class="vr editable" data-key="promiseVar"><span data-field="promisevar">netTask</span></span>;</span></div><div class="code-line"><span class="ln">05</span><span class="ct">    console.log(<span class="st">"3. Microtask resuelta"</span>);</span></div><div class="code-line"><span class="ln">06</span><span class="ct">    <span class="kw">return</span> <span class="vr editable" data-key="dataVar"><span data-field="datavar">rawMetrics</span></span>.size;</span></div><div class="code-line"><span class="ln">07</span><span class="ct">}</span></div><div class="code-line"><span class="ln">08</span><span class="ct">&#160;</span></div><div class="code-line"><span class="ln">09</span><span class="ct"><span class="fn editable" data-key="fnAsync"><span data-field="fnasync">requestPayload</span></span>(<span class="st">"/api/stream"</span>);</span></div><div class="code-line"><span class="ln">10</span><span class="ct">console.log(<span class="st">"2. Pila principal libre"</span>);</span></div></div><div class="code-more"></div></div></div><div class="execution-bar"><div class="log-stage" style="position:relative;height:100%;flex:1;overflow:hidden"><span class="log phase log-22-0">[JS_CONSOLE] 1. Inicio síncrono</span><span class="log phase log-22-1">[JS_CONSOLE] 1. Inicio síncrono</span><span class="log phase log-22-2">[JS_CONSOLE] 2. Pila principal libre (await delega a Web APIs)</span><span class="log phase log-22-3">[JS_EVENT_LOOP] Microtask agregada para netTask. Tick evaluado.</span><span class="log phase log-22-4">[JS_CONSOLE] 3. Microtask resuelta. rawMetrics desempaquetado.</span></div><span class="execution-tag">DEMO · 4s</span></div></section><section class="module" data-id="language-typescript"><div class="module-header"><span class="index">03/10 · 23/30</span><h1 class="headline" data-field="title">TypeScript</h1><span class="kind">LENGUAJES DE PROGRAMACIÓN</span></div><p class="description" data-field="description">Interfaces, Tipos, Genéricos y Verificación Estática</p><div class="main-layout"><div class="visual-card"><div class="pane-title"><span>VISUALIZACIÓN DE EJECUCIÓN</span><span>ETAPAS 05</span></div><div class="visual-stage"><div class="phase phase-23-0">
+            <svg class="diagram-svg-root" class="visual-svg" viewBox="0 0 540 260">
+              <!-- AST Declarations -->
+              <rect class="svg-box active" x="20" y="30" width="140" height="90"/>
+              <text class="svg-text" x="90" y="55">INTERFACE AST</text>
+              <text class="svg-subtext" x="90" y="75"><tspan data-field="interfacename">AuthToken</tspan>&lt;T&gt;</text>
+              <text class="svg-subtext" x="90" y="92">Generics: Validated</text>
+
+              <!-- Conexión -->
+              <line class="svg-path " x1="160" y1="75" x2="200" y2="75"/>
+
+              <!-- Type Checker -->
+              <rect class="svg-box " x="200" y="30" width="160" height="90"/>
+              <text class="svg-text" x="280" y="55">TYPE CHECKER</text>
+              <text class="svg-subtext" x="280" y="75">Generic &lt;<tspan data-field="generictype">PayloadRecord</tspan>&gt;</text>
+              <text class="svg-subtext" x="280" y="92" fill="#3fb950">0 Errores Semánticos</text>
+
+              <!-- Emit JS -->
+              <line class="svg-path " x1="280" y1="120" x2="280" y2="150"/>
+              <rect class="svg-box " x="200" y="150" width="160" height="75"/>
+              <text class="svg-text" x="280" y="175">COMPILADOR TSC</text>
+              <text class="svg-subtext" x="280" y="195">Stripping Types (...)</text>
+
+              <!-- Clean Output -->
+              <line class="svg-path " x1="360" y1="187" x2="400" y2="187"/>
+              <rect class="svg-box " x="400" y="150" width="120" height="75"/>
+              <text class="svg-text" x="460" y="175">JAVASCRIPT</text>
+              <text class="svg-subtext" x="460" y="195"><tspan data-field="funcname">normalizeContext</tspan>() JS Emitted</text>
+            </svg>
+          <span class="sr-only" style="display:none">[TSC] Analizando estructura estática: AuthToken&lt;PayloadRecord&gt;</span></div><div class="phase phase-23-1">
+            <svg class="diagram-svg-root" class="visual-svg" viewBox="0 0 540 260">
+              <!-- AST Declarations -->
+              <rect class="svg-box active" x="20" y="30" width="140" height="90"/>
+              <text class="svg-text" x="90" y="55">INTERFACE AST</text>
+              <text class="svg-subtext" x="90" y="75"><tspan data-field="interfacename">AuthToken</tspan>&lt;T&gt;</text>
+              <text class="svg-subtext" x="90" y="92">Generics: Validated</text>
+
+              <!-- Conexión -->
+              <line class="svg-path " x1="160" y1="75" x2="200" y2="75"/>
+
+              <!-- Type Checker -->
+              <rect class="svg-box " x="200" y="30" width="160" height="90"/>
+              <text class="svg-text" x="280" y="55">TYPE CHECKER</text>
+              <text class="svg-subtext" x="280" y="75">Generic &lt;<tspan data-field="generictype">PayloadRecord</tspan>&gt;</text>
+              <text class="svg-subtext" x="280" y="92" fill="#3fb950">0 Errores Semánticos</text>
+
+              <!-- Emit JS -->
+              <line class="svg-path " x1="280" y1="120" x2="280" y2="150"/>
+              <rect class="svg-box " x="200" y="150" width="160" height="75"/>
+              <text class="svg-text" x="280" y="175">COMPILADOR TSC</text>
+              <text class="svg-subtext" x="280" y="195">Stripping Types (...)</text>
+
+              <!-- Clean Output -->
+              <line class="svg-path " x1="360" y1="187" x2="400" y2="187"/>
+              <rect class="svg-box " x="400" y="150" width="120" height="75"/>
+              <text class="svg-text" x="460" y="175">JAVASCRIPT</text>
+              <text class="svg-subtext" x="460" y="195"><tspan data-field="funcname">normalizeContext</tspan>() JS Emitted</text>
+            </svg>
+          <span class="sr-only" style="display:none">[TSC] Analizando estructura estática: AuthToken&lt;PayloadRecord&gt;</span></div><div class="phase phase-23-2">
+            <svg class="diagram-svg-root" class="visual-svg" viewBox="0 0 540 260">
+              <!-- AST Declarations -->
+              <rect class="svg-box active" x="20" y="30" width="140" height="90"/>
+              <text class="svg-text" x="90" y="55">INTERFACE AST</text>
+              <text class="svg-subtext" x="90" y="75"><tspan data-field="interfacename">AuthToken</tspan>&lt;T&gt;</text>
+              <text class="svg-subtext" x="90" y="92">Generics: Validated</text>
+
+              <!-- Conexión -->
+              <line class="svg-path flowing" x1="160" y1="75" x2="200" y2="75"/>
+
+              <!-- Type Checker -->
+              <rect class="svg-box active" x="200" y="30" width="160" height="90"/>
+              <text class="svg-text" x="280" y="55">TYPE CHECKER</text>
+              <text class="svg-subtext" x="280" y="75">Generic &lt;<tspan data-field="generictype">PayloadRecord</tspan>&gt;</text>
+              <text class="svg-subtext" x="280" y="92" fill="#3fb950">0 Errores Semánticos</text>
+
+              <!-- Emit JS -->
+              <line class="svg-path " x1="280" y1="120" x2="280" y2="150"/>
+              <rect class="svg-box " x="200" y="150" width="160" height="75"/>
+              <text class="svg-text" x="280" y="175">COMPILADOR TSC</text>
+              <text class="svg-subtext" x="280" y="195">Stripping Types (...)</text>
+
+              <!-- Clean Output -->
+              <line class="svg-path " x1="360" y1="187" x2="400" y2="187"/>
+              <rect class="svg-box " x="400" y="150" width="120" height="75"/>
+              <text class="svg-text" x="460" y="175">JAVASCRIPT</text>
+              <text class="svg-subtext" x="460" y="195"><tspan data-field="funcname">normalizeContext</tspan>() JS Emitted</text>
+            </svg>
+          <span class="sr-only" style="display:none">[TSC] Restricciones genéricas satisfechas sin coerción errónea.</span></div><div class="phase phase-23-3">
+            <svg class="diagram-svg-root" class="visual-svg" viewBox="0 0 540 260">
+              <!-- AST Declarations -->
+              <rect class="svg-box active" x="20" y="30" width="140" height="90"/>
+              <text class="svg-text" x="90" y="55">INTERFACE AST</text>
+              <text class="svg-subtext" x="90" y="75"><tspan data-field="interfacename">AuthToken</tspan>&lt;T&gt;</text>
+              <text class="svg-subtext" x="90" y="92">Generics: Validated</text>
+
+              <!-- Conexión -->
+              <line class="svg-path flowing" x1="160" y1="75" x2="200" y2="75"/>
+
+              <!-- Type Checker -->
+              <rect class="svg-box active" x="200" y="30" width="160" height="90"/>
+              <text class="svg-text" x="280" y="55">TYPE CHECKER</text>
+              <text class="svg-subtext" x="280" y="75">Generic &lt;<tspan data-field="generictype">PayloadRecord</tspan>&gt;</text>
+              <text class="svg-subtext" x="280" y="92" fill="#3fb950">0 Errores Semánticos</text>
+
+              <!-- Emit JS -->
+              <line class="svg-path flowing" x1="280" y1="120" x2="280" y2="150"/>
+              <rect class="svg-box active" x="200" y="150" width="160" height="75"/>
+              <text class="svg-text" x="280" y="175">COMPILADOR TSC</text>
+              <text class="svg-subtext" x="280" y="195">Stripping Types (...)</text>
+
+              <!-- Clean Output -->
+              <line class="svg-path " x1="360" y1="187" x2="400" y2="187"/>
+              <rect class="svg-box " x="400" y="150" width="120" height="75"/>
+              <text class="svg-text" x="460" y="175">JAVASCRIPT</text>
+              <text class="svg-subtext" x="460" y="195"><tspan data-field="funcname">normalizeContext</tspan>() JS Emitted</text>
+            </svg>
+          <span class="sr-only" style="display:none">[TSC] Eliminando definiciones de tipos en tiempo de compilación.</span></div><div class="phase phase-23-4">
+            <svg class="diagram-svg-root" class="visual-svg" viewBox="0 0 540 260">
+              <!-- AST Declarations -->
+              <rect class="svg-box active" x="20" y="30" width="140" height="90"/>
+              <text class="svg-text" x="90" y="55">INTERFACE AST</text>
+              <text class="svg-subtext" x="90" y="75"><tspan data-field="interfacename">AuthToken</tspan>&lt;T&gt;</text>
+              <text class="svg-subtext" x="90" y="92">Generics: Validated</text>
+
+              <!-- Conexión -->
+              <line class="svg-path flowing" x1="160" y1="75" x2="200" y2="75"/>
+
+              <!-- Type Checker -->
+              <rect class="svg-box active" x="200" y="30" width="160" height="90"/>
+              <text class="svg-text" x="280" y="55">TYPE CHECKER</text>
+              <text class="svg-subtext" x="280" y="75">Generic &lt;<tspan data-field="generictype">PayloadRecord</tspan>&gt;</text>
+              <text class="svg-subtext" x="280" y="92" fill="#3fb950">0 Errores Semánticos</text>
+
+              <!-- Emit JS -->
+              <line class="svg-path flowing" x1="280" y1="120" x2="280" y2="150"/>
+              <rect class="svg-box active" x="200" y="150" width="160" height="75"/>
+              <text class="svg-text" x="280" y="175">COMPILADOR TSC</text>
+              <text class="svg-subtext" x="280" y="195">Stripping Types (...)</text>
+
+              <!-- Clean Output -->
+              <line class="svg-path flowing" x1="360" y1="187" x2="400" y2="187"/>
+              <rect class="svg-box success" x="400" y="150" width="120" height="75"/>
+              <text class="svg-text" x="460" y="175">JAVASCRIPT</text>
+              <text class="svg-subtext" x="460" y="195"><tspan data-field="funcname">normalizeContext</tspan>() JS Emitted</text>
+            </svg>
+          <span class="sr-only" style="display:none">[TSC] Éxito: 0 diagnósticos. Salida pura JS generada.</span></div></div></div><div class="source-card"><div class="pane-title"><span>CÓDIGO / INSPECTOR</span><span data-field="file">type_validator.ts</span></div><div class="code-scroll"><div class="code-line"><span class="ln">01</span><span class="ct"><span class="kw">interface</span> <span class="tp editable" data-key="interfaceName"><span data-field="interfacename">AuthToken</span></span>&lt;<span class="tp">T</span>&gt; {</span></div><div class="code-line"><span class="ln">02</span><span class="ct">    id: <span class="tp">string</span>;</span></div><div class="code-line"><span class="ln">03</span><span class="ct">    data: <span class="tp">T</span>;</span></div><div class="code-line"><span class="ln">04</span><span class="ct">    exp: <span class="tp">number</span>;</span></div><div class="code-line"><span class="ln">05</span><span class="ct">}</span></div><div class="code-line"><span class="ln">06</span><span class="ct">&#160;</span></div><div class="code-line"><span class="ln">07</span><span class="ct"><span class="kw">type</span> <span class="tp editable" data-key="genericType"><span data-field="generictype">PayloadRecord</span></span> = { role: <span class="st">"admin"</span> | <span class="st">"usr"</span> };</span></div><div class="code-line"><span class="ln">08</span><span class="ct">&#160;</span></div><div class="code-line"><span class="ln">09</span><span class="ct"><span class="kw">function</span> <span class="fn editable" data-key="funcName"><span data-field="funcname">normalizeContext</span></span>&lt;<span class="tp">T</span>&gt;(</span></div><div class="code-line"><span class="ln">10</span><span class="ct">    item: <span class="tp editable" data-key="interfaceName"><span data-field="interfacename">AuthToken</span></span>&lt;<span class="tp">T</span>&gt;</span></div><div class="code-line"><span class="ln">11</span><span class="ct">): <span class="tp">boolean</span> {</span></div><div class="code-line"><span class="ln">12</span><span class="ct">    <span class="kw">return</span> item.exp &gt; Date.now();</span></div><div class="code-line"><span class="ln">13</span><span class="ct">}</span></div></div><div class="code-more"></div></div></div><div class="execution-bar"><div class="log-stage" style="position:relative;height:100%;flex:1;overflow:hidden"><span class="log phase log-23-0">[TSC] Analizando estructura estática: AuthToken&lt;PayloadRecord&gt;</span><span class="log phase log-23-1">[TSC] Analizando estructura estática: AuthToken&lt;PayloadRecord&gt;</span><span class="log phase log-23-2">[TSC] Restricciones genéricas satisfechas sin coerción errónea.</span><span class="log phase log-23-3">[TSC] Eliminando definiciones de tipos en tiempo de compilación.</span><span class="log phase log-23-4">[TSC] Éxito: 0 diagnósticos. Salida pura JS generada.</span></div><span class="execution-tag">DEMO · 4s</span></div></section><section class="module" data-id="language-go"><div class="module-header"><span class="index">04/10 · 24/30</span><h1 class="headline" data-field="title">Go</h1><span class="kind">LENGUAJES DE PROGRAMACIÓN</span></div><p class="description" data-field="description">Goroutines, Canales y Concurrencia CSP</p><div class="main-layout"><div class="visual-card"><div class="pane-title"><span>VISUALIZACIÓN DE EJECUCIÓN</span><span>ETAPAS 05</span></div><div class="visual-stage"><div class="phase phase-24-0">
+            <svg class="diagram-svg-root" class="visual-svg" viewBox="0 0 540 260">
+              <!-- Goroutine 1 (Main) -->
+              <rect class="svg-box active" x="20" y="60" width="120" height="90"/>
+              <text class="svg-text" x="80" y="90">GOROUTINE (G1)</text>
+              <text class="svg-subtext" x="80" y="110">main() thread</text>
+
+              <!-- CSP Channel Tube -->
+              <rect class="svg-box " x="180" y="70" width="160" height="70" rx="20"/>
+              <text class="svg-text" x="260" y="95">chan <tspan data-field="chname">taskStream</tspan></text>
+              <circle cx="210" cy="115" r="8" fill="#58a6ff"/>
+              <text class="svg-subtext" x="260" y="130"><tspan data-field="msgpayload">JobPacket</tspan> [Slot 1/2]</text>
+
+              <!-- Goroutine 2 (Worker) -->
+              <rect class="svg-box " x="380" y="60" width="140" height="90"/>
+              <text class="svg-text" x="450" y="90">GOROUTINE (G2)</text>
+              <text class="svg-subtext" x="450" y="110"><tspan data-field="workername">consumeWorker</tspan>()</text>
+
+              <!-- Conexión Salida -->
+              <line class="svg-path " x1="450" y1="150" x2="450" y2="190"/>
+              <rect class="svg-box " x="380" y="190" width="140" height="50"/>
+              <text class="svg-text" x="450" y="215">STDOUT: ID 101</text>
+            </svg>
+          <span class="sr-only" style="display:none">[GO_RUNTIME] Iniciando goroutine principal G1...</span></div><div class="phase phase-24-1">
+            <svg class="diagram-svg-root" class="visual-svg" viewBox="0 0 540 260">
+              <!-- Goroutine 1 (Main) -->
+              <rect class="svg-box active" x="20" y="60" width="120" height="90"/>
+              <text class="svg-text" x="80" y="90">GOROUTINE (G1)</text>
+              <text class="svg-subtext" x="80" y="110">main() thread</text>
+
+              <!-- CSP Channel Tube -->
+              <rect class="svg-box " x="180" y="70" width="160" height="70" rx="20"/>
+              <text class="svg-text" x="260" y="95">chan <tspan data-field="chname">taskStream</tspan></text>
+              <circle cx="210" cy="115" r="8" fill="#58a6ff"/>
+              <text class="svg-subtext" x="260" y="130"><tspan data-field="msgpayload">JobPacket</tspan> [Slot 1/2]</text>
+
+              <!-- Goroutine 2 (Worker) -->
+              <rect class="svg-box " x="380" y="60" width="140" height="90"/>
+              <text class="svg-text" x="450" y="90">GOROUTINE (G2)</text>
+              <text class="svg-subtext" x="450" y="110"><tspan data-field="workername">consumeWorker</tspan>()</text>
+
+              <!-- Conexión Salida -->
+              <line class="svg-path " x1="450" y1="150" x2="450" y2="190"/>
+              <rect class="svg-box " x="380" y="190" width="140" height="50"/>
+              <text class="svg-text" x="450" y="215">STDOUT: ID 101</text>
+            </svg>
+          <span class="sr-only" style="display:none">[GO_RUNTIME] Iniciando goroutine principal G1...</span></div><div class="phase phase-24-2">
+            <svg class="diagram-svg-root" class="visual-svg" viewBox="0 0 540 260">
+              <!-- Goroutine 1 (Main) -->
+              <rect class="svg-box active" x="20" y="60" width="120" height="90"/>
+              <text class="svg-text" x="80" y="90">GOROUTINE (G1)</text>
+              <text class="svg-subtext" x="80" y="110">main() thread</text>
+
+              <!-- CSP Channel Tube -->
+              <rect class="svg-box active" x="180" y="70" width="160" height="70" rx="20"/>
+              <text class="svg-text" x="260" y="95">chan <tspan data-field="chname">taskStream</tspan></text>
+              <circle cx="256.27254509018036" cy="115" r="8" fill="#58a6ff"/>
+              <text class="svg-subtext" x="260" y="130"><tspan data-field="msgpayload">JobPacket</tspan> [Slot 1/2]</text>
+
+              <!-- Goroutine 2 (Worker) -->
+              <rect class="svg-box " x="380" y="60" width="140" height="90"/>
+              <text class="svg-text" x="450" y="90">GOROUTINE (G2)</text>
+              <text class="svg-subtext" x="450" y="110"><tspan data-field="workername">consumeWorker</tspan>()</text>
+
+              <!-- Conexión Salida -->
+              <line class="svg-path " x1="450" y1="150" x2="450" y2="190"/>
+              <rect class="svg-box " x="380" y="190" width="140" height="50"/>
+              <text class="svg-text" x="450" y="215">STDOUT: ID 101</text>
+            </svg>
+          <span class="sr-only" style="display:none">[GO_RUNTIME] Canal &#x27;taskStream&#x27; asignado en ringbuffer.</span></div><div class="phase phase-24-3">
+            <svg class="diagram-svg-root" class="visual-svg" viewBox="0 0 540 260">
+              <!-- Goroutine 1 (Main) -->
+              <rect class="svg-box active" x="20" y="60" width="120" height="90"/>
+              <text class="svg-text" x="80" y="90">GOROUTINE (G1)</text>
+              <text class="svg-subtext" x="80" y="110">main() thread</text>
+
+              <!-- CSP Channel Tube -->
+              <rect class="svg-box active" x="180" y="70" width="160" height="70" rx="20"/>
+              <text class="svg-text" x="260" y="95">chan <tspan data-field="chname">taskStream</tspan></text>
+              <circle cx="264.2885771543086" cy="115" r="8" fill="#58a6ff"/>
+              <text class="svg-subtext" x="260" y="130"><tspan data-field="msgpayload">JobPacket</tspan> [Slot 1/2]</text>
+
+              <!-- Goroutine 2 (Worker) -->
+              <rect class="svg-box active" x="380" y="60" width="140" height="90"/>
+              <text class="svg-text" x="450" y="90">GOROUTINE (G2)</text>
+              <text class="svg-subtext" x="450" y="110"><tspan data-field="workername">consumeWorker</tspan>()</text>
+
+              <!-- Conexión Salida -->
+              <line class="svg-path " x1="450" y1="150" x2="450" y2="190"/>
+              <rect class="svg-box " x="380" y="190" width="140" height="50"/>
+              <text class="svg-text" x="450" y="215">STDOUT: ID 101</text>
+            </svg>
+          <span class="sr-only" style="display:none">[GO_RUNTIME] Conmutando contexto a G2 (consumeWorker) vía multiplexor M:N.</span></div><div class="phase phase-24-4">
+            <svg class="diagram-svg-root" class="visual-svg" viewBox="0 0 540 260">
+              <!-- Goroutine 1 (Main) -->
+              <rect class="svg-box active" x="20" y="60" width="120" height="90"/>
+              <text class="svg-text" x="80" y="90">GOROUTINE (G1)</text>
+              <text class="svg-subtext" x="80" y="110">main() thread</text>
+
+              <!-- CSP Channel Tube -->
+              <rect class="svg-box active" x="180" y="70" width="160" height="70" rx="20"/>
+              <text class="svg-text" x="260" y="95">chan <tspan data-field="chname">taskStream</tspan></text>
+              <circle cx="272.3046092184369" cy="115" r="8" fill="#58a6ff"/>
+              <text class="svg-subtext" x="260" y="130"><tspan data-field="msgpayload">JobPacket</tspan> [Slot 1/2]</text>
+
+              <!-- Goroutine 2 (Worker) -->
+              <rect class="svg-box active" x="380" y="60" width="140" height="90"/>
+              <text class="svg-text" x="450" y="90">GOROUTINE (G2)</text>
+              <text class="svg-subtext" x="450" y="110"><tspan data-field="workername">consumeWorker</tspan>()</text>
+
+              <!-- Conexión Salida -->
+              <line class="svg-path flowing" x1="450" y1="150" x2="450" y2="190"/>
+              <rect class="svg-box success" x="380" y="190" width="140" height="50"/>
+              <text class="svg-text" x="450" y="215">STDOUT: ID 101</text>
+            </svg>
+          <span class="sr-only" style="display:none">[GO_STDOUT] Procesado: {ID: 101} sin condiciones de carrera (Race detector: limpio).</span></div></div></div><div class="source-card"><div class="pane-title"><span>CÓDIGO / INSPECTOR</span><span data-field="file">dispatcher.go</span></div><div class="code-scroll"><div class="code-line"><span class="ln">01</span><span class="ct"><span class="kw">package</span> main</span></div><div class="code-line"><span class="ln">02</span><span class="ct">&#160;</span></div><div class="code-line"><span class="ln">03</span><span class="ct"><span class="kw">func</span> <span class="fn editable" data-key="workerName"><span data-field="workername">consumeWorker</span></span>(<span class="vr editable" data-key="chName"><span data-field="chname">taskStream</span></span> <span class="kw">chan</span> <span class="tp editable" data-key="msgPayload"><span data-field="msgpayload">JobPacket</span></span>) {</span></div><div class="code-line"><span class="ln">04</span><span class="ct">    msg := &lt;-<span class="vr editable" data-key="chName"><span data-field="chname">taskStream</span></span> <span class="cm">// Recepción bloqueante</span></span></div><div class="code-line"><span class="ln">05</span><span class="ct">    println(<span class="st">"Procesado: "</span>, msg)</span></div><div class="code-line"><span class="ln">06</span><span class="ct">}</span></div><div class="code-line"><span class="ln">07</span><span class="ct">&#160;</span></div><div class="code-line"><span class="ln">08</span><span class="ct"><span class="kw">func</span> main() {</span></div><div class="code-line"><span class="ln">09</span><span class="ct">    <span class="vr editable" data-key="chName"><span data-field="chname">taskStream</span></span> := make(<span class="kw">chan</span> <span class="tp editable" data-key="msgPayload"><span data-field="msgpayload">JobPacket</span></span>, 2)</span></div><div class="code-line"><span class="ln">10</span><span class="ct">    <span class="kw">go</span> <span class="fn editable" data-key="workerName"><span data-field="workername">consumeWorker</span></span>(<span class="vr editable" data-key="chName"><span data-field="chname">taskStream</span></span>)</span></div><div class="code-line"><span class="ln">11</span><span class="ct">    <span class="vr editable" data-key="chName"><span data-field="chname">taskStream</span></span> &lt;- <span class="tp editable" data-key="msgPayload"><span data-field="msgpayload">JobPacket</span></span>{ID: 101}</span></div><div class="code-line"><span class="ln">12</span><span class="ct">}</span></div></div><div class="code-more"></div></div></div><div class="execution-bar"><div class="log-stage" style="position:relative;height:100%;flex:1;overflow:hidden"><span class="log phase log-24-0">[GO_RUNTIME] Iniciando goroutine principal G1...</span><span class="log phase log-24-1">[GO_RUNTIME] Iniciando goroutine principal G1...</span><span class="log phase log-24-2">[GO_RUNTIME] Canal &#x27;taskStream&#x27; asignado en ringbuffer.</span><span class="log phase log-24-3">[GO_RUNTIME] Conmutando contexto a G2 (consumeWorker) vía multiplexor M:N.</span><span class="log phase log-24-4">[GO_STDOUT] Procesado: {ID: 101} sin condiciones de carrera (Race detector: limpio).</span></div><span class="execution-tag">DEMO · 4s</span></div></section><section class="module" data-id="language-rust"><div class="module-header"><span class="index">05/10 · 25/30</span><h1 class="headline" data-field="title">Rust</h1><span class="kind">LENGUAJES DE PROGRAMACIÓN</span></div><p class="description" data-field="description">Ownership, Borrowing y Lifetimes</p><div class="main-layout"><div class="visual-card"><div class="pane-title"><span>VISUALIZACIÓN DE EJECUCIÓN</span><span>ETAPAS 05</span></div><div class="visual-stage"><div class="phase phase-25-0">
+            <svg class="diagram-svg-root" class="visual-svg" viewBox="0 0 540 260">
+              <!-- STACK FRAME -->
+              <rect class="svg-box active" x="20" y="30" width="160" height="200"/>
+              <text class="svg-text" x="100" y="55">STACK (main)</text>
+
+              <rect x="30" y="75" width="140" height="40" rx="4" fill="#161b22" stroke="#58a6ff"/>
+              <text class="svg-text" x="100" y="95" style="font-size:10px;"><tspan data-field="ownervar">buffer_owner</tspan></text>
+              <text class="svg-subtext" x="100" y="108">OWNER [ptr, cap, len]</text>
+
+              <rect x="30" y="130" width="140" height="40" rx="4" fill="#161b22" stroke="#30363d"/>
+              <text class="svg-text" x="100" y="150" style="font-size:10px;">&amp;<tspan data-field="borrowref">borrowed_view</tspan></text>
+              <text class="svg-subtext" x="100" y="163">Lifetime: <tspan data-field="ltname">'scope_a</tspan></text>
+
+              <!-- HEAP BUFFER -->
+              <rect class="svg-box active" x="280" y="60" width="180" height="110"/>
+              <text class="svg-text" x="370" y="85">HEAP MEMORY</text>
+              <rect x="295" y="105" width="150" height="35" rx="3" fill="#161b22" stroke="#3fb950"/>
+              <text class="svg-text" x="370" y="125" style="font-size:11px;">"payload\0"</text>
+
+              <!-- FLECHAS DE PROPIEDAD -->
+              <line class="svg-path flowing" x1="170" y1="95" x2="280" y2="120" stroke="#58a6ff"/>
+              
+            </svg>
+          <span class="sr-only" style="display:none">[RUSTC] Instanciado heap buffer para &#x27;buffer_owner&#x27; con puntero único.</span></div><div class="phase phase-25-1">
+            <svg class="diagram-svg-root" class="visual-svg" viewBox="0 0 540 260">
+              <!-- STACK FRAME -->
+              <rect class="svg-box active" x="20" y="30" width="160" height="200"/>
+              <text class="svg-text" x="100" y="55">STACK (main)</text>
+
+              <rect x="30" y="75" width="140" height="40" rx="4" fill="#161b22" stroke="#58a6ff"/>
+              <text class="svg-text" x="100" y="95" style="font-size:10px;"><tspan data-field="ownervar">buffer_owner</tspan></text>
+              <text class="svg-subtext" x="100" y="108">OWNER [ptr, cap, len]</text>
+
+              <rect x="30" y="130" width="140" height="40" rx="4" fill="#161b22" stroke="#30363d"/>
+              <text class="svg-text" x="100" y="150" style="font-size:10px;">&amp;<tspan data-field="borrowref">borrowed_view</tspan></text>
+              <text class="svg-subtext" x="100" y="163">Lifetime: <tspan data-field="ltname">'scope_a</tspan></text>
+
+              <!-- HEAP BUFFER -->
+              <rect class="svg-box active" x="280" y="60" width="180" height="110"/>
+              <text class="svg-text" x="370" y="85">HEAP MEMORY</text>
+              <rect x="295" y="105" width="150" height="35" rx="3" fill="#161b22" stroke="#3fb950"/>
+              <text class="svg-text" x="370" y="125" style="font-size:11px;">"payload\0"</text>
+
+              <!-- FLECHAS DE PROPIEDAD -->
+              <line class="svg-path flowing" x1="170" y1="95" x2="280" y2="120" stroke="#58a6ff"/>
+              
+            </svg>
+          <span class="sr-only" style="display:none">[RUSTC] Instanciado heap buffer para &#x27;buffer_owner&#x27; con puntero único.</span></div><div class="phase phase-25-2">
+            <svg class="diagram-svg-root" class="visual-svg" viewBox="0 0 540 260">
+              <!-- STACK FRAME -->
+              <rect class="svg-box active" x="20" y="30" width="160" height="200"/>
+              <text class="svg-text" x="100" y="55">STACK (main)</text>
+
+              <rect x="30" y="75" width="140" height="40" rx="4" fill="#161b22" stroke="#58a6ff"/>
+              <text class="svg-text" x="100" y="95" style="font-size:10px;"><tspan data-field="ownervar">buffer_owner</tspan></text>
+              <text class="svg-subtext" x="100" y="108">OWNER [ptr, cap, len]</text>
+
+              <rect x="30" y="130" width="140" height="40" rx="4" fill="#161b22" stroke="#bc8cff"/>
+              <text class="svg-text" x="100" y="150" style="font-size:10px;">&amp;<tspan data-field="borrowref">borrowed_view</tspan></text>
+              <text class="svg-subtext" x="100" y="163">Lifetime: <tspan data-field="ltname">'scope_a</tspan></text>
+
+              <!-- HEAP BUFFER -->
+              <rect class="svg-box active" x="280" y="60" width="180" height="110"/>
+              <text class="svg-text" x="370" y="85">HEAP MEMORY</text>
+              <rect x="295" y="105" width="150" height="35" rx="3" fill="#161b22" stroke="#3fb950"/>
+              <text class="svg-text" x="370" y="125" style="font-size:11px;">"payload\0"</text>
+
+              <!-- FLECHAS DE PROPIEDAD -->
+              <line class="svg-path flowing" x1="170" y1="95" x2="280" y2="120" stroke="#58a6ff"/>
+              <path d="M 170 150 Q 230 150 280 130" fill="none" stroke="#bc8cff" stroke-width="1.5" stroke-dasharray="3 3"/>
+            </svg>
+          <span class="sr-only" style="display:none">[BORROW_CHECKER] Préstamo compartido emitido a &#x27;&amp;borrowed_view&#x27; bajo &#x27;&#x27;scope_a&#x27;. Mutaciones bloqueadas.</span></div><div class="phase phase-25-3">
+            <svg class="diagram-svg-root" class="visual-svg" viewBox="0 0 540 260">
+              <!-- STACK FRAME -->
+              <rect class="svg-box active" x="20" y="30" width="160" height="200"/>
+              <text class="svg-text" x="100" y="55">STACK (main)</text>
+
+              <rect x="30" y="75" width="140" height="40" rx="4" fill="#161b22" stroke="#58a6ff"/>
+              <text class="svg-text" x="100" y="95" style="font-size:10px;"><tspan data-field="ownervar">buffer_owner</tspan></text>
+              <text class="svg-subtext" x="100" y="108">OWNER [ptr, cap, len]</text>
+
+              <rect x="30" y="130" width="140" height="40" rx="4" fill="#161b22" stroke="#bc8cff"/>
+              <text class="svg-text" x="100" y="150" style="font-size:10px;">&amp;<tspan data-field="borrowref">borrowed_view</tspan></text>
+              <text class="svg-subtext" x="100" y="163">Lifetime: <tspan data-field="ltname">'scope_a</tspan></text>
+
+              <!-- HEAP BUFFER -->
+              <rect class="svg-box active" x="280" y="60" width="180" height="110"/>
+              <text class="svg-text" x="370" y="85">HEAP MEMORY</text>
+              <rect x="295" y="105" width="150" height="35" rx="3" fill="#161b22" stroke="#3fb950"/>
+              <text class="svg-text" x="370" y="125" style="font-size:11px;">"payload\0"</text>
+
+              <!-- FLECHAS DE PROPIEDAD -->
+              <line class="svg-path flowing" x1="170" y1="95" x2="280" y2="120" stroke="#58a6ff"/>
+              <path d="M 170 150 Q 230 150 280 130" fill="none" stroke="#bc8cff" stroke-width="1.5" stroke-dasharray="3 3"/>
+            </svg>
+          <span class="sr-only" style="display:none">[BORROW_CHECKER] Ámbito &#x27;scope_a finalizado. Préstamo liberado de manera segura.</span></div><div class="phase phase-25-4">
+            <svg class="diagram-svg-root" class="visual-svg" viewBox="0 0 540 260">
+              <!-- STACK FRAME -->
+              <rect class="svg-box active" x="20" y="30" width="160" height="200"/>
+              <text class="svg-text" x="100" y="55">STACK (main)</text>
+
+              <rect x="30" y="75" width="140" height="40" rx="4" fill="#161b22" stroke="#484f58"/>
+              <text class="svg-text" x="100" y="95" style="font-size:10px;"><tspan data-field="ownervar">buffer_owner</tspan></text>
+              <text class="svg-subtext" x="100" y="108">MOVED (Inválido)</text>
+
+              <rect x="30" y="130" width="140" height="40" rx="4" fill="#161b22" stroke="#30363d"/>
+              <text class="svg-text" x="100" y="150" style="font-size:10px;">&amp;<tspan data-field="borrowref">borrowed_view</tspan></text>
+              <text class="svg-subtext" x="100" y="163">Lifetime: <tspan data-field="ltname">'scope_a</tspan></text>
+
+              <!-- HEAP BUFFER -->
+              <rect class="svg-box warning" x="280" y="60" width="180" height="110"/>
+              <text class="svg-text" x="370" y="85">HEAP MEMORY</text>
+              <rect x="295" y="105" width="150" height="35" rx="3" fill="#161b22" stroke="#3fb950"/>
+              <text class="svg-text" x="370" y="125" style="font-size:11px;">"payload\0"</text>
+
+              <!-- FLECHAS DE PROPIEDAD -->
+              <line class="svg-path " x1="170" y1="95" x2="280" y2="120" stroke="#58a6ff"/>
+              
+            </svg>
+          <span class="sr-only" style="display:none">[RUSTC] Ownership de &#x27;buffer_owner&#x27; movido. Lecturas posteriores a &#x27;buffer_owner&#x27; dispararían E0382.</span></div></div></div><div class="source-card"><div class="pane-title"><span>CÓDIGO / INSPECTOR</span><span data-field="file">borrow_checker.rs</span></div><div class="code-scroll"><div class="code-line"><span class="ln">01</span><span class="ct"><span class="kw">fn</span> main() {</span></div><div class="code-line"><span class="ln">02</span><span class="ct">    <span class="kw">let</span> <span class="vr editable" data-key="ownerVar"><span data-field="ownervar">buffer_owner</span></span> = String::from(<span class="st">"payload"</span>);</span></div><div class="code-line"><span class="ln">03</span><span class="ct">    {</span></div><div class="code-line"><span class="ln">04</span><span class="ct">        <span class="cm">// Préstamo inmutable con lifetime <span data-field="ltname">'scope_a</span></span></span></div><div class="code-line"><span class="ln">05</span><span class="ct">        <span class="kw">let</span> <span class="vr editable" data-key="borrowRef"><span data-field="borrowref">borrowed_view</span></span>: &amp;<span class="tp">String</span> = &amp;<span class="vr editable" data-key="ownerVar"><span data-field="ownervar">buffer_owner</span></span>;</span></div><div class="code-line"><span class="ln">06</span><span class="ct">        println!(<span class="st">"Lectura: {}"</span>, <span class="vr editable" data-key="borrowRef"><span data-field="borrowref">borrowed_view</span></span>);</span></div><div class="code-line"><span class="ln">07</span><span class="ct">    } <span class="cm">// <span data-field="borrowref">borrowed_view</span> sale de ámbito aquí</span></span></div><div class="code-line"><span class="ln">08</span><span class="ct">    <span class="kw">let</span> moved_val = <span class="vr editable" data-key="ownerVar"><span data-field="ownervar">buffer_owner</span></span>; <span class="cm">// Transferencia de Ownership</span></span></div><div class="code-line"><span class="ln">09</span><span class="ct">}</span></div></div><div class="code-more"></div></div></div><div class="execution-bar"><div class="log-stage" style="position:relative;height:100%;flex:1;overflow:hidden"><span class="log phase log-25-0">[RUSTC] Instanciado heap buffer para &#x27;buffer_owner&#x27; con puntero único.</span><span class="log phase log-25-1">[RUSTC] Instanciado heap buffer para &#x27;buffer_owner&#x27; con puntero único.</span><span class="log phase log-25-2">[BORROW_CHECKER] Préstamo compartido emitido a &#x27;&amp;borrowed_view&#x27; bajo &#x27;&#x27;scope_a&#x27;. Mutaciones bloqueadas.</span><span class="log phase log-25-3">[BORROW_CHECKER] Ámbito &#x27;scope_a finalizado. Préstamo liberado de manera segura.</span><span class="log phase log-25-4">[RUSTC] Ownership de &#x27;buffer_owner&#x27; movido. Lecturas posteriores a &#x27;buffer_owner&#x27; dispararían E0382.</span></div><span class="execution-tag">DEMO · 4s</span></div></section><section class="module" data-id="language-c"><div class="module-header"><span class="index">06/10 · 26/30</span><h1 class="headline" data-field="title">C</h1><span class="kind">LENGUAJES DE PROGRAMACIÓN</span></div><p class="description" data-field="description">Punteros, Memoria Manual, malloc y free</p><div class="main-layout"><div class="visual-card"><div class="pane-title"><span>VISUALIZACIÓN DE EJECUCIÓN</span><span>ETAPAS 05</span></div><div class="visual-stage"><div class="phase phase-26-0">
+            <svg class="diagram-svg-root" class="visual-svg" viewBox="0 0 540 260">
+              <!-- STACK: Puntero -->
+              <rect class="svg-box active" x="20" y="40" width="140" height="150"/>
+              <text class="svg-text" x="90" y="65">STACK</text>
+              <rect x="30" y="90" width="120" height="50" rx="3" fill="#161b22" stroke="#58a6ff"/>
+              <text class="svg-text" x="90" y="110" style="font-size:10px;"><tspan data-field="ptrname">buffer_ptr</tspan></text>
+              <text class="svg-subtext" x="90" y="125">0x0040A000</text>
+
+              <!-- HEAP ADDRESS SPACE -->
+              <rect class="svg-box" x="220" y="40" width="280" height="150"/>
+              <text class="svg-text" x="360" y="65">HEAP (Segmento Manual)</text>
+
+              <!-- Bloque Heap 0 -->
+              <rect x="240" y="90" width="110" height="60" rx="3" fill="#161b22" stroke="#30363d"/>
+              <text class="svg-text" x="295" y="110" style="font-size:10px;">0x0040A000</text>
+              <text class="svg-subtext" x="295" y="130">RAW</text>
+
+              <!-- Bloque Heap 1 -->
+              <rect x="360" y="90" width="110" height="60" rx="3" fill="#161b22" stroke="#30363d"/>
+              <text class="svg-text" x="415" y="110" style="font-size:10px;">0x0040A004</text>
+              <text class="svg-subtext" x="415" y="130">RAW</text>
+
+              <!-- Línea puntero -->
+              <line class="svg-path flowing" x1="150" y1="115" x2="240" y2="115" stroke="#58a6ff"/>
+            </svg>
+          <span class="sr-only" style="display:none">[C_MEM] malloc(2 * sizeof(int)) solicita 8 bytes a brk/sbrk.</span></div><div class="phase phase-26-1">
+            <svg class="diagram-svg-root" class="visual-svg" viewBox="0 0 540 260">
+              <!-- STACK: Puntero -->
+              <rect class="svg-box active" x="20" y="40" width="140" height="150"/>
+              <text class="svg-text" x="90" y="65">STACK</text>
+              <rect x="30" y="90" width="120" height="50" rx="3" fill="#161b22" stroke="#58a6ff"/>
+              <text class="svg-text" x="90" y="110" style="font-size:10px;"><tspan data-field="ptrname">buffer_ptr</tspan></text>
+              <text class="svg-subtext" x="90" y="125">0x0040A000</text>
+
+              <!-- HEAP ADDRESS SPACE -->
+              <rect class="svg-box" x="220" y="40" width="280" height="150"/>
+              <text class="svg-text" x="360" y="65">HEAP (Segmento Manual)</text>
+
+              <!-- Bloque Heap 0 -->
+              <rect x="240" y="90" width="110" height="60" rx="3" fill="#161b22" stroke="#30363d"/>
+              <text class="svg-text" x="295" y="110" style="font-size:10px;">0x0040A000</text>
+              <text class="svg-subtext" x="295" y="130">RAW</text>
+
+              <!-- Bloque Heap 1 -->
+              <rect x="360" y="90" width="110" height="60" rx="3" fill="#161b22" stroke="#30363d"/>
+              <text class="svg-text" x="415" y="110" style="font-size:10px;">0x0040A004</text>
+              <text class="svg-subtext" x="415" y="130">RAW</text>
+
+              <!-- Línea puntero -->
+              <line class="svg-path flowing" x1="150" y1="115" x2="240" y2="115" stroke="#58a6ff"/>
+            </svg>
+          <span class="sr-only" style="display:none">[C_MEM] malloc(2 * sizeof(int)) solicita 8 bytes a brk/sbrk.</span></div><div class="phase phase-26-2">
+            <svg class="diagram-svg-root" class="visual-svg" viewBox="0 0 540 260">
+              <!-- STACK: Puntero -->
+              <rect class="svg-box active" x="20" y="40" width="140" height="150"/>
+              <text class="svg-text" x="90" y="65">STACK</text>
+              <rect x="30" y="90" width="120" height="50" rx="3" fill="#161b22" stroke="#58a6ff"/>
+              <text class="svg-text" x="90" y="110" style="font-size:10px;"><tspan data-field="ptrname">buffer_ptr</tspan></text>
+              <text class="svg-subtext" x="90" y="125">0x0040A000</text>
+
+              <!-- HEAP ADDRESS SPACE -->
+              <rect class="svg-box" x="220" y="40" width="280" height="150"/>
+              <text class="svg-text" x="360" y="65">HEAP (Segmento Manual)</text>
+
+              <!-- Bloque Heap 0 -->
+              <rect x="240" y="90" width="110" height="60" rx="3" fill="#1a2c20" stroke="#3fb950"/>
+              <text class="svg-text" x="295" y="110" style="font-size:10px;">0x0040A000</text>
+              <text class="svg-subtext" x="295" y="130">RAW</text>
+
+              <!-- Bloque Heap 1 -->
+              <rect x="360" y="90" width="110" height="60" rx="3" fill="#1a2c20" stroke="#3fb950"/>
+              <text class="svg-text" x="415" y="110" style="font-size:10px;">0x0040A004</text>
+              <text class="svg-subtext" x="415" y="130">RAW</text>
+
+              <!-- Línea puntero -->
+              <line class="svg-path flowing" x1="150" y1="115" x2="240" y2="115" stroke="#58a6ff"/>
+            </svg>
+          <span class="sr-only" style="display:none">[C_MEM] Puntero &#x27;buffer_ptr&#x27; mapeado a dirección física 0x0040A000.</span></div><div class="phase phase-26-3">
+            <svg class="diagram-svg-root" class="visual-svg" viewBox="0 0 540 260">
+              <!-- STACK: Puntero -->
+              <rect class="svg-box active" x="20" y="40" width="140" height="150"/>
+              <text class="svg-text" x="90" y="65">STACK</text>
+              <rect x="30" y="90" width="120" height="50" rx="3" fill="#161b22" stroke="#58a6ff"/>
+              <text class="svg-text" x="90" y="110" style="font-size:10px;"><tspan data-field="ptrname">buffer_ptr</tspan></text>
+              <text class="svg-subtext" x="90" y="125">0x0040A000</text>
+
+              <!-- HEAP ADDRESS SPACE -->
+              <rect class="svg-box" x="220" y="40" width="280" height="150"/>
+              <text class="svg-text" x="360" y="65">HEAP (Segmento Manual)</text>
+
+              <!-- Bloque Heap 0 -->
+              <rect x="240" y="90" width="110" height="60" rx="3" fill="#1a2c20" stroke="#3fb950"/>
+              <text class="svg-text" x="295" y="110" style="font-size:10px;">0x0040A000</text>
+              <text class="svg-subtext" x="295" y="130"><tspan data-field="vala">0xA4</tspan></text>
+
+              <!-- Bloque Heap 1 -->
+              <rect x="360" y="90" width="110" height="60" rx="3" fill="#1a2c20" stroke="#3fb950"/>
+              <text class="svg-text" x="415" y="110" style="font-size:10px;">0x0040A004</text>
+              <text class="svg-subtext" x="415" y="130"><tspan data-field="valb">0xB8</tspan></text>
+
+              <!-- Línea puntero -->
+              <line class="svg-path flowing" x1="150" y1="115" x2="240" y2="115" stroke="#58a6ff"/>
+            </svg>
+          <span class="sr-only" style="display:none">[C_MEM] Escritura directa: *(buffer_ptr) = 0xA4, *(buffer_ptr+1) = 0xB8.</span></div><div class="phase phase-26-4">
+            <svg class="diagram-svg-root" class="visual-svg" viewBox="0 0 540 260">
+              <!-- STACK: Puntero -->
+              <rect class="svg-box active" x="20" y="40" width="140" height="150"/>
+              <text class="svg-text" x="90" y="65">STACK</text>
+              <rect x="30" y="90" width="120" height="50" rx="3" fill="#161b22" stroke="#58a6ff"/>
+              <text class="svg-text" x="90" y="110" style="font-size:10px;"><tspan data-field="ptrname">buffer_ptr</tspan></text>
+              <text class="svg-subtext" x="90" y="125">0x00000000 (NULL)</text>
+
+              <!-- HEAP ADDRESS SPACE -->
+              <rect class="svg-box" x="220" y="40" width="280" height="150"/>
+              <text class="svg-text" x="360" y="65">HEAP (Segmento Manual)</text>
+
+              <!-- Bloque Heap 0 -->
+              <rect x="240" y="90" width="110" height="60" rx="3" fill="#161b22" stroke="#30363d"/>
+              <text class="svg-text" x="295" y="110" style="font-size:10px;">0x0040A000</text>
+              <text class="svg-subtext" x="295" y="130">LIBERADO</text>
+
+              <!-- Bloque Heap 1 -->
+              <rect x="360" y="90" width="110" height="60" rx="3" fill="#161b22" stroke="#30363d"/>
+              <text class="svg-text" x="415" y="110" style="font-size:10px;">0x0040A004</text>
+              <text class="svg-subtext" x="415" y="130">LIBERADO</text>
+
+              <!-- Línea puntero -->
+              
+            </svg>
+          <span class="sr-only" style="display:none">[C_MEM] free(buffer_ptr) ejecutado. Bloque retornado a freelist. buffer_ptr = NULL.</span></div></div></div><div class="source-card"><div class="pane-title"><span>CÓDIGO / INSPECTOR</span><span data-field="file">mem_alloc.c</span></div><div class="code-scroll"><div class="code-line"><span class="ln">01</span><span class="ct"><span class="kw">#include</span> <span class="st">&lt;stdlib.h&gt;</span></span></div><div class="code-line"><span class="ln">02</span><span class="ct">&#160;</span></div><div class="code-line"><span class="ln">03</span><span class="ct"><span class="kw">int</span> main() {</span></div><div class="code-line"><span class="ln">04</span><span class="ct">    <span class="kw">int</span> *<span class="vr editable" data-key="ptrName"><span data-field="ptrname">buffer_ptr</span></span> = (<span class="kw">int</span>*)malloc(<span class="editable" data-key="allocSize"><span data-field="allocsize">2 * sizeof(int)</span></span>);</span></div><div class="code-line"><span class="ln">05</span><span class="ct">    *<span class="vr editable" data-key="ptrName"><span data-field="ptrname">buffer_ptr</span></span> = <span class="num editable" data-key="valA"><span data-field="vala">0xA4</span></span>;</span></div><div class="code-line"><span class="ln">06</span><span class="ct">    *(<span class="vr editable" data-key="ptrName"><span data-field="ptrname">buffer_ptr</span></span> + 1) = <span class="num editable" data-key="valB"><span data-field="valb">0xB8</span></span>;</span></div><div class="code-line"><span class="ln">07</span><span class="ct">    free(<span class="vr editable" data-key="ptrName"><span data-field="ptrname">buffer_ptr</span></span>);</span></div><div class="code-line"><span class="ln">08</span><span class="ct">    <span class="vr editable" data-key="ptrName"><span data-field="ptrname">buffer_ptr</span></span> = NULL;</span></div><div class="code-line"><span class="ln">09</span><span class="ct">    <span class="kw">return</span> 0;</span></div><div class="code-line"><span class="ln">10</span><span class="ct">}</span></div></div><div class="code-more"></div></div></div><div class="execution-bar"><div class="log-stage" style="position:relative;height:100%;flex:1;overflow:hidden"><span class="log phase log-26-0">[C_MEM] malloc(2 * sizeof(int)) solicita 8 bytes a brk/sbrk.</span><span class="log phase log-26-1">[C_MEM] malloc(2 * sizeof(int)) solicita 8 bytes a brk/sbrk.</span><span class="log phase log-26-2">[C_MEM] Puntero &#x27;buffer_ptr&#x27; mapeado a dirección física 0x0040A000.</span><span class="log phase log-26-3">[C_MEM] Escritura directa: *(buffer_ptr) = 0xA4, *(buffer_ptr+1) = 0xB8.</span><span class="log phase log-26-4">[C_MEM] free(buffer_ptr) ejecutado. Bloque retornado a freelist. buffer_ptr = NULL.</span></div><span class="execution-tag">DEMO · 4s</span></div></section><section class="module" data-id="language-cpp"><div class="module-header"><span class="index">07/10 · 27/30</span><h1 class="headline" data-field="title">C++</h1><span class="kind">LENGUAJES DE PROGRAMACIÓN</span></div><p class="description" data-field="description">Clases, Templates, RAII y Compilación Determinística</p><div class="main-layout"><div class="visual-card"><div class="pane-title"><span>VISUALIZACIÓN DE EJECUCIÓN</span><span>ETAPAS 05</span></div><div class="visual-stage"><div class="phase phase-27-0">
+            <svg class="diagram-svg-root" class="visual-svg" viewBox="0 0 540 260">
+              <!-- Ámbito de compilación / Template AST -->
+              <rect class="svg-box active" x="20" y="30" width="150" height="90"/>
+              <text class="svg-text" x="95" y="55">TEMPLATE INSTANCE</text>
+              <text class="svg-subtext" x="95" y="75"><tspan data-field="classname">ScopedLock</tspan>&lt;<tspan data-field="restype">SharedMutex</tspan>&gt;</text>
+              <text class="svg-subtext" x="95" y="92">Monomorfización OK</text>
+
+              <!-- Conexión RAII -->
+              <line class="svg-path " x1="170" y1="75" x2="220" y2="75"/>
+
+              <!-- OBJETO RAII EN STACK -->
+              <rect class="svg-box " x="220" y="30" width="150" height="170"/>
+              <text class="svg-text" x="295" y="55">STACK SCOPE { ... }</text>
+              <rect x="235" y="80" width="120" height="40" rx="3" fill="#161b22" stroke="#30363d"/>
+              <text class="svg-text" x="295" y="100" style="font-size:10px;"><tspan data-field="instancevar">guardObj</tspan></text>
+              <text class="svg-subtext" x="295" y="113">Pendiente</text>
+
+              <!-- RECURSO GESTIONADO -->
+              <rect class="svg-box success" x="400" y="70" width="120" height="90"/>
+              <text class="svg-text" x="460" y="95"><tspan data-field="restype">SharedMutex</tspan></text>
+              <text class="svg-subtext" x="460" y="120">LIBERADO (unlock)</text>
+            </svg>
+          <span class="sr-only" style="display:none">[CLANG/GCC] Instanciación monomórfica de ScopedLock&lt;SharedMutex&gt; sin sobrecarga virtual.</span></div><div class="phase phase-27-1">
+            <svg class="diagram-svg-root" class="visual-svg" viewBox="0 0 540 260">
+              <!-- Ámbito de compilación / Template AST -->
+              <rect class="svg-box active" x="20" y="30" width="150" height="90"/>
+              <text class="svg-text" x="95" y="55">TEMPLATE INSTANCE</text>
+              <text class="svg-subtext" x="95" y="75"><tspan data-field="classname">ScopedLock</tspan>&lt;<tspan data-field="restype">SharedMutex</tspan>&gt;</text>
+              <text class="svg-subtext" x="95" y="92">Monomorfización OK</text>
+
+              <!-- Conexión RAII -->
+              <line class="svg-path " x1="170" y1="75" x2="220" y2="75"/>
+
+              <!-- OBJETO RAII EN STACK -->
+              <rect class="svg-box " x="220" y="30" width="150" height="170"/>
+              <text class="svg-text" x="295" y="55">STACK SCOPE { ... }</text>
+              <rect x="235" y="80" width="120" height="40" rx="3" fill="#161b22" stroke="#30363d"/>
+              <text class="svg-text" x="295" y="100" style="font-size:10px;"><tspan data-field="instancevar">guardObj</tspan></text>
+              <text class="svg-subtext" x="295" y="113">Pendiente</text>
+
+              <!-- RECURSO GESTIONADO -->
+              <rect class="svg-box success" x="400" y="70" width="120" height="90"/>
+              <text class="svg-text" x="460" y="95"><tspan data-field="restype">SharedMutex</tspan></text>
+              <text class="svg-subtext" x="460" y="120">LIBERADO (unlock)</text>
+            </svg>
+          <span class="sr-only" style="display:none">[CLANG/GCC] Instanciación monomórfica de ScopedLock&lt;SharedMutex&gt; sin sobrecarga virtual.</span></div><div class="phase phase-27-2">
+            <svg class="diagram-svg-root" class="visual-svg" viewBox="0 0 540 260">
+              <!-- Ámbito de compilación / Template AST -->
+              <rect class="svg-box active" x="20" y="30" width="150" height="90"/>
+              <text class="svg-text" x="95" y="55">TEMPLATE INSTANCE</text>
+              <text class="svg-subtext" x="95" y="75"><tspan data-field="classname">ScopedLock</tspan>&lt;<tspan data-field="restype">SharedMutex</tspan>&gt;</text>
+              <text class="svg-subtext" x="95" y="92">Monomorfización OK</text>
+
+              <!-- Conexión RAII -->
+              <line class="svg-path flowing" x1="170" y1="75" x2="220" y2="75"/>
+
+              <!-- OBJETO RAII EN STACK -->
+              <rect class="svg-box active" x="220" y="30" width="150" height="170"/>
+              <text class="svg-text" x="295" y="55">STACK SCOPE { ... }</text>
+              <rect x="235" y="80" width="120" height="40" rx="3" fill="#161b22" stroke="#58a6ff"/>
+              <text class="svg-text" x="295" y="100" style="font-size:10px;"><tspan data-field="instancevar">guardObj</tspan></text>
+              <text class="svg-subtext" x="295" y="113">Constructor: lock()</text>
+
+              <!-- RECURSO GESTIONADO -->
+              <rect class="svg-box warning" x="400" y="70" width="120" height="90"/>
+              <text class="svg-text" x="460" y="95"><tspan data-field="restype">SharedMutex</tspan></text>
+              <text class="svg-subtext" x="460" y="120">ESTADO: BLOQUEADO</text>
+            </svg>
+          <span class="sr-only" style="display:none">[RAII] guardObj entra en scope. Constructor adquiere cerrojo mutex.</span></div><div class="phase phase-27-3">
+            <svg class="diagram-svg-root" class="visual-svg" viewBox="0 0 540 260">
+              <!-- Ámbito de compilación / Template AST -->
+              <rect class="svg-box active" x="20" y="30" width="150" height="90"/>
+              <text class="svg-text" x="95" y="55">TEMPLATE INSTANCE</text>
+              <text class="svg-subtext" x="95" y="75"><tspan data-field="classname">ScopedLock</tspan>&lt;<tspan data-field="restype">SharedMutex</tspan>&gt;</text>
+              <text class="svg-subtext" x="95" y="92">Monomorfización OK</text>
+
+              <!-- Conexión RAII -->
+              <line class="svg-path flowing" x1="170" y1="75" x2="220" y2="75"/>
+
+              <!-- OBJETO RAII EN STACK -->
+              <rect class="svg-box active" x="220" y="30" width="150" height="170"/>
+              <text class="svg-text" x="295" y="55">STACK SCOPE { ... }</text>
+              <rect x="235" y="80" width="120" height="40" rx="3" fill="#161b22" stroke="#58a6ff"/>
+              <text class="svg-text" x="295" y="100" style="font-size:10px;"><tspan data-field="instancevar">guardObj</tspan></text>
+              <text class="svg-subtext" x="295" y="113">Constructor: lock()</text>
+
+              <!-- RECURSO GESTIONADO -->
+              <rect class="svg-box warning" x="400" y="70" width="120" height="90"/>
+              <text class="svg-text" x="460" y="95"><tspan data-field="restype">SharedMutex</tspan></text>
+              <text class="svg-subtext" x="460" y="120">ESTADO: BLOQUEADO</text>
+            </svg>
+          <span class="sr-only" style="display:none">[RAII] Sección crítica en ejecución garantizada bajo excepción.</span></div><div class="phase phase-27-4">
+            <svg class="diagram-svg-root" class="visual-svg" viewBox="0 0 540 260">
+              <!-- Ámbito de compilación / Template AST -->
+              <rect class="svg-box active" x="20" y="30" width="150" height="90"/>
+              <text class="svg-text" x="95" y="55">TEMPLATE INSTANCE</text>
+              <text class="svg-subtext" x="95" y="75"><tspan data-field="classname">ScopedLock</tspan>&lt;<tspan data-field="restype">SharedMutex</tspan>&gt;</text>
+              <text class="svg-subtext" x="95" y="92">Monomorfización OK</text>
+
+              <!-- Conexión RAII -->
+              <line class="svg-path flowing" x1="170" y1="75" x2="220" y2="75"/>
+
+              <!-- OBJETO RAII EN STACK -->
+              <rect class="svg-box " x="220" y="30" width="150" height="170"/>
+              <text class="svg-text" x="295" y="55">STACK SCOPE { ... }</text>
+              <rect x="235" y="80" width="120" height="40" rx="3" fill="#161b22" stroke="#30363d"/>
+              <text class="svg-text" x="295" y="100" style="font-size:10px;"><tspan data-field="instancevar">guardObj</tspan></text>
+              <text class="svg-subtext" x="295" y="113">Destruido</text>
+
+              <!-- RECURSO GESTIONADO -->
+              <rect class="svg-box success" x="400" y="70" width="120" height="90"/>
+              <text class="svg-text" x="460" y="95"><tspan data-field="restype">SharedMutex</tspan></text>
+              <text class="svg-subtext" x="460" y="120">LIBERADO (unlock)</text>
+            </svg>
+          <span class="sr-only" style="display:none">[RAII] Salida de ámbito. ~ScopedLock() invocado: cerrojo desbloqueado automáticamente.</span></div></div></div><div class="source-card"><div class="pane-title"><span>CÓDIGO / INSPECTOR</span><span data-field="file">raii_guard.cpp</span></div><div class="code-scroll"><div class="code-line"><span class="ln">01</span><span class="ct"><span class="kw">template</span>&lt;<span class="kw">typename</span> <span class="tp">Resource</span>&gt;</span></div><div class="code-line"><span class="ln">02</span><span class="ct"><span class="kw">class</span> <span class="tp editable" data-key="className"><span data-field="classname">ScopedLock</span></span> {</span></div><div class="code-line"><span class="ln">03</span><span class="ct">    <span class="tp">Resource</span>* res;</span></div><div class="code-line"><span class="ln">04</span><span class="ct">public:</span></div><div class="code-line"><span class="ln">05</span><span class="ct">    <span class="fn editable" data-key="className"><span data-field="classname">ScopedLock</span></span>(<span class="tp">Resource</span>* r) : res(r) { res-&gt;lock(); }</span></div><div class="code-line"><span class="ln">06</span><span class="ct">    ~<span class="fn editable" data-key="className"><span data-field="classname">ScopedLock</span></span>() { res-&gt;unlock(); } <span class="cm">// RAII</span></span></div><div class="code-line"><span class="ln">07</span><span class="ct">};</span></div><div class="code-line"><span class="ln">08</span><span class="ct">&#160;</span></div><div class="code-line"><span class="ln">09</span><span class="ct">{</span></div><div class="code-line"><span class="ln">10</span><span class="ct">    <span class="tp editable" data-key="className"><span data-field="classname">ScopedLock</span></span>&lt;<span class="tp editable" data-key="resType"><span data-field="restype">SharedMutex</span></span>&gt; <span class="vr editable" data-key="instanceVar"><span data-field="instancevar">guardObj</span></span>(&amp;mtx);</span></div><div class="code-line"><span class="ln">11</span><span class="ct">} <span class="cm">// Destructor invocado determinísticamente</span></span></div></div><div class="code-more"></div></div></div><div class="execution-bar"><div class="log-stage" style="position:relative;height:100%;flex:1;overflow:hidden"><span class="log phase log-27-0">[CLANG/GCC] Instanciación monomórfica de ScopedLock&lt;SharedMutex&gt; sin sobrecarga virtual.</span><span class="log phase log-27-1">[CLANG/GCC] Instanciación monomórfica de ScopedLock&lt;SharedMutex&gt; sin sobrecarga virtual.</span><span class="log phase log-27-2">[RAII] guardObj entra en scope. Constructor adquiere cerrojo mutex.</span><span class="log phase log-27-3">[RAII] Sección crítica en ejecución garantizada bajo excepción.</span><span class="log phase log-27-4">[RAII] Salida de ámbito. ~ScopedLock() invocado: cerrojo desbloqueado automáticamente.</span></div><span class="execution-tag">DEMO · 4s</span></div></section><section class="module" data-id="language-java"><div class="module-header"><span class="index">08/10 · 28/30</span><h1 class="headline" data-field="title">Java</h1><span class="kind">LENGUAJES DE PROGRAMACIÓN</span></div><p class="description" data-field="description">JVM, Bytecode, Clases y Garbage Collector</p><div class="main-layout"><div class="visual-card"><div class="pane-title"><span>VISUALIZACIÓN DE EJECUCIÓN</span><span>ETAPAS 05</span></div><div class="visual-stage"><div class="phase phase-28-0">
+            <svg class="diagram-svg-root" class="visual-svg" viewBox="0 0 540 260">
+              <!-- BYTECODE JIT -->
+              <rect class="svg-box active" x="20" y="30" width="130" height="180"/>
+              <text class="svg-text" x="85" y="55">JVM BYTECODE</text>
+              <text class="svg-subtext" x="85" y="75">0: new #<tspan data-field="entitytype">RecordEntity</tspan></text>
+              <text class="svg-subtext" x="85" y="92">3: dup</text>
+              <text class="svg-subtext" x="85" y="110">4: invokespecial</text>
+              <text class="svg-subtext" x="85" y="128">7: astore_1</text>
+              <text class="svg-subtext" x="85" y="146">8: aconst_null</text>
+
+              <!-- HEAP SPACE (EDEN) -->
+              <rect class="svg-box" x="180" y="30" width="180" height="180"/>
+              <text class="svg-text" x="270" y="55">HEAP (Eden Space)</text>
+              <rect x="200" y="80" width="140" height="50" rx="4" fill="#222c3a" stroke="#3fb950"/>
+              <text class="svg-text" x="270" y="102" style="font-size:10px;"><tspan data-field="entitytype">RecordEntity</tspan></text>
+              <text class="svg-subtext" x="270" y="118">VIVO (mark)</text>
+
+              <!-- GARBAGE COLLECTOR -->
+              <rect class="svg-box " x="390" y="30" width="130" height="180"/>
+              <text class="svg-text" x="455" y="55">GARBAGE COLL.</text>
+              <circle cx="455" cy="110" r="30" fill="#161b22" stroke="#30363d" stroke-width="2"/>
+              <text class="svg-text" x="455" y="112" style="font-size:10px;">GC G1</text>
+              <text class="svg-subtext" x="455" y="160">Esperando ciclo</text>
+            </svg>
+          <span class="sr-only" style="display:none">[JAVAC] WorkerService.java compilado a bytecode compatible JVM SE HotSpot.</span></div><div class="phase phase-28-1">
+            <svg class="diagram-svg-root" class="visual-svg" viewBox="0 0 540 260">
+              <!-- BYTECODE JIT -->
+              <rect class="svg-box active" x="20" y="30" width="130" height="180"/>
+              <text class="svg-text" x="85" y="55">JVM BYTECODE</text>
+              <text class="svg-subtext" x="85" y="75">0: new #<tspan data-field="entitytype">RecordEntity</tspan></text>
+              <text class="svg-subtext" x="85" y="92">3: dup</text>
+              <text class="svg-subtext" x="85" y="110">4: invokespecial</text>
+              <text class="svg-subtext" x="85" y="128">7: astore_1</text>
+              <text class="svg-subtext" x="85" y="146">8: aconst_null</text>
+
+              <!-- HEAP SPACE (EDEN) -->
+              <rect class="svg-box" x="180" y="30" width="180" height="180"/>
+              <text class="svg-text" x="270" y="55">HEAP (Eden Space)</text>
+              <rect x="200" y="80" width="140" height="50" rx="4" fill="#222c3a" stroke="#3fb950"/>
+              <text class="svg-text" x="270" y="102" style="font-size:10px;"><tspan data-field="entitytype">RecordEntity</tspan></text>
+              <text class="svg-subtext" x="270" y="118">VIVO (mark)</text>
+
+              <!-- GARBAGE COLLECTOR -->
+              <rect class="svg-box " x="390" y="30" width="130" height="180"/>
+              <text class="svg-text" x="455" y="55">GARBAGE COLL.</text>
+              <circle cx="455" cy="110" r="30" fill="#161b22" stroke="#30363d" stroke-width="2"/>
+              <text class="svg-text" x="455" y="112" style="font-size:10px;">GC G1</text>
+              <text class="svg-subtext" x="455" y="160">Esperando ciclo</text>
+            </svg>
+          <span class="sr-only" style="display:none">[JAVAC] WorkerService.java compilado a bytecode compatible JVM SE HotSpot.</span></div><div class="phase phase-28-2">
+            <svg class="diagram-svg-root" class="visual-svg" viewBox="0 0 540 260">
+              <!-- BYTECODE JIT -->
+              <rect class="svg-box active" x="20" y="30" width="130" height="180"/>
+              <text class="svg-text" x="85" y="55">JVM BYTECODE</text>
+              <text class="svg-subtext" x="85" y="75">0: new #<tspan data-field="entitytype">RecordEntity</tspan></text>
+              <text class="svg-subtext" x="85" y="92">3: dup</text>
+              <text class="svg-subtext" x="85" y="110">4: invokespecial</text>
+              <text class="svg-subtext" x="85" y="128">7: astore_1</text>
+              <text class="svg-subtext" x="85" y="146">8: aconst_null</text>
+
+              <!-- HEAP SPACE (EDEN) -->
+              <rect class="svg-box" x="180" y="30" width="180" height="180"/>
+              <text class="svg-text" x="270" y="55">HEAP (Eden Space)</text>
+              <rect x="200" y="80" width="140" height="50" rx="4" fill="#222c3a" stroke="#3fb950"/>
+              <text class="svg-text" x="270" y="102" style="font-size:10px;"><tspan data-field="entitytype">RecordEntity</tspan></text>
+              <text class="svg-subtext" x="270" y="118">VIVO (mark)</text>
+
+              <!-- GARBAGE COLLECTOR -->
+              <rect class="svg-box " x="390" y="30" width="130" height="180"/>
+              <text class="svg-text" x="455" y="55">GARBAGE COLL.</text>
+              <circle cx="455" cy="110" r="30" fill="#161b22" stroke="#30363d" stroke-width="2"/>
+              <text class="svg-text" x="455" y="112" style="font-size:10px;">GC G1</text>
+              <text class="svg-subtext" x="455" y="160">Esperando ciclo</text>
+            </svg>
+          <span class="sr-only" style="display:none">[HOTSPOT] Opcodes interpretados. Objeto &#x27;RecordEntity&#x27; asignado en Generación Joven.</span></div><div class="phase phase-28-3">
+            <svg class="diagram-svg-root" class="visual-svg" viewBox="0 0 540 260">
+              <!-- BYTECODE JIT -->
+              <rect class="svg-box active" x="20" y="30" width="130" height="180"/>
+              <text class="svg-text" x="85" y="55">JVM BYTECODE</text>
+              <text class="svg-subtext" x="85" y="75">0: new #<tspan data-field="entitytype">RecordEntity</tspan></text>
+              <text class="svg-subtext" x="85" y="92">3: dup</text>
+              <text class="svg-subtext" x="85" y="110">4: invokespecial</text>
+              <text class="svg-subtext" x="85" y="128">7: astore_1</text>
+              <text class="svg-subtext" x="85" y="146">8: aconst_null</text>
+
+              <!-- HEAP SPACE (EDEN) -->
+              <rect class="svg-box" x="180" y="30" width="180" height="180"/>
+              <text class="svg-text" x="270" y="55">HEAP (Eden Space)</text>
+              <rect x="200" y="80" width="140" height="50" rx="4" fill="#222c3a" stroke="#3fb950"/>
+              <text class="svg-text" x="270" y="102" style="font-size:10px;"><tspan data-field="entitytype">RecordEntity</tspan></text>
+              <text class="svg-subtext" x="270" y="118">VIVO (mark)</text>
+
+              <!-- GARBAGE COLLECTOR -->
+              <rect class="svg-box active" x="390" y="30" width="130" height="180"/>
+              <text class="svg-text" x="455" y="55">GARBAGE COLL.</text>
+              <circle cx="455" cy="110" r="30" fill="#161b22" stroke="#bc8cff" stroke-width="2"/>
+              <text class="svg-text" x="455" y="112" style="font-size:10px;">GC G1</text>
+              <text class="svg-subtext" x="455" y="160">Fase: Mark & Sweep</text>
+            </svg>
+          <span class="sr-only" style="display:none">[HOTSPOT] Puntero local asignado a null. Raíz GC perdida para &#x27;RecordEntity&#x27;.</span></div><div class="phase phase-28-4">
+            <svg class="diagram-svg-root" class="visual-svg" viewBox="0 0 540 260">
+              <!-- BYTECODE JIT -->
+              <rect class="svg-box active" x="20" y="30" width="130" height="180"/>
+              <text class="svg-text" x="85" y="55">JVM BYTECODE</text>
+              <text class="svg-subtext" x="85" y="75">0: new #<tspan data-field="entitytype">RecordEntity</tspan></text>
+              <text class="svg-subtext" x="85" y="92">3: dup</text>
+              <text class="svg-subtext" x="85" y="110">4: invokespecial</text>
+              <text class="svg-subtext" x="85" y="128">7: astore_1</text>
+              <text class="svg-subtext" x="85" y="146">8: aconst_null</text>
+
+              <!-- HEAP SPACE (EDEN) -->
+              <rect class="svg-box" x="180" y="30" width="180" height="180"/>
+              <text class="svg-text" x="270" y="55">HEAP (Eden Space)</text>
+              <rect x="200" y="80" width="140" height="50" rx="4" fill="#1f242c" stroke="#f85149"/>
+              <text class="svg-text" x="270" y="102" style="font-size:10px;"><tspan data-field="entitytype">RecordEntity</tspan></text>
+              <text class="svg-subtext" x="270" y="118">BARRIDO (0 refs)</text>
+
+              <!-- GARBAGE COLLECTOR -->
+              <rect class="svg-box active" x="390" y="30" width="130" height="180"/>
+              <text class="svg-text" x="455" y="55">GARBAGE COLL.</text>
+              <circle cx="455" cy="110" r="30" fill="#161b22" stroke="#bc8cff" stroke-width="2"/>
+              <text class="svg-text" x="455" y="112" style="font-size:10px;">GC G1</text>
+              <text class="svg-subtext" x="455" y="160">Fase: Mark & Sweep</text>
+            </svg>
+          <span class="sr-only" style="display:none">[GC_G1] Ciclo completado: 1 objeto huérfano compactado/liberado de Eden Space.</span></div></div></div><div class="source-card"><div class="pane-title"><span>CÓDIGO / INSPECTOR</span><span data-field="file">WorkerService.java</span></div><div class="code-scroll"><div class="code-line"><span class="ln">01</span><span class="ct"><span class="kw">public class</span> <span class="tp editable" data-key="className"><span data-field="classname">WorkerService</span></span> {</span></div><div class="code-line"><span class="ln">02</span><span class="ct">    <span class="kw">public void</span> <span class="fn editable" data-key="methodName"><span data-field="methodname">dispatchTask</span></span>() {</span></div><div class="code-line"><span class="ln">03</span><span class="ct">        <span class="tp editable" data-key="entityType"><span data-field="entitytype">RecordEntity</span></span> item = <span class="kw">new</span> <span class="tp editable" data-key="entityType"><span data-field="entitytype">RecordEntity</span></span>();</span></div><div class="code-line"><span class="ln">04</span><span class="ct">        item = <span class="kw">null</span>; <span class="cm">// Huérfano en Heap</span></span></div><div class="code-line"><span class="ln">05</span><span class="ct">        System.gc(); <span class="cm">// Marca y barrido</span></span></div><div class="code-line"><span class="ln">06</span><span class="ct">    }</span></div><div class="code-line"><span class="ln">07</span><span class="ct">}</span></div></div><div class="code-more"></div></div></div><div class="execution-bar"><div class="log-stage" style="position:relative;height:100%;flex:1;overflow:hidden"><span class="log phase log-28-0">[JAVAC] WorkerService.java compilado a bytecode compatible JVM SE HotSpot.</span><span class="log phase log-28-1">[JAVAC] WorkerService.java compilado a bytecode compatible JVM SE HotSpot.</span><span class="log phase log-28-2">[HOTSPOT] Opcodes interpretados. Objeto &#x27;RecordEntity&#x27; asignado en Generación Joven.</span><span class="log phase log-28-3">[HOTSPOT] Puntero local asignado a null. Raíz GC perdida para &#x27;RecordEntity&#x27;.</span><span class="log phase log-28-4">[GC_G1] Ciclo completado: 1 objeto huérfano compactado/liberado de Eden Space.</span></div><span class="execution-tag">DEMO · 4s</span></div></section><section class="module" data-id="language-cs"><div class="module-header"><span class="index">09/10 · 29/30</span><h1 class="headline" data-field="title">C#</h1><span class="kind">LENGUAJES DE PROGRAMACIÓN</span></div><p class="description" data-field="description">.NET, LINQ, Interfaces y Tareas Asíncronas</p><div class="main-layout"><div class="visual-card"><div class="pane-title"><span>VISUALIZACIÓN DE EJECUCIÓN</span><span>ETAPAS 05</span></div><div class="visual-stage"><div class="phase phase-29-0">
+            <svg class="diagram-svg-root" class="visual-svg" viewBox="0 0 540 260">
+              <!-- LINQ PIPELINE -->
+              <rect class="svg-box" x="20" y="30" width="140" height="180"/>
+              <text class="svg-text" x="90" y="55">LINQ ENUMERABLE</text>
+              <rect x="30" y="80" width="120" height="30" rx="3" fill="#161b22" stroke="#30363d"/>
+              <text class="svg-subtext" x="90" y="97"><tspan data-field="querysrc">metricsCatalog</tspan></text>
+              <rect x="30" y="120" width="120" height="30" rx="3" fill="#161b22" stroke="#30363d"/>
+              <text class="svg-subtext" x="90" y="137">.Where() &amp; .Select()</text>
+
+              <!-- Conexión a ThreadPool Task -->
+              <line class="svg-path " x1="160" y1="120" x2="210" y2="120"/>
+
+              <!-- .NET TASK STATE MACHINE -->
+              <rect class="svg-box " x="210" y="40" width="160" height="150"/>
+              <text class="svg-text" x="290" y="65">IAsyncStateMachine</text>
+              <text class="svg-subtext" x="290" y="85">Task.Run() :: Worker</text>
+              <circle cx="290" cy="120" r="22" fill="#161b22" stroke="#30363d" stroke-width="2"/>
+              <text class="svg-text" x="290" y="123" style="font-size:9px;">THREAD</text>
+
+              <!-- Conexión a Resultado -->
+              <line class="svg-path " x1="370" y1="120" x2="410" y2="120"/>
+
+              <!-- Salida de Resultado -->
+              <rect class="svg-box " x="410" y="60" width="110" height="100"/>
+              <text class="svg-text" x="465" y="95">VALOR AWAIT</text>
+              <text class="svg-text" x="465" y="125" style="fill:#3fb950; font-size:16px;">total: 480</text>
+            </svg>
+          <span class="sr-only" style="display:none">[.NET] Compilando árbol de expresiones LINQ sobre &#x27;metricsCatalog&#x27;.</span></div><div class="phase phase-29-1">
+            <svg class="diagram-svg-root" class="visual-svg" viewBox="0 0 540 260">
+              <!-- LINQ PIPELINE -->
+              <rect class="svg-box" x="20" y="30" width="140" height="180"/>
+              <text class="svg-text" x="90" y="55">LINQ ENUMERABLE</text>
+              <rect x="30" y="80" width="120" height="30" rx="3" fill="#161b22" stroke="#30363d"/>
+              <text class="svg-subtext" x="90" y="97"><tspan data-field="querysrc">metricsCatalog</tspan></text>
+              <rect x="30" y="120" width="120" height="30" rx="3" fill="#161b22" stroke="#30363d"/>
+              <text class="svg-subtext" x="90" y="137">.Where() &amp; .Select()</text>
+
+              <!-- Conexión a ThreadPool Task -->
+              <line class="svg-path " x1="160" y1="120" x2="210" y2="120"/>
+
+              <!-- .NET TASK STATE MACHINE -->
+              <rect class="svg-box " x="210" y="40" width="160" height="150"/>
+              <text class="svg-text" x="290" y="65">IAsyncStateMachine</text>
+              <text class="svg-subtext" x="290" y="85">Task.Run() :: Worker</text>
+              <circle cx="290" cy="120" r="22" fill="#161b22" stroke="#30363d" stroke-width="2"/>
+              <text class="svg-text" x="290" y="123" style="font-size:9px;">THREAD</text>
+
+              <!-- Conexión a Resultado -->
+              <line class="svg-path " x1="370" y1="120" x2="410" y2="120"/>
+
+              <!-- Salida de Resultado -->
+              <rect class="svg-box " x="410" y="60" width="110" height="100"/>
+              <text class="svg-text" x="465" y="95">VALOR AWAIT</text>
+              <text class="svg-text" x="465" y="125" style="fill:#3fb950; font-size:16px;">total: 480</text>
+            </svg>
+          <span class="sr-only" style="display:none">[.NET] Compilando árbol de expresiones LINQ sobre &#x27;metricsCatalog&#x27;.</span></div><div class="phase phase-29-2">
+            <svg class="diagram-svg-root" class="visual-svg" viewBox="0 0 540 260">
+              <!-- LINQ PIPELINE -->
+              <rect class="svg-box" x="20" y="30" width="140" height="180"/>
+              <text class="svg-text" x="90" y="55">LINQ ENUMERABLE</text>
+              <rect x="30" y="80" width="120" height="30" rx="3" fill="#161b22" stroke="#30363d"/>
+              <text class="svg-subtext" x="90" y="97"><tspan data-field="querysrc">metricsCatalog</tspan></text>
+              <rect x="30" y="120" width="120" height="30" rx="3" fill="#161b22" stroke="#58a6ff"/>
+              <text class="svg-subtext" x="90" y="137">.Where() &amp; .Select()</text>
+
+              <!-- Conexión a ThreadPool Task -->
+              <line class="svg-path " x1="160" y1="120" x2="210" y2="120"/>
+
+              <!-- .NET TASK STATE MACHINE -->
+              <rect class="svg-box " x="210" y="40" width="160" height="150"/>
+              <text class="svg-text" x="290" y="65">IAsyncStateMachine</text>
+              <text class="svg-subtext" x="290" y="85">Task.Run() :: Worker</text>
+              <circle cx="290" cy="120" r="22" fill="#161b22" stroke="#30363d" stroke-width="2"/>
+              <text class="svg-text" x="290" y="123" style="font-size:9px;">THREAD</text>
+
+              <!-- Conexión a Resultado -->
+              <line class="svg-path " x1="370" y1="120" x2="410" y2="120"/>
+
+              <!-- Salida de Resultado -->
+              <rect class="svg-box " x="410" y="60" width="110" height="100"/>
+              <text class="svg-text" x="465" y="95">VALOR AWAIT</text>
+              <text class="svg-text" x="465" y="125" style="fill:#3fb950; font-size:16px;">total: 480</text>
+            </svg>
+          <span class="sr-only" style="display:none">[.NET] Evaluación diferida configurada con delegados Func&lt;T, bool&gt;.</span></div><div class="phase phase-29-3">
+            <svg class="diagram-svg-root" class="visual-svg" viewBox="0 0 540 260">
+              <!-- LINQ PIPELINE -->
+              <rect class="svg-box" x="20" y="30" width="140" height="180"/>
+              <text class="svg-text" x="90" y="55">LINQ ENUMERABLE</text>
+              <rect x="30" y="80" width="120" height="30" rx="3" fill="#161b22" stroke="#30363d"/>
+              <text class="svg-subtext" x="90" y="97"><tspan data-field="querysrc">metricsCatalog</tspan></text>
+              <rect x="30" y="120" width="120" height="30" rx="3" fill="#161b22" stroke="#58a6ff"/>
+              <text class="svg-subtext" x="90" y="137">.Where() &amp; .Select()</text>
+
+              <!-- Conexión a ThreadPool Task -->
+              <line class="svg-path flowing" x1="160" y1="120" x2="210" y2="120"/>
+
+              <!-- .NET TASK STATE MACHINE -->
+              <rect class="svg-box active" x="210" y="40" width="160" height="150"/>
+              <text class="svg-text" x="290" y="65">IAsyncStateMachine</text>
+              <text class="svg-subtext" x="290" y="85">Task.Run() :: Worker</text>
+              <circle cx="290" cy="120" r="22" fill="#161b22" stroke="#bc8cff" stroke-width="2"/>
+              <text class="svg-text" x="290" y="123" style="font-size:9px;">THREAD</text>
+
+              <!-- Conexión a Resultado -->
+              <line class="svg-path " x1="370" y1="120" x2="410" y2="120"/>
+
+              <!-- Salida de Resultado -->
+              <rect class="svg-box " x="410" y="60" width="110" height="100"/>
+              <text class="svg-text" x="465" y="95">VALOR AWAIT</text>
+              <text class="svg-text" x="465" y="125" style="fill:#3fb950; font-size:16px;">total: 480</text>
+            </svg>
+          <span class="sr-only" style="display:none">[.NET] AggregateMetricsAsync: IAsyncStateMachine delega cálculo al ThreadPool sin bloquear UI.</span></div><div class="phase phase-29-4">
+            <svg class="diagram-svg-root" class="visual-svg" viewBox="0 0 540 260">
+              <!-- LINQ PIPELINE -->
+              <rect class="svg-box" x="20" y="30" width="140" height="180"/>
+              <text class="svg-text" x="90" y="55">LINQ ENUMERABLE</text>
+              <rect x="30" y="80" width="120" height="30" rx="3" fill="#161b22" stroke="#30363d"/>
+              <text class="svg-subtext" x="90" y="97"><tspan data-field="querysrc">metricsCatalog</tspan></text>
+              <rect x="30" y="120" width="120" height="30" rx="3" fill="#161b22" stroke="#58a6ff"/>
+              <text class="svg-subtext" x="90" y="137">.Where() &amp; .Select()</text>
+
+              <!-- Conexión a ThreadPool Task -->
+              <line class="svg-path flowing" x1="160" y1="120" x2="210" y2="120"/>
+
+              <!-- .NET TASK STATE MACHINE -->
+              <rect class="svg-box active" x="210" y="40" width="160" height="150"/>
+              <text class="svg-text" x="290" y="65">IAsyncStateMachine</text>
+              <text class="svg-subtext" x="290" y="85">Task.Run() :: Worker</text>
+              <circle cx="290" cy="120" r="22" fill="#161b22" stroke="#bc8cff" stroke-width="2"/>
+              <text class="svg-text" x="290" y="123" style="font-size:9px;">THREAD</text>
+
+              <!-- Conexión a Resultado -->
+              <line class="svg-path flowing" x1="370" y1="120" x2="410" y2="120"/>
+
+              <!-- Salida de Resultado -->
+              <rect class="svg-box success" x="410" y="60" width="110" height="100"/>
+              <text class="svg-text" x="465" y="95">VALOR AWAIT</text>
+              <text class="svg-text" x="465" y="125" style="fill:#3fb950; font-size:16px;">total: 480</text>
+            </svg>
+          <span class="sr-only" style="display:none">[.NET] Tarea completada. Contexto restaurado, total: 480.</span></div></div></div><div class="source-card"><div class="pane-title"><span>CÓDIGO / INSPECTOR</span><span data-field="file">DataProcessor.cs</span></div><div class="code-scroll"><div class="code-line"><span class="ln">01</span><span class="ct"><span class="kw">public interface</span> <span class="tp editable" data-key="interfaceName"><span data-field="interfacename">IComputeProvider</span></span> {</span></div><div class="code-line"><span class="ln">02</span><span class="ct">    <span class="tp">Task</span>&lt;<span class="tp">int</span>&gt; <span class="fn editable" data-key="taskMethod"><span data-field="taskmethod">AggregateMetricsAsync</span></span>();</span></div><div class="code-line"><span class="ln">03</span><span class="ct">}</span></div><div class="code-line"><span class="ln">04</span><span class="ct">&#160;</span></div><div class="code-line"><span class="ln">05</span><span class="ct"><span class="kw">var</span> query = <span class="vr editable" data-key="querySrc"><span data-field="querysrc">metricsCatalog</span></span></span></div><div class="code-line"><span class="ln">06</span><span class="ct">    .Where(x =&gt; x.Active)</span></div><div class="code-line"><span class="ln">07</span><span class="ct">    .Select(x =&gt; x.Score);</span></div><div class="code-line"><span class="ln">08</span><span class="ct">&#160;</span></div><div class="code-line"><span class="ln">09</span><span class="ct"><span class="kw">int</span> total = <span class="kw">await</span> Task.Run(() =&gt; query.Sum());</span></div></div><div class="code-more"></div></div></div><div class="execution-bar"><div class="log-stage" style="position:relative;height:100%;flex:1;overflow:hidden"><span class="log phase log-29-0">[.NET] Compilando árbol de expresiones LINQ sobre &#x27;metricsCatalog&#x27;.</span><span class="log phase log-29-1">[.NET] Compilando árbol de expresiones LINQ sobre &#x27;metricsCatalog&#x27;.</span><span class="log phase log-29-2">[.NET] Evaluación diferida configurada con delegados Func&lt;T, bool&gt;.</span><span class="log phase log-29-3">[.NET] AggregateMetricsAsync: IAsyncStateMachine delega cálculo al ThreadPool sin bloquear UI.</span><span class="log phase log-29-4">[.NET] Tarea completada. Contexto restaurado, total: 480.</span></div><span class="execution-tag">DEMO · 4s</span></div></section><section class="module" data-id="language-sql"><div class="module-header"><span class="index">10/10 · 30/30</span><h1 class="headline" data-field="title">SQL</h1><span class="kind">LENGUAJES DE PROGRAMACIÓN</span></div><p class="description" data-field="description">Consultas, Joins, Filtros y Ejecución Visual</p><div class="main-layout"><div class="visual-card"><div class="pane-title"><span>VISUALIZACIÓN DE EJECUCIÓN</span><span>ETAPAS 05</span></div><div class="visual-stage"><div class="phase phase-30-0">
+            <svg class="diagram-svg-root" class="visual-svg" viewBox="0 0 540 260">
+              <!-- SCAN TABLES -->
+              <rect class="svg-box active" x="15" y="20" width="110" height="70"/>
+              <text class="svg-text" x="70" y="45">TABLE: <tspan data-field="lefttable">users</tspan></text>
+              <text class="svg-subtext" x="70" y="65">Seq Scan [3 filas]</text>
+
+              <rect class="svg-box active" x="15" y="110" width="110" height="70"/>
+              <text class="svg-text" x="70" y="135">TABLE: <tspan data-field="righttable">transactions</tspan></text>
+              <text class="svg-subtext" x="70" y="155">Index Scan [4 filas]</text>
+
+              <!-- HASH JOIN -->
+              <line class="svg-path " x1="125" y1="55" x2="175" y2="95"/>
+              <line class="svg-path " x1="125" y1="145" x2="175" y2="95"/>
+              <rect class="svg-box " x="175" y="65" width="130" height="65"/>
+              <text class="svg-text" x="240" y="90">HASH JOIN</text>
+              <text class="svg-subtext" x="240" y="108">ON u.id = t.user_id</text>
+
+              <!-- FILTER WHERE -->
+              <line class="svg-path " x1="305" y1="97" x2="350" y2="97"/>
+              <rect class="svg-box " x="350" y="65" width="85" height="65"/>
+              <text class="svg-text" x="392" y="90">FILTER</text>
+              <text class="svg-subtext" x="392" y="108">&gt; <tspan data-field="filterthreshold">500</tspan></text>
+
+              <!-- RESULT SET -->
+              <line class="svg-path " x1="435" y1="97" x2="465" y2="97"/>
+              <rect class="svg-box " x="465" y="45" width="65" height="110"/>
+              <text class="svg-text" x="497" y="70" style="font-size:9px;">OUTPUT</text>
+              <rect x="472" y="85" width="50" height="15" fill="#161b22" stroke="#3fb950"/>
+              <rect x="472" y="105" width="50" height="15" fill="#161b22" stroke="#3fb950"/>
+              <text class="svg-subtext" x="497" y="135">2 Tuplas</text>
+            </svg>
+          <span class="sr-only" style="display:none">[QUERY_PLAN] Optimizador Cost-Based construye Hash Join entre &#x27;users&#x27; y &#x27;transactions&#x27;.</span></div><div class="phase phase-30-1">
+            <svg class="diagram-svg-root" class="visual-svg" viewBox="0 0 540 260">
+              <!-- SCAN TABLES -->
+              <rect class="svg-box active" x="15" y="20" width="110" height="70"/>
+              <text class="svg-text" x="70" y="45">TABLE: <tspan data-field="lefttable">users</tspan></text>
+              <text class="svg-subtext" x="70" y="65">Seq Scan [3 filas]</text>
+
+              <rect class="svg-box active" x="15" y="110" width="110" height="70"/>
+              <text class="svg-text" x="70" y="135">TABLE: <tspan data-field="righttable">transactions</tspan></text>
+              <text class="svg-subtext" x="70" y="155">Index Scan [4 filas]</text>
+
+              <!-- HASH JOIN -->
+              <line class="svg-path " x1="125" y1="55" x2="175" y2="95"/>
+              <line class="svg-path " x1="125" y1="145" x2="175" y2="95"/>
+              <rect class="svg-box " x="175" y="65" width="130" height="65"/>
+              <text class="svg-text" x="240" y="90">HASH JOIN</text>
+              <text class="svg-subtext" x="240" y="108">ON u.id = t.user_id</text>
+
+              <!-- FILTER WHERE -->
+              <line class="svg-path " x1="305" y1="97" x2="350" y2="97"/>
+              <rect class="svg-box " x="350" y="65" width="85" height="65"/>
+              <text class="svg-text" x="392" y="90">FILTER</text>
+              <text class="svg-subtext" x="392" y="108">&gt; <tspan data-field="filterthreshold">500</tspan></text>
+
+              <!-- RESULT SET -->
+              <line class="svg-path " x1="435" y1="97" x2="465" y2="97"/>
+              <rect class="svg-box " x="465" y="45" width="65" height="110"/>
+              <text class="svg-text" x="497" y="70" style="font-size:9px;">OUTPUT</text>
+              <rect x="472" y="85" width="50" height="15" fill="#161b22" stroke="#3fb950"/>
+              <rect x="472" y="105" width="50" height="15" fill="#161b22" stroke="#3fb950"/>
+              <text class="svg-subtext" x="497" y="135">2 Tuplas</text>
+            </svg>
+          <span class="sr-only" style="display:none">[QUERY_PLAN] Optimizador Cost-Based construye Hash Join entre &#x27;users&#x27; y &#x27;transactions&#x27;.</span></div><div class="phase phase-30-2">
+            <svg class="diagram-svg-root" class="visual-svg" viewBox="0 0 540 260">
+              <!-- SCAN TABLES -->
+              <rect class="svg-box active" x="15" y="20" width="110" height="70"/>
+              <text class="svg-text" x="70" y="45">TABLE: <tspan data-field="lefttable">users</tspan></text>
+              <text class="svg-subtext" x="70" y="65">Seq Scan [3 filas]</text>
+
+              <rect class="svg-box active" x="15" y="110" width="110" height="70"/>
+              <text class="svg-text" x="70" y="135">TABLE: <tspan data-field="righttable">transactions</tspan></text>
+              <text class="svg-subtext" x="70" y="155">Index Scan [4 filas]</text>
+
+              <!-- HASH JOIN -->
+              <line class="svg-path flowing" x1="125" y1="55" x2="175" y2="95"/>
+              <line class="svg-path flowing" x1="125" y1="145" x2="175" y2="95"/>
+              <rect class="svg-box active" x="175" y="65" width="130" height="65"/>
+              <text class="svg-text" x="240" y="90">HASH JOIN</text>
+              <text class="svg-subtext" x="240" y="108">ON u.id = t.user_id</text>
+
+              <!-- FILTER WHERE -->
+              <line class="svg-path " x1="305" y1="97" x2="350" y2="97"/>
+              <rect class="svg-box " x="350" y="65" width="85" height="65"/>
+              <text class="svg-text" x="392" y="90">FILTER</text>
+              <text class="svg-subtext" x="392" y="108">&gt; <tspan data-field="filterthreshold">500</tspan></text>
+
+              <!-- RESULT SET -->
+              <line class="svg-path " x1="435" y1="97" x2="465" y2="97"/>
+              <rect class="svg-box " x="465" y="45" width="65" height="110"/>
+              <text class="svg-text" x="497" y="70" style="font-size:9px;">OUTPUT</text>
+              <rect x="472" y="85" width="50" height="15" fill="#161b22" stroke="#3fb950"/>
+              <rect x="472" y="105" width="50" height="15" fill="#161b22" stroke="#3fb950"/>
+              <text class="svg-subtext" x="497" y="135">2 Tuplas</text>
+            </svg>
+          <span class="sr-only" style="display:none">[ENGINE] Coincidencias de clave foránea evaluadas en memoria caché.</span></div><div class="phase phase-30-3">
+            <svg class="diagram-svg-root" class="visual-svg" viewBox="0 0 540 260">
+              <!-- SCAN TABLES -->
+              <rect class="svg-box active" x="15" y="20" width="110" height="70"/>
+              <text class="svg-text" x="70" y="45">TABLE: <tspan data-field="lefttable">users</tspan></text>
+              <text class="svg-subtext" x="70" y="65">Seq Scan [3 filas]</text>
+
+              <rect class="svg-box active" x="15" y="110" width="110" height="70"/>
+              <text class="svg-text" x="70" y="135">TABLE: <tspan data-field="righttable">transactions</tspan></text>
+              <text class="svg-subtext" x="70" y="155">Index Scan [4 filas]</text>
+
+              <!-- HASH JOIN -->
+              <line class="svg-path flowing" x1="125" y1="55" x2="175" y2="95"/>
+              <line class="svg-path flowing" x1="125" y1="145" x2="175" y2="95"/>
+              <rect class="svg-box active" x="175" y="65" width="130" height="65"/>
+              <text class="svg-text" x="240" y="90">HASH JOIN</text>
+              <text class="svg-subtext" x="240" y="108">ON u.id = t.user_id</text>
+
+              <!-- FILTER WHERE -->
+              <line class="svg-path flowing" x1="305" y1="97" x2="350" y2="97"/>
+              <rect class="svg-box active" x="350" y="65" width="85" height="65"/>
+              <text class="svg-text" x="392" y="90">FILTER</text>
+              <text class="svg-subtext" x="392" y="108">&gt; <tspan data-field="filterthreshold">500</tspan></text>
+
+              <!-- RESULT SET -->
+              <line class="svg-path " x1="435" y1="97" x2="465" y2="97"/>
+              <rect class="svg-box " x="465" y="45" width="65" height="110"/>
+              <text class="svg-text" x="497" y="70" style="font-size:9px;">OUTPUT</text>
+              <rect x="472" y="85" width="50" height="15" fill="#161b22" stroke="#3fb950"/>
+              <rect x="472" y="105" width="50" height="15" fill="#161b22" stroke="#3fb950"/>
+              <text class="svg-subtext" x="497" y="135">2 Tuplas</text>
+            </svg>
+          <span class="sr-only" style="display:none">[ENGINE] Predicado de filtro aplicado: amount &gt; 500 descarta 2 tuplas.</span></div><div class="phase phase-30-4">
+            <svg class="diagram-svg-root" class="visual-svg" viewBox="0 0 540 260">
+              <!-- SCAN TABLES -->
+              <rect class="svg-box active" x="15" y="20" width="110" height="70"/>
+              <text class="svg-text" x="70" y="45">TABLE: <tspan data-field="lefttable">users</tspan></text>
+              <text class="svg-subtext" x="70" y="65">Seq Scan [3 filas]</text>
+
+              <rect class="svg-box active" x="15" y="110" width="110" height="70"/>
+              <text class="svg-text" x="70" y="135">TABLE: <tspan data-field="righttable">transactions</tspan></text>
+              <text class="svg-subtext" x="70" y="155">Index Scan [4 filas]</text>
+
+              <!-- HASH JOIN -->
+              <line class="svg-path flowing" x1="125" y1="55" x2="175" y2="95"/>
+              <line class="svg-path flowing" x1="125" y1="145" x2="175" y2="95"/>
+              <rect class="svg-box active" x="175" y="65" width="130" height="65"/>
+              <text class="svg-text" x="240" y="90">HASH JOIN</text>
+              <text class="svg-subtext" x="240" y="108">ON u.id = t.user_id</text>
+
+              <!-- FILTER WHERE -->
+              <line class="svg-path flowing" x1="305" y1="97" x2="350" y2="97"/>
+              <rect class="svg-box active" x="350" y="65" width="85" height="65"/>
+              <text class="svg-text" x="392" y="90">FILTER</text>
+              <text class="svg-subtext" x="392" y="108">&gt; <tspan data-field="filterthreshold">500</tspan></text>
+
+              <!-- RESULT SET -->
+              <line class="svg-path flowing" x1="435" y1="97" x2="465" y2="97"/>
+              <rect class="svg-box success" x="465" y="45" width="65" height="110"/>
+              <text class="svg-text" x="497" y="70" style="font-size:9px;">OUTPUT</text>
+              <rect x="472" y="85" width="50" height="15" fill="#161b22" stroke="#3fb950"/>
+              <rect x="472" y="105" width="50" height="15" fill="#161b22" stroke="#3fb950"/>
+              <text class="svg-subtext" x="497" y="135">2 Tuplas</text>
+            </svg>
+          <span class="sr-only" style="display:none">[RESULT] 2 registros proyectados con éxito (Tiempo de ejecución: 0.42ms).</span></div></div></div><div class="source-card"><div class="pane-title"><span>CÓDIGO / INSPECTOR</span><span data-field="file">analytics_query.sql</span></div><div class="code-scroll"><div class="code-line"><span class="ln">01</span><span class="ct"><span class="kw">SELECT</span> u.name, t.amount</span></div><div class="code-line"><span class="ln">02</span><span class="ct"><span class="kw">FROM</span> <span class="tp editable" data-key="leftTable"><span data-field="lefttable">users</span></span> u</span></div><div class="code-line"><span class="ln">03</span><span class="ct"><span class="kw">INNER JOIN</span> <span class="tp editable" data-key="rightTable"><span data-field="righttable">transactions</span></span> t</span></div><div class="code-line"><span class="ln">04</span><span class="ct">    <span class="kw">ON</span> u.id = t.user_id</span></div><div class="code-line"><span class="ln">05</span><span class="ct"><span class="kw">WHERE</span> t.amount &gt; <span class="num editable" data-key="filterThreshold"><span data-field="filterthreshold">500</span></span>;</span></div></div><div class="code-more"></div></div></div><div class="execution-bar"><div class="log-stage" style="position:relative;height:100%;flex:1;overflow:hidden"><span class="log phase log-30-0">[QUERY_PLAN] Optimizador Cost-Based construye Hash Join entre &#x27;users&#x27; y &#x27;transactions&#x27;.</span><span class="log phase log-30-1">[QUERY_PLAN] Optimizador Cost-Based construye Hash Join entre &#x27;users&#x27; y &#x27;transactions&#x27;.</span><span class="log phase log-30-2">[ENGINE] Coincidencias de clave foránea evaluadas en memoria caché.</span><span class="log phase log-30-3">[ENGINE] Predicado de filtro aplicado: amount &gt; 500 descarta 2 tuplas.</span><span class="log phase log-30-4">[RESULT] 2 registros proyectados con éxito (Tiempo de ejecución: 0.42ms).</span></div><span class="execution-tag">DEMO · 4s</span></div></section></main><footer>GPTFRAMES / BROWSER RENDER · 480P 24 FPS</footer></body></html>

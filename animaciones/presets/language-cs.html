@@ -1,0 +1,231 @@
+<!doctype html><html lang="es"><head><meta charset="utf-8"><meta http-equiv="Content-Security-Policy" content="default-src &#39;none&#39;; script-src &#39;none&#39;; connect-src &#39;none&#39;; style-src &#39;unsafe-inline&#39;; img-src data:; font-src data:;"><style>
+:root{--bg:#080e18;--card:#121d2d;--panel:#0e1827;--surface:#1b2939;--muted:#8fa9bc;--edge:#294159;--line:#344c66;--cyan:#5bdcf5;--green:#55dfae;--amber:#ffcb81;--purple:#b9a3ff;
+--border-color:#30363d;--border-bright:#484f58;--text-main:#e6edf3;--text-muted:#8b949e;
+--accent-cyan:#00e3ff;--accent-green:#42dea9;--accent-amber:#ffbd6b;--accent-violet:#a855f7;--accent-red:#f85149;
+--accent-blue:#58a6ff;--accent-yellow:#d29922;--success:#3fb950;--warning:#d29922;--danger:#f85149;
+--bg-surface:#151e2d;--bg-card:#21262d;--bg-panel:#0e1827;--bg-overlay:#1f242c}
+*{box-sizing:border-box}
+html,body{width:100%;height:100%;margin:0;overflow:hidden}
+body{background:radial-gradient(ellipse at 20% 14%,#18293f,#080e18 67%,#050a12);color:#eaf5fc;font-family:system-ui,Arial,sans-serif}
+.collection-header{position:absolute;inset:15px 26px auto;display:flex;justify-content:space-between;align-items:center;color:#8baec1;font-size:10px;letter-spacing:1px;font-weight:800}
+.collection-header strong{color:#65e8c6}
+.progress-line{position:absolute;top:42px;left:26px;right:26px;background:#294159;height:2px}
+.catalog{position:absolute;inset:0;overflow:hidden}
+.module{position:absolute;inset:0;padding:55px 26px 27px;visibility:hidden;display:flex;flex-direction:column;gap:8px}
+.module-header{display:flex;align-items:baseline;gap:12px;min-height:29px}
+.index{color:#6de6c8;font:800 12px ui-monospace,Consolas,monospace;white-space:nowrap}
+.headline{font-size:24px;letter-spacing:-.5px;color:#edf7ff;font-weight:840;margin:0;line-height:1.2}
+.kind{margin-left:auto;font:750 9px ui-monospace,Consolas,monospace;letter-spacing:.4px;color:#8facc2;border:1px solid #314d65;border-radius:13px;padding:5px 10px;white-space:nowrap}
+.description{margin:0;color:#aec4d4;font-size:12px;line-height:1.36;height:32px;max-width:785px;overflow:hidden}
+.main-layout{display:flex;gap:13px;min-height:0;flex:1}
+.visual-card{position:relative;background:#0b1524;border:1px solid #36516b;border-radius:14px;overflow:hidden;flex:1;min-width:0}
+.visual-card .pane-title,.source-card .pane-title{height:30px;border-bottom:1px solid #2d4157;display:flex;align-items:center;justify-content:space-between;padding:0 12px;color:#83abc4;font:750 10px ui-monospace,Consolas,monospace;letter-spacing:.45px;background:#111e30}
+.visual-card .pane-title span:last-child{color:#61e1ba}
+.source-card .pane-title span:last-child{max-width:124px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;text-align:right}
+.visual-stage{position:absolute;top:30px;bottom:0;left:0;right:0}
+.phase{position:absolute;inset:0;opacity:0;visibility:hidden;display:flex;align-items:center;justify-content:center}
+.diagram-svg,.diagram-svg-root{display:block;width:100%;height:100%;overflow:visible}
+.source-card{position:relative;width:260px;flex:0 0 260px;min-width:0;background:#0b1524;border:1px solid #36516b;border-radius:14px;overflow:hidden}
+.code-scroll{position:absolute;inset:30px 0 0;overflow:hidden;padding:7px 7px 5px 0;background:#080f1e}
+.code-line{display:flex;gap:4px;align-items:baseline;font:10px/1.53 ui-monospace,Consolas,monospace;min-height:15.3px;white-space:pre}
+.code-line .ln{flex:0 0 23px;text-align:right;color:#42637b}
+.code-line .ct{min-width:0;display:block;color:#e0eaf8}
+.code-line .ct span{white-space:pre}
+.kw,.tok-kw,.c-kw{color:#c3aaff;font-weight:700}
+.fn,.tok-fn,.c-fn{color:#77e3d1}.tp{color:#83c8ff}
+.st,.tok-str,.c-str{color:#b4d6ff}.num,.tok-num,.c-num{color:#ffc879}.cm,.tok-cmt,.c-cm{color:#8298a8}
+.vr,.tok-op,.c-hl{color:#e5b9fb}
+.code-scroll .code-line{padding-right:3px}
+.code-scroll .code-line:nth-child(n+17){opacity:.55}
+.code-more{position:absolute;bottom:0;left:0;right:0;background:linear-gradient(transparent,#0b1524 90%);height:22px;pointer-events:none}
+.execution-bar{height:30px;flex:0 0 30px;background:#102238;border:1px solid #274c68;border-radius:8px;padding:7px 10px;color:#a8e3e5;display:flex;justify-content:space-between;align-items:center;gap:13px}
+.log{font:10.2px ui-monospace,Consolas,monospace;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.execution-tag{font:800 9px ui-monospace,Consolas,monospace;color:#8ddbbf;white-space:nowrap}
+footer{position:absolute;bottom:9px;right:26px;color:#57768d;font:9px ui-monospace,Consolas,monospace}
+/* architecture SVG vocabulary */
+.node-box{fill:#132236;stroke:#334e67;stroke-width:1.5}
+.node-box.active,.node-box.highlight{fill:#1e344a;stroke:#58a6ff}
+.node-box.success{fill:#15372d;stroke:#44e2a9}
+.node-box.warning{fill:#3a2d1c;stroke:#eab977}
+.node-box.error{fill:#401a26;stroke:#ff6675}
+.svg-label{fill:#dceef8;font:600 12px ui-monospace,Consolas,monospace}
+.svg-sub{fill:#95acc1;font:10px ui-monospace,Consolas,monospace}
+.packet{fill:#5ce6fa;filter:drop-shadow(0 0 5px #35dafb)}
+/* runtime SVG vocabulary */
+.node-text{fill:#e2edf9;font:11px ui-monospace,Consolas,monospace}
+.node-subtext{fill:#9fb0c2;font:9px ui-monospace,Consolas,monospace}
+.conn-line{stroke:#526b84;stroke-width:1.7;fill:none}
+.conn-line.active,.svg-path.flowing{stroke:#5ad8fe;stroke-dasharray:6 4;animation:motionDash 1s linear infinite}
+.conn-line.error{stroke:#fa6868}
+@keyframes motionDash{to{stroke-dashoffset:-20}}
+/* languages SVG vocabulary */
+.svg-box{fill:#1a2739;stroke:#39516a;stroke-width:1.6}
+.svg-box.active{stroke:#58a6ff;fill:#1d354c}
+.svg-box.success{stroke:#36d6a7;fill:#14382f}
+.svg-box.warning{stroke:#facc80;fill:#3a291b}
+.svg-text{fill:#e8f3fb;font:700 11px ui-monospace,Consolas,monospace;text-anchor:middle;dominant-baseline:middle}
+.svg-subtext{fill:#a2b5c8;font:9px ui-monospace,Consolas,monospace;text-anchor:middle;dominant-baseline:middle}
+.svg-path{fill:none;stroke:#51708c;stroke-width:1.7}
+
+@keyframes phase_29_0{0%,19.9000%{opacity:1;visibility:visible}20.0000%,100%{opacity:0;visibility:hidden}}
+.phase-29-0{animation:phase_29_0 4s linear both}
+@keyframes phase_29_1{0%,19.9000%{opacity:0;visibility:hidden}20.0000%,39.9000%{opacity:1;visibility:visible}40.0000%,100%{opacity:0;visibility:hidden}}
+.phase-29-1{animation:phase_29_1 4s linear both}
+@keyframes phase_29_2{0%,39.9000%{opacity:0;visibility:hidden}40.0000%,59.9000%{opacity:1;visibility:visible}60.0000%,100%{opacity:0;visibility:hidden}}
+.phase-29-2{animation:phase_29_2 4s linear both}
+@keyframes phase_29_3{0%,59.9000%{opacity:0;visibility:hidden}60.0000%,79.9000%{opacity:1;visibility:visible}80.0000%,100%{opacity:0;visibility:hidden}}
+.phase-29-3{animation:phase_29_3 4s linear both}
+@keyframes phase_29_4{0%,79.9000%{opacity:0;visibility:hidden}80.0000%,99.9000%{opacity:1;visibility:visible}100.0000%,100%{opacity:0;visibility:hidden}}
+.phase-29-4{animation:phase_29_4 4s linear both}
+@keyframes log_29_0{0%,19.9000%{opacity:1;visibility:visible}20.0000%,100%{opacity:0;visibility:hidden}}
+.log-29-0{animation:log_29_0 4s linear both}
+@keyframes log_29_1{0%,19.9000%{opacity:0;visibility:hidden}20.0000%,39.9000%{opacity:1;visibility:visible}40.0000%,100%{opacity:0;visibility:hidden}}
+.log-29-1{animation:log_29_1 4s linear both}
+@keyframes log_29_2{0%,39.9000%{opacity:0;visibility:hidden}40.0000%,59.9000%{opacity:1;visibility:visible}60.0000%,100%{opacity:0;visibility:hidden}}
+.log-29-2{animation:log_29_2 4s linear both}
+@keyframes log_29_3{0%,59.9000%{opacity:0;visibility:hidden}60.0000%,79.9000%{opacity:1;visibility:visible}80.0000%,100%{opacity:0;visibility:hidden}}
+.log-29-3{animation:log_29_3 4s linear both}
+@keyframes log_29_4{0%,79.9000%{opacity:0;visibility:hidden}80.0000%,99.9000%{opacity:1;visibility:visible}100.0000%,100%{opacity:0;visibility:hidden}}
+.log-29-4{animation:log_29_4 4s linear both}
+.log-stage .log{position:absolute;inset:0;display:block;line-height:17px;}
+.module{visibility:visible}</style></head><body><header class="collection-header"><span>GPTFRAMES / RECURSO EDITABLE</span><strong>Lenguajes de programación</strong></header><div class="progress-line"></div><main class="catalog" data-segment-seconds="4"><section class="module" data-id="language-cs"><div class="module-header"><span class="index">09/10 · 29/30</span><h1 class="headline" data-field="title">C#</h1><span class="kind">LENGUAJES DE PROGRAMACIÓN</span></div><p class="description" data-field="description">.NET, LINQ, Interfaces y Tareas Asíncronas</p><div class="main-layout"><div class="visual-card"><div class="pane-title"><span>VISUALIZACIÓN DE EJECUCIÓN</span><span>ETAPAS 05</span></div><div class="visual-stage"><div class="phase phase-29-0">
+            <svg class="diagram-svg-root" class="visual-svg" viewBox="0 0 540 260">
+              <!-- LINQ PIPELINE -->
+              <rect class="svg-box" x="20" y="30" width="140" height="180"/>
+              <text class="svg-text" x="90" y="55">LINQ ENUMERABLE</text>
+              <rect x="30" y="80" width="120" height="30" rx="3" fill="#161b22" stroke="#30363d"/>
+              <text class="svg-subtext" x="90" y="97"><tspan data-field="querysrc">metricsCatalog</tspan></text>
+              <rect x="30" y="120" width="120" height="30" rx="3" fill="#161b22" stroke="#30363d"/>
+              <text class="svg-subtext" x="90" y="137">.Where() &amp; .Select()</text>
+
+              <!-- Conexión a ThreadPool Task -->
+              <line class="svg-path " x1="160" y1="120" x2="210" y2="120"/>
+
+              <!-- .NET TASK STATE MACHINE -->
+              <rect class="svg-box " x="210" y="40" width="160" height="150"/>
+              <text class="svg-text" x="290" y="65">IAsyncStateMachine</text>
+              <text class="svg-subtext" x="290" y="85">Task.Run() :: Worker</text>
+              <circle cx="290" cy="120" r="22" fill="#161b22" stroke="#30363d" stroke-width="2"/>
+              <text class="svg-text" x="290" y="123" style="font-size:9px;">THREAD</text>
+
+              <!-- Conexión a Resultado -->
+              <line class="svg-path " x1="370" y1="120" x2="410" y2="120"/>
+
+              <!-- Salida de Resultado -->
+              <rect class="svg-box " x="410" y="60" width="110" height="100"/>
+              <text class="svg-text" x="465" y="95">VALOR AWAIT</text>
+              <text class="svg-text" x="465" y="125" style="fill:#3fb950; font-size:16px;">total: 480</text>
+            </svg>
+          <span class="sr-only" style="display:none">[.NET] Compilando árbol de expresiones LINQ sobre &#x27;metricsCatalog&#x27;.</span></div><div class="phase phase-29-1">
+            <svg class="diagram-svg-root" class="visual-svg" viewBox="0 0 540 260">
+              <!-- LINQ PIPELINE -->
+              <rect class="svg-box" x="20" y="30" width="140" height="180"/>
+              <text class="svg-text" x="90" y="55">LINQ ENUMERABLE</text>
+              <rect x="30" y="80" width="120" height="30" rx="3" fill="#161b22" stroke="#30363d"/>
+              <text class="svg-subtext" x="90" y="97"><tspan data-field="querysrc">metricsCatalog</tspan></text>
+              <rect x="30" y="120" width="120" height="30" rx="3" fill="#161b22" stroke="#30363d"/>
+              <text class="svg-subtext" x="90" y="137">.Where() &amp; .Select()</text>
+
+              <!-- Conexión a ThreadPool Task -->
+              <line class="svg-path " x1="160" y1="120" x2="210" y2="120"/>
+
+              <!-- .NET TASK STATE MACHINE -->
+              <rect class="svg-box " x="210" y="40" width="160" height="150"/>
+              <text class="svg-text" x="290" y="65">IAsyncStateMachine</text>
+              <text class="svg-subtext" x="290" y="85">Task.Run() :: Worker</text>
+              <circle cx="290" cy="120" r="22" fill="#161b22" stroke="#30363d" stroke-width="2"/>
+              <text class="svg-text" x="290" y="123" style="font-size:9px;">THREAD</text>
+
+              <!-- Conexión a Resultado -->
+              <line class="svg-path " x1="370" y1="120" x2="410" y2="120"/>
+
+              <!-- Salida de Resultado -->
+              <rect class="svg-box " x="410" y="60" width="110" height="100"/>
+              <text class="svg-text" x="465" y="95">VALOR AWAIT</text>
+              <text class="svg-text" x="465" y="125" style="fill:#3fb950; font-size:16px;">total: 480</text>
+            </svg>
+          <span class="sr-only" style="display:none">[.NET] Compilando árbol de expresiones LINQ sobre &#x27;metricsCatalog&#x27;.</span></div><div class="phase phase-29-2">
+            <svg class="diagram-svg-root" class="visual-svg" viewBox="0 0 540 260">
+              <!-- LINQ PIPELINE -->
+              <rect class="svg-box" x="20" y="30" width="140" height="180"/>
+              <text class="svg-text" x="90" y="55">LINQ ENUMERABLE</text>
+              <rect x="30" y="80" width="120" height="30" rx="3" fill="#161b22" stroke="#30363d"/>
+              <text class="svg-subtext" x="90" y="97"><tspan data-field="querysrc">metricsCatalog</tspan></text>
+              <rect x="30" y="120" width="120" height="30" rx="3" fill="#161b22" stroke="#58a6ff"/>
+              <text class="svg-subtext" x="90" y="137">.Where() &amp; .Select()</text>
+
+              <!-- Conexión a ThreadPool Task -->
+              <line class="svg-path " x1="160" y1="120" x2="210" y2="120"/>
+
+              <!-- .NET TASK STATE MACHINE -->
+              <rect class="svg-box " x="210" y="40" width="160" height="150"/>
+              <text class="svg-text" x="290" y="65">IAsyncStateMachine</text>
+              <text class="svg-subtext" x="290" y="85">Task.Run() :: Worker</text>
+              <circle cx="290" cy="120" r="22" fill="#161b22" stroke="#30363d" stroke-width="2"/>
+              <text class="svg-text" x="290" y="123" style="font-size:9px;">THREAD</text>
+
+              <!-- Conexión a Resultado -->
+              <line class="svg-path " x1="370" y1="120" x2="410" y2="120"/>
+
+              <!-- Salida de Resultado -->
+              <rect class="svg-box " x="410" y="60" width="110" height="100"/>
+              <text class="svg-text" x="465" y="95">VALOR AWAIT</text>
+              <text class="svg-text" x="465" y="125" style="fill:#3fb950; font-size:16px;">total: 480</text>
+            </svg>
+          <span class="sr-only" style="display:none">[.NET] Evaluación diferida configurada con delegados Func&lt;T, bool&gt;.</span></div><div class="phase phase-29-3">
+            <svg class="diagram-svg-root" class="visual-svg" viewBox="0 0 540 260">
+              <!-- LINQ PIPELINE -->
+              <rect class="svg-box" x="20" y="30" width="140" height="180"/>
+              <text class="svg-text" x="90" y="55">LINQ ENUMERABLE</text>
+              <rect x="30" y="80" width="120" height="30" rx="3" fill="#161b22" stroke="#30363d"/>
+              <text class="svg-subtext" x="90" y="97"><tspan data-field="querysrc">metricsCatalog</tspan></text>
+              <rect x="30" y="120" width="120" height="30" rx="3" fill="#161b22" stroke="#58a6ff"/>
+              <text class="svg-subtext" x="90" y="137">.Where() &amp; .Select()</text>
+
+              <!-- Conexión a ThreadPool Task -->
+              <line class="svg-path flowing" x1="160" y1="120" x2="210" y2="120"/>
+
+              <!-- .NET TASK STATE MACHINE -->
+              <rect class="svg-box active" x="210" y="40" width="160" height="150"/>
+              <text class="svg-text" x="290" y="65">IAsyncStateMachine</text>
+              <text class="svg-subtext" x="290" y="85">Task.Run() :: Worker</text>
+              <circle cx="290" cy="120" r="22" fill="#161b22" stroke="#bc8cff" stroke-width="2"/>
+              <text class="svg-text" x="290" y="123" style="font-size:9px;">THREAD</text>
+
+              <!-- Conexión a Resultado -->
+              <line class="svg-path " x1="370" y1="120" x2="410" y2="120"/>
+
+              <!-- Salida de Resultado -->
+              <rect class="svg-box " x="410" y="60" width="110" height="100"/>
+              <text class="svg-text" x="465" y="95">VALOR AWAIT</text>
+              <text class="svg-text" x="465" y="125" style="fill:#3fb950; font-size:16px;">total: 480</text>
+            </svg>
+          <span class="sr-only" style="display:none">[.NET] AggregateMetricsAsync: IAsyncStateMachine delega cálculo al ThreadPool sin bloquear UI.</span></div><div class="phase phase-29-4">
+            <svg class="diagram-svg-root" class="visual-svg" viewBox="0 0 540 260">
+              <!-- LINQ PIPELINE -->
+              <rect class="svg-box" x="20" y="30" width="140" height="180"/>
+              <text class="svg-text" x="90" y="55">LINQ ENUMERABLE</text>
+              <rect x="30" y="80" width="120" height="30" rx="3" fill="#161b22" stroke="#30363d"/>
+              <text class="svg-subtext" x="90" y="97"><tspan data-field="querysrc">metricsCatalog</tspan></text>
+              <rect x="30" y="120" width="120" height="30" rx="3" fill="#161b22" stroke="#58a6ff"/>
+              <text class="svg-subtext" x="90" y="137">.Where() &amp; .Select()</text>
+
+              <!-- Conexión a ThreadPool Task -->
+              <line class="svg-path flowing" x1="160" y1="120" x2="210" y2="120"/>
+
+              <!-- .NET TASK STATE MACHINE -->
+              <rect class="svg-box active" x="210" y="40" width="160" height="150"/>
+              <text class="svg-text" x="290" y="65">IAsyncStateMachine</text>
+              <text class="svg-subtext" x="290" y="85">Task.Run() :: Worker</text>
+              <circle cx="290" cy="120" r="22" fill="#161b22" stroke="#bc8cff" stroke-width="2"/>
+              <text class="svg-text" x="290" y="123" style="font-size:9px;">THREAD</text>
+
+              <!-- Conexión a Resultado -->
+              <line class="svg-path flowing" x1="370" y1="120" x2="410" y2="120"/>
+
+              <!-- Salida de Resultado -->
+              <rect class="svg-box success" x="410" y="60" width="110" height="100"/>
+              <text class="svg-text" x="465" y="95">VALOR AWAIT</text>
+              <text class="svg-text" x="465" y="125" style="fill:#3fb950; font-size:16px;">total: 480</text>
+            </svg>
+          <span class="sr-only" style="display:none">[.NET] Tarea completada. Contexto restaurado, total: 480.</span></div></div></div><div class="source-card"><div class="pane-title"><span>CÓDIGO / INSPECTOR</span><span data-field="file">DataProcessor.cs</span></div><div class="code-scroll"><div class="code-line"><span class="ln">01</span><span class="ct"><span class="kw">public interface</span> <span class="tp editable" data-key="interfaceName"><span data-field="interfacename">IComputeProvider</span></span> {</span></div><div class="code-line"><span class="ln">02</span><span class="ct">    <span class="tp">Task</span>&lt;<span class="tp">int</span>&gt; <span class="fn editable" data-key="taskMethod"><span data-field="taskmethod">AggregateMetricsAsync</span></span>();</span></div><div class="code-line"><span class="ln">03</span><span class="ct">}</span></div><div class="code-line"><span class="ln">04</span><span class="ct">&#160;</span></div><div class="code-line"><span class="ln">05</span><span class="ct"><span class="kw">var</span> query = <span class="vr editable" data-key="querySrc"><span data-field="querysrc">metricsCatalog</span></span></span></div><div class="code-line"><span class="ln">06</span><span class="ct">    .Where(x =&gt; x.Active)</span></div><div class="code-line"><span class="ln">07</span><span class="ct">    .Select(x =&gt; x.Score);</span></div><div class="code-line"><span class="ln">08</span><span class="ct">&#160;</span></div><div class="code-line"><span class="ln">09</span><span class="ct"><span class="kw">int</span> total = <span class="kw">await</span> Task.Run(() =&gt; query.Sum());</span></div></div><div class="code-more"></div></div></div><div class="execution-bar"><div class="log-stage" style="position:relative;height:100%;flex:1;overflow:hidden"><span class="log phase log-29-0">[.NET] Compilando árbol de expresiones LINQ sobre &#x27;metricsCatalog&#x27;.</span><span class="log phase log-29-1">[.NET] Compilando árbol de expresiones LINQ sobre &#x27;metricsCatalog&#x27;.</span><span class="log phase log-29-2">[.NET] Evaluación diferida configurada con delegados Func&lt;T, bool&gt;.</span><span class="log phase log-29-3">[.NET] AggregateMetricsAsync: IAsyncStateMachine delega cálculo al ThreadPool sin bloquear UI.</span><span class="log phase log-29-4">[.NET] Tarea completada. Contexto restaurado, total: 480.</span></div><span class="execution-tag">DEMO · 4s</span></div></section></main><footer>SVG / HTML PURO · {DURATION}s</footer></body></html>

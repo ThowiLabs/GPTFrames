@@ -1,0 +1,261 @@
+<!doctype html><html lang="es"><head><meta charset="utf-8"><meta http-equiv="Content-Security-Policy" content="default-src &#39;none&#39;; script-src &#39;none&#39;; connect-src &#39;none&#39;; style-src &#39;unsafe-inline&#39;; img-src data:; font-src data:;"><style>
+:root{--bg:#080e18;--card:#121d2d;--panel:#0e1827;--surface:#1b2939;--muted:#8fa9bc;--edge:#294159;--line:#344c66;--cyan:#5bdcf5;--green:#55dfae;--amber:#ffcb81;--purple:#b9a3ff;
+--border-color:#30363d;--border-bright:#484f58;--text-main:#e6edf3;--text-muted:#8b949e;
+--accent-cyan:#00e3ff;--accent-green:#42dea9;--accent-amber:#ffbd6b;--accent-violet:#a855f7;--accent-red:#f85149;
+--accent-blue:#58a6ff;--accent-yellow:#d29922;--success:#3fb950;--warning:#d29922;--danger:#f85149;
+--bg-surface:#151e2d;--bg-card:#21262d;--bg-panel:#0e1827;--bg-overlay:#1f242c}
+*{box-sizing:border-box}
+html,body{width:100%;height:100%;margin:0;overflow:hidden}
+body{background:radial-gradient(ellipse at 20% 14%,#18293f,#080e18 67%,#050a12);color:#eaf5fc;font-family:system-ui,Arial,sans-serif}
+.collection-header{position:absolute;inset:15px 26px auto;display:flex;justify-content:space-between;align-items:center;color:#8baec1;font-size:10px;letter-spacing:1px;font-weight:800}
+.collection-header strong{color:#65e8c6}
+.progress-line{position:absolute;top:42px;left:26px;right:26px;background:#294159;height:2px}
+.catalog{position:absolute;inset:0;overflow:hidden}
+.module{position:absolute;inset:0;padding:55px 26px 27px;visibility:hidden;display:flex;flex-direction:column;gap:8px}
+.module-header{display:flex;align-items:baseline;gap:12px;min-height:29px}
+.index{color:#6de6c8;font:800 12px ui-monospace,Consolas,monospace;white-space:nowrap}
+.headline{font-size:24px;letter-spacing:-.5px;color:#edf7ff;font-weight:840;margin:0;line-height:1.2}
+.kind{margin-left:auto;font:750 9px ui-monospace,Consolas,monospace;letter-spacing:.4px;color:#8facc2;border:1px solid #314d65;border-radius:13px;padding:5px 10px;white-space:nowrap}
+.description{margin:0;color:#aec4d4;font-size:12px;line-height:1.36;height:32px;max-width:785px;overflow:hidden}
+.main-layout{display:flex;gap:13px;min-height:0;flex:1}
+.visual-card{position:relative;background:#0b1524;border:1px solid #36516b;border-radius:14px;overflow:hidden;flex:1;min-width:0}
+.visual-card .pane-title,.source-card .pane-title{height:30px;border-bottom:1px solid #2d4157;display:flex;align-items:center;justify-content:space-between;padding:0 12px;color:#83abc4;font:750 10px ui-monospace,Consolas,monospace;letter-spacing:.45px;background:#111e30}
+.visual-card .pane-title span:last-child{color:#61e1ba}
+.source-card .pane-title span:last-child{max-width:124px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;text-align:right}
+.visual-stage{position:absolute;top:30px;bottom:0;left:0;right:0}
+.phase{position:absolute;inset:0;opacity:0;visibility:hidden;display:flex;align-items:center;justify-content:center}
+.diagram-svg,.diagram-svg-root{display:block;width:100%;height:100%;overflow:visible}
+.source-card{position:relative;width:260px;flex:0 0 260px;min-width:0;background:#0b1524;border:1px solid #36516b;border-radius:14px;overflow:hidden}
+.code-scroll{position:absolute;inset:30px 0 0;overflow:hidden;padding:7px 7px 5px 0;background:#080f1e}
+.code-line{display:flex;gap:4px;align-items:baseline;font:10px/1.53 ui-monospace,Consolas,monospace;min-height:15.3px;white-space:pre}
+.code-line .ln{flex:0 0 23px;text-align:right;color:#42637b}
+.code-line .ct{min-width:0;display:block;color:#e0eaf8}
+.code-line .ct span{white-space:pre}
+.kw,.tok-kw,.c-kw{color:#c3aaff;font-weight:700}
+.fn,.tok-fn,.c-fn{color:#77e3d1}.tp{color:#83c8ff}
+.st,.tok-str,.c-str{color:#b4d6ff}.num,.tok-num,.c-num{color:#ffc879}.cm,.tok-cmt,.c-cm{color:#8298a8}
+.vr,.tok-op,.c-hl{color:#e5b9fb}
+.code-scroll .code-line{padding-right:3px}
+.code-scroll .code-line:nth-child(n+17){opacity:.55}
+.code-more{position:absolute;bottom:0;left:0;right:0;background:linear-gradient(transparent,#0b1524 90%);height:22px;pointer-events:none}
+.execution-bar{height:30px;flex:0 0 30px;background:#102238;border:1px solid #274c68;border-radius:8px;padding:7px 10px;color:#a8e3e5;display:flex;justify-content:space-between;align-items:center;gap:13px}
+.log{font:10.2px ui-monospace,Consolas,monospace;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.execution-tag{font:800 9px ui-monospace,Consolas,monospace;color:#8ddbbf;white-space:nowrap}
+footer{position:absolute;bottom:9px;right:26px;color:#57768d;font:9px ui-monospace,Consolas,monospace}
+/* architecture SVG vocabulary */
+.node-box{fill:#132236;stroke:#334e67;stroke-width:1.5}
+.node-box.active,.node-box.highlight{fill:#1e344a;stroke:#58a6ff}
+.node-box.success{fill:#15372d;stroke:#44e2a9}
+.node-box.warning{fill:#3a2d1c;stroke:#eab977}
+.node-box.error{fill:#401a26;stroke:#ff6675}
+.svg-label{fill:#dceef8;font:600 12px ui-monospace,Consolas,monospace}
+.svg-sub{fill:#95acc1;font:10px ui-monospace,Consolas,monospace}
+.packet{fill:#5ce6fa;filter:drop-shadow(0 0 5px #35dafb)}
+/* runtime SVG vocabulary */
+.node-text{fill:#e2edf9;font:11px ui-monospace,Consolas,monospace}
+.node-subtext{fill:#9fb0c2;font:9px ui-monospace,Consolas,monospace}
+.conn-line{stroke:#526b84;stroke-width:1.7;fill:none}
+.conn-line.active,.svg-path.flowing{stroke:#5ad8fe;stroke-dasharray:6 4;animation:motionDash 1s linear infinite}
+.conn-line.error{stroke:#fa6868}
+@keyframes motionDash{to{stroke-dashoffset:-20}}
+/* languages SVG vocabulary */
+.svg-box{fill:#1a2739;stroke:#39516a;stroke-width:1.6}
+.svg-box.active{stroke:#58a6ff;fill:#1d354c}
+.svg-box.success{stroke:#36d6a7;fill:#14382f}
+.svg-box.warning{stroke:#facc80;fill:#3a291b}
+.svg-text{fill:#e8f3fb;font:700 11px ui-monospace,Consolas,monospace;text-anchor:middle;dominant-baseline:middle}
+.svg-subtext{fill:#a2b5c8;font:9px ui-monospace,Consolas,monospace;text-anchor:middle;dominant-baseline:middle}
+.svg-path{fill:none;stroke:#51708c;stroke-width:1.7}
+
+@keyframes phase_18_0{0%,19.9000%{opacity:1;visibility:visible}20.0000%,100%{opacity:0;visibility:hidden}}
+.phase-18-0{animation:phase_18_0 4s linear both}
+@keyframes phase_18_1{0%,19.9000%{opacity:0;visibility:hidden}20.0000%,39.9000%{opacity:1;visibility:visible}40.0000%,100%{opacity:0;visibility:hidden}}
+.phase-18-1{animation:phase_18_1 4s linear both}
+@keyframes phase_18_2{0%,39.9000%{opacity:0;visibility:hidden}40.0000%,59.9000%{opacity:1;visibility:visible}60.0000%,100%{opacity:0;visibility:hidden}}
+.phase-18-2{animation:phase_18_2 4s linear both}
+@keyframes phase_18_3{0%,59.9000%{opacity:0;visibility:hidden}60.0000%,79.9000%{opacity:1;visibility:visible}80.0000%,100%{opacity:0;visibility:hidden}}
+.phase-18-3{animation:phase_18_3 4s linear both}
+@keyframes phase_18_4{0%,79.9000%{opacity:0;visibility:hidden}80.0000%,99.9000%{opacity:1;visibility:visible}100.0000%,100%{opacity:0;visibility:hidden}}
+.phase-18-4{animation:phase_18_4 4s linear both}
+@keyframes log_18_0{0%,19.9000%{opacity:1;visibility:visible}20.0000%,100%{opacity:0;visibility:hidden}}
+.log-18-0{animation:log_18_0 4s linear both}
+@keyframes log_18_1{0%,19.9000%{opacity:0;visibility:hidden}20.0000%,39.9000%{opacity:1;visibility:visible}40.0000%,100%{opacity:0;visibility:hidden}}
+.log-18-1{animation:log_18_1 4s linear both}
+@keyframes log_18_2{0%,39.9000%{opacity:0;visibility:hidden}40.0000%,59.9000%{opacity:1;visibility:visible}60.0000%,100%{opacity:0;visibility:hidden}}
+.log-18-2{animation:log_18_2 4s linear both}
+@keyframes log_18_3{0%,59.9000%{opacity:0;visibility:hidden}60.0000%,79.9000%{opacity:1;visibility:visible}80.0000%,100%{opacity:0;visibility:hidden}}
+.log-18-3{animation:log_18_3 4s linear both}
+@keyframes log_18_4{0%,79.9000%{opacity:0;visibility:hidden}80.0000%,99.9000%{opacity:1;visibility:visible}100.0000%,100%{opacity:0;visibility:hidden}}
+.log-18-4{animation:log_18_4 4s linear both}
+.log-stage .log{position:absolute;inset:0;display:block;line-height:17px;}
+.module{visibility:visible}</style></head><body><header class="collection-header"><span>GPTFRAMES / RECURSO EDITABLE</span><strong>Programación y ejecución</strong></header><div class="progress-line"></div><main class="catalog" data-segment-seconds="4"><section class="module" data-id="runtime-variables-y-referencias"><div class="module-header"><span class="index">08/10 · 18/30</span><h1 class="headline" data-field="title">Variables y Referencias</h1><span class="kind">PROGRAMACIÓN Y EJECUCIÓN</span></div><p class="description" data-field="description">Contraste explícito entre copia de tipos de valor frente a direccionamiento de punteros compartidos.</p><div class="main-layout"><div class="visual-card"><div class="pane-title"><span>VISUALIZACIÓN DE EJECUCIÓN</span><span>ETAPAS 05</span></div><div class="visual-stage"><div class="phase phase-18-0"><svg class="diagram-svg" viewBox="0 0 800 480" preserveAspectRatio="xMidYMid meet"><defs><marker id="arrow" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 1 L8 5 L0 9Z" fill="#7894a9"/></marker><marker id="arrow-active" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 1 L8 5 L0 9Z" fill="#57d9f3"/></marker><marker id="arrow-error" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 1 L8 5 L0 9Z" fill="#fa6878"/></marker></defs>
+        <rect x="30" y="30" width="740" height="420" rx="6" fill="#161b22" stroke="#30363d" />
+        
+        <!-- Value Type Side -->
+        <rect x="50" y="70" width="320" height="340" rx="4" fill="#0d1117" stroke="#30363d" />
+        <text x="70" y="100" class="node-text" fill="#58a6ff">TIPO VALOR (COPIA INDEPENDIENTE)</text>
+        <line x1="50" y1="115" x2="370" y2="115" stroke="#30363d" />
+
+        <rect x="80" y="150" width="260" height="50" rx="3" class="node-box highlight" />
+        <text x="100" y="180" class="node-text"><tspan data-field="va">numA</tspan> = <tspan fill="#3fb950">10</tspan></text>
+
+        <rect x="80" y="240" width="260" height="50" rx="3" class="node-box highlight" />
+        <text x="100" y="270" class="node-text"><tspan data-field="vb">numB</tspan> = <tspan fill="#3fb950">10</tspan></text>
+        <text x="80" y="330" class="node-subtext" fill="#8b949e">Modificar <tspan data-field="vb">numB</tspan> no afecta la celda de <tspan data-field="va">numA</tspan>.</text>
+
+        <!-- Reference Type Side -->
+        <rect x="410" y="70" width="340" height="340" rx="4" fill="#0d1117" stroke="#30363d" />
+        <text x="430" y="100" class="node-text" fill="#bc8cff">TIPO REFERENCIA (PUNTERO COMPARTIDO)</text>
+        <line x1="410" y1="115" x2="750" y2="115" stroke="#30363d" />
+
+        <rect x="440" y="150" width="120" height="45" rx="3" class="node-box active" />
+        <text x="455" y="178" class="node-text"><tspan data-field="oa">objA</tspan> (ptr)</text>
+
+        <rect x="440" y="240" width="120" height="45" rx="3" class="node-box active" />
+        <text x="455" y="268" class="node-text"><tspan data-field="ob">objB</tspan> (ptr)</text>
+
+        <!-- Shared Object in Memory -->
+        <rect x="610" y="180" width="120" height="80" rx="4" class="node-box success" />
+        <text x="625" y="210" class="node-subtext" fill="#8b949e">0x7F20B0</text>
+        <text x="625" y="235" class="node-text" font-weight="600">x: <tspan fill="#f85149">10</tspan></text>
+
+        <!-- Pointer Lines -->
+        <line x1="560" y1="172" x2="605" y2="205" stroke="#bc8cff" stroke-width="2" marker-end="url(#arrow-active)" />
+        <line x1="560" y1="262" x2="605" y2="235" stroke="#bc8cff" stroke-width="2" marker-end="url(#arrow-active)" />
+      </svg><span class="sr-only" style="display:none">Paso 0: Evaluación de mutación de memoria.  •  Punteros configurados hacia la misma dirección física.</span></div><div class="phase phase-18-1"><svg class="diagram-svg" viewBox="0 0 800 480" preserveAspectRatio="xMidYMid meet"><defs><marker id="arrow" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 1 L8 5 L0 9Z" fill="#7894a9"/></marker><marker id="arrow-active" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 1 L8 5 L0 9Z" fill="#57d9f3"/></marker><marker id="arrow-error" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 1 L8 5 L0 9Z" fill="#fa6878"/></marker></defs>
+        <rect x="30" y="30" width="740" height="420" rx="6" fill="#161b22" stroke="#30363d" />
+        
+        <!-- Value Type Side -->
+        <rect x="50" y="70" width="320" height="340" rx="4" fill="#0d1117" stroke="#30363d" />
+        <text x="70" y="100" class="node-text" fill="#58a6ff">TIPO VALOR (COPIA INDEPENDIENTE)</text>
+        <line x1="50" y1="115" x2="370" y2="115" stroke="#30363d" />
+
+        <rect x="80" y="150" width="260" height="50" rx="3" class="node-box highlight" />
+        <text x="100" y="180" class="node-text"><tspan data-field="va">numA</tspan> = <tspan fill="#3fb950">10</tspan></text>
+
+        <rect x="80" y="240" width="260" height="50" rx="3" class="node-box highlight" />
+        <text x="100" y="270" class="node-text"><tspan data-field="vb">numB</tspan> = <tspan fill="#3fb950">10</tspan></text>
+        <text x="80" y="330" class="node-subtext" fill="#8b949e">Modificar <tspan data-field="vb">numB</tspan> no afecta la celda de <tspan data-field="va">numA</tspan>.</text>
+
+        <!-- Reference Type Side -->
+        <rect x="410" y="70" width="340" height="340" rx="4" fill="#0d1117" stroke="#30363d" />
+        <text x="430" y="100" class="node-text" fill="#bc8cff">TIPO REFERENCIA (PUNTERO COMPARTIDO)</text>
+        <line x1="410" y1="115" x2="750" y2="115" stroke="#30363d" />
+
+        <rect x="440" y="150" width="120" height="45" rx="3" class="node-box active" />
+        <text x="455" y="178" class="node-text"><tspan data-field="oa">objA</tspan> (ptr)</text>
+
+        <rect x="440" y="240" width="120" height="45" rx="3" class="node-box active" />
+        <text x="455" y="268" class="node-text"><tspan data-field="ob">objB</tspan> (ptr)</text>
+
+        <!-- Shared Object in Memory -->
+        <rect x="610" y="180" width="120" height="80" rx="4" class="node-box success" />
+        <text x="625" y="210" class="node-subtext" fill="#8b949e">0x7F20B0</text>
+        <text x="625" y="235" class="node-text" font-weight="600">x: <tspan fill="#f85149">10</tspan></text>
+
+        <!-- Pointer Lines -->
+        <line x1="560" y1="172" x2="605" y2="205" stroke="#bc8cff" stroke-width="2" marker-end="url(#arrow-active)" />
+        <line x1="560" y1="262" x2="605" y2="235" stroke="#bc8cff" stroke-width="2" marker-end="url(#arrow-active)" />
+      </svg><span class="sr-only" style="display:none">Paso 1: Evaluación de mutación de memoria.  •  Punteros configurados hacia la misma dirección física.</span></div><div class="phase phase-18-2"><svg class="diagram-svg" viewBox="0 0 800 480" preserveAspectRatio="xMidYMid meet"><defs><marker id="arrow" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 1 L8 5 L0 9Z" fill="#7894a9"/></marker><marker id="arrow-active" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 1 L8 5 L0 9Z" fill="#57d9f3"/></marker><marker id="arrow-error" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 1 L8 5 L0 9Z" fill="#fa6878"/></marker></defs>
+        <rect x="30" y="30" width="740" height="420" rx="6" fill="#161b22" stroke="#30363d" />
+        
+        <!-- Value Type Side -->
+        <rect x="50" y="70" width="320" height="340" rx="4" fill="#0d1117" stroke="#30363d" />
+        <text x="70" y="100" class="node-text" fill="#58a6ff">TIPO VALOR (COPIA INDEPENDIENTE)</text>
+        <line x1="50" y1="115" x2="370" y2="115" stroke="#30363d" />
+
+        <rect x="80" y="150" width="260" height="50" rx="3" class="node-box highlight" />
+        <text x="100" y="180" class="node-text"><tspan data-field="va">numA</tspan> = <tspan fill="#3fb950">10</tspan></text>
+
+        <rect x="80" y="240" width="260" height="50" rx="3" class="node-box highlight" />
+        <text x="100" y="270" class="node-text"><tspan data-field="vb">numB</tspan> = <tspan fill="#3fb950">99</tspan></text>
+        <text x="80" y="330" class="node-subtext" fill="#8b949e">Modificar <tspan data-field="vb">numB</tspan> no afecta la celda de <tspan data-field="va">numA</tspan>.</text>
+
+        <!-- Reference Type Side -->
+        <rect x="410" y="70" width="340" height="340" rx="4" fill="#0d1117" stroke="#30363d" />
+        <text x="430" y="100" class="node-text" fill="#bc8cff">TIPO REFERENCIA (PUNTERO COMPARTIDO)</text>
+        <line x1="410" y1="115" x2="750" y2="115" stroke="#30363d" />
+
+        <rect x="440" y="150" width="120" height="45" rx="3" class="node-box active" />
+        <text x="455" y="178" class="node-text"><tspan data-field="oa">objA</tspan> (ptr)</text>
+
+        <rect x="440" y="240" width="120" height="45" rx="3" class="node-box active" />
+        <text x="455" y="268" class="node-text"><tspan data-field="ob">objB</tspan> (ptr)</text>
+
+        <!-- Shared Object in Memory -->
+        <rect x="610" y="180" width="120" height="80" rx="4" class="node-box success" />
+        <text x="625" y="210" class="node-subtext" fill="#8b949e">0x7F20B0</text>
+        <text x="625" y="235" class="node-text" font-weight="600">x: <tspan fill="#f85149">10</tspan></text>
+
+        <!-- Pointer Lines -->
+        <line x1="560" y1="172" x2="605" y2="205" stroke="#bc8cff" stroke-width="2" marker-end="url(#arrow-active)" />
+        <line x1="560" y1="262" x2="605" y2="235" stroke="#bc8cff" stroke-width="2" marker-end="url(#arrow-active)" />
+      </svg><span class="sr-only" style="display:none">Paso 2: Evaluación de mutación de memoria.  •  Punteros configurados hacia la misma dirección física.</span></div><div class="phase phase-18-3"><svg class="diagram-svg" viewBox="0 0 800 480" preserveAspectRatio="xMidYMid meet"><defs><marker id="arrow" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 1 L8 5 L0 9Z" fill="#7894a9"/></marker><marker id="arrow-active" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 1 L8 5 L0 9Z" fill="#57d9f3"/></marker><marker id="arrow-error" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 1 L8 5 L0 9Z" fill="#fa6878"/></marker></defs>
+        <rect x="30" y="30" width="740" height="420" rx="6" fill="#161b22" stroke="#30363d" />
+        
+        <!-- Value Type Side -->
+        <rect x="50" y="70" width="320" height="340" rx="4" fill="#0d1117" stroke="#30363d" />
+        <text x="70" y="100" class="node-text" fill="#58a6ff">TIPO VALOR (COPIA INDEPENDIENTE)</text>
+        <line x1="50" y1="115" x2="370" y2="115" stroke="#30363d" />
+
+        <rect x="80" y="150" width="260" height="50" rx="3" class="node-box highlight" />
+        <text x="100" y="180" class="node-text"><tspan data-field="va">numA</tspan> = <tspan fill="#3fb950">10</tspan></text>
+
+        <rect x="80" y="240" width="260" height="50" rx="3" class="node-box highlight" />
+        <text x="100" y="270" class="node-text"><tspan data-field="vb">numB</tspan> = <tspan fill="#3fb950">99</tspan></text>
+        <text x="80" y="330" class="node-subtext" fill="#8b949e">Modificar <tspan data-field="vb">numB</tspan> no afecta la celda de <tspan data-field="va">numA</tspan>.</text>
+
+        <!-- Reference Type Side -->
+        <rect x="410" y="70" width="340" height="340" rx="4" fill="#0d1117" stroke="#30363d" />
+        <text x="430" y="100" class="node-text" fill="#bc8cff">TIPO REFERENCIA (PUNTERO COMPARTIDO)</text>
+        <line x1="410" y1="115" x2="750" y2="115" stroke="#30363d" />
+
+        <rect x="440" y="150" width="120" height="45" rx="3" class="node-box active" />
+        <text x="455" y="178" class="node-text"><tspan data-field="oa">objA</tspan> (ptr)</text>
+
+        <rect x="440" y="240" width="120" height="45" rx="3" class="node-box active" />
+        <text x="455" y="268" class="node-text"><tspan data-field="ob">objB</tspan> (ptr)</text>
+
+        <!-- Shared Object in Memory -->
+        <rect x="610" y="180" width="120" height="80" rx="4" class="node-box success" />
+        <text x="625" y="210" class="node-subtext" fill="#8b949e">0x7F20B0</text>
+        <text x="625" y="235" class="node-text" font-weight="600">x: <tspan fill="#f85149">10</tspan></text>
+
+        <!-- Pointer Lines -->
+        <line x1="560" y1="172" x2="605" y2="205" stroke="#bc8cff" stroke-width="2" marker-end="url(#arrow-active)" />
+        <line x1="560" y1="262" x2="605" y2="235" stroke="#bc8cff" stroke-width="2" marker-end="url(#arrow-active)" />
+      </svg><span class="sr-only" style="display:none">Paso 3: Evaluación de mutación de memoria.  •  Punteros configurados hacia la misma dirección física.</span></div><div class="phase phase-18-4"><svg class="diagram-svg" viewBox="0 0 800 480" preserveAspectRatio="xMidYMid meet"><defs><marker id="arrow" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 1 L8 5 L0 9Z" fill="#7894a9"/></marker><marker id="arrow-active" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 1 L8 5 L0 9Z" fill="#57d9f3"/></marker><marker id="arrow-error" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 1 L8 5 L0 9Z" fill="#fa6878"/></marker></defs>
+        <rect x="30" y="30" width="740" height="420" rx="6" fill="#161b22" stroke="#30363d" />
+        
+        <!-- Value Type Side -->
+        <rect x="50" y="70" width="320" height="340" rx="4" fill="#0d1117" stroke="#30363d" />
+        <text x="70" y="100" class="node-text" fill="#58a6ff">TIPO VALOR (COPIA INDEPENDIENTE)</text>
+        <line x1="50" y1="115" x2="370" y2="115" stroke="#30363d" />
+
+        <rect x="80" y="150" width="260" height="50" rx="3" class="node-box highlight" />
+        <text x="100" y="180" class="node-text"><tspan data-field="va">numA</tspan> = <tspan fill="#3fb950">10</tspan></text>
+
+        <rect x="80" y="240" width="260" height="50" rx="3" class="node-box highlight" />
+        <text x="100" y="270" class="node-text"><tspan data-field="vb">numB</tspan> = <tspan fill="#3fb950">99</tspan></text>
+        <text x="80" y="330" class="node-subtext" fill="#8b949e">Modificar <tspan data-field="vb">numB</tspan> no afecta la celda de <tspan data-field="va">numA</tspan>.</text>
+
+        <!-- Reference Type Side -->
+        <rect x="410" y="70" width="340" height="340" rx="4" fill="#0d1117" stroke="#30363d" />
+        <text x="430" y="100" class="node-text" fill="#bc8cff">TIPO REFERENCIA (PUNTERO COMPARTIDO)</text>
+        <line x1="410" y1="115" x2="750" y2="115" stroke="#30363d" />
+
+        <rect x="440" y="150" width="120" height="45" rx="3" class="node-box active" />
+        <text x="455" y="178" class="node-text"><tspan data-field="oa">objA</tspan> (ptr)</text>
+
+        <rect x="440" y="240" width="120" height="45" rx="3" class="node-box active" />
+        <text x="455" y="268" class="node-text"><tspan data-field="ob">objB</tspan> (ptr)</text>
+
+        <!-- Shared Object in Memory -->
+        <rect x="610" y="180" width="120" height="80" rx="4" class="node-box success" />
+        <text x="625" y="210" class="node-subtext" fill="#8b949e">0x7F20B0</text>
+        <text x="625" y="235" class="node-text" font-weight="600">x: <tspan fill="#f85149">99</tspan></text>
+
+        <!-- Pointer Lines -->
+        <line x1="560" y1="172" x2="605" y2="205" stroke="#bc8cff" stroke-width="2" marker-end="url(#arrow-active)" />
+        <line x1="560" y1="262" x2="605" y2="235" stroke="#bc8cff" stroke-width="2" marker-end="url(#arrow-active)" />
+      </svg><span class="sr-only" style="display:none">Paso 4: Evaluación de mutación de memoria.  •  Mutación mediante objB.x alteró el objeto compartido apuntado por objA.</span></div></div></div><div class="source-card"><div class="pane-title"><span>CÓDIGO / INSPECTOR</span><span data-field="file"></span></div><div class="code-scroll"><div class="code-line"><span class="ln">01</span><span class="ct">// Valor: independientes</span></div><div class="code-line"><span class="ln">02</span><span class="ct"><span class="kw">let</span> <span data-field="va">numA</span> = 10; <span class="kw">let</span> numB = numA; numB = 99;</span></div><div class="code-line"><span class="ln">03</span><span class="ct">// Referencia: puntero compartido</span></div><div class="code-line"><span class="ln">04</span><span class="ct"><span class="kw">let</span> objA = { x: 10 };</span></div><div class="code-line"><span class="ln">05</span><span class="ct"><span class="kw">let</span> objB = objA; objB.x = 99;</span></div></div><div class="code-more"></div></div></div><div class="execution-bar"><div class="log-stage" style="position:relative;height:100%;flex:1;overflow:hidden"><span class="log phase log-18-0">Paso 0: Evaluación de mutación de memoria.  •  Punteros configurados hacia la misma dirección física.</span><span class="log phase log-18-1">Paso 1: Evaluación de mutación de memoria.  •  Punteros configurados hacia la misma dirección física.</span><span class="log phase log-18-2">Paso 2: Evaluación de mutación de memoria.  •  Punteros configurados hacia la misma dirección física.</span><span class="log phase log-18-3">Paso 3: Evaluación de mutación de memoria.  •  Punteros configurados hacia la misma dirección física.</span><span class="log phase log-18-4">Paso 4: Evaluación de mutación de memoria.  •  Mutación mediante objB.x alteró el objeto compartido apuntado por objA.</span></div><span class="execution-tag">DEMO · 4s</span></div></section></main><footer>SVG / HTML PURO · {DURATION}s</footer></body></html>

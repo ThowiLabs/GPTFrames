@@ -1,0 +1,231 @@
+<!doctype html><html lang="es"><head><meta charset="utf-8"><meta http-equiv="Content-Security-Policy" content="default-src &#39;none&#39;; script-src &#39;none&#39;; connect-src &#39;none&#39;; style-src &#39;unsafe-inline&#39;; img-src data:; font-src data:;"><style>
+:root{--bg:#080e18;--card:#121d2d;--panel:#0e1827;--surface:#1b2939;--muted:#8fa9bc;--edge:#294159;--line:#344c66;--cyan:#5bdcf5;--green:#55dfae;--amber:#ffcb81;--purple:#b9a3ff;
+--border-color:#30363d;--border-bright:#484f58;--text-main:#e6edf3;--text-muted:#8b949e;
+--accent-cyan:#00e3ff;--accent-green:#42dea9;--accent-amber:#ffbd6b;--accent-violet:#a855f7;--accent-red:#f85149;
+--accent-blue:#58a6ff;--accent-yellow:#d29922;--success:#3fb950;--warning:#d29922;--danger:#f85149;
+--bg-surface:#151e2d;--bg-card:#21262d;--bg-panel:#0e1827;--bg-overlay:#1f242c}
+*{box-sizing:border-box}
+html,body{width:100%;height:100%;margin:0;overflow:hidden}
+body{background:radial-gradient(ellipse at 20% 14%,#18293f,#080e18 67%,#050a12);color:#eaf5fc;font-family:system-ui,Arial,sans-serif}
+.collection-header{position:absolute;inset:15px 26px auto;display:flex;justify-content:space-between;align-items:center;color:#8baec1;font-size:10px;letter-spacing:1px;font-weight:800}
+.collection-header strong{color:#65e8c6}
+.progress-line{position:absolute;top:42px;left:26px;right:26px;background:#294159;height:2px}
+.catalog{position:absolute;inset:0;overflow:hidden}
+.module{position:absolute;inset:0;padding:55px 26px 27px;visibility:hidden;display:flex;flex-direction:column;gap:8px}
+.module-header{display:flex;align-items:baseline;gap:12px;min-height:29px}
+.index{color:#6de6c8;font:800 12px ui-monospace,Consolas,monospace;white-space:nowrap}
+.headline{font-size:24px;letter-spacing:-.5px;color:#edf7ff;font-weight:840;margin:0;line-height:1.2}
+.kind{margin-left:auto;font:750 9px ui-monospace,Consolas,monospace;letter-spacing:.4px;color:#8facc2;border:1px solid #314d65;border-radius:13px;padding:5px 10px;white-space:nowrap}
+.description{margin:0;color:#aec4d4;font-size:12px;line-height:1.36;height:32px;max-width:785px;overflow:hidden}
+.main-layout{display:flex;gap:13px;min-height:0;flex:1}
+.visual-card{position:relative;background:#0b1524;border:1px solid #36516b;border-radius:14px;overflow:hidden;flex:1;min-width:0}
+.visual-card .pane-title,.source-card .pane-title{height:30px;border-bottom:1px solid #2d4157;display:flex;align-items:center;justify-content:space-between;padding:0 12px;color:#83abc4;font:750 10px ui-monospace,Consolas,monospace;letter-spacing:.45px;background:#111e30}
+.visual-card .pane-title span:last-child{color:#61e1ba}
+.source-card .pane-title span:last-child{max-width:124px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;text-align:right}
+.visual-stage{position:absolute;top:30px;bottom:0;left:0;right:0}
+.phase{position:absolute;inset:0;opacity:0;visibility:hidden;display:flex;align-items:center;justify-content:center}
+.diagram-svg,.diagram-svg-root{display:block;width:100%;height:100%;overflow:visible}
+.source-card{position:relative;width:260px;flex:0 0 260px;min-width:0;background:#0b1524;border:1px solid #36516b;border-radius:14px;overflow:hidden}
+.code-scroll{position:absolute;inset:30px 0 0;overflow:hidden;padding:7px 7px 5px 0;background:#080f1e}
+.code-line{display:flex;gap:4px;align-items:baseline;font:10px/1.53 ui-monospace,Consolas,monospace;min-height:15.3px;white-space:pre}
+.code-line .ln{flex:0 0 23px;text-align:right;color:#42637b}
+.code-line .ct{min-width:0;display:block;color:#e0eaf8}
+.code-line .ct span{white-space:pre}
+.kw,.tok-kw,.c-kw{color:#c3aaff;font-weight:700}
+.fn,.tok-fn,.c-fn{color:#77e3d1}.tp{color:#83c8ff}
+.st,.tok-str,.c-str{color:#b4d6ff}.num,.tok-num,.c-num{color:#ffc879}.cm,.tok-cmt,.c-cm{color:#8298a8}
+.vr,.tok-op,.c-hl{color:#e5b9fb}
+.code-scroll .code-line{padding-right:3px}
+.code-scroll .code-line:nth-child(n+17){opacity:.55}
+.code-more{position:absolute;bottom:0;left:0;right:0;background:linear-gradient(transparent,#0b1524 90%);height:22px;pointer-events:none}
+.execution-bar{height:30px;flex:0 0 30px;background:#102238;border:1px solid #274c68;border-radius:8px;padding:7px 10px;color:#a8e3e5;display:flex;justify-content:space-between;align-items:center;gap:13px}
+.log{font:10.2px ui-monospace,Consolas,monospace;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.execution-tag{font:800 9px ui-monospace,Consolas,monospace;color:#8ddbbf;white-space:nowrap}
+footer{position:absolute;bottom:9px;right:26px;color:#57768d;font:9px ui-monospace,Consolas,monospace}
+/* architecture SVG vocabulary */
+.node-box{fill:#132236;stroke:#334e67;stroke-width:1.5}
+.node-box.active,.node-box.highlight{fill:#1e344a;stroke:#58a6ff}
+.node-box.success{fill:#15372d;stroke:#44e2a9}
+.node-box.warning{fill:#3a2d1c;stroke:#eab977}
+.node-box.error{fill:#401a26;stroke:#ff6675}
+.svg-label{fill:#dceef8;font:600 12px ui-monospace,Consolas,monospace}
+.svg-sub{fill:#95acc1;font:10px ui-monospace,Consolas,monospace}
+.packet{fill:#5ce6fa;filter:drop-shadow(0 0 5px #35dafb)}
+/* runtime SVG vocabulary */
+.node-text{fill:#e2edf9;font:11px ui-monospace,Consolas,monospace}
+.node-subtext{fill:#9fb0c2;font:9px ui-monospace,Consolas,monospace}
+.conn-line{stroke:#526b84;stroke-width:1.7;fill:none}
+.conn-line.active,.svg-path.flowing{stroke:#5ad8fe;stroke-dasharray:6 4;animation:motionDash 1s linear infinite}
+.conn-line.error{stroke:#fa6868}
+@keyframes motionDash{to{stroke-dashoffset:-20}}
+/* languages SVG vocabulary */
+.svg-box{fill:#1a2739;stroke:#39516a;stroke-width:1.6}
+.svg-box.active{stroke:#58a6ff;fill:#1d354c}
+.svg-box.success{stroke:#36d6a7;fill:#14382f}
+.svg-box.warning{stroke:#facc80;fill:#3a291b}
+.svg-text{fill:#e8f3fb;font:700 11px ui-monospace,Consolas,monospace;text-anchor:middle;dominant-baseline:middle}
+.svg-subtext{fill:#a2b5c8;font:9px ui-monospace,Consolas,monospace;text-anchor:middle;dominant-baseline:middle}
+.svg-path{fill:none;stroke:#51708c;stroke-width:1.7}
+
+@keyframes phase_6_0{0%,19.9000%{opacity:1;visibility:visible}20.0000%,100%{opacity:0;visibility:hidden}}
+.phase-6-0{animation:phase_6_0 4s linear both}
+@keyframes phase_6_1{0%,19.9000%{opacity:0;visibility:hidden}20.0000%,39.9000%{opacity:1;visibility:visible}40.0000%,100%{opacity:0;visibility:hidden}}
+.phase-6-1{animation:phase_6_1 4s linear both}
+@keyframes phase_6_2{0%,39.9000%{opacity:0;visibility:hidden}40.0000%,59.9000%{opacity:1;visibility:visible}60.0000%,100%{opacity:0;visibility:hidden}}
+.phase-6-2{animation:phase_6_2 4s linear both}
+@keyframes phase_6_3{0%,59.9000%{opacity:0;visibility:hidden}60.0000%,79.9000%{opacity:1;visibility:visible}80.0000%,100%{opacity:0;visibility:hidden}}
+.phase-6-3{animation:phase_6_3 4s linear both}
+@keyframes phase_6_4{0%,79.9000%{opacity:0;visibility:hidden}80.0000%,99.9000%{opacity:1;visibility:visible}100.0000%,100%{opacity:0;visibility:hidden}}
+.phase-6-4{animation:phase_6_4 4s linear both}
+@keyframes log_6_0{0%,19.9000%{opacity:1;visibility:visible}20.0000%,100%{opacity:0;visibility:hidden}}
+.log-6-0{animation:log_6_0 4s linear both}
+@keyframes log_6_1{0%,19.9000%{opacity:0;visibility:hidden}20.0000%,39.9000%{opacity:1;visibility:visible}40.0000%,100%{opacity:0;visibility:hidden}}
+.log-6-1{animation:log_6_1 4s linear both}
+@keyframes log_6_2{0%,39.9000%{opacity:0;visibility:hidden}40.0000%,59.9000%{opacity:1;visibility:visible}60.0000%,100%{opacity:0;visibility:hidden}}
+.log-6-2{animation:log_6_2 4s linear both}
+@keyframes log_6_3{0%,59.9000%{opacity:0;visibility:hidden}60.0000%,79.9000%{opacity:1;visibility:visible}80.0000%,100%{opacity:0;visibility:hidden}}
+.log-6-3{animation:log_6_3 4s linear both}
+@keyframes log_6_4{0%,79.9000%{opacity:0;visibility:hidden}80.0000%,99.9000%{opacity:1;visibility:visible}100.0000%,100%{opacity:0;visibility:hidden}}
+.log-6-4{animation:log_6_4 4s linear both}
+.log-stage .log{position:absolute;inset:0;display:block;line-height:17px;}
+.module{visibility:visible}</style></head><body><header class="collection-header"><span>GPTFRAMES / RECURSO EDITABLE</span><strong>Arquitectura de software</strong></header><div class="progress-line"></div><main class="catalog" data-segment-seconds="4"><section class="module" data-id="architecture-arquitectura-mvc"><div class="module-header"><span class="index">06/10 · 06/30</span><h1 class="headline" data-field="title">Arquitectura MVC</h1><span class="kind">ARQUITECTURA DE SOFTWARE</span></div><p class="description" data-field="description">Desacopla la lógica de visualización (View) del almacenamiento de estado (Model) a través de un intermediario (Controller) que gestiona eventos y actualiza la interfaz reactivamente.</p><div class="main-layout"><div class="visual-card"><div class="pane-title"><span>VISUALIZACIÓN DE EJECUCIÓN</span><span>ETAPAS 05</span></div><div class="visual-stage"><div class="phase phase-6-0"><svg class="diagram-svg" viewBox="0 0 800 440" preserveAspectRatio="xMidYMid meet"><defs><marker id="arrow" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 1 L8 5 L0 9Z" fill="#7894a9"/></marker><marker id="arrow-active" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 1 L8 5 L0 9Z" fill="#57d9f3"/></marker><marker id="arrow-error" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 1 L8 5 L0 9Z" fill="#fa6878"/></marker></defs>
+            <!-- Controlador (Vértice Superior) -->
+            <rect x="310" y="40" width="180" height="90" rx="8" class="node-box" stroke="var(--accent-cyan)"/>
+            <text x="350" y="80" class="svg-label" fill="var(--accent-cyan)">CONTROLLER</text>
+            <text x="345" y="100" class="svg-sub">Orquesta flujo y datos</text>
+
+            <!-- Vista (Inferior Izquierda) -->
+            <rect x="110" y="260" width="180" height="90" rx="8" class="node-box" stroke="var(--accent-violet)"/>
+            <text x="175" y="300" class="svg-label" fill="var(--accent-violet)">VIEW</text>
+            <text x="145" y="320" class="svg-sub">Renderizado de Interfaz</text>
+
+            <!-- Modelo (Inferior Derecha) -->
+            <rect x="510" y="260" width="180" height="90" rx="8" class="node-box" stroke="var(--accent-green)"/>
+            <text x="570" y="300" class="svg-label" fill="var(--accent-green)">MODEL</text>
+            <text x="545" y="320" class="svg-sub">Estado & Reglas de Negocio</text>
+
+            <!-- Flechas direccionales triangulares -->
+            <!-- 1. View -> Controller -->
+            <line x1="220" y1="260" x2="330" y2="130" stroke="var(--border-bright)" stroke-width="1.5" marker-end="url(#arrow)"/>
+            <text x="230" y="180" class="svg-sub" fill="var(--accent-violet)">1. User Input</text>
+
+            <!-- 2. Controller -> Model -->
+            <line x1="470" y1="130" x2="580" y2="260" stroke="var(--border-bright)" stroke-width="1.5" marker-end="url(#arrow)"/>
+            <text x="540" y="180" class="svg-sub" fill="var(--accent-cyan)">2. Updates</text>
+
+            <!-- 3. Model -> View -->
+            <line x1="510" y1="310" x2="290" y2="310" stroke="var(--border-bright)" stroke-width="1.5" marker-end="url(#arrow)"/>
+            <text x="365" y="330" class="svg-sub" fill="var(--accent-green)">3. Notifies Update</text>
+          <circle cx="222.00400801603206" cy="257.63162689014393" r="7" fill="var(--accent-violet)" filter="drop-shadow(0 0 7px var(--accent-violet))" /></svg><span class="sr-only" style="display:none">Procesando arquitectura</span></div><div class="phase phase-6-1"><svg class="diagram-svg" viewBox="0 0 800 440" preserveAspectRatio="xMidYMid meet"><defs><marker id="arrow" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 1 L8 5 L0 9Z" fill="#7894a9"/></marker><marker id="arrow-active" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 1 L8 5 L0 9Z" fill="#57d9f3"/></marker><marker id="arrow-error" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 1 L8 5 L0 9Z" fill="#fa6878"/></marker></defs>
+            <!-- Controlador (Vértice Superior) -->
+            <rect x="310" y="40" width="180" height="90" rx="8" class="node-box" stroke="var(--accent-cyan)"/>
+            <text x="350" y="80" class="svg-label" fill="var(--accent-cyan)">CONTROLLER</text>
+            <text x="345" y="100" class="svg-sub">Orquesta flujo y datos</text>
+
+            <!-- Vista (Inferior Izquierda) -->
+            <rect x="110" y="260" width="180" height="90" rx="8" class="node-box" stroke="var(--accent-violet)"/>
+            <text x="175" y="300" class="svg-label" fill="var(--accent-violet)">VIEW</text>
+            <text x="145" y="320" class="svg-sub">Renderizado de Interfaz</text>
+
+            <!-- Modelo (Inferior Derecha) -->
+            <rect x="510" y="260" width="180" height="90" rx="8" class="node-box" stroke="var(--accent-green)"/>
+            <text x="570" y="300" class="svg-label" fill="var(--accent-green)">MODEL</text>
+            <text x="545" y="320" class="svg-sub">Estado & Reglas de Negocio</text>
+
+            <!-- Flechas direccionales triangulares -->
+            <!-- 1. View -> Controller -->
+            <line x1="220" y1="260" x2="330" y2="130" stroke="var(--border-bright)" stroke-width="1.5" marker-end="url(#arrow)"/>
+            <text x="230" y="180" class="svg-sub" fill="var(--accent-violet)">1. User Input</text>
+
+            <!-- 2. Controller -> Model -->
+            <line x1="470" y1="130" x2="580" y2="260" stroke="var(--border-bright)" stroke-width="1.5" marker-end="url(#arrow)"/>
+            <text x="540" y="180" class="svg-sub" fill="var(--accent-cyan)">2. Updates</text>
+
+            <!-- 3. Model -> View -->
+            <line x1="510" y1="310" x2="290" y2="310" stroke="var(--border-bright)" stroke-width="1.5" marker-end="url(#arrow)"/>
+            <text x="365" y="330" class="svg-sub" fill="var(--accent-green)">3. Notifies Update</text>
+          <circle cx="288.80427521710084" cy="178.6858565616081" r="7" fill="var(--accent-violet)" filter="drop-shadow(0 0 7px var(--accent-violet))" /></svg><span class="sr-only" style="display:none">1. Usuario dispara acción en la Vista</span></div><div class="phase phase-6-2"><svg class="diagram-svg" viewBox="0 0 800 440" preserveAspectRatio="xMidYMid meet"><defs><marker id="arrow" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 1 L8 5 L0 9Z" fill="#7894a9"/></marker><marker id="arrow-active" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 1 L8 5 L0 9Z" fill="#57d9f3"/></marker><marker id="arrow-error" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 1 L8 5 L0 9Z" fill="#fa6878"/></marker></defs>
+            <!-- Controlador (Vértice Superior) -->
+            <rect x="310" y="40" width="180" height="90" rx="8" class="node-box" stroke="var(--accent-cyan)"/>
+            <text x="350" y="80" class="svg-label" fill="var(--accent-cyan)">CONTROLLER</text>
+            <text x="345" y="100" class="svg-sub">Orquesta flujo y datos</text>
+
+            <!-- Vista (Inferior Izquierda) -->
+            <rect x="110" y="260" width="180" height="90" rx="8" class="node-box" stroke="var(--accent-violet)"/>
+            <text x="175" y="300" class="svg-label" fill="var(--accent-violet)">VIEW</text>
+            <text x="145" y="320" class="svg-sub">Renderizado de Interfaz</text>
+
+            <!-- Modelo (Inferior Derecha) -->
+            <rect x="510" y="260" width="180" height="90" rx="8" class="node-box" stroke="var(--accent-green)"/>
+            <text x="570" y="300" class="svg-label" fill="var(--accent-green)">MODEL</text>
+            <text x="545" y="320" class="svg-sub">Estado & Reglas de Negocio</text>
+
+            <!-- Flechas direccionales triangulares -->
+            <!-- 1. View -> Controller -->
+            <line x1="220" y1="260" x2="330" y2="130" stroke="var(--border-bright)" stroke-width="1.5" marker-end="url(#arrow)"/>
+            <text x="230" y="180" class="svg-sub" fill="var(--accent-violet)">1. User Input</text>
+
+            <!-- 2. Controller -> Model -->
+            <line x1="470" y1="130" x2="580" y2="260" stroke="var(--border-bright)" stroke-width="1.5" marker-end="url(#arrow)"/>
+            <text x="540" y="180" class="svg-sub" fill="var(--accent-cyan)">2. Updates</text>
+
+            <!-- 3. Model -> View -->
+            <line x1="510" y1="310" x2="290" y2="310" stroke="var(--border-bright)" stroke-width="1.5" marker-end="url(#arrow)"/>
+            <text x="365" y="330" class="svg-sub" fill="var(--accent-green)">3. Notifies Update</text>
+          <circle cx="495.6045424181697" cy="160.25991376692778" r="7" fill="var(--accent-cyan)" filter="drop-shadow(0 0 7px var(--accent-cyan))" /></svg><span class="sr-only" style="display:none">1. Usuario dispara acción en la Vista</span></div><div class="phase phase-6-3"><svg class="diagram-svg" viewBox="0 0 800 440" preserveAspectRatio="xMidYMid meet"><defs><marker id="arrow" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 1 L8 5 L0 9Z" fill="#7894a9"/></marker><marker id="arrow-active" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 1 L8 5 L0 9Z" fill="#57d9f3"/></marker><marker id="arrow-error" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 1 L8 5 L0 9Z" fill="#fa6878"/></marker></defs>
+            <!-- Controlador (Vértice Superior) -->
+            <rect x="310" y="40" width="180" height="90" rx="8" class="node-box" stroke="var(--accent-cyan)"/>
+            <text x="350" y="80" class="svg-label" fill="var(--accent-cyan)">CONTROLLER</text>
+            <text x="345" y="100" class="svg-sub">Orquesta flujo y datos</text>
+
+            <!-- Vista (Inferior Izquierda) -->
+            <rect x="110" y="260" width="180" height="90" rx="8" class="node-box" stroke="var(--accent-violet)"/>
+            <text x="175" y="300" class="svg-label" fill="var(--accent-violet)">VIEW</text>
+            <text x="145" y="320" class="svg-sub">Renderizado de Interfaz</text>
+
+            <!-- Modelo (Inferior Derecha) -->
+            <rect x="510" y="260" width="180" height="90" rx="8" class="node-box" stroke="var(--accent-green)"/>
+            <text x="570" y="300" class="svg-label" fill="var(--accent-green)">MODEL</text>
+            <text x="545" y="320" class="svg-sub">Estado & Reglas de Negocio</text>
+
+            <!-- Flechas direccionales triangulares -->
+            <!-- 1. View -> Controller -->
+            <line x1="220" y1="260" x2="330" y2="130" stroke="var(--border-bright)" stroke-width="1.5" marker-end="url(#arrow)"/>
+            <text x="230" y="180" class="svg-sub" fill="var(--accent-violet)">1. User Input</text>
+
+            <!-- 2. Controller -> Model -->
+            <line x1="470" y1="130" x2="580" y2="260" stroke="var(--border-bright)" stroke-width="1.5" marker-end="url(#arrow)"/>
+            <text x="540" y="180" class="svg-sub" fill="var(--accent-cyan)">2. Updates</text>
+
+            <!-- 3. Model -> View -->
+            <line x1="510" y1="310" x2="290" y2="310" stroke="var(--border-bright)" stroke-width="1.5" marker-end="url(#arrow)"/>
+            <text x="365" y="330" class="svg-sub" fill="var(--accent-green)">3. Notifies Update</text>
+          <circle cx="562.4048096192384" cy="239.2056840954636" r="7" fill="var(--accent-cyan)" filter="drop-shadow(0 0 7px var(--accent-cyan))" /></svg><span class="sr-only" style="display:none">2. Controlador recibe el evento y manipula el Modelo</span></div><div class="phase phase-6-4"><svg class="diagram-svg" viewBox="0 0 800 440" preserveAspectRatio="xMidYMid meet"><defs><marker id="arrow" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 1 L8 5 L0 9Z" fill="#7894a9"/></marker><marker id="arrow-active" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 1 L8 5 L0 9Z" fill="#57d9f3"/></marker><marker id="arrow-error" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 1 L8 5 L0 9Z" fill="#fa6878"/></marker></defs>
+            <!-- Controlador (Vértice Superior) -->
+            <rect x="310" y="40" width="180" height="90" rx="8" class="node-box" stroke="var(--accent-cyan)"/>
+            <text x="350" y="80" class="svg-label" fill="var(--accent-cyan)">CONTROLLER</text>
+            <text x="345" y="100" class="svg-sub">Orquesta flujo y datos</text>
+
+            <!-- Vista (Inferior Izquierda) -->
+            <rect x="110" y="260" width="180" height="90" rx="8" class="node-box" stroke="var(--accent-violet)"/>
+            <text x="175" y="300" class="svg-label" fill="var(--accent-violet)">VIEW</text>
+            <text x="145" y="320" class="svg-sub">Renderizado de Interfaz</text>
+
+            <!-- Modelo (Inferior Derecha) -->
+            <rect x="510" y="260" width="180" height="90" rx="8" class="node-box" stroke="var(--accent-green)"/>
+            <text x="570" y="300" class="svg-label" fill="var(--accent-green)">MODEL</text>
+            <text x="545" y="320" class="svg-sub">Estado & Reglas de Negocio</text>
+
+            <!-- Flechas direccionales triangulares -->
+            <!-- 1. View -> Controller -->
+            <line x1="220" y1="260" x2="330" y2="130" stroke="var(--border-bright)" stroke-width="1.5" marker-end="url(#arrow)"/>
+            <text x="230" y="180" class="svg-sub" fill="var(--accent-violet)">1. User Input</text>
+
+            <!-- 2. Controller -> Model -->
+            <line x1="470" y1="130" x2="580" y2="260" stroke="var(--border-bright)" stroke-width="1.5" marker-end="url(#arrow)"/>
+            <text x="540" y="180" class="svg-sub" fill="var(--accent-cyan)">2. Updates</text>
+
+            <!-- 3. Model -> View -->
+            <line x1="510" y1="310" x2="290" y2="310" stroke="var(--border-bright)" stroke-width="1.5" marker-end="url(#arrow)"/>
+            <text x="365" y="330" class="svg-sub" fill="var(--accent-green)">3. Notifies Update</text>
+          <circle cx="414.48426264293295" cy="310" r="7" fill="var(--accent-green)" filter="drop-shadow(0 0 7px var(--accent-green))" /></svg><span class="sr-only" style="display:none">3. El Modelo notifica la mutación de estado a la Vista</span></div></div></div><div class="source-card"><div class="pane-title"><span>CÓDIGO / INSPECTOR</span><span data-field="file">controllers/user_controller.py</span></div><div class="code-scroll"><div class="code-line"><span class="ln">01</span><span class="ct"><span class="c-cm"># MVC Controller Intermediary</span></span></div><div class="code-line"><span class="ln">02</span><span class="ct"><span class="c-kw">class</span> <span class="c-fn">OrderController</span>:</span></div><div class="code-line"><span class="ln">03</span><span class="ct">    <span class="c-kw">def</span> <span class="c-fn">__init__</span>(self, model, view):</span></div><div class="code-line"><span class="ln">04</span><span class="ct">        self.model = model</span></div><div class="code-line"><span class="ln">05</span><span class="ct">        self.view = view</span></div><div class="code-line"><span class="ln">06</span><span class="ct">&#160;</span></div><div class="code-line"><span class="ln">07</span><span class="ct">    <span class="c-kw">def</span> <span class="c-fn">on_submit_action</span>(self, form_payload):</span></div><div class="code-line"><span class="ln">08</span><span class="ct">        <span class="c-cm"># 1. Controlador muta el Modelo</span></span></div><div class="code-line"><span class="ln">09</span><span class="ct">        record = self.model.<span class="c-fn">persist</span>(form_payload)</span></div><div class="code-line"><span class="ln">10</span><span class="ct">        <span class="c-cm"># 2. Modelo actualiza la Vista</span></span></div><div class="code-line"><span class="ln">11</span><span class="ct">        self.view.<span class="c-fn">render_success</span>(record.id)</span></div></div><div class="code-more"></div></div></div><div class="execution-bar"><div class="log-stage" style="position:relative;height:100%;flex:1;overflow:hidden"><span class="log phase log-6-0">Procesando arquitectura</span><span class="log phase log-6-1">1. Usuario dispara acción en la Vista</span><span class="log phase log-6-2">1. Usuario dispara acción en la Vista</span><span class="log phase log-6-3">2. Controlador recibe el evento y manipula el Modelo</span><span class="log phase log-6-4">3. El Modelo notifica la mutación de estado a la Vista</span></div><span class="execution-tag">DEMO · 4s</span></div></section></main><footer>SVG / HTML PURO · {DURATION}s</footer></body></html>

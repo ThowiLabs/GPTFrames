@@ -3,3 +3,4 @@ qa-*
 check-*
 __pycache__/
 *.pyc
+snapshot_sources_06_08.json

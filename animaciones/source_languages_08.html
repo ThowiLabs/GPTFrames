@@ -1,0 +1,1439 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Animaciones Profesionales de Lenguajes de Programación</title>
+  <style>
+    :root {
+      --bg-darker: #0d1117;
+      --bg-dark: #161b22;
+      --bg-editor: #1f242c;
+      --bg-surface: #262c36;
+      --border-color: #30363d;
+      --text-main: #c9d1d9;
+      --text-muted: #8b949e;
+      --accent: #58a6ff;
+      --accent-hover: #1f6feb;
+      --success: #3fb950;
+      --warning: #d29922;
+      --danger: #f85149;
+      --purple: #bc8cff;
+      --orange: #ffa657;
+      
+      --syn-keyword: #ff7b72;
+      --syn-func: #d2a8ff;
+      --syn-type: #79c0ff;
+      --syn-string: #a5d6ff;
+      --syn-number: #79c0ff;
+      --syn-comment: #8b949e;
+      --syn-var: #ffa657;
+
+      --font-ui: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      --font-mono: ui-monospace, "Cascadia Code", "Fira Code", Menlo, Monaco, Consolas, monospace;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background: var(--bg-darker);
+      color: var(--text-main);
+      font-family: var(--font-ui);
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      user-select: none;
+    }
+
+    /* BARRA SUPERIOR */
+    header {
+      background: var(--bg-dark);
+      border-bottom: 1px solid var(--border-color);
+      height: 48px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 16px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 13px;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+      color: var(--text-main);
+    }
+    .brand-tag {
+      background: #238636;
+      color: #fff;
+      font-size: 10px;
+      padding: 2px 6px;
+      border-radius: 4px;
+      text-transform: uppercase;
+      font-family: var(--font-mono);
+    }
+
+    /* CONTROLES DE LÍNEA DE TIEMPO */
+    .timeline-controls {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--bg-editor);
+      border: 1px solid var(--border-color);
+      border-radius: 6px;
+      padding: 3px 8px;
+    }
+
+    .btn-ctrl {
+      background: transparent;
+      border: 1px solid transparent;
+      color: var(--text-main);
+      padding: 4px 8px;
+      border-radius: 4px;
+      cursor: pointer;
+      font-family: var(--font-mono);
+      font-size: 11px;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+    }
+    .btn-ctrl:hover {
+      background: var(--bg-surface);
+      border-color: var(--border-color);
+    }
+    .btn-ctrl.active {
+      background: var(--accent-hover);
+      color: #fff;
+    }
+
+    .scrubber-container {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-left: 8px;
+    }
+    .scrubber {
+      -webkit-appearance: none;
+      width: 140px;
+      height: 4px;
+      border-radius: 2px;
+      background: var(--border-color);
+      outline: none;
+    }
+    .scrubber::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      background: var(--accent);
+      cursor: pointer;
+    }
+    .time-badge {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      color: var(--text-muted);
+      min-width: 45px;
+    }
+
+    /* CONTENEDOR PRINCIPAL */
+    .app-body {
+      flex: 1;
+      display: flex;
+      overflow: hidden;
+    }
+
+    /* BARRA LATERAL (LISTA DE LENGUAJES) */
+    .sidebar {
+      width: 250px;
+      background: var(--bg-dark);
+      border-right: 1px solid var(--border-color);
+      display: flex;
+      flex-direction: column;
+    }
+    .sidebar-header {
+      padding: 10px 14px;
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--text-muted);
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+      border-bottom: 1px solid var(--border-color);
+    }
+    .lang-list {
+      flex: 1;
+      overflow-y: auto;
+      list-style: none;
+    }
+    .lang-item {
+      padding: 9px 14px;
+      font-size: 12px;
+      cursor: pointer;
+      border-left: 2px solid transparent;
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+      border-bottom: 1px solid rgba(48, 54, 61, 0.3);
+    }
+    .lang-item:hover {
+      background: rgba(88, 166, 255, 0.05);
+    }
+    .lang-item.active {
+      background: var(--bg-editor);
+      border-left-color: var(--accent);
+      color: #fff;
+    }
+    .lang-title {
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .lang-num {
+      font-family: var(--font-mono);
+      color: var(--accent);
+      font-size: 11px;
+    }
+    .lang-subs {
+      font-size: 11px;
+      color: var(--text-muted);
+    }
+
+    /* ÁREA DE TRABAJO DEL LENGUAJE SELECCIONADO */
+    .workspace {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      background: var(--bg-editor);
+    }
+
+    /* PESTAÑAS SUPERIORES */
+    .editor-tabs {
+      background: var(--bg-dark);
+      display: flex;
+      border-bottom: 1px solid var(--border-color);
+    }
+    .tab {
+      padding: 8px 16px;
+      font-size: 12px;
+      font-family: var(--font-mono);
+      color: var(--text-muted);
+      border-right: 1px solid var(--border-color);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .tab.active {
+      background: var(--bg-editor);
+      color: var(--text-main);
+      border-bottom: 1px solid var(--bg-editor);
+    }
+    .tab-status {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--success);
+    }
+
+    /* GRID DIVIDIDO: EDITOR (IZQ) + SIMULACIÓN SVG (DER) */
+    .content-split {
+      flex: 1;
+      display: grid;
+      grid-template-columns: 46% 54%;
+      overflow: hidden;
+    }
+
+    /* EDITOR DE CÓDIGO */
+    .code-panel {
+      border-right: 1px solid var(--border-color);
+      display: flex;
+      flex-direction: column;
+      background: var(--bg-editor);
+      overflow: hidden;
+    }
+    .panel-header {
+      padding: 8px 12px;
+      background: rgba(0,0,0,0.15);
+      border-bottom: 1px solid var(--border-color);
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: var(--text-muted);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .panel-header .tip {
+      font-size: 10px;
+      color: var(--warning);
+      text-transform: none;
+      font-family: var(--font-mono);
+    }
+    .code-container {
+      flex: 1;
+      padding: 12px;
+      font-family: var(--font-mono);
+      font-size: 12px;
+      line-height: 1.6;
+      overflow-y: auto;
+      user-select: text;
+    }
+    .code-line {
+      display: flex;
+      align-items: baseline;
+      padding: 0 4px;
+      border-radius: 3px;
+    }
+    .code-line.highlight {
+      background: rgba(88, 166, 255, 0.15);
+      border-left: 2px solid var(--accent);
+      padding-left: 2px;
+    }
+    .line-no {
+      color: #484f58;
+      width: 28px;
+      text-align: right;
+      padding-right: 12px;
+      user-select: none;
+      font-size: 11px;
+    }
+    .line-text {
+      flex: 1;
+      white-space: pre;
+    }
+
+    /* TOKEN EDITABLE */
+    .editable {
+      outline: none;
+      border-bottom: 1px dashed var(--accent);
+      color: var(--text-main);
+      padding: 0 1px;
+      cursor: text;
+    }
+    .editable:focus {
+      background: rgba(88, 166, 255, 0.2);
+      border-bottom: 1px solid var(--accent);
+      border-radius: 2px;
+    }
+
+    /* RESALTADO SINTÁCTICO */
+    .kw { color: var(--syn-keyword); font-weight: 600; }
+    .fn { color: var(--syn-func); }
+    .tp { color: var(--syn-type); }
+    .st { color: var(--syn-string); }
+    .num { color: var(--syn-number); }
+    .cm { color: var(--syn-comment); font-style: italic; }
+    .vr { color: var(--syn-var); }
+
+    /* PANEL VISUAL (SVG & EFECTOS) */
+    .visual-panel {
+      display: flex;
+      flex-direction: column;
+      background: #14181f;
+      overflow: hidden;
+    }
+    .canvas-wrapper {
+      flex: 1;
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 16px;
+    }
+    .visual-svg {
+      width: 100%;
+      height: 100%;
+      max-height: 380px;
+    }
+
+    /* PANEL INFERIOR: CONSOLA / TERMINAL */
+    .terminal-panel {
+      height: 120px;
+      border-top: 1px solid var(--border-color);
+      background: var(--bg-darker);
+      display: flex;
+      flex-direction: column;
+    }
+    .terminal-header {
+      padding: 4px 12px;
+      background: var(--bg-dark);
+      border-bottom: 1px solid var(--border-color);
+      font-size: 11px;
+      color: var(--text-muted);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-family: var(--font-mono);
+    }
+    .terminal-body {
+      flex: 1;
+      padding: 8px 12px;
+      font-family: var(--font-mono);
+      font-size: 11px;
+      line-height: 1.5;
+      overflow-y: auto;
+      color: #7ee787;
+      user-select: text;
+    }
+    .terminal-entry {
+      margin-bottom: 2px;
+    }
+    .terminal-entry .term-dim {
+      color: var(--text-muted);
+    }
+    .terminal-entry .term-info {
+      color: var(--accent);
+    }
+    .terminal-entry .term-warn {
+      color: var(--warning);
+    }
+
+    /* ESTILOS SVG UNIVERSALES */
+    .svg-box {
+      fill: #1f242c;
+      stroke: var(--border-color);
+      stroke-width: 1.5;
+      rx: 6;
+    }
+    .svg-box.active {
+      stroke: var(--accent);
+      fill: #222c3a;
+      filter: drop-shadow(0 0 6px rgba(88, 166, 255, 0.25));
+    }
+    .svg-box.success {
+      stroke: var(--success);
+      fill: #1a2c20;
+    }
+    .svg-box.warning {
+      stroke: var(--warning);
+      fill: #2f2717;
+    }
+    .svg-text {
+      fill: var(--text-main);
+      font-family: var(--font-mono);
+      font-size: 11px;
+      text-anchor: middle;
+      dominant-baseline: middle;
+    }
+    .svg-subtext {
+      fill: var(--text-muted);
+      font-family: var(--font-ui);
+      font-size: 9px;
+      text-anchor: middle;
+      dominant-baseline: middle;
+    }
+    .svg-path {
+      fill: none;
+      stroke: var(--border-color);
+      stroke-width: 1.5;
+    }
+    .svg-path.flowing {
+      stroke: var(--accent);
+      stroke-dasharray: 4 4;
+      animation: dashMove 0.8s linear infinite;
+    }
+    @keyframes dashMove {
+      to { stroke-dashoffset: -8; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- BARRA SUPERIOR -->
+  <header>
+    <div class="brand">
+      <span class="brand-tag">IDE Core</span>
+      <span>ANIMACIONES DE LENGUAJES DE PROGRAMACIÓN</span>
+    </div>
+    <div class="timeline-controls">
+      <button class="btn-ctrl" id="btnStepPrev" title="Paso anterior">&lt; Paso</button>
+      <button class="btn-ctrl active" id="btnPlayPause">Pausar</button>
+      <button class="btn-ctrl" id="btnStepNext" title="Paso siguiente">Paso &gt;</button>
+      <button class="btn-ctrl" id="btnReset">Reiniciar</button>
+      <div class="scrubber-container">
+        <input type="range" class="scrubber" id="scrubber" min="0" max="100" value="0">
+        <span class="time-badge" id="timeBadge">0.0s</span>
+      </div>
+      <button class="btn-ctrl" id="btnSpeed">1.0x</button>
+    </div>
+  </header>
+
+  <!-- CUERPO PRINCIPAL -->
+  <div class="app-body">
+    <!-- BARRA LATERAL CON LOS 10 LENGUAJES -->
+    <nav class="sidebar">
+      <div class="sidebar-header">Catálogo de Módulos (10)</div>
+      <ul class="lang-list" id="langList">
+        <!-- Renderizado dinámico -->
+      </ul>
+    </nav>
+
+    <!-- ÁREA DE TRABAJO -->
+    <main class="workspace">
+      <div class="editor-tabs">
+        <div class="tab active">
+          <span class="tab-status"></span>
+          <span id="tabFilename">module.ext</span>
+        </div>
+      </div>
+
+      <div class="content-split">
+        <!-- EDITOR DE CÓDIGO -->
+        <section class="code-panel">
+          <div class="panel-header">
+            <span>Editor de Código Fuente</span>
+            <span class="tip">Tokens subrayados son editables</span>
+          </div>
+          <div class="code-container" id="codeEditor">
+            <!-- Inyectado dinámicamente -->
+          </div>
+        </section>
+
+        <!-- PANEL DE ANIMACIÓN VECTORIAL -->
+        <section class="visual-panel">
+          <div class="panel-header">
+            <span>Mecanismo Interno y Visualización de Ejecución</span>
+            <span id="visualStatusBadge" class="tip" style="color:var(--accent);">FASE: INICIAL</span>
+          </div>
+          <div class="canvas-wrapper" id="canvasWrapper">
+            <!-- Inyectado dinámicamente según lenguaje -->
+          </div>
+        </section>
+      </div>
+
+      <!-- TERMINAL DE SALIDA -->
+      <footer class="terminal-panel">
+        <div class="terminal-header">
+          <span>SALIDA DE EJECUCIÓN (STDOUT / LOGS)</span>
+          <span id="termState">ESTADO: ACTIVO</span>
+        </div>
+        <div class="terminal-body" id="termOutput">
+          <!-- Salida sincrónica -->
+        </div>
+      </footer>
+    </main>
+  </div>
+
+  <script>
+    /**
+     * MODELO DE DATOS: 10 LENGUAJES Y SUS MECANISMOS
+     * Los nombres de variables, funciones y estructuras son dinámicos y editables.
+     */
+    const MODULES = [
+      {
+        id: "py",
+        num: "01",
+        name: "Python",
+        sub: "Funciones, Clases, Decoradores y Módulos",
+        file: "analytics_pipeline.py",
+        state: {
+          modName: "sys_metric",
+          decName: "trace_perf",
+          className: "DataPipeline",
+          fnName: "transform_records",
+          argName: "dataset"
+        },
+        getCode(s) {
+          return [
+            { n: 1, html: `<span class="kw">import</span> <span class="editable" data-key="modName">${s.modName}</span>` },
+            { n: 2, html: `` },
+            { n: 3, html: `<span class="kw">def</span> <span class="fn editable" data-key="decName">${s.decName}</span>(wrapped_fn):` },
+            { n: 4, html: `    <span class="kw">def</span> <span class="fn">wrapper</span>(*args, **kwargs):` },
+            { n: 5, html: `        print(<span class="st">"--> Interceptando ejecución"</span>)` },
+            { n: 6, html: `        <span class="kw">return</span> wrapped_fn(*args, **kwargs)` },
+            { n: 7, html: `    <span class="kw">return</span> wrapper` },
+            { n: 8, html: `` },
+            { n: 9, html: `<span class="kw">class</span> <span class="tp editable" data-key="className">${s.className}</span>:` },
+            { n: 10, html: `    @<span class="fn editable" data-key="decName">${s.decName}</span>` },
+            { n: 11, html: `    <span class="kw">def</span> <span class="fn editable" data-key="fnName">${s.fnName}</span>(self, <span class="vr editable" data-key="argName">${s.argName}</span>):` },
+            { n: 12, html: `        <span class="kw">return</span> len(<span class="vr editable" data-key="argName">${s.argName}</span>) * 10` },
+            { n: 13, html: `` },
+            { n: 14, html: `pipe = <span class="tp editable" data-key="className">${s.className}</span>()` },
+            { n: 15, html: `res = pipe.<span class="fn editable" data-key="fnName">${s.fnName}</span>([10, 20, 30])` }
+          ];
+        },
+        renderSVG(s, progress) {
+          const step = Math.min(3, Math.floor(progress * 4));
+          const modActive = step >= 0 ? "active" : "";
+          const decActive = step >= 1 ? "active" : "";
+          const clsActive = step >= 2 ? "active" : "";
+          const outActive = step >= 3 ? "success" : "";
+
+          return `
+            <svg class="visual-svg" viewBox="0 0 540 260">
+              <!-- Módulo importado -->
+              <rect class="svg-box ${modActive}" x="20" y="20" width="130" height="60"/>
+              <text class="svg-text" x="85" y="45">${s.modName}.py</text>
+              <text class="svg-subtext" x="85" y="62">MÓDULO CARGADO</text>
+
+              <!-- Conexión hacia Decorador -->
+              <line class="svg-path ${step >= 1 ? 'flowing' : ''}" x1="150" y1="50" x2="200" y2="50"/>
+
+              <!-- Envoltorio Decorador -->
+              <rect class="svg-box ${decActive}" x="200" y="20" width="140" height="70"/>
+              <text class="svg-text" x="270" y="45">@${s.decName}</text>
+              <text class="svg-subtext" x="270" y="62">WRAPPER FUNCTION</text>
+
+              <!-- Conexión a Clase -->
+              <line class="svg-path ${step >= 2 ? 'flowing' : ''}" x1="270" y1="90" x2="270" y2="130"/>
+
+              <!-- Clase & Instancia -->
+              <rect class="svg-box ${clsActive}" x="180" y="130" width="180" height="100"/>
+              <text class="svg-text" x="270" y="155">class ${s.className}</text>
+              <text class="svg-subtext" x="270" y="172">MÉTODO: ${s.fnName}()</text>
+              <rect x="195" y="185" width="150" height="30" rx="4" fill="#161b22" stroke="${step >= 2 ? '#58a6ff' : '#30363d'}"/>
+              <text class="svg-text" x="270" y="203" style="font-size:10px;">self.${s.argName} -> Evaluado</text>
+
+              <!-- Conexión a Retorno -->
+              <line class="svg-path ${step >= 3 ? 'flowing' : ''}" x1="360" y1="180" x2="410" y2="180"/>
+
+              <!-- Resultado -->
+              <rect class="svg-box ${outActive}" x="410" y="150" width="110" height="60"/>
+              <text class="svg-text" x="465" y="175">Retorno: 30</text>
+              <text class="svg-subtext" x="465" y="192">RESULTADO OK</text>
+            </svg>
+          `;
+        },
+        getLogs(s, progress) {
+          const step = Math.min(3, Math.floor(progress * 4));
+          const logs = [
+            `[PY_EXEC] Importando módulo de espacio de nombres: '${s.modName}'...`,
+            step >= 1 ? `[PY_EXEC] Decorador '@${s.decName}' intercepta definición de '${s.fnName}'.` : null,
+            step >= 2 ? `[PY_EXEC] Instanciando '${s.className}' en heap: 0x7f9a2b00.` : null,
+            step >= 3 ? `[PY_EXEC] ${s.fnName}() completado. Salida producida: 30.` : null
+          ];
+          return logs.filter(Boolean);
+        }
+      },
+      {
+        id: "js",
+        num: "02",
+        name: "JavaScript",
+        sub: "Event Loop, Callbacks, Promises y Async/Await",
+        file: "engine_loop.js",
+        state: {
+          fnAsync: "requestPayload",
+          promiseVar: "netTask",
+          dataVar: "rawMetrics"
+        },
+        getCode(s) {
+          return [
+            { n: 1, html: `<span class="kw">async function</span> <span class="fn editable" data-key="fnAsync">${s.fnAsync}</span>(uri) {` },
+            { n: 2, html: `    console.log(<span class="st">"1. Inicio síncrono"</span>);` },
+            { n: 3, html: `    <span class="kw">const</span> <span class="vr editable" data-key="promiseVar">${s.promiseVar}</span> = fetch(uri);` },
+            { n: 4, html: `    <span class="kw">const</span> <span class="vr editable" data-key="dataVar">${s.dataVar}</span> = <span class="kw">await</span> <span class="vr editable" data-key="promiseVar">${s.promiseVar}</span>;` },
+            { n: 5, html: `    console.log(<span class="st">"3. Microtask resuelta"</span>);` },
+            { n: 6, html: `    <span class="kw">return</span> <span class="vr editable" data-key="dataVar">${s.dataVar}</span>.size;` },
+            { n: 7, html: `}` },
+            { n: 8, html: `` },
+            { n: 9, html: `<span class="fn editable" data-key="fnAsync">${s.fnAsync}</span>(<span class="st">"/api/stream"</span>);` },
+            { n: 10, html: `console.log(<span class="st">"2. Pila principal libre"</span>);` }
+          ];
+        },
+        renderSVG(s, progress) {
+          const step = Math.min(3, Math.floor(progress * 4));
+          const callstackClass = (step === 0 || step === 3) ? "active" : "";
+          const webApiClass = step === 1 ? "active" : "";
+          const microQueueClass = step === 2 ? "active" : "";
+
+          return `
+            <svg class="visual-svg" viewBox="0 0 540 260">
+              <!-- CALL STACK -->
+              <rect class="svg-box ${callstackClass}" x="20" y="30" width="130" height="180"/>
+              <text class="svg-text" x="85" y="55">CALL STACK</text>
+              <rect x="30" y="80" width="110" height="30" rx="3" fill="#161b22" stroke="${step === 0 ? '#58a6ff' : '#30363d'}"/>
+              <text class="svg-text" x="85" y="98" style="font-size:10px;">${step === 0 ? s.fnAsync + '()' : 'global()'}</text>
+              ${step === 3 ? `<rect x="30" y="120" width="110" height="30" rx="3" fill="#1a2c20" stroke="#3fb950"/><text class="svg-text" x="85" y="138" style="font-size:10px;">resume: ${s.fnAsync}</text>` : ''}
+
+              <!-- WEB APIs -->
+              <rect class="svg-box ${webApiClass}" x="190" y="30" width="140" height="80"/>
+              <text class="svg-text" x="260" y="55">WEB API / NODE</text>
+              <text class="svg-subtext" x="260" y="75">${s.promiseVar}: fetch()</text>
+
+              <!-- MICROTASK QUEUE -->
+              <rect class="svg-box ${microQueueClass}" x="190" y="130" width="140" height="80"/>
+              <text class="svg-text" x="260" y="155">MICROTASK QUEUE</text>
+              <text class="svg-subtext" x="260" y="175">Promise.resolve(${s.dataVar})</text>
+
+              <!-- EVENT LOOP RING -->
+              <circle cx="420" cy="120" r="50" fill="#1f242c" stroke="${step >= 2 ? '#bc8cff' : '#30363d'}" stroke-width="2"/>
+              <path d="M 420 70 A 50 50 0 0 1 470 120" fill="none" stroke="#bc8cff" stroke-width="3" stroke-dasharray="6 6"/>
+              <text class="svg-text" x="420" y="115">EVENT</text>
+              <text class="svg-text" x="420" y="132">LOOP</text>
+
+              <!-- RUTA DE FLUJO -->
+              <path class="svg-path ${step >= 2 ? 'flowing' : ''}" d="M 330 170 L 370 170 L 420 170"/>
+            </svg>
+          `;
+        },
+        getLogs(s, progress) {
+          const step = Math.min(3, Math.floor(progress * 4));
+          const logs = [
+            `[JS_CONSOLE] 1. Inicio síncrono`,
+            step >= 1 ? `[JS_CONSOLE] 2. Pila principal libre (await delega a Web APIs)` : null,
+            step >= 2 ? `[JS_EVENT_LOOP] Microtask agregada para ${s.promiseVar}. Tick evaluado.` : null,
+            step >= 3 ? `[JS_CONSOLE] 3. Microtask resuelta. ${s.dataVar} desempaquetado.` : null
+          ];
+          return logs.filter(Boolean);
+        }
+      },
+      {
+        id: "ts",
+        num: "03",
+        name: "TypeScript",
+        sub: "Interfaces, Tipos, Genéricos y Verificación Estática",
+        file: "type_validator.ts",
+        state: {
+          interfaceName: "AuthToken",
+          genericType: "PayloadRecord",
+          funcName: "normalizeContext"
+        },
+        getCode(s) {
+          return [
+            { n: 1, html: `<span class="kw">interface</span> <span class="tp editable" data-key="interfaceName">${s.interfaceName}</span>&lt;<span class="tp">T</span>&gt; {` },
+            { n: 2, html: `    id: <span class="tp">string</span>;` },
+            { n: 3, html: `    data: <span class="tp">T</span>;` },
+            { n: 4, html: `    exp: <span class="tp">number</span>;` },
+            { n: 5, html: `}` },
+            { n: 6, html: `` },
+            { n: 7, html: `<span class="kw">type</span> <span class="tp editable" data-key="genericType">${s.genericType}</span> = { role: <span class="st">"admin"</span> | <span class="st">"usr"</span> };` },
+            { n: 8, html: `` },
+            { n: 9, html: `<span class="kw">function</span> <span class="fn editable" data-key="funcName">${s.funcName}</span>&lt;<span class="tp">T</span>&gt;(` },
+            { n: 10, html: `    item: <span class="tp editable" data-key="interfaceName">${s.interfaceName}</span>&lt;<span class="tp">T</span>&gt;` },
+            { n: 11, html: `): <span class="tp">boolean</span> {` },
+            { n: 12, html: `    <span class="kw">return</span> item.exp &gt; Date.now();` },
+            { n: 13, html: `}` }
+          ];
+        },
+        renderSVG(s, progress) {
+          const step = Math.min(3, Math.floor(progress * 4));
+          const step0 = step >= 0 ? "active" : "";
+          const step1 = step >= 1 ? "active" : "";
+          const step2 = step >= 2 ? "active" : "";
+          const step3 = step >= 3 ? "success" : "";
+
+          return `
+            <svg class="visual-svg" viewBox="0 0 540 260">
+              <!-- AST Declarations -->
+              <rect class="svg-box ${step0}" x="20" y="30" width="140" height="90"/>
+              <text class="svg-text" x="90" y="55">INTERFACE AST</text>
+              <text class="svg-subtext" x="90" y="75">${s.interfaceName}&lt;T&gt;</text>
+              <text class="svg-subtext" x="90" y="92">Generics: Validated</text>
+
+              <!-- Conexión -->
+              <line class="svg-path ${step >= 1 ? 'flowing' : ''}" x1="160" y1="75" x2="200" y2="75"/>
+
+              <!-- Type Checker -->
+              <rect class="svg-box ${step1}" x="200" y="30" width="160" height="90"/>
+              <text class="svg-text" x="280" y="55">TYPE CHECKER</text>
+              <text class="svg-subtext" x="280" y="75">Generic &lt;${s.genericType}&gt;</text>
+              <text class="svg-subtext" x="280" y="92" fill="#3fb950">0 Errores Semánticos</text>
+
+              <!-- Emit JS -->
+              <line class="svg-path ${step >= 2 ? 'flowing' : ''}" x1="280" y1="120" x2="280" y2="150"/>
+              <rect class="svg-box ${step2}" x="200" y="150" width="160" height="75"/>
+              <text class="svg-text" x="280" y="175">COMPILADOR TSC</text>
+              <text class="svg-subtext" x="280" y="195">Stripping Types (...)</text>
+
+              <!-- Clean Output -->
+              <line class="svg-path ${step >= 3 ? 'flowing' : ''}" x1="360" y1="187" x2="400" y2="187"/>
+              <rect class="svg-box ${step3}" x="400" y="150" width="120" height="75"/>
+              <text class="svg-text" x="460" y="175">JAVASCRIPT</text>
+              <text class="svg-subtext" x="460" y="195">${s.funcName}() JS Emitted</text>
+            </svg>
+          `;
+        },
+        getLogs(s, progress) {
+          const step = Math.min(3, Math.floor(progress * 4));
+          const logs = [
+            `[TSC] Analizando estructura estática: ${s.interfaceName}<${s.genericType}>`,
+            step >= 1 ? `[TSC] Restricciones genéricas satisfechas sin coerción errónea.` : null,
+            step >= 2 ? `[TSC] Eliminando definiciones de tipos en tiempo de compilación.` : null,
+            step >= 3 ? `[TSC] Éxito: 0 diagnósticos. Salida pura JS generada.` : null
+          ];
+          return logs.filter(Boolean);
+        }
+      },
+      {
+        id: "go",
+        num: "04",
+        name: "Go",
+        sub: "Goroutines, Canales y Concurrencia CSP",
+        file: "dispatcher.go",
+        state: {
+          chName: "taskStream",
+          workerName: "consumeWorker",
+          msgPayload: "JobPacket"
+        },
+        getCode(s) {
+          return [
+            { n: 1, html: `<span class="kw">package</span> main` },
+            { n: 2, html: `` },
+            { n: 3, html: `<span class="kw">func</span> <span class="fn editable" data-key="workerName">${s.workerName}</span>(<span class="vr editable" data-key="chName">${s.chName}</span> <span class="kw">chan</span> <span class="tp editable" data-key="msgPayload">${s.msgPayload}</span>) {` },
+            { n: 4, html: `    msg := &lt;-<span class="vr editable" data-key="chName">${s.chName}</span> <span class="cm">// Recepción bloqueante</span>` },
+            { n: 5, html: `    println(<span class="st">"Procesado: "</span>, msg)` },
+            { n: 6, html: `}` },
+            { n: 7, html: `` },
+            { n: 8, html: `<span class="kw">func</span> main() {` },
+            { n: 9, html: `    <span class="vr editable" data-key="chName">${s.chName}</span> := make(<span class="kw">chan</span> <span class="tp editable" data-key="msgPayload">${s.msgPayload}</span>, 2)` },
+            { n: 10, html: `    <span class="kw">go</span> <span class="fn editable" data-key="workerName">${s.workerName}</span>(<span class="vr editable" data-key="chName">${s.chName}</span>)` },
+            { n: 11, html: `    <span class="vr editable" data-key="chName">${s.chName}</span> &lt;- <span class="tp editable" data-key="msgPayload">${s.msgPayload}</span>{ID: 101}` },
+            { n: 12, html: `}` }
+          ];
+        },
+        renderSVG(s, progress) {
+          const step = Math.min(3, Math.floor(progress * 4));
+          const pActive = step >= 0 ? "active" : "";
+          const chActive = step >= 1 ? "active" : "";
+          const cActive = step >= 2 ? "active" : "";
+          const outActive = step >= 3 ? "success" : "";
+
+          return `
+            <svg class="visual-svg" viewBox="0 0 540 260">
+              <!-- Goroutine 1 (Main) -->
+              <rect class="svg-box ${pActive}" x="20" y="60" width="120" height="90"/>
+              <text class="svg-text" x="80" y="90">GOROUTINE (G1)</text>
+              <text class="svg-subtext" x="80" y="110">main() thread</text>
+
+              <!-- CSP Channel Tube -->
+              <rect class="svg-box ${chActive}" x="180" y="70" width="160" height="70" rx="20"/>
+              <text class="svg-text" x="260" y="95">chan ${s.chName}</text>
+              <circle cx="${step >= 1 ? 240 + (progress*40) : 210}" cy="115" r="8" fill="#58a6ff"/>
+              <text class="svg-subtext" x="260" y="130">${s.msgPayload} [Slot 1/2]</text>
+
+              <!-- Goroutine 2 (Worker) -->
+              <rect class="svg-box ${cActive}" x="380" y="60" width="140" height="90"/>
+              <text class="svg-text" x="450" y="90">GOROUTINE (G2)</text>
+              <text class="svg-subtext" x="450" y="110">${s.workerName}()</text>
+
+              <!-- Conexión Salida -->
+              <line class="svg-path ${step >= 3 ? 'flowing' : ''}" x1="450" y1="150" x2="450" y2="190"/>
+              <rect class="svg-box ${outActive}" x="380" y="190" width="140" height="50"/>
+              <text class="svg-text" x="450" y="215">STDOUT: ID 101</text>
+            </svg>
+          `;
+        },
+        getLogs(s, progress) {
+          const step = Math.min(3, Math.floor(progress * 4));
+          const logs = [
+            `[GO_RUNTIME] Iniciando goroutine principal G1...`,
+            step >= 1 ? `[GO_RUNTIME] Canal '${s.chName}' asignado en ringbuffer.` : null,
+            step >= 2 ? `[GO_RUNTIME] Conmutando contexto a G2 (${s.workerName}) vía multiplexor M:N.` : null,
+            step >= 3 ? `[GO_STDOUT] Procesado: {ID: 101} sin condiciones de carrera (Race detector: limpio).` : null
+          ];
+          return logs.filter(Boolean);
+        }
+      },
+      {
+        id: "rs",
+        num: "05",
+        name: "Rust",
+        sub: "Ownership, Borrowing y Lifetimes",
+        file: "borrow_checker.rs",
+        state: {
+          ownerVar: "buffer_owner",
+          borrowRef: "borrowed_view",
+          ltName: "'scope_a"
+        },
+        getCode(s) {
+          return [
+            { n: 1, html: `<span class="kw">fn</span> main() {` },
+            { n: 2, html: `    <span class="kw">let</span> <span class="vr editable" data-key="ownerVar">${s.ownerVar}</span> = String::from(<span class="st">"payload"</span>);` },
+            { n: 3, html: `    {` },
+            { n: 4, html: `        <span class="cm">// Préstamo inmutable con lifetime ${s.ltName}</span>` },
+            { n: 5, html: `        <span class="kw">let</span> <span class="vr editable" data-key="borrowRef">${s.borrowRef}</span>: &amp;<span class="tp">String</span> = &amp;<span class="vr editable" data-key="ownerVar">${s.ownerVar}</span>;` },
+            { n: 6, html: `        println!(<span class="st">"Lectura: {}"</span>, <span class="vr editable" data-key="borrowRef">${s.borrowRef}</span>);` },
+            { n: 7, html: `    } <span class="cm">// ${s.borrowRef} sale de ámbito aquí</span>` },
+            { n: 8, html: `    <span class="kw">let</span> moved_val = <span class="vr editable" data-key="ownerVar">${s.ownerVar}</span>; <span class="cm">// Transferencia de Ownership</span>` },
+            { n: 9, html: `}` }
+          ];
+        },
+        renderSVG(s, progress) {
+          const step = Math.min(3, Math.floor(progress * 4));
+          const stackActive = step >= 0 ? "active" : "";
+          const borrowActive = (step === 1 || step === 2) ? "active" : "";
+          const moveActive = step >= 3 ? "warning" : "";
+
+          return `
+            <svg class="visual-svg" viewBox="0 0 540 260">
+              <!-- STACK FRAME -->
+              <rect class="svg-box ${stackActive}" x="20" y="30" width="160" height="200"/>
+              <text class="svg-text" x="100" y="55">STACK (main)</text>
+
+              <rect x="30" y="75" width="140" height="40" rx="4" fill="#161b22" stroke="${step < 3 ? '#58a6ff' : '#484f58'}"/>
+              <text class="svg-text" x="100" y="95" style="font-size:10px;">${s.ownerVar}</text>
+              <text class="svg-subtext" x="100" y="108">${step < 3 ? 'OWNER [ptr, cap, len]' : 'MOVED (Inválido)'}</text>
+
+              <rect x="30" y="130" width="140" height="40" rx="4" fill="#161b22" stroke="${borrowActive ? '#bc8cff' : '#30363d'}"/>
+              <text class="svg-text" x="100" y="150" style="font-size:10px;">&amp;${s.borrowRef}</text>
+              <text class="svg-subtext" x="100" y="163">Lifetime: ${s.ltName}</text>
+
+              <!-- HEAP BUFFER -->
+              <rect class="svg-box ${moveActive || 'active'}" x="280" y="60" width="180" height="110"/>
+              <text class="svg-text" x="370" y="85">HEAP MEMORY</text>
+              <rect x="295" y="105" width="150" height="35" rx="3" fill="#161b22" stroke="#3fb950"/>
+              <text class="svg-text" x="370" y="125" style="font-size:11px;">"payload\\0"</text>
+
+              <!-- FLECHAS DE PROPIEDAD -->
+              <line class="svg-path ${step < 3 ? 'flowing' : ''}" x1="170" y1="95" x2="280" y2="120" stroke="#58a6ff"/>
+              ${borrowActive ? '<path d="M 170 150 Q 230 150 280 130" fill="none" stroke="#bc8cff" stroke-width="1.5" stroke-dasharray="3 3"/>' : ''}
+            </svg>
+          `;
+        },
+        getLogs(s, progress) {
+          const step = Math.min(3, Math.floor(progress * 4));
+          const logs = [
+            `[RUSTC] Instanciado heap buffer para '${s.ownerVar}' con puntero único.`,
+            step >= 1 ? `[BORROW_CHECKER] Préstamo compartido emitido a '&${s.borrowRef}' bajo '${s.ltName}'. Mutaciones bloqueadas.` : null,
+            step >= 2 ? `[BORROW_CHECKER] Ámbito ${s.ltName} finalizado. Préstamo liberado de manera segura.` : null,
+            step >= 3 ? `[RUSTC] Ownership de '${s.ownerVar}' movido. Lecturas posteriores a '${s.ownerVar}' dispararían E0382.` : null
+          ];
+          return logs.filter(Boolean);
+        }
+      },
+      {
+        id: "c",
+        num: "06",
+        name: "C",
+        sub: "Punteros, Memoria Manual, malloc y free",
+        file: "mem_alloc.c",
+        state: {
+          ptrName: "buffer_ptr",
+          allocSize: "2 * sizeof(int)",
+          valA: "0xA4",
+          valB: "0xB8"
+        },
+        getCode(s) {
+          return [
+            { n: 1, html: `<span class="kw">#include</span> <span class="st">&lt;stdlib.h&gt;</span>` },
+            { n: 2, html: `` },
+            { n: 3, html: `<span class="kw">int</span> main() {` },
+            { n: 4, html: `    <span class="kw">int</span> *<span class="vr editable" data-key="ptrName">${s.ptrName}</span> = (<span class="kw">int</span>*)malloc(<span class="editable" data-key="allocSize">${s.allocSize}</span>);` },
+            { n: 5, html: `    *<span class="vr editable" data-key="ptrName">${s.ptrName}</span> = <span class="num editable" data-key="valA">${s.valA}</span>;` },
+            { n: 6, html: `    *(<span class="vr editable" data-key="ptrName">${s.ptrName}</span> + 1) = <span class="num editable" data-key="valB">${s.valB}</span>;` },
+            { n: 7, html: `    free(<span class="vr editable" data-key="ptrName">${s.ptrName}</span>);` },
+            { n: 8, html: `    <span class="vr editable" data-key="ptrName">${s.ptrName}</span> = NULL;` },
+            { n: 9, html: `    <span class="kw">return</span> 0;` },
+            { n: 10, html: `}` }
+          ];
+        },
+        renderSVG(s, progress) {
+          const step = Math.min(3, Math.floor(progress * 4));
+          const isAllocated = step >= 1 && step < 3;
+          const isFreed = step >= 3;
+
+          return `
+            <svg class="visual-svg" viewBox="0 0 540 260">
+              <!-- STACK: Puntero -->
+              <rect class="svg-box active" x="20" y="40" width="140" height="150"/>
+              <text class="svg-text" x="90" y="65">STACK</text>
+              <rect x="30" y="90" width="120" height="50" rx="3" fill="#161b22" stroke="#58a6ff"/>
+              <text class="svg-text" x="90" y="110" style="font-size:10px;">${s.ptrName}</text>
+              <text class="svg-subtext" x="90" y="125">${isFreed ? '0x00000000 (NULL)' : '0x0040A000'}</text>
+
+              <!-- HEAP ADDRESS SPACE -->
+              <rect class="svg-box" x="220" y="40" width="280" height="150"/>
+              <text class="svg-text" x="360" y="65">HEAP (Segmento Manual)</text>
+
+              <!-- Bloque Heap 0 -->
+              <rect x="240" y="90" width="110" height="60" rx="3" fill="${isAllocated ? '#1a2c20' : '#161b22'}" stroke="${isAllocated ? '#3fb950' : '#30363d'}"/>
+              <text class="svg-text" x="295" y="110" style="font-size:10px;">0x0040A000</text>
+              <text class="svg-subtext" x="295" y="130">${step >= 2 && !isFreed ? s.valA : (isFreed ? 'LIBERADO' : 'RAW')}</text>
+
+              <!-- Bloque Heap 1 -->
+              <rect x="360" y="90" width="110" height="60" rx="3" fill="${isAllocated ? '#1a2c20' : '#161b22'}" stroke="${isAllocated ? '#3fb950' : '#30363d'}"/>
+              <text class="svg-text" x="415" y="110" style="font-size:10px;">0x0040A004</text>
+              <text class="svg-subtext" x="415" y="130">${step >= 2 && !isFreed ? s.valB : (isFreed ? 'LIBERADO' : 'RAW')}</text>
+
+              <!-- Línea puntero -->
+              ${!isFreed ? '<line class="svg-path flowing" x1="150" y1="115" x2="240" y2="115" stroke="#58a6ff"/>' : ''}
+            </svg>
+          `;
+        },
+        getLogs(s, progress) {
+          const step = Math.min(3, Math.floor(progress * 4));
+          const logs = [
+            `[C_MEM] malloc(${s.allocSize}) solicita 8 bytes a brk/sbrk.`,
+            step >= 1 ? `[C_MEM] Puntero '${s.ptrName}' mapeado a dirección física 0x0040A000.` : null,
+            step >= 2 ? `[C_MEM] Escritura directa: *(${s.ptrName}) = ${s.valA}, *(${s.ptrName}+1) = ${s.valB}.` : null,
+            step >= 3 ? `[C_MEM] free(${s.ptrName}) ejecutado. Bloque retornado a freelist. ${s.ptrName} = NULL.` : null
+          ];
+          return logs.filter(Boolean);
+        }
+      },
+      {
+        id: "cpp",
+        num: "07",
+        name: "C++",
+        sub: "Clases, Templates, RAII y Compilación Determinística",
+        file: "raii_guard.cpp",
+        state: {
+          className: "ScopedLock",
+          resType: "SharedMutex",
+          instanceVar: "guardObj"
+        },
+        getCode(s) {
+          return [
+            { n: 1, html: `<span class="kw">template</span>&lt;<span class="kw">typename</span> <span class="tp">Resource</span>&gt;` },
+            { n: 2, html: `<span class="kw">class</span> <span class="tp editable" data-key="className">${s.className}</span> {` },
+            { n: 3, html: `    <span class="tp">Resource</span>* res;` },
+            { n: 4, html: `public:` },
+            { n: 5, html: `    <span class="fn editable" data-key="className">${s.className}</span>(<span class="tp">Resource</span>* r) : res(r) { res-&gt;lock(); }` },
+            { n: 6, html: `    ~<span class="fn editable" data-key="className">${s.className}</span>() { res-&gt;unlock(); } <span class="cm">// RAII</span>` },
+            { n: 7, html: `};` },
+            { n: 8, html: `` },
+            { n: 9, html: `{` },
+            { n: 10, html: `    <span class="tp editable" data-key="className">${s.className}</span>&lt;<span class="tp editable" data-key="resType">${s.resType}</span>&gt; <span class="vr editable" data-key="instanceVar">${s.instanceVar}</span>(&amp;mtx);` },
+            { n: 11, html: `} <span class="cm">// Destructor invocado determinísticamente</span>` }
+          ];
+        },
+        renderSVG(s, progress) {
+          const step = Math.min(3, Math.floor(progress * 4));
+          const isScopeActive = step >= 1 && step < 3;
+          const isUnlocked = step >= 3;
+
+          return `
+            <svg class="visual-svg" viewBox="0 0 540 260">
+              <!-- Ámbito de compilación / Template AST -->
+              <rect class="svg-box active" x="20" y="30" width="150" height="90"/>
+              <text class="svg-text" x="95" y="55">TEMPLATE INSTANCE</text>
+              <text class="svg-subtext" x="95" y="75">${s.className}&lt;${s.resType}&gt;</text>
+              <text class="svg-subtext" x="95" y="92">Monomorfización OK</text>
+
+              <!-- Conexión RAII -->
+              <line class="svg-path ${step >= 1 ? 'flowing' : ''}" x1="170" y1="75" x2="220" y2="75"/>
+
+              <!-- OBJETO RAII EN STACK -->
+              <rect class="svg-box ${isScopeActive ? 'active' : ''}" x="220" y="30" width="150" height="170"/>
+              <text class="svg-text" x="295" y="55">STACK SCOPE { ... }</text>
+              <rect x="235" y="80" width="120" height="40" rx="3" fill="#161b22" stroke="${isScopeActive ? '#58a6ff' : '#30363d'}"/>
+              <text class="svg-text" x="295" y="100" style="font-size:10px;">${s.instanceVar}</text>
+              <text class="svg-subtext" x="295" y="113">${isScopeActive ? 'Constructor: lock()' : (isUnlocked ? 'Destruido' : 'Pendiente')}</text>
+
+              <!-- RECURSO GESTIONADO -->
+              <rect class="svg-box ${isScopeActive ? 'warning' : 'success'}" x="400" y="70" width="120" height="90"/>
+              <text class="svg-text" x="460" y="95">${s.resType}</text>
+              <text class="svg-subtext" x="460" y="120">${isScopeActive ? 'ESTADO: BLOQUEADO' : 'LIBERADO (unlock)'}</text>
+            </svg>
+          `;
+        },
+        getLogs(s, progress) {
+          const step = Math.min(3, Math.floor(progress * 4));
+          const logs = [
+            `[CLANG/GCC] Instanciación monomórfica de ${s.className}<${s.resType}> sin sobrecarga virtual.`,
+            step >= 1 ? `[RAII] ${s.instanceVar} entra en scope. Constructor adquiere cerrojo mutex.` : null,
+            step >= 2 ? `[RAII] Sección crítica en ejecución garantizada bajo excepción.` : null,
+            step >= 3 ? `[RAII] Salida de ámbito. ~${s.className}() invocado: cerrojo desbloqueado automáticamente.` : null
+          ];
+          return logs.filter(Boolean);
+        }
+      },
+      {
+        id: "java",
+        num: "08",
+        name: "Java",
+        sub: "JVM, Bytecode, Clases y Garbage Collector",
+        file: "WorkerService.java",
+        state: {
+          className: "WorkerService",
+          methodName: "dispatchTask",
+          entityType: "RecordEntity"
+        },
+        getCode(s) {
+          return [
+            { n: 1, html: `<span class="kw">public class</span> <span class="tp editable" data-key="className">${s.className}</span> {` },
+            { n: 2, html: `    <span class="kw">public void</span> <span class="fn editable" data-key="methodName">${s.methodName}</span>() {` },
+            { n: 3, html: `        <span class="tp editable" data-key="entityType">${s.entityType}</span> item = <span class="kw">new</span> <span class="tp editable" data-key="entityType">${s.entityType}</span>();` },
+            { n: 4, html: `        item = <span class="kw">null</span>; <span class="cm">// Huérfano en Heap</span>` },
+            { n: 5, html: `        System.gc(); <span class="cm">// Marca y barrido</span>` },
+            { n: 6, html: `    }` },
+            { n: 7, html: `}` }
+          ];
+        },
+        renderSVG(s, progress) {
+          const step = Math.min(3, Math.floor(progress * 4));
+          const isGcCollected = step >= 3;
+
+          return `
+            <svg class="visual-svg" viewBox="0 0 540 260">
+              <!-- BYTECODE JIT -->
+              <rect class="svg-box active" x="20" y="30" width="130" height="180"/>
+              <text class="svg-text" x="85" y="55">JVM BYTECODE</text>
+              <text class="svg-subtext" x="85" y="75">0: new #${s.entityType}</text>
+              <text class="svg-subtext" x="85" y="92">3: dup</text>
+              <text class="svg-subtext" x="85" y="110">4: invokespecial</text>
+              <text class="svg-subtext" x="85" y="128">7: astore_1</text>
+              <text class="svg-subtext" x="85" y="146">8: aconst_null</text>
+
+              <!-- HEAP SPACE (EDEN) -->
+              <rect class="svg-box" x="180" y="30" width="180" height="180"/>
+              <text class="svg-text" x="270" y="55">HEAP (Eden Space)</text>
+              <rect x="200" y="80" width="140" height="50" rx="4" fill="${isGcCollected ? '#1f242c' : '#222c3a'}" stroke="${isGcCollected ? '#f85149' : '#3fb950'}"/>
+              <text class="svg-text" x="270" y="102" style="font-size:10px;">${s.entityType}</text>
+              <text class="svg-subtext" x="270" y="118">${isGcCollected ? 'BARRIDO (0 refs)' : 'VIVO (mark)'}</text>
+
+              <!-- GARBAGE COLLECTOR -->
+              <rect class="svg-box ${step >= 2 ? 'active' : ''}" x="390" y="30" width="130" height="180"/>
+              <text class="svg-text" x="455" y="55">GARBAGE COLL.</text>
+              <circle cx="455" cy="110" r="30" fill="#161b22" stroke="${step >= 2 ? '#bc8cff' : '#30363d'}" stroke-width="2"/>
+              <text class="svg-text" x="455" y="112" style="font-size:10px;">GC G1</text>
+              <text class="svg-subtext" x="455" y="160">${step >= 2 ? 'Fase: Mark & Sweep' : 'Esperando ciclo'}</text>
+            </svg>
+          `;
+        },
+        getLogs(s, progress) {
+          const step = Math.min(3, Math.floor(progress * 4));
+          const logs = [
+            `[JAVAC] ${s.className}.java compilado a bytecode compatible JVM SE HotSpot.`,
+            step >= 1 ? `[HOTSPOT] Opcodes interpretados. Objeto '${s.entityType}' asignado en Generación Joven.` : null,
+            step >= 2 ? `[HOTSPOT] Puntero local asignado a null. Raíz GC perdida para '${s.entityType}'.` : null,
+            step >= 3 ? `[GC_G1] Ciclo completado: 1 objeto huérfano compactado/liberado de Eden Space.` : null
+          ];
+          return logs.filter(Boolean);
+        }
+      },
+      {
+        id: "cs",
+        num: "09",
+        name: "C#",
+        sub: ".NET, LINQ, Interfaces y Tareas Asíncronas",
+        file: "DataProcessor.cs",
+        state: {
+          interfaceName: "IComputeProvider",
+          querySrc: "metricsCatalog",
+          taskMethod: "AggregateMetricsAsync"
+        },
+        getCode(s) {
+          return [
+            { n: 1, html: `<span class="kw">public interface</span> <span class="tp editable" data-key="interfaceName">${s.interfaceName}</span> {` },
+            { n: 2, html: `    <span class="tp">Task</span>&lt;<span class="tp">int</span>&gt; <span class="fn editable" data-key="taskMethod">${s.taskMethod}</span>();` },
+            { n: 3, html: `}` },
+            { n: 4, html: `` },
+            { n: 5, html: `<span class="kw">var</span> query = <span class="vr editable" data-key="querySrc">${s.querySrc}</span>` },
+            { n: 6, html: `    .Where(x =&gt; x.Active)` },
+            { n: 7, html: `    .Select(x =&gt; x.Score);` },
+            { n: 8, html: `` },
+            { n: 9, html: `<span class="kw">int</span> total = <span class="kw">await</span> Task.Run(() =&gt; query.Sum());` }
+          ];
+        },
+        renderSVG(s, progress) {
+          const step = Math.min(3, Math.floor(progress * 4));
+          const linqActive = step >= 1 ? "active" : "";
+          const taskActive = step >= 2 ? "active" : "";
+          const resActive = step >= 3 ? "success" : "";
+
+          return `
+            <svg class="visual-svg" viewBox="0 0 540 260">
+              <!-- LINQ PIPELINE -->
+              <rect class="svg-box" x="20" y="30" width="140" height="180"/>
+              <text class="svg-text" x="90" y="55">LINQ ENUMERABLE</text>
+              <rect x="30" y="80" width="120" height="30" rx="3" fill="#161b22" stroke="#30363d"/>
+              <text class="svg-subtext" x="90" y="97">${s.querySrc}</text>
+              <rect x="30" y="120" width="120" height="30" rx="3" fill="#161b22" stroke="${linqActive ? '#58a6ff' : '#30363d'}"/>
+              <text class="svg-subtext" x="90" y="137">.Where() &amp; .Select()</text>
+
+              <!-- Conexión a ThreadPool Task -->
+              <line class="svg-path ${step >= 2 ? 'flowing' : ''}" x1="160" y1="120" x2="210" y2="120"/>
+
+              <!-- .NET TASK STATE MACHINE -->
+              <rect class="svg-box ${taskActive}" x="210" y="40" width="160" height="150"/>
+              <text class="svg-text" x="290" y="65">IAsyncStateMachine</text>
+              <text class="svg-subtext" x="290" y="85">Task.Run() :: Worker</text>
+              <circle cx="290" cy="120" r="22" fill="#161b22" stroke="${taskActive ? '#bc8cff' : '#30363d'}" stroke-width="2"/>
+              <text class="svg-text" x="290" y="123" style="font-size:9px;">THREAD</text>
+
+              <!-- Conexión a Resultado -->
+              <line class="svg-path ${step >= 3 ? 'flowing' : ''}" x1="370" y1="120" x2="410" y2="120"/>
+
+              <!-- Salida de Resultado -->
+              <rect class="svg-box ${resActive}" x="410" y="60" width="110" height="100"/>
+              <text class="svg-text" x="465" y="95">VALOR AWAIT</text>
+              <text class="svg-text" x="465" y="125" style="fill:#3fb950; font-size:16px;">total: 480</text>
+            </svg>
+          `;
+        },
+        getLogs(s, progress) {
+          const step = Math.min(3, Math.floor(progress * 4));
+          const logs = [
+            `[.NET] Compilando árbol de expresiones LINQ sobre '${s.querySrc}'.`,
+            step >= 1 ? `[.NET] Evaluación diferida configurada con delegados Func<T, bool>.` : null,
+            step >= 2 ? `[.NET] ${s.taskMethod}: IAsyncStateMachine delega cálculo al ThreadPool sin bloquear UI.` : null,
+            step >= 3 ? `[.NET] Tarea completada. Contexto restaurado, total: 480.` : null
+          ];
+          return logs.filter(Boolean);
+        }
+      },
+      {
+        id: "sql",
+        num: "10",
+        name: "SQL",
+        sub: "Consultas, Joins, Filtros y Ejecución Visual",
+        file: "analytics_query.sql",
+        state: {
+          leftTable: "users",
+          rightTable: "transactions",
+          filterThreshold: "500"
+        },
+        getCode(s) {
+          return [
+            { n: 1, html: `<span class="kw">SELECT</span> u.name, t.amount` },
+            { n: 2, html: `<span class="kw">FROM</span> <span class="tp editable" data-key="leftTable">${s.leftTable}</span> u` },
+            { n: 3, html: `<span class="kw">INNER JOIN</span> <span class="tp editable" data-key="rightTable">${s.rightTable}</span> t` },
+            { n: 4, html: `    <span class="kw">ON</span> u.id = t.user_id` },
+            { n: 5, html: `<span class="kw">WHERE</span> t.amount &gt; <span class="num editable" data-key="filterThreshold">${s.filterThreshold}</span>;` }
+          ];
+        },
+        renderSVG(s, progress) {
+          const step = Math.min(3, Math.floor(progress * 4));
+          const scanActive = step >= 0 ? "active" : "";
+          const joinActive = step >= 1 ? "active" : "";
+          const filterActive = step >= 2 ? "active" : "";
+          const resultActive = step >= 3 ? "success" : "";
+
+          return `
+            <svg class="visual-svg" viewBox="0 0 540 260">
+              <!-- SCAN TABLES -->
+              <rect class="svg-box ${scanActive}" x="15" y="20" width="110" height="70"/>
+              <text class="svg-text" x="70" y="45">TABLE: ${s.leftTable}</text>
+              <text class="svg-subtext" x="70" y="65">Seq Scan [3 filas]</text>
+
+              <rect class="svg-box ${scanActive}" x="15" y="110" width="110" height="70"/>
+              <text class="svg-text" x="70" y="135">TABLE: ${s.rightTable}</text>
+              <text class="svg-subtext" x="70" y="155">Index Scan [4 filas]</text>
+
+              <!-- HASH JOIN -->
+              <line class="svg-path ${step >= 1 ? 'flowing' : ''}" x1="125" y1="55" x2="175" y2="95"/>
+              <line class="svg-path ${step >= 1 ? 'flowing' : ''}" x1="125" y1="145" x2="175" y2="95"/>
+              <rect class="svg-box ${joinActive}" x="175" y="65" width="130" height="65"/>
+              <text class="svg-text" x="240" y="90">HASH JOIN</text>
+              <text class="svg-subtext" x="240" y="108">ON u.id = t.user_id</text>
+
+              <!-- FILTER WHERE -->
+              <line class="svg-path ${step >= 2 ? 'flowing' : ''}" x1="305" y1="97" x2="350" y2="97"/>
+              <rect class="svg-box ${filterActive}" x="350" y="65" width="85" height="65"/>
+              <text class="svg-text" x="392" y="90">FILTER</text>
+              <text class="svg-subtext" x="392" y="108">&gt; ${s.filterThreshold}</text>
+
+              <!-- RESULT SET -->
+              <line class="svg-path ${step >= 3 ? 'flowing' : ''}" x1="435" y1="97" x2="465" y2="97"/>
+              <rect class="svg-box ${resultActive}" x="465" y="45" width="65" height="110"/>
+              <text class="svg-text" x="497" y="70" style="font-size:9px;">OUTPUT</text>
+              <rect x="472" y="85" width="50" height="15" fill="#161b22" stroke="#3fb950"/>
+              <rect x="472" y="105" width="50" height="15" fill="#161b22" stroke="#3fb950"/>
+              <text class="svg-subtext" x="497" y="135">2 Tuplas</text>
+            </svg>
+          `;
+        },
+        getLogs(s, progress) {
+          const step = Math.min(3, Math.floor(progress * 4));
+          const logs = [
+            `[QUERY_PLAN] Optimizador Cost-Based construye Hash Join entre '${s.leftTable}' y '${s.rightTable}'.`,
+            step >= 1 ? `[ENGINE] Coincidencias de clave foránea evaluadas en memoria caché.` : null,
+            step >= 2 ? `[ENGINE] Predicado de filtro aplicado: amount > ${s.filterThreshold} descarta 2 tuplas.` : null,
+            step >= 3 ? `[RESULT] 2 registros proyectados con éxito (Tiempo de ejecución: 0.42ms).` : null
+          ];
+          return logs.filter(Boolean);
+        }
+      }
+    ];
+
+    /**
+     * MOTOR DE CONTROL Y ANIMACIÓN
+     */
+    class EngineController {
+      constructor() {
+        this.currentIndex = 0;
+        this.progress = 0.0; // 0.0 a 1.0
+        this.isPlaying = true;
+        this.speed = 1.0;
+        this.lastTimestamp = null;
+        this.duration = 4500; // ms por ciclo
+
+        this.initDOM();
+        this.bindEvents();
+        this.renderSidebar();
+        this.loadCurrentModule();
+        this.startLoop();
+      }
+
+      initDOM() {
+        this.dom = {
+          langList: document.getElementById("langList"),
+          tabFilename: document.getElementById("tabFilename"),
+          codeEditor: document.getElementById("codeEditor"),
+          canvasWrapper: document.getElementById("canvasWrapper"),
+          termOutput: document.getElementById("termOutput"),
+          visualStatusBadge: document.getElementById("visualStatusBadge"),
+          btnPlayPause: document.getElementById("btnPlayPause"),
+          btnStepPrev: document.getElementById("btnStepPrev"),
+          btnStepNext: document.getElementById("btnStepNext"),
+          btnReset: document.getElementById("btnReset"),
+          btnSpeed: document.getElementById("btnSpeed"),
+          scrubber: document.getElementById("scrubber"),
+          timeBadge: document.getElementById("timeBadge")
+        };
+      }
+
+      bindEvents() {
+        this.dom.btnPlayPause.addEventListener("click", () => this.togglePlay());
+        this.dom.btnReset.addEventListener("click", () => this.resetAnimation());
+        this.dom.btnStepNext.addEventListener("click", () => this.stepRelative(0.25));
+        this.dom.btnStepPrev.addEventListener("click", () => this.stepRelative(-0.25));
+        
+        this.dom.btnSpeed.addEventListener("click", () => {
+          if (this.speed === 1.0) this.speed = 1.75;
+          else if (this.speed === 1.75) this.speed = 0.5;
+          else this.speed = 1.0;
+          this.dom.btnSpeed.textContent = this.speed + "x";
+        });
+
+        this.dom.scrubber.addEventListener("input", (e) => {
+          this.progress = parseFloat(e.target.value) / 100;
+          this.syncVisuals();
+        });
+
+        // Manejo de edición directa en el editor de código
+        this.dom.codeEditor.addEventListener("input", (e) => {
+          if (e.target.classList.contains("editable")) {
+            const key = e.target.dataset.key;
+            const val = e.target.textContent.trim();
+            if (key) {
+              MODULES[this.currentIndex].state[key] = val;
+              this.syncVisuals();
+            }
+          }
+        });
+      }
+
+      togglePlay() {
+        this.isPlaying = !this.isPlaying;
+        this.dom.btnPlayPause.textContent = this.isPlaying ? "Pausar" : "Reproducir";
+        this.dom.btnPlayPause.classList.toggle("active", this.isPlaying);
+      }
+
+      stepRelative(delta) {
+        this.isPlaying = false;
+        this.dom.btnPlayPause.textContent = "Reproducir";
+        this.dom.btnPlayPause.classList.remove("active");
+        this.progress = Math.min(1, Math.max(0, this.progress + delta));
+        this.dom.scrubber.value = Math.round(this.progress * 100);
+        this.syncVisuals();
+      }
+
+      resetAnimation() {
+        this.progress = 0;
+        this.dom.scrubber.value = 0;
+        this.syncVisuals();
+      }
+
+      renderSidebar() {
+        this.dom.langList.innerHTML = MODULES.map((m, idx) => `
+          <li class="lang-item ${idx === this.currentIndex ? 'active' : ''}" data-index="${idx}">
+            <div class="lang-title">
+              <span class="lang-num">${m.num}</span>
+              <span>${m.name}</span>
+            </div>
+            <div class="lang-subs">${m.sub}</div>
+          </li>
+        `).join("");
+
+        this.dom.langList.querySelectorAll(".lang-item").forEach(item => {
+          item.addEventListener("click", () => {
+            const idx = parseInt(item.dataset.index, 10);
+            this.switchModule(idx);
+          });
+        });
+      }
+
+      switchModule(index) {
+        if (index === this.currentIndex) return;
+        this.currentIndex = index;
+        this.progress = 0;
+        this.dom.scrubber.value = 0;
+        
+        // Actualizar sidebar activa
+        this.dom.langList.querySelectorAll(".lang-item").forEach((el, i) => {
+          el.classList.toggle("active", i === index);
+        });
+
+        this.loadCurrentModule();
+      }
+
+      loadCurrentModule() {
+        const mod = MODULES[this.currentIndex];
+        this.dom.tabFilename.textContent = mod.file;
+        this.renderCodeLines();
+        this.syncVisuals();
+      }
+
+      renderCodeLines() {
+        const mod = MODULES[this.currentIndex];
+        const lines = mod.getCode(mod.state);
+        this.dom.codeEditor.innerHTML = lines.map(line => `
+          <div class="code-line" data-line="${line.n}">
+            <span class="line-no">${line.n}</span>
+            <span class="line-text">${line.html}</span>
+          </div>
+        `).join("");
+      }
+
+      syncVisuals() {
+        const mod = MODULES[this.currentIndex];
+        
+        // 1. Actualizar Diagrama SVG
+        this.dom.canvasWrapper.innerHTML = mod.renderSVG(mod.state, this.progress);
+
+        // 2. Actualizar Terminal
+        const logs = mod.getLogs(mod.state, this.progress);
+        this.dom.termOutput.innerHTML = logs.map(l => `
+          <div class="terminal-entry"><span class="term-dim">&gt;</span> ${l}</div>
+        `).join("");
+
+        // 3. Resaltar Líneas de código activas según fase
+        const step = Math.min(3, Math.floor(this.progress * 4));
+        const stepNames = ["1/4: DEFINICIÓN", "2/4: EVALUACIÓN", "3/4: OPERACIÓN", "4/4: RESOLUCIÓN"];
+        this.dom.visualStatusBadge.textContent = stepNames[step];
+
+        const lines = this.dom.codeEditor.querySelectorAll(".code-line");
+        lines.forEach(l => l.classList.remove("highlight"));
+        if (lines.length > 0) {
+          const targetIndex = Math.min(lines.length - 1, Math.floor(step * (lines.length / 4)));
+          if (lines[targetIndex]) lines[targetIndex].classList.add("highlight");
+        }
+
+        // 4. Indicador de tiempo
+        const curSeconds = (this.progress * (this.duration / 1000)).toFixed(1);
+        this.dom.timeBadge.textContent = `${curSeconds}s`;
+      }
+
+      startLoop() {
+        const loop = (timestamp) => {
+          if (!this.lastTimestamp) this.lastTimestamp = timestamp;
+          const delta = timestamp - this.lastTimestamp;
+          this.lastTimestamp = timestamp;
+
+          if (this.isPlaying) {
+            this.progress += (delta / this.duration) * this.speed;
+            if (this.progress > 1) {
+              this.progress = 0; // Reinicio cíclico continuo
+            }
+            this.dom.scrubber.value = Math.round(this.progress * 100);
+            this.syncVisuals();
+          }
+
+          requestAnimationFrame(loop);
+        };
+        requestAnimationFrame(loop);
+      }
+    }
+
+    // Inicializar al cargar la página
+    window.addEventListener("DOMContentLoaded", () => {
+      new EngineController();
+    });
+  </script>
+</body>
+</html>

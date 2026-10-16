@@ -2,8 +2,8 @@
   "version": 1,
   "name": "Animaciones",
   "description": "Colección de recursos visuales editables, categorizados y buscables.",
-  "total": 65,
-  "duration": 188.9,
+  "total": 95,
+  "duration": 308.9,
   "presets": [
     {
       "number": 1,
@@ -3309,6 +3309,1738 @@
         "exitEnter"
       ],
       "searchable": true
+    },
+    {
+      "number": 66,
+      "id": "architecture-arquitectura-monolitica",
+      "name": "Arquitectura Monolítica",
+      "category": "Arquitectura de software",
+      "type": "arquitectura",
+      "description": "Todo el sistema (autenticación, órdenes, inventario, facturación y capa UI) convive dentro de un solo proceso y base de código. Una falla o bloqueo en una rutina puede afectar todo el servicio.",
+      "style": "Dark technical / SVG / código editable",
+      "backend": "browser",
+      "collection": "animaciones",
+      "preset_file": "animaciones/presets/architecture-arquitectura-monolitica.html",
+      "status": "candidate",
+      "duration": 4,
+      "batch": "architecture-06",
+      "motion": [
+        "revelado por fases",
+        "resaltado de estado",
+        "flujo de datos",
+        "animación SVG"
+      ],
+      "editable": {
+        "title": {
+          "type": "text",
+          "label": "Nombre visible"
+        },
+        "description": {
+          "type": "text",
+          "label": "Descripción"
+        },
+        "file": {
+          "type": "text",
+          "label": "Archivo de ejemplo"
+        }
+      },
+      "tags": [
+        "architecture",
+        "arquitectura",
+        "arquitectura-monolitica",
+        "arquitectura-de-software",
+        "bloque",
+        "unico",
+        "fuertemente",
+        "acoplado"
+      ],
+      "source_collection": "animaciones/source_architecture_06.html",
+      "source_module_id": "monolith",
+      "states": 5
+    },
+    {
+      "number": 67,
+      "id": "architecture-arquitectura-modular",
+      "name": "Arquitectura Modular",
+      "category": "Arquitectura de software",
+      "type": "arquitectura",
+      "description": "El sistema se subdivide en ficheros o librerías independientes. La comunicación ocurre estrictamente mediante interfaces tipadas (exports/imports), garantizando encapsulación sin llamadas directas a memoria privada.",
+      "style": "Dark technical / SVG / código editable",
+      "backend": "browser",
+      "collection": "animaciones",
+      "preset_file": "animaciones/presets/architecture-arquitectura-modular.html",
+      "status": "candidate",
+      "duration": 4,
+      "batch": "architecture-06",
+      "motion": [
+        "revelado por fases",
+        "resaltado de estado",
+        "flujo de datos",
+        "animación SVG"
+      ],
+      "editable": {
+        "title": {
+          "type": "text",
+          "label": "Nombre visible"
+        },
+        "description": {
+          "type": "text",
+          "label": "Descripción"
+        },
+        "file": {
+          "type": "text",
+          "label": "Archivo de ejemplo"
+        }
+      },
+      "tags": [
+        "architecture",
+        "arquitectura",
+        "arquitectura-modular",
+        "arquitectura-de-software",
+        "archivos",
+        "autonomos",
+        "con",
+        "interfaces",
+        "explicitas"
+      ],
+      "source_collection": "animaciones/source_architecture_06.html",
+      "source_module_id": "modular",
+      "states": 5
+    },
+    {
+      "number": 68,
+      "id": "architecture-monolito-modular",
+      "name": "Monolito Modular",
+      "category": "Arquitectura de software",
+      "type": "arquitectura",
+      "description": "Combina la simplicidad operativa de desplegar un solo artefacto con el aislamiento arquitectónico de microservicios: cada módulo tiene su propio esquema de datos y facade pública inquebrantable.",
+      "style": "Dark technical / SVG / código editable",
+      "backend": "browser",
+      "collection": "animaciones",
+      "preset_file": "animaciones/presets/architecture-monolito-modular.html",
+      "status": "candidate",
+      "duration": 4,
+      "batch": "architecture-06",
+      "motion": [
+        "revelado por fases",
+        "resaltado de estado",
+        "flujo de datos",
+        "animación SVG"
+      ],
+      "editable": {
+        "title": {
+          "type": "text",
+          "label": "Nombre visible"
+        },
+        "description": {
+          "type": "text",
+          "label": "Descripción"
+        },
+        "file": {
+          "type": "text",
+          "label": "Archivo de ejemplo"
+        }
+      },
+      "tags": [
+        "architecture",
+        "arquitectura",
+        "monolito-modular",
+        "arquitectura-de-software",
+        "limites",
+        "estrictos",
+        "en",
+        "un",
+        "unico",
+        "despliegue"
+      ],
+      "source_collection": "animaciones/source_architecture_06.html",
+      "source_module_id": "modular-monolith",
+      "states": 5
+    },
+    {
+      "number": 69,
+      "id": "architecture-microservicios",
+      "name": "Microservicios",
+      "category": "Arquitectura de software",
+      "type": "arquitectura",
+      "description": "Cada dominio de negocio se ejecuta de forma autónoma en contenedores/pods aislados, con bases de datos descentralizadas y orquestación mediante API Gateway y llamadas gRPC/REST.",
+      "style": "Dark technical / SVG / código editable",
+      "backend": "browser",
+      "collection": "animaciones",
+      "preset_file": "animaciones/presets/architecture-microservicios.html",
+      "status": "candidate",
+      "duration": 4,
+      "batch": "architecture-06",
+      "motion": [
+        "revelado por fases",
+        "resaltado de estado",
+        "flujo de datos",
+        "animación SVG"
+      ],
+      "editable": {
+        "title": {
+          "type": "text",
+          "label": "Nombre visible"
+        },
+        "description": {
+          "type": "text",
+          "label": "Descripción"
+        },
+        "file": {
+          "type": "text",
+          "label": "Archivo de ejemplo"
+        }
+      },
+      "tags": [
+        "architecture",
+        "arquitectura",
+        "microservicios",
+        "arquitectura-de-software",
+        "servicios",
+        "distribuidos",
+        "conectados",
+        "via",
+        "api"
+      ],
+      "source_collection": "animaciones/source_architecture_06.html",
+      "source_module_id": "microservices",
+      "states": 5
+    },
+    {
+      "number": 70,
+      "id": "architecture-arquitectura-cliente-servidor",
+      "name": "Arquitectura Cliente-Servidor",
+      "category": "Arquitectura de software",
+      "type": "arquitectura",
+      "description": "Separación canónica de responsabilidades: el Cliente gestiona el estado de vista y presentación mientras que el Servidor centraliza reglas de negocio, persistencia y computación segura.",
+      "style": "Dark technical / SVG / código editable",
+      "backend": "browser",
+      "collection": "animaciones",
+      "preset_file": "animaciones/presets/architecture-arquitectura-cliente-servidor.html",
+      "status": "candidate",
+      "duration": 4,
+      "batch": "architecture-06",
+      "motion": [
+        "revelado por fases",
+        "resaltado de estado",
+        "flujo de datos",
+        "animación SVG"
+      ],
+      "editable": {
+        "title": {
+          "type": "text",
+          "label": "Nombre visible"
+        },
+        "description": {
+          "type": "text",
+          "label": "Descripción"
+        },
+        "file": {
+          "type": "text",
+          "label": "Archivo de ejemplo"
+        }
+      },
+      "tags": [
+        "architecture",
+        "arquitectura",
+        "arquitectura-cliente-servidor",
+        "arquitectura-de-software",
+        "ciclo",
+        "de",
+        "peticion",
+        "procesamiento",
+        "y",
+        "respuesta"
+      ],
+      "source_collection": "animaciones/source_architecture_06.html",
+      "source_module_id": "client-server",
+      "states": 5
+    },
+    {
+      "number": 71,
+      "id": "architecture-arquitectura-mvc",
+      "name": "Arquitectura MVC",
+      "category": "Arquitectura de software",
+      "type": "arquitectura",
+      "description": "Desacopla la lógica de visualización (View) del almacenamiento de estado (Model) a través de un intermediario (Controller) que gestiona eventos y actualiza la interfaz reactivamente.",
+      "style": "Dark technical / SVG / código editable",
+      "backend": "browser",
+      "collection": "animaciones",
+      "preset_file": "animaciones/presets/architecture-arquitectura-mvc.html",
+      "status": "candidate",
+      "duration": 4,
+      "batch": "architecture-06",
+      "motion": [
+        "revelado por fases",
+        "resaltado de estado",
+        "flujo de datos",
+        "animación SVG"
+      ],
+      "editable": {
+        "title": {
+          "type": "text",
+          "label": "Nombre visible"
+        },
+        "description": {
+          "type": "text",
+          "label": "Descripción"
+        },
+        "file": {
+          "type": "text",
+          "label": "Archivo de ejemplo"
+        }
+      },
+      "tags": [
+        "architecture",
+        "arquitectura",
+        "arquitectura-mvc",
+        "arquitectura-de-software",
+        "modelo",
+        "vista",
+        "controlador"
+      ],
+      "source_collection": "animaciones/source_architecture_06.html",
+      "source_module_id": "mvc",
+      "states": 5
+    },
+    {
+      "number": 72,
+      "id": "architecture-arquitectura-en-capas-n-tier",
+      "name": "Arquitectura en Capas (N-Tier)",
+      "category": "Arquitectura de software",
+      "type": "arquitectura",
+      "description": "Las capas se apilan jerárquicamente: cada capa solo puede invocar a la inmediatamente inferior, impidiendo que detalles de infraestructura o base de datos contaminen la lógica de dominio.",
+      "style": "Dark technical / SVG / código editable",
+      "backend": "browser",
+      "collection": "animaciones",
+      "preset_file": "animaciones/presets/architecture-arquitectura-en-capas-n-tier.html",
+      "status": "candidate",
+      "duration": 4,
+      "batch": "architecture-06",
+      "motion": [
+        "revelado por fases",
+        "resaltado de estado",
+        "flujo de datos",
+        "animación SVG"
+      ],
+      "editable": {
+        "title": {
+          "type": "text",
+          "label": "Nombre visible"
+        },
+        "description": {
+          "type": "text",
+          "label": "Descripción"
+        },
+        "file": {
+          "type": "text",
+          "label": "Archivo de ejemplo"
+        }
+      },
+      "tags": [
+        "architecture",
+        "arquitectura",
+        "arquitectura-en-capas-n-tier",
+        "arquitectura-de-software",
+        "separacion",
+        "estricta",
+        "jerarquica",
+        "unidireccional"
+      ],
+      "source_collection": "animaciones/source_architecture_06.html",
+      "source_module_id": "layered",
+      "states": 5
+    },
+    {
+      "number": 73,
+      "id": "architecture-arquitectura-hexagonal",
+      "name": "Arquitectura Hexagonal",
+      "category": "Arquitectura de software",
+      "type": "arquitectura",
+      "description": "El núcleo de dominio reside en el centro absoluto rodeado de Puertos (interfaces). Adaptadores externos (controladores HTTP, drivers SQL, colas) se acoplan hacia adentro sin que el núcleo dependa de librerías externas.",
+      "style": "Dark technical / SVG / código editable",
+      "backend": "browser",
+      "collection": "animaciones",
+      "preset_file": "animaciones/presets/architecture-arquitectura-hexagonal.html",
+      "status": "candidate",
+      "duration": 4,
+      "batch": "architecture-06",
+      "motion": [
+        "revelado por fases",
+        "resaltado de estado",
+        "flujo de datos",
+        "animación SVG"
+      ],
+      "editable": {
+        "title": {
+          "type": "text",
+          "label": "Nombre visible"
+        },
+        "description": {
+          "type": "text",
+          "label": "Descripción"
+        },
+        "file": {
+          "type": "text",
+          "label": "Archivo de ejemplo"
+        }
+      },
+      "tags": [
+        "architecture",
+        "arquitectura",
+        "arquitectura-hexagonal",
+        "arquitectura-de-software",
+        "puertos",
+        "y",
+        "adaptadores",
+        "agnostica",
+        "de",
+        "frameworks"
+      ],
+      "source_collection": "animaciones/source_architecture_06.html",
+      "source_module_id": "hexagonal",
+      "states": 5
+    },
+    {
+      "number": 74,
+      "id": "architecture-arquitectura-orientada-a-eventos",
+      "name": "Arquitectura Orientada a Eventos",
+      "category": "Arquitectura de software",
+      "type": "arquitectura",
+      "description": "Desacoplamiento temporal y espacial total: los componentes productores emiten sucesos inmutables (events) hacia un broker de streaming (Kafka/RabbitMQ), y múltiples consumidores los procesan asíncronamente.",
+      "style": "Dark technical / SVG / código editable",
+      "backend": "browser",
+      "collection": "animaciones",
+      "preset_file": "animaciones/presets/architecture-arquitectura-orientada-a-eventos.html",
+      "status": "candidate",
+      "duration": 4,
+      "batch": "architecture-06",
+      "motion": [
+        "revelado por fases",
+        "resaltado de estado",
+        "flujo de datos",
+        "animación SVG"
+      ],
+      "editable": {
+        "title": {
+          "type": "text",
+          "label": "Nombre visible"
+        },
+        "description": {
+          "type": "text",
+          "label": "Descripción"
+        },
+        "file": {
+          "type": "text",
+          "label": "Archivo de ejemplo"
+        }
+      },
+      "tags": [
+        "architecture",
+        "arquitectura",
+        "arquitectura-orientada-a-eventos",
+        "arquitectura-de-software",
+        "productores",
+        "broker",
+        "distribuido",
+        "y",
+        "consumidores"
+      ],
+      "source_collection": "animaciones/source_architecture_06.html",
+      "source_module_id": "event-driven",
+      "states": 5
+    },
+    {
+      "number": 75,
+      "id": "architecture-refactorizacion-limpia",
+      "name": "Refactorización Limpia",
+      "category": "Arquitectura de software",
+      "type": "arquitectura",
+      "description": "Transformación interactiva de una función legacy gigante (anti-patrón espagueti con responsabilidades mezcladas) en funciones puras, cohesivas y testeables respetando el Single Responsibility Principle.",
+      "style": "Dark technical / SVG / código editable",
+      "backend": "browser",
+      "collection": "animaciones",
+      "preset_file": "animaciones/presets/architecture-refactorizacion-limpia.html",
+      "status": "candidate",
+      "duration": 4,
+      "batch": "architecture-06",
+      "motion": [
+        "revelado por fases",
+        "resaltado de estado",
+        "flujo de datos",
+        "animación SVG"
+      ],
+      "editable": {
+        "title": {
+          "type": "text",
+          "label": "Nombre visible"
+        },
+        "description": {
+          "type": "text",
+          "label": "Descripción"
+        },
+        "file": {
+          "type": "text",
+          "label": "Archivo de ejemplo"
+        }
+      },
+      "tags": [
+        "architecture",
+        "arquitectura",
+        "refactorizacion-limpia",
+        "arquitectura-de-software",
+        "de",
+        "funcion",
+        "monstruosa",
+        "a",
+        "composicion",
+        "srp"
+      ],
+      "source_collection": "animaciones/source_architecture_06.html",
+      "source_module_id": "refactoring",
+      "states": 5
+    },
+    {
+      "number": 76,
+      "id": "runtime-editor-y-tokens",
+      "name": "Editor y Tokens",
+      "category": "Programación y ejecución",
+      "type": "depuración",
+      "description": "Escritura progresiva del búfer de texto, detección de tokens léxicos y resaltado sintáctico en vivo.",
+      "style": "Dark technical / SVG / código editable",
+      "backend": "browser",
+      "collection": "animaciones",
+      "preset_file": "animaciones/presets/runtime-editor-y-tokens.html",
+      "status": "candidate",
+      "duration": 4,
+      "batch": "runtime-07",
+      "motion": [
+        "revelado por fases",
+        "resaltado de estado",
+        "flujo de datos",
+        "animación SVG"
+      ],
+      "editable": {
+        "title": {
+          "type": "text",
+          "label": "Nombre visible"
+        },
+        "description": {
+          "type": "text",
+          "label": "Descripción"
+        },
+        "file": {
+          "type": "text",
+          "label": "Archivo de ejemplo"
+        },
+        "fnname": {
+          "type": "text",
+          "label": "fnName",
+          "default": "calcularTotal"
+        },
+        "p1": {
+          "type": "text",
+          "label": "p1",
+          "default": "cantidad"
+        },
+        "p2": {
+          "type": "text",
+          "label": "p2",
+          "default": "tasa"
+        },
+        "localvar": {
+          "type": "text",
+          "label": "localVar",
+          "default": "subtotal"
+        },
+        "multiplier": {
+          "type": "text",
+          "label": "multiplier",
+          "default": "1.16"
+        }
+      },
+      "tags": [
+        "runtime",
+        "depuración",
+        "editor-y-tokens",
+        "programacion-y-ejecucion",
+        ""
+      ],
+      "source_collection": "animaciones/source_runtime_07.html",
+      "source_module_id": "01",
+      "states": 6
+    },
+    {
+      "number": 77,
+      "id": "runtime-pipeline-de-compilacion",
+      "name": "Pipeline de Compilación",
+      "category": "Programación y ejecución",
+      "type": "depuración",
+      "description": "Transformación estricta de Código Fuente → Tokens → AST → Código Intermedio (IR) → Binario.",
+      "style": "Dark technical / SVG / código editable",
+      "backend": "browser",
+      "collection": "animaciones",
+      "preset_file": "animaciones/presets/runtime-pipeline-de-compilacion.html",
+      "status": "candidate",
+      "duration": 4,
+      "batch": "runtime-07",
+      "motion": [
+        "revelado por fases",
+        "resaltado de estado",
+        "flujo de datos",
+        "animación SVG"
+      ],
+      "editable": {
+        "title": {
+          "type": "text",
+          "label": "Nombre visible"
+        },
+        "description": {
+          "type": "text",
+          "label": "Descripción"
+        },
+        "file": {
+          "type": "text",
+          "label": "Archivo de ejemplo"
+        },
+        "fnname": {
+          "type": "text",
+          "label": "fnName",
+          "default": "procesar"
+        },
+        "arg": {
+          "type": "text",
+          "label": "arg",
+          "default": "val"
+        }
+      },
+      "tags": [
+        "runtime",
+        "depuración",
+        "pipeline-de-compilacion",
+        "programacion-y-ejecucion",
+        ""
+      ],
+      "source_collection": "animaciones/source_runtime_07.html",
+      "source_module_id": "02",
+      "states": 5
+    },
+    {
+      "number": 78,
+      "id": "runtime-interprete-linea-por-linea",
+      "name": "Intérprete Línea por Línea",
+      "category": "Programación y ejecución",
+      "type": "depuración",
+      "description": "Evaluación dinámica inmediata de sentencias con actualización continua del entorno de variables.",
+      "style": "Dark technical / SVG / código editable",
+      "backend": "browser",
+      "collection": "animaciones",
+      "preset_file": "animaciones/presets/runtime-interprete-linea-por-linea.html",
+      "status": "candidate",
+      "duration": 4,
+      "batch": "runtime-07",
+      "motion": [
+        "revelado por fases",
+        "resaltado de estado",
+        "flujo de datos",
+        "animación SVG"
+      ],
+      "editable": {
+        "title": {
+          "type": "text",
+          "label": "Nombre visible"
+        },
+        "description": {
+          "type": "text",
+          "label": "Descripción"
+        },
+        "file": {
+          "type": "text",
+          "label": "Archivo de ejemplo"
+        },
+        "v1": {
+          "type": "text",
+          "label": "v1",
+          "default": "precio"
+        },
+        "v2": {
+          "type": "text",
+          "label": "v2",
+          "default": "recargo"
+        },
+        "v3": {
+          "type": "text",
+          "label": "v3",
+          "default": "total"
+        }
+      },
+      "tags": [
+        "runtime",
+        "depuración",
+        "interprete-linea-por-linea",
+        "programacion-y-ejecucion",
+        ""
+      ],
+      "source_collection": "animaciones/source_runtime_07.html",
+      "source_module_id": "03",
+      "states": 5
+    },
+    {
+      "number": 79,
+      "id": "runtime-debugger-y-breakpoints",
+      "name": "Debugger y Breakpoints",
+      "category": "Programación y ejecución",
+      "type": "depuración",
+      "description": "Control de flujo con puntos de interrupción, puntero de ejecución (PC) e inspección de variables locales.",
+      "style": "Dark technical / SVG / código editable",
+      "backend": "browser",
+      "collection": "animaciones",
+      "preset_file": "animaciones/presets/runtime-debugger-y-breakpoints.html",
+      "status": "candidate",
+      "duration": 4,
+      "batch": "runtime-07",
+      "motion": [
+        "revelado por fases",
+        "resaltado de estado",
+        "flujo de datos",
+        "animación SVG"
+      ],
+      "editable": {
+        "title": {
+          "type": "text",
+          "label": "Nombre visible"
+        },
+        "description": {
+          "type": "text",
+          "label": "Descripción"
+        },
+        "file": {
+          "type": "text",
+          "label": "Archivo de ejemplo"
+        },
+        "counter": {
+          "type": "text",
+          "label": "counter",
+          "default": "indice"
+        }
+      },
+      "tags": [
+        "runtime",
+        "depuración",
+        "debugger-y-breakpoints",
+        "programacion-y-ejecucion",
+        ""
+      ],
+      "source_collection": "animaciones/source_runtime_07.html",
+      "source_module_id": "04",
+      "states": 5
+    },
+    {
+      "number": 80,
+      "id": "runtime-call-stack-pila-de-llamadas",
+      "name": "Call Stack (Pila de Llamadas)",
+      "category": "Programación y ejecución",
+      "type": "depuración",
+      "description": "Inserción (push) y extracción (pop) de marcos de función (stack frames) con direcciones de retorno.",
+      "style": "Dark technical / SVG / código editable",
+      "backend": "browser",
+      "collection": "animaciones",
+      "preset_file": "animaciones/presets/runtime-call-stack-pila-de-llamadas.html",
+      "status": "candidate",
+      "duration": 4,
+      "batch": "runtime-07",
+      "motion": [
+        "revelado por fases",
+        "resaltado de estado",
+        "flujo de datos",
+        "animación SVG"
+      ],
+      "editable": {
+        "title": {
+          "type": "text",
+          "label": "Nombre visible"
+        },
+        "description": {
+          "type": "text",
+          "label": "Descripción"
+        },
+        "file": {
+          "type": "text",
+          "label": "Archivo de ejemplo"
+        },
+        "fn1": {
+          "type": "text",
+          "label": "fn1",
+          "default": "alfa"
+        },
+        "fn2": {
+          "type": "text",
+          "label": "fn2",
+          "default": "beta"
+        },
+        "fn3": {
+          "type": "text",
+          "label": "fn3",
+          "default": "gamma"
+        }
+      },
+      "tags": [
+        "runtime",
+        "depuración",
+        "call-stack-pila-de-llamadas",
+        "programacion-y-ejecucion",
+        ""
+      ],
+      "source_collection": "animaciones/source_runtime_07.html",
+      "source_module_id": "05",
+      "states": 7
+    },
+    {
+      "number": 81,
+      "id": "runtime-recursividad-y-desbobinado",
+      "name": "Recursividad y Desbobinado",
+      "category": "Programación y ejecución",
+      "type": "depuración",
+      "description": "Fases claras de expansión (winding) con llamadas anidadas y resolución/retorno (unwinding).",
+      "style": "Dark technical / SVG / código editable",
+      "backend": "browser",
+      "collection": "animaciones",
+      "preset_file": "animaciones/presets/runtime-recursividad-y-desbobinado.html",
+      "status": "candidate",
+      "duration": 4,
+      "batch": "runtime-07",
+      "motion": [
+        "revelado por fases",
+        "resaltado de estado",
+        "flujo de datos",
+        "animación SVG"
+      ],
+      "editable": {
+        "title": {
+          "type": "text",
+          "label": "Nombre visible"
+        },
+        "description": {
+          "type": "text",
+          "label": "Descripción"
+        },
+        "file": {
+          "type": "text",
+          "label": "Archivo de ejemplo"
+        },
+        "fnname": {
+          "type": "text",
+          "label": "fnName",
+          "default": "factorial"
+        }
+      },
+      "tags": [
+        "runtime",
+        "depuración",
+        "recursividad-y-desbobinado",
+        "programacion-y-ejecucion",
+        ""
+      ],
+      "source_collection": "animaciones/source_runtime_07.html",
+      "source_module_id": "06",
+      "states": 8
+    },
+    {
+      "number": 82,
+      "id": "runtime-memoria-stack-vs-heap",
+      "name": "Memoria Stack vs Heap",
+      "category": "Programación y ejecución",
+      "type": "depuración",
+      "description": "Distribución contigua LIFO en Stack frente a reserva dinámica fragmentada con punteros en Heap.",
+      "style": "Dark technical / SVG / código editable",
+      "backend": "browser",
+      "collection": "animaciones",
+      "preset_file": "animaciones/presets/runtime-memoria-stack-vs-heap.html",
+      "status": "candidate",
+      "duration": 4,
+      "batch": "runtime-07",
+      "motion": [
+        "revelado por fases",
+        "resaltado de estado",
+        "flujo de datos",
+        "animación SVG"
+      ],
+      "editable": {
+        "title": {
+          "type": "text",
+          "label": "Nombre visible"
+        },
+        "description": {
+          "type": "text",
+          "label": "Descripción"
+        },
+        "file": {
+          "type": "text",
+          "label": "Archivo de ejemplo"
+        },
+        "valname": {
+          "type": "text",
+          "label": "valName",
+          "default": "edad"
+        },
+        "refname": {
+          "type": "text",
+          "label": "refName",
+          "default": "usuario"
+        },
+        "alias": {
+          "type": "text",
+          "label": "alias",
+          "default": "sesion"
+        }
+      },
+      "tags": [
+        "runtime",
+        "depuración",
+        "memoria-stack-vs-heap",
+        "programacion-y-ejecucion",
+        ""
+      ],
+      "source_collection": "animaciones/source_runtime_07.html",
+      "source_module_id": "07",
+      "states": 5
+    },
+    {
+      "number": 83,
+      "id": "runtime-variables-y-referencias",
+      "name": "Variables y Referencias",
+      "category": "Programación y ejecución",
+      "type": "depuración",
+      "description": "Contraste explícito entre copia de tipos de valor frente a direccionamiento de punteros compartidos.",
+      "style": "Dark technical / SVG / código editable",
+      "backend": "browser",
+      "collection": "animaciones",
+      "preset_file": "animaciones/presets/runtime-variables-y-referencias.html",
+      "status": "candidate",
+      "duration": 4,
+      "batch": "runtime-07",
+      "motion": [
+        "revelado por fases",
+        "resaltado de estado",
+        "flujo de datos",
+        "animación SVG"
+      ],
+      "editable": {
+        "title": {
+          "type": "text",
+          "label": "Nombre visible"
+        },
+        "description": {
+          "type": "text",
+          "label": "Descripción"
+        },
+        "file": {
+          "type": "text",
+          "label": "Archivo de ejemplo"
+        },
+        "va": {
+          "type": "text",
+          "label": "vA",
+          "default": "numA"
+        },
+        "vb": {
+          "type": "text",
+          "label": "vB",
+          "default": "numB"
+        },
+        "oa": {
+          "type": "text",
+          "label": "oA",
+          "default": "objA"
+        },
+        "ob": {
+          "type": "text",
+          "label": "oB",
+          "default": "objB"
+        }
+      },
+      "tags": [
+        "runtime",
+        "depuración",
+        "variables-y-referencias",
+        "programacion-y-ejecucion",
+        ""
+      ],
+      "source_collection": "animaciones/source_runtime_07.html",
+      "source_module_id": "08",
+      "states": 5
+    },
+    {
+      "number": 84,
+      "id": "runtime-bucles-e-iteraciones",
+      "name": "Bucles e Iteraciones",
+      "category": "Programación y ejecución",
+      "type": "depuración",
+      "description": "Diagrama de flujo activo y evaluación condicional (Verdadero / Falso) en cada iteración.",
+      "style": "Dark technical / SVG / código editable",
+      "backend": "browser",
+      "collection": "animaciones",
+      "preset_file": "animaciones/presets/runtime-bucles-e-iteraciones.html",
+      "status": "candidate",
+      "duration": 4,
+      "batch": "runtime-07",
+      "motion": [
+        "revelado por fases",
+        "resaltado de estado",
+        "flujo de datos",
+        "animación SVG"
+      ],
+      "editable": {
+        "title": {
+          "type": "text",
+          "label": "Nombre visible"
+        },
+        "description": {
+          "type": "text",
+          "label": "Descripción"
+        },
+        "file": {
+          "type": "text",
+          "label": "Archivo de ejemplo"
+        },
+        "acc": {
+          "type": "text",
+          "label": "acc",
+          "default": "suma"
+        }
+      },
+      "tags": [
+        "runtime",
+        "depuración",
+        "bucles-e-iteraciones",
+        "programacion-y-ejecucion",
+        ""
+      ],
+      "source_collection": "animaciones/source_runtime_07.html",
+      "source_module_id": "09",
+      "states": 6
+    },
+    {
+      "number": 85,
+      "id": "runtime-manejo-de-excepciones",
+      "name": "Manejo de Excepciones",
+      "category": "Programación y ejecución",
+      "type": "depuración",
+      "description": "Lanzamiento de error (throw), desbobinado de marcos y captura en bloques try/catch/finally.",
+      "style": "Dark technical / SVG / código editable",
+      "backend": "browser",
+      "collection": "animaciones",
+      "preset_file": "animaciones/presets/runtime-manejo-de-excepciones.html",
+      "status": "candidate",
+      "duration": 4,
+      "batch": "runtime-07",
+      "motion": [
+        "revelado por fases",
+        "resaltado de estado",
+        "flujo de datos",
+        "animación SVG"
+      ],
+      "editable": {
+        "title": {
+          "type": "text",
+          "label": "Nombre visible"
+        },
+        "description": {
+          "type": "text",
+          "label": "Descripción"
+        },
+        "file": {
+          "type": "text",
+          "label": "Archivo de ejemplo"
+        },
+        "callfn": {
+          "type": "text",
+          "label": "callFn",
+          "default": "validarPago"
+        },
+        "errvar": {
+          "type": "text",
+          "label": "errVar",
+          "default": "err"
+        },
+        "reason": {
+          "type": "text",
+          "label": "reason",
+          "default": "FondosInsuficientes"
+        }
+      },
+      "tags": [
+        "runtime",
+        "depuración",
+        "manejo-de-excepciones",
+        "programacion-y-ejecucion",
+        ""
+      ],
+      "source_collection": "animaciones/source_runtime_07.html",
+      "source_module_id": "10",
+      "states": 6
+    },
+    {
+      "number": 86,
+      "id": "language-python",
+      "name": "Python",
+      "category": "Lenguajes de programación",
+      "type": "lenguaje",
+      "description": "Funciones, Clases, Decoradores y Módulos",
+      "style": "Dark technical / SVG / código editable",
+      "backend": "browser",
+      "collection": "animaciones",
+      "preset_file": "animaciones/presets/language-python.html",
+      "status": "candidate",
+      "duration": 4,
+      "batch": "languages-08",
+      "motion": [
+        "revelado por fases",
+        "resaltado de estado",
+        "flujo de datos",
+        "animación SVG"
+      ],
+      "editable": {
+        "title": {
+          "type": "text",
+          "label": "Nombre visible"
+        },
+        "description": {
+          "type": "text",
+          "label": "Descripción"
+        },
+        "file": {
+          "type": "text",
+          "label": "Archivo de ejemplo"
+        },
+        "modname": {
+          "type": "text",
+          "label": "modName",
+          "default": "sys_metric"
+        },
+        "decname": {
+          "type": "text",
+          "label": "decName",
+          "default": "trace_perf"
+        },
+        "classname": {
+          "type": "text",
+          "label": "className",
+          "default": "DataPipeline"
+        },
+        "fnname": {
+          "type": "text",
+          "label": "fnName",
+          "default": "transform_records"
+        },
+        "argname": {
+          "type": "text",
+          "label": "argName",
+          "default": "dataset"
+        }
+      },
+      "tags": [
+        "language",
+        "lenguaje",
+        "python",
+        "lenguajes-de-programacion",
+        "funciones",
+        "clases",
+        "decoradores",
+        "y",
+        "modulos"
+      ],
+      "source_collection": "animaciones/source_languages_08.html",
+      "source_module_id": "py",
+      "states": 5
+    },
+    {
+      "number": 87,
+      "id": "language-javascript",
+      "name": "JavaScript",
+      "category": "Lenguajes de programación",
+      "type": "lenguaje",
+      "description": "Event Loop, Callbacks, Promises y Async/Await",
+      "style": "Dark technical / SVG / código editable",
+      "backend": "browser",
+      "collection": "animaciones",
+      "preset_file": "animaciones/presets/language-javascript.html",
+      "status": "candidate",
+      "duration": 4,
+      "batch": "languages-08",
+      "motion": [
+        "revelado por fases",
+        "resaltado de estado",
+        "flujo de datos",
+        "animación SVG"
+      ],
+      "editable": {
+        "title": {
+          "type": "text",
+          "label": "Nombre visible"
+        },
+        "description": {
+          "type": "text",
+          "label": "Descripción"
+        },
+        "file": {
+          "type": "text",
+          "label": "Archivo de ejemplo"
+        },
+        "fnasync": {
+          "type": "text",
+          "label": "fnAsync",
+          "default": "requestPayload"
+        },
+        "promisevar": {
+          "type": "text",
+          "label": "promiseVar",
+          "default": "netTask"
+        },
+        "datavar": {
+          "type": "text",
+          "label": "dataVar",
+          "default": "rawMetrics"
+        }
+      },
+      "tags": [
+        "language",
+        "lenguaje",
+        "javascript",
+        "lenguajes-de-programacion",
+        "event",
+        "loop",
+        "callbacks",
+        "promises",
+        "y",
+        "async",
+        "await"
+      ],
+      "source_collection": "animaciones/source_languages_08.html",
+      "source_module_id": "js",
+      "states": 5
+    },
+    {
+      "number": 88,
+      "id": "language-typescript",
+      "name": "TypeScript",
+      "category": "Lenguajes de programación",
+      "type": "lenguaje",
+      "description": "Interfaces, Tipos, Genéricos y Verificación Estática",
+      "style": "Dark technical / SVG / código editable",
+      "backend": "browser",
+      "collection": "animaciones",
+      "preset_file": "animaciones/presets/language-typescript.html",
+      "status": "candidate",
+      "duration": 4,
+      "batch": "languages-08",
+      "motion": [
+        "revelado por fases",
+        "resaltado de estado",
+        "flujo de datos",
+        "animación SVG"
+      ],
+      "editable": {
+        "title": {
+          "type": "text",
+          "label": "Nombre visible"
+        },
+        "description": {
+          "type": "text",
+          "label": "Descripción"
+        },
+        "file": {
+          "type": "text",
+          "label": "Archivo de ejemplo"
+        },
+        "interfacename": {
+          "type": "text",
+          "label": "interfaceName",
+          "default": "AuthToken"
+        },
+        "generictype": {
+          "type": "text",
+          "label": "genericType",
+          "default": "PayloadRecord"
+        },
+        "funcname": {
+          "type": "text",
+          "label": "funcName",
+          "default": "normalizeContext"
+        }
+      },
+      "tags": [
+        "language",
+        "lenguaje",
+        "typescript",
+        "lenguajes-de-programacion",
+        "interfaces",
+        "tipos",
+        "genericos",
+        "y",
+        "verificacion",
+        "estatica"
+      ],
+      "source_collection": "animaciones/source_languages_08.html",
+      "source_module_id": "ts",
+      "states": 5
+    },
+    {
+      "number": 89,
+      "id": "language-go",
+      "name": "Go",
+      "category": "Lenguajes de programación",
+      "type": "lenguaje",
+      "description": "Goroutines, Canales y Concurrencia CSP",
+      "style": "Dark technical / SVG / código editable",
+      "backend": "browser",
+      "collection": "animaciones",
+      "preset_file": "animaciones/presets/language-go.html",
+      "status": "candidate",
+      "duration": 4,
+      "batch": "languages-08",
+      "motion": [
+        "revelado por fases",
+        "resaltado de estado",
+        "flujo de datos",
+        "animación SVG"
+      ],
+      "editable": {
+        "title": {
+          "type": "text",
+          "label": "Nombre visible"
+        },
+        "description": {
+          "type": "text",
+          "label": "Descripción"
+        },
+        "file": {
+          "type": "text",
+          "label": "Archivo de ejemplo"
+        },
+        "chname": {
+          "type": "text",
+          "label": "chName",
+          "default": "taskStream"
+        },
+        "workername": {
+          "type": "text",
+          "label": "workerName",
+          "default": "consumeWorker"
+        },
+        "msgpayload": {
+          "type": "text",
+          "label": "msgPayload",
+          "default": "JobPacket"
+        }
+      },
+      "tags": [
+        "language",
+        "lenguaje",
+        "go",
+        "lenguajes-de-programacion",
+        "goroutines",
+        "canales",
+        "y",
+        "concurrencia",
+        "csp"
+      ],
+      "source_collection": "animaciones/source_languages_08.html",
+      "source_module_id": "go",
+      "states": 5
+    },
+    {
+      "number": 90,
+      "id": "language-rust",
+      "name": "Rust",
+      "category": "Lenguajes de programación",
+      "type": "lenguaje",
+      "description": "Ownership, Borrowing y Lifetimes",
+      "style": "Dark technical / SVG / código editable",
+      "backend": "browser",
+      "collection": "animaciones",
+      "preset_file": "animaciones/presets/language-rust.html",
+      "status": "candidate",
+      "duration": 4,
+      "batch": "languages-08",
+      "motion": [
+        "revelado por fases",
+        "resaltado de estado",
+        "flujo de datos",
+        "animación SVG"
+      ],
+      "editable": {
+        "title": {
+          "type": "text",
+          "label": "Nombre visible"
+        },
+        "description": {
+          "type": "text",
+          "label": "Descripción"
+        },
+        "file": {
+          "type": "text",
+          "label": "Archivo de ejemplo"
+        },
+        "ownervar": {
+          "type": "text",
+          "label": "ownerVar",
+          "default": "buffer_owner"
+        },
+        "borrowref": {
+          "type": "text",
+          "label": "borrowRef",
+          "default": "borrowed_view"
+        },
+        "ltname": {
+          "type": "text",
+          "label": "ltName",
+          "default": "'scope_a"
+        }
+      },
+      "tags": [
+        "language",
+        "lenguaje",
+        "rust",
+        "lenguajes-de-programacion",
+        "ownership",
+        "borrowing",
+        "y",
+        "lifetimes"
+      ],
+      "source_collection": "animaciones/source_languages_08.html",
+      "source_module_id": "rs",
+      "states": 5
+    },
+    {
+      "number": 91,
+      "id": "language-c",
+      "name": "C",
+      "category": "Lenguajes de programación",
+      "type": "lenguaje",
+      "description": "Punteros, Memoria Manual, malloc y free",
+      "style": "Dark technical / SVG / código editable",
+      "backend": "browser",
+      "collection": "animaciones",
+      "preset_file": "animaciones/presets/language-c.html",
+      "status": "candidate",
+      "duration": 4,
+      "batch": "languages-08",
+      "motion": [
+        "revelado por fases",
+        "resaltado de estado",
+        "flujo de datos",
+        "animación SVG"
+      ],
+      "editable": {
+        "title": {
+          "type": "text",
+          "label": "Nombre visible"
+        },
+        "description": {
+          "type": "text",
+          "label": "Descripción"
+        },
+        "file": {
+          "type": "text",
+          "label": "Archivo de ejemplo"
+        },
+        "ptrname": {
+          "type": "text",
+          "label": "ptrName",
+          "default": "buffer_ptr"
+        },
+        "allocsize": {
+          "type": "text",
+          "label": "allocSize",
+          "default": "2 * sizeof(int)"
+        },
+        "vala": {
+          "type": "text",
+          "label": "valA",
+          "default": "0xA4"
+        },
+        "valb": {
+          "type": "text",
+          "label": "valB",
+          "default": "0xB8"
+        }
+      },
+      "tags": [
+        "language",
+        "lenguaje",
+        "c",
+        "lenguajes-de-programacion",
+        "punteros",
+        "memoria",
+        "manual",
+        "malloc",
+        "y",
+        "free"
+      ],
+      "source_collection": "animaciones/source_languages_08.html",
+      "source_module_id": "c",
+      "states": 5
+    },
+    {
+      "number": 92,
+      "id": "language-cpp",
+      "name": "C++",
+      "category": "Lenguajes de programación",
+      "type": "lenguaje",
+      "description": "Clases, Templates, RAII y Compilación Determinística",
+      "style": "Dark technical / SVG / código editable",
+      "backend": "browser",
+      "collection": "animaciones",
+      "preset_file": "animaciones/presets/language-cpp.html",
+      "status": "candidate",
+      "duration": 4,
+      "batch": "languages-08",
+      "motion": [
+        "revelado por fases",
+        "resaltado de estado",
+        "flujo de datos",
+        "animación SVG"
+      ],
+      "editable": {
+        "title": {
+          "type": "text",
+          "label": "Nombre visible"
+        },
+        "description": {
+          "type": "text",
+          "label": "Descripción"
+        },
+        "file": {
+          "type": "text",
+          "label": "Archivo de ejemplo"
+        },
+        "classname": {
+          "type": "text",
+          "label": "className",
+          "default": "ScopedLock"
+        },
+        "restype": {
+          "type": "text",
+          "label": "resType",
+          "default": "SharedMutex"
+        },
+        "instancevar": {
+          "type": "text",
+          "label": "instanceVar",
+          "default": "guardObj"
+        }
+      },
+      "tags": [
+        "language",
+        "lenguaje",
+        "c",
+        "lenguajes-de-programacion",
+        "clases",
+        "templates",
+        "raii",
+        "y",
+        "compilacion",
+        "deterministica"
+      ],
+      "source_collection": "animaciones/source_languages_08.html",
+      "source_module_id": "cpp",
+      "states": 5
+    },
+    {
+      "number": 93,
+      "id": "language-java",
+      "name": "Java",
+      "category": "Lenguajes de programación",
+      "type": "lenguaje",
+      "description": "JVM, Bytecode, Clases y Garbage Collector",
+      "style": "Dark technical / SVG / código editable",
+      "backend": "browser",
+      "collection": "animaciones",
+      "preset_file": "animaciones/presets/language-java.html",
+      "status": "candidate",
+      "duration": 4,
+      "batch": "languages-08",
+      "motion": [
+        "revelado por fases",
+        "resaltado de estado",
+        "flujo de datos",
+        "animación SVG"
+      ],
+      "editable": {
+        "title": {
+          "type": "text",
+          "label": "Nombre visible"
+        },
+        "description": {
+          "type": "text",
+          "label": "Descripción"
+        },
+        "file": {
+          "type": "text",
+          "label": "Archivo de ejemplo"
+        },
+        "classname": {
+          "type": "text",
+          "label": "className",
+          "default": "WorkerService"
+        },
+        "methodname": {
+          "type": "text",
+          "label": "methodName",
+          "default": "dispatchTask"
+        },
+        "entitytype": {
+          "type": "text",
+          "label": "entityType",
+          "default": "RecordEntity"
+        }
+      },
+      "tags": [
+        "language",
+        "lenguaje",
+        "java",
+        "lenguajes-de-programacion",
+        "jvm",
+        "bytecode",
+        "clases",
+        "y",
+        "garbage",
+        "collector"
+      ],
+      "source_collection": "animaciones/source_languages_08.html",
+      "source_module_id": "java",
+      "states": 5
+    },
+    {
+      "number": 94,
+      "id": "language-cs",
+      "name": "C#",
+      "category": "Lenguajes de programación",
+      "type": "lenguaje",
+      "description": ".NET, LINQ, Interfaces y Tareas Asíncronas",
+      "style": "Dark technical / SVG / código editable",
+      "backend": "browser",
+      "collection": "animaciones",
+      "preset_file": "animaciones/presets/language-cs.html",
+      "status": "candidate",
+      "duration": 4,
+      "batch": "languages-08",
+      "motion": [
+        "revelado por fases",
+        "resaltado de estado",
+        "flujo de datos",
+        "animación SVG"
+      ],
+      "editable": {
+        "title": {
+          "type": "text",
+          "label": "Nombre visible"
+        },
+        "description": {
+          "type": "text",
+          "label": "Descripción"
+        },
+        "file": {
+          "type": "text",
+          "label": "Archivo de ejemplo"
+        },
+        "interfacename": {
+          "type": "text",
+          "label": "interfaceName",
+          "default": "IComputeProvider"
+        },
+        "querysrc": {
+          "type": "text",
+          "label": "querySrc",
+          "default": "metricsCatalog"
+        },
+        "taskmethod": {
+          "type": "text",
+          "label": "taskMethod",
+          "default": "AggregateMetricsAsync"
+        }
+      },
+      "tags": [
+        "language",
+        "lenguaje",
+        "c",
+        "lenguajes-de-programacion",
+        "net",
+        "linq",
+        "interfaces",
+        "y",
+        "tareas",
+        "asincronas"
+      ],
+      "source_collection": "animaciones/source_languages_08.html",
+      "source_module_id": "cs",
+      "states": 5
+    },
+    {
+      "number": 95,
+      "id": "language-sql",
+      "name": "SQL",
+      "category": "Lenguajes de programación",
+      "type": "lenguaje",
+      "description": "Consultas, Joins, Filtros y Ejecución Visual",
+      "style": "Dark technical / SVG / código editable",
+      "backend": "browser",
+      "collection": "animaciones",
+      "preset_file": "animaciones/presets/language-sql.html",
+      "status": "candidate",
+      "duration": 4,
+      "batch": "languages-08",
+      "motion": [
+        "revelado por fases",
+        "resaltado de estado",
+        "flujo de datos",
+        "animación SVG"
+      ],
+      "editable": {
+        "title": {
+          "type": "text",
+          "label": "Nombre visible"
+        },
+        "description": {
+          "type": "text",
+          "label": "Descripción"
+        },
+        "file": {
+          "type": "text",
+          "label": "Archivo de ejemplo"
+        },
+        "lefttable": {
+          "type": "text",
+          "label": "leftTable",
+          "default": "users"
+        },
+        "righttable": {
+          "type": "text",
+          "label": "rightTable",
+          "default": "transactions"
+        },
+        "filterthreshold": {
+          "type": "text",
+          "label": "filterThreshold",
+          "default": "500"
+        }
+      },
+      "tags": [
+        "language",
+        "lenguaje",
+        "sql",
+        "lenguajes-de-programacion",
+        "consultas",
+        "joins",
+        "filtros",
+        "y",
+        "ejecucion",
+        "visual"
+      ],
+      "source_collection": "animaciones/source_languages_08.html",
+      "source_module_id": "sql",
+      "states": 5
     }
   ],
   "deduplicated": [

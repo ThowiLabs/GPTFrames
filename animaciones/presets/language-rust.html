@@ -1,0 +1,211 @@
+<!doctype html><html lang="es"><head><meta charset="utf-8"><meta http-equiv="Content-Security-Policy" content="default-src &#39;none&#39;; script-src &#39;none&#39;; connect-src &#39;none&#39;; style-src &#39;unsafe-inline&#39;; img-src data:; font-src data:;"><style>
+:root{--bg:#080e18;--card:#121d2d;--panel:#0e1827;--surface:#1b2939;--muted:#8fa9bc;--edge:#294159;--line:#344c66;--cyan:#5bdcf5;--green:#55dfae;--amber:#ffcb81;--purple:#b9a3ff;
+--border-color:#30363d;--border-bright:#484f58;--text-main:#e6edf3;--text-muted:#8b949e;
+--accent-cyan:#00e3ff;--accent-green:#42dea9;--accent-amber:#ffbd6b;--accent-violet:#a855f7;--accent-red:#f85149;
+--accent-blue:#58a6ff;--accent-yellow:#d29922;--success:#3fb950;--warning:#d29922;--danger:#f85149;
+--bg-surface:#151e2d;--bg-card:#21262d;--bg-panel:#0e1827;--bg-overlay:#1f242c}
+*{box-sizing:border-box}
+html,body{width:100%;height:100%;margin:0;overflow:hidden}
+body{background:radial-gradient(ellipse at 20% 14%,#18293f,#080e18 67%,#050a12);color:#eaf5fc;font-family:system-ui,Arial,sans-serif}
+.collection-header{position:absolute;inset:15px 26px auto;display:flex;justify-content:space-between;align-items:center;color:#8baec1;font-size:10px;letter-spacing:1px;font-weight:800}
+.collection-header strong{color:#65e8c6}
+.progress-line{position:absolute;top:42px;left:26px;right:26px;background:#294159;height:2px}
+.catalog{position:absolute;inset:0;overflow:hidden}
+.module{position:absolute;inset:0;padding:55px 26px 27px;visibility:hidden;display:flex;flex-direction:column;gap:8px}
+.module-header{display:flex;align-items:baseline;gap:12px;min-height:29px}
+.index{color:#6de6c8;font:800 12px ui-monospace,Consolas,monospace;white-space:nowrap}
+.headline{font-size:24px;letter-spacing:-.5px;color:#edf7ff;font-weight:840;margin:0;line-height:1.2}
+.kind{margin-left:auto;font:750 9px ui-monospace,Consolas,monospace;letter-spacing:.4px;color:#8facc2;border:1px solid #314d65;border-radius:13px;padding:5px 10px;white-space:nowrap}
+.description{margin:0;color:#aec4d4;font-size:12px;line-height:1.36;height:32px;max-width:785px;overflow:hidden}
+.main-layout{display:flex;gap:13px;min-height:0;flex:1}
+.visual-card{position:relative;background:#0b1524;border:1px solid #36516b;border-radius:14px;overflow:hidden;flex:1;min-width:0}
+.visual-card .pane-title,.source-card .pane-title{height:30px;border-bottom:1px solid #2d4157;display:flex;align-items:center;justify-content:space-between;padding:0 12px;color:#83abc4;font:750 10px ui-monospace,Consolas,monospace;letter-spacing:.45px;background:#111e30}
+.visual-card .pane-title span:last-child{color:#61e1ba}
+.source-card .pane-title span:last-child{max-width:124px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;text-align:right}
+.visual-stage{position:absolute;top:30px;bottom:0;left:0;right:0}
+.phase{position:absolute;inset:0;opacity:0;visibility:hidden;display:flex;align-items:center;justify-content:center}
+.diagram-svg,.diagram-svg-root{display:block;width:100%;height:100%;overflow:visible}
+.source-card{position:relative;width:260px;flex:0 0 260px;min-width:0;background:#0b1524;border:1px solid #36516b;border-radius:14px;overflow:hidden}
+.code-scroll{position:absolute;inset:30px 0 0;overflow:hidden;padding:7px 7px 5px 0;background:#080f1e}
+.code-line{display:flex;gap:4px;align-items:baseline;font:10px/1.53 ui-monospace,Consolas,monospace;min-height:15.3px;white-space:pre}
+.code-line .ln{flex:0 0 23px;text-align:right;color:#42637b}
+.code-line .ct{min-width:0;display:block;color:#e0eaf8}
+.code-line .ct span{white-space:pre}
+.kw,.tok-kw,.c-kw{color:#c3aaff;font-weight:700}
+.fn,.tok-fn,.c-fn{color:#77e3d1}.tp{color:#83c8ff}
+.st,.tok-str,.c-str{color:#b4d6ff}.num,.tok-num,.c-num{color:#ffc879}.cm,.tok-cmt,.c-cm{color:#8298a8}
+.vr,.tok-op,.c-hl{color:#e5b9fb}
+.code-scroll .code-line{padding-right:3px}
+.code-scroll .code-line:nth-child(n+17){opacity:.55}
+.code-more{position:absolute;bottom:0;left:0;right:0;background:linear-gradient(transparent,#0b1524 90%);height:22px;pointer-events:none}
+.execution-bar{height:30px;flex:0 0 30px;background:#102238;border:1px solid #274c68;border-radius:8px;padding:7px 10px;color:#a8e3e5;display:flex;justify-content:space-between;align-items:center;gap:13px}
+.log{font:10.2px ui-monospace,Consolas,monospace;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.execution-tag{font:800 9px ui-monospace,Consolas,monospace;color:#8ddbbf;white-space:nowrap}
+footer{position:absolute;bottom:9px;right:26px;color:#57768d;font:9px ui-monospace,Consolas,monospace}
+/* architecture SVG vocabulary */
+.node-box{fill:#132236;stroke:#334e67;stroke-width:1.5}
+.node-box.active,.node-box.highlight{fill:#1e344a;stroke:#58a6ff}
+.node-box.success{fill:#15372d;stroke:#44e2a9}
+.node-box.warning{fill:#3a2d1c;stroke:#eab977}
+.node-box.error{fill:#401a26;stroke:#ff6675}
+.svg-label{fill:#dceef8;font:600 12px ui-monospace,Consolas,monospace}
+.svg-sub{fill:#95acc1;font:10px ui-monospace,Consolas,monospace}
+.packet{fill:#5ce6fa;filter:drop-shadow(0 0 5px #35dafb)}
+/* runtime SVG vocabulary */
+.node-text{fill:#e2edf9;font:11px ui-monospace,Consolas,monospace}
+.node-subtext{fill:#9fb0c2;font:9px ui-monospace,Consolas,monospace}
+.conn-line{stroke:#526b84;stroke-width:1.7;fill:none}
+.conn-line.active,.svg-path.flowing{stroke:#5ad8fe;stroke-dasharray:6 4;animation:motionDash 1s linear infinite}
+.conn-line.error{stroke:#fa6868}
+@keyframes motionDash{to{stroke-dashoffset:-20}}
+/* languages SVG vocabulary */
+.svg-box{fill:#1a2739;stroke:#39516a;stroke-width:1.6}
+.svg-box.active{stroke:#58a6ff;fill:#1d354c}
+.svg-box.success{stroke:#36d6a7;fill:#14382f}
+.svg-box.warning{stroke:#facc80;fill:#3a291b}
+.svg-text{fill:#e8f3fb;font:700 11px ui-monospace,Consolas,monospace;text-anchor:middle;dominant-baseline:middle}
+.svg-subtext{fill:#a2b5c8;font:9px ui-monospace,Consolas,monospace;text-anchor:middle;dominant-baseline:middle}
+.svg-path{fill:none;stroke:#51708c;stroke-width:1.7}
+
+@keyframes phase_25_0{0%,19.9000%{opacity:1;visibility:visible}20.0000%,100%{opacity:0;visibility:hidden}}
+.phase-25-0{animation:phase_25_0 4s linear both}
+@keyframes phase_25_1{0%,19.9000%{opacity:0;visibility:hidden}20.0000%,39.9000%{opacity:1;visibility:visible}40.0000%,100%{opacity:0;visibility:hidden}}
+.phase-25-1{animation:phase_25_1 4s linear both}
+@keyframes phase_25_2{0%,39.9000%{opacity:0;visibility:hidden}40.0000%,59.9000%{opacity:1;visibility:visible}60.0000%,100%{opacity:0;visibility:hidden}}
+.phase-25-2{animation:phase_25_2 4s linear both}
+@keyframes phase_25_3{0%,59.9000%{opacity:0;visibility:hidden}60.0000%,79.9000%{opacity:1;visibility:visible}80.0000%,100%{opacity:0;visibility:hidden}}
+.phase-25-3{animation:phase_25_3 4s linear both}
+@keyframes phase_25_4{0%,79.9000%{opacity:0;visibility:hidden}80.0000%,99.9000%{opacity:1;visibility:visible}100.0000%,100%{opacity:0;visibility:hidden}}
+.phase-25-4{animation:phase_25_4 4s linear both}
+@keyframes log_25_0{0%,19.9000%{opacity:1;visibility:visible}20.0000%,100%{opacity:0;visibility:hidden}}
+.log-25-0{animation:log_25_0 4s linear both}
+@keyframes log_25_1{0%,19.9000%{opacity:0;visibility:hidden}20.0000%,39.9000%{opacity:1;visibility:visible}40.0000%,100%{opacity:0;visibility:hidden}}
+.log-25-1{animation:log_25_1 4s linear both}
+@keyframes log_25_2{0%,39.9000%{opacity:0;visibility:hidden}40.0000%,59.9000%{opacity:1;visibility:visible}60.0000%,100%{opacity:0;visibility:hidden}}
+.log-25-2{animation:log_25_2 4s linear both}
+@keyframes log_25_3{0%,59.9000%{opacity:0;visibility:hidden}60.0000%,79.9000%{opacity:1;visibility:visible}80.0000%,100%{opacity:0;visibility:hidden}}
+.log-25-3{animation:log_25_3 4s linear both}
+@keyframes log_25_4{0%,79.9000%{opacity:0;visibility:hidden}80.0000%,99.9000%{opacity:1;visibility:visible}100.0000%,100%{opacity:0;visibility:hidden}}
+.log-25-4{animation:log_25_4 4s linear both}
+.log-stage .log{position:absolute;inset:0;display:block;line-height:17px;}
+.module{visibility:visible}</style></head><body><header class="collection-header"><span>GPTFRAMES / RECURSO EDITABLE</span><strong>Lenguajes de programación</strong></header><div class="progress-line"></div><main class="catalog" data-segment-seconds="4"><section class="module" data-id="language-rust"><div class="module-header"><span class="index">05/10 · 25/30</span><h1 class="headline" data-field="title">Rust</h1><span class="kind">LENGUAJES DE PROGRAMACIÓN</span></div><p class="description" data-field="description">Ownership, Borrowing y Lifetimes</p><div class="main-layout"><div class="visual-card"><div class="pane-title"><span>VISUALIZACIÓN DE EJECUCIÓN</span><span>ETAPAS 05</span></div><div class="visual-stage"><div class="phase phase-25-0">
+            <svg class="diagram-svg-root" class="visual-svg" viewBox="0 0 540 260">
+              <!-- STACK FRAME -->
+              <rect class="svg-box active" x="20" y="30" width="160" height="200"/>
+              <text class="svg-text" x="100" y="55">STACK (main)</text>
+
+              <rect x="30" y="75" width="140" height="40" rx="4" fill="#161b22" stroke="#58a6ff"/>
+              <text class="svg-text" x="100" y="95" style="font-size:10px;"><tspan data-field="ownervar">buffer_owner</tspan></text>
+              <text class="svg-subtext" x="100" y="108">OWNER [ptr, cap, len]</text>
+
+              <rect x="30" y="130" width="140" height="40" rx="4" fill="#161b22" stroke="#30363d"/>
+              <text class="svg-text" x="100" y="150" style="font-size:10px;">&amp;<tspan data-field="borrowref">borrowed_view</tspan></text>
+              <text class="svg-subtext" x="100" y="163">Lifetime: <tspan data-field="ltname">'scope_a</tspan></text>
+
+              <!-- HEAP BUFFER -->
+              <rect class="svg-box active" x="280" y="60" width="180" height="110"/>
+              <text class="svg-text" x="370" y="85">HEAP MEMORY</text>
+              <rect x="295" y="105" width="150" height="35" rx="3" fill="#161b22" stroke="#3fb950"/>
+              <text class="svg-text" x="370" y="125" style="font-size:11px;">"payload\0"</text>
+
+              <!-- FLECHAS DE PROPIEDAD -->
+              <line class="svg-path flowing" x1="170" y1="95" x2="280" y2="120" stroke="#58a6ff"/>
+              
+            </svg>
+          <span class="sr-only" style="display:none">[RUSTC] Instanciado heap buffer para &#x27;buffer_owner&#x27; con puntero único.</span></div><div class="phase phase-25-1">
+            <svg class="diagram-svg-root" class="visual-svg" viewBox="0 0 540 260">
+              <!-- STACK FRAME -->
+              <rect class="svg-box active" x="20" y="30" width="160" height="200"/>
+              <text class="svg-text" x="100" y="55">STACK (main)</text>
+
+              <rect x="30" y="75" width="140" height="40" rx="4" fill="#161b22" stroke="#58a6ff"/>
+              <text class="svg-text" x="100" y="95" style="font-size:10px;"><tspan data-field="ownervar">buffer_owner</tspan></text>
+              <text class="svg-subtext" x="100" y="108">OWNER [ptr, cap, len]</text>
+
+              <rect x="30" y="130" width="140" height="40" rx="4" fill="#161b22" stroke="#30363d"/>
+              <text class="svg-text" x="100" y="150" style="font-size:10px;">&amp;<tspan data-field="borrowref">borrowed_view</tspan></text>
+              <text class="svg-subtext" x="100" y="163">Lifetime: <tspan data-field="ltname">'scope_a</tspan></text>
+
+              <!-- HEAP BUFFER -->
+              <rect class="svg-box active" x="280" y="60" width="180" height="110"/>
+              <text class="svg-text" x="370" y="85">HEAP MEMORY</text>
+              <rect x="295" y="105" width="150" height="35" rx="3" fill="#161b22" stroke="#3fb950"/>
+              <text class="svg-text" x="370" y="125" style="font-size:11px;">"payload\0"</text>
+
+              <!-- FLECHAS DE PROPIEDAD -->
+              <line class="svg-path flowing" x1="170" y1="95" x2="280" y2="120" stroke="#58a6ff"/>
+              
+            </svg>
+          <span class="sr-only" style="display:none">[RUSTC] Instanciado heap buffer para &#x27;buffer_owner&#x27; con puntero único.</span></div><div class="phase phase-25-2">
+            <svg class="diagram-svg-root" class="visual-svg" viewBox="0 0 540 260">
+              <!-- STACK FRAME -->
+              <rect class="svg-box active" x="20" y="30" width="160" height="200"/>
+              <text class="svg-text" x="100" y="55">STACK (main)</text>
+
+              <rect x="30" y="75" width="140" height="40" rx="4" fill="#161b22" stroke="#58a6ff"/>
+              <text class="svg-text" x="100" y="95" style="font-size:10px;"><tspan data-field="ownervar">buffer_owner</tspan></text>
+              <text class="svg-subtext" x="100" y="108">OWNER [ptr, cap, len]</text>
+
+              <rect x="30" y="130" width="140" height="40" rx="4" fill="#161b22" stroke="#bc8cff"/>
+              <text class="svg-text" x="100" y="150" style="font-size:10px;">&amp;<tspan data-field="borrowref">borrowed_view</tspan></text>
+              <text class="svg-subtext" x="100" y="163">Lifetime: <tspan data-field="ltname">'scope_a</tspan></text>
+
+              <!-- HEAP BUFFER -->
+              <rect class="svg-box active" x="280" y="60" width="180" height="110"/>
+              <text class="svg-text" x="370" y="85">HEAP MEMORY</text>
+              <rect x="295" y="105" width="150" height="35" rx="3" fill="#161b22" stroke="#3fb950"/>
+              <text class="svg-text" x="370" y="125" style="font-size:11px;">"payload\0"</text>
+
+              <!-- FLECHAS DE PROPIEDAD -->
+              <line class="svg-path flowing" x1="170" y1="95" x2="280" y2="120" stroke="#58a6ff"/>
+              <path d="M 170 150 Q 230 150 280 130" fill="none" stroke="#bc8cff" stroke-width="1.5" stroke-dasharray="3 3"/>
+            </svg>
+          <span class="sr-only" style="display:none">[BORROW_CHECKER] Préstamo compartido emitido a &#x27;&amp;borrowed_view&#x27; bajo &#x27;&#x27;scope_a&#x27;. Mutaciones bloqueadas.</span></div><div class="phase phase-25-3">
+            <svg class="diagram-svg-root" class="visual-svg" viewBox="0 0 540 260">
+              <!-- STACK FRAME -->
+              <rect class="svg-box active" x="20" y="30" width="160" height="200"/>
+              <text class="svg-text" x="100" y="55">STACK (main)</text>
+
+              <rect x="30" y="75" width="140" height="40" rx="4" fill="#161b22" stroke="#58a6ff"/>
+              <text class="svg-text" x="100" y="95" style="font-size:10px;"><tspan data-field="ownervar">buffer_owner</tspan></text>
+              <text class="svg-subtext" x="100" y="108">OWNER [ptr, cap, len]</text>
+
+              <rect x="30" y="130" width="140" height="40" rx="4" fill="#161b22" stroke="#bc8cff"/>
+              <text class="svg-text" x="100" y="150" style="font-size:10px;">&amp;<tspan data-field="borrowref">borrowed_view</tspan></text>
+              <text class="svg-subtext" x="100" y="163">Lifetime: <tspan data-field="ltname">'scope_a</tspan></text>
+
+              <!-- HEAP BUFFER -->
+              <rect class="svg-box active" x="280" y="60" width="180" height="110"/>
+              <text class="svg-text" x="370" y="85">HEAP MEMORY</text>
+              <rect x="295" y="105" width="150" height="35" rx="3" fill="#161b22" stroke="#3fb950"/>
+              <text class="svg-text" x="370" y="125" style="font-size:11px;">"payload\0"</text>
+
+              <!-- FLECHAS DE PROPIEDAD -->
+              <line class="svg-path flowing" x1="170" y1="95" x2="280" y2="120" stroke="#58a6ff"/>
+              <path d="M 170 150 Q 230 150 280 130" fill="none" stroke="#bc8cff" stroke-width="1.5" stroke-dasharray="3 3"/>
+            </svg>
+          <span class="sr-only" style="display:none">[BORROW_CHECKER] Ámbito &#x27;scope_a finalizado. Préstamo liberado de manera segura.</span></div><div class="phase phase-25-4">
+            <svg class="diagram-svg-root" class="visual-svg" viewBox="0 0 540 260">
+              <!-- STACK FRAME -->
+              <rect class="svg-box active" x="20" y="30" width="160" height="200"/>
+              <text class="svg-text" x="100" y="55">STACK (main)</text>
+
+              <rect x="30" y="75" width="140" height="40" rx="4" fill="#161b22" stroke="#484f58"/>
+              <text class="svg-text" x="100" y="95" style="font-size:10px;"><tspan data-field="ownervar">buffer_owner</tspan></text>
+              <text class="svg-subtext" x="100" y="108">MOVED (Inválido)</text>
+
+              <rect x="30" y="130" width="140" height="40" rx="4" fill="#161b22" stroke="#30363d"/>
+              <text class="svg-text" x="100" y="150" style="font-size:10px;">&amp;<tspan data-field="borrowref">borrowed_view</tspan></text>
+              <text class="svg-subtext" x="100" y="163">Lifetime: <tspan data-field="ltname">'scope_a</tspan></text>
+
+              <!-- HEAP BUFFER -->
+              <rect class="svg-box warning" x="280" y="60" width="180" height="110"/>
+              <text class="svg-text" x="370" y="85">HEAP MEMORY</text>
+              <rect x="295" y="105" width="150" height="35" rx="3" fill="#161b22" stroke="#3fb950"/>
+              <text class="svg-text" x="370" y="125" style="font-size:11px;">"payload\0"</text>
+
+              <!-- FLECHAS DE PROPIEDAD -->
+              <line class="svg-path " x1="170" y1="95" x2="280" y2="120" stroke="#58a6ff"/>
+              
+            </svg>
+          <span class="sr-only" style="display:none">[RUSTC] Ownership de &#x27;buffer_owner&#x27; movido. Lecturas posteriores a &#x27;buffer_owner&#x27; dispararían E0382.</span></div></div></div><div class="source-card"><div class="pane-title"><span>CÓDIGO / INSPECTOR</span><span data-field="file">borrow_checker.rs</span></div><div class="code-scroll"><div class="code-line"><span class="ln">01</span><span class="ct"><span class="kw">fn</span> main() {</span></div><div class="code-line"><span class="ln">02</span><span class="ct">    <span class="kw">let</span> <span class="vr editable" data-key="ownerVar"><span data-field="ownervar">buffer_owner</span></span> = String::from(<span class="st">"payload"</span>);</span></div><div class="code-line"><span class="ln">03</span><span class="ct">    {</span></div><div class="code-line"><span class="ln">04</span><span class="ct">        <span class="cm">// Préstamo inmutable con lifetime <span data-field="ltname">'scope_a</span></span></span></div><div class="code-line"><span class="ln">05</span><span class="ct">        <span class="kw">let</span> <span class="vr editable" data-key="borrowRef"><span data-field="borrowref">borrowed_view</span></span>: &amp;<span class="tp">String</span> = &amp;<span class="vr editable" data-key="ownerVar"><span data-field="ownervar">buffer_owner</span></span>;</span></div><div class="code-line"><span class="ln">06</span><span class="ct">        println!(<span class="st">"Lectura: {}"</span>, <span class="vr editable" data-key="borrowRef"><span data-field="borrowref">borrowed_view</span></span>);</span></div><div class="code-line"><span class="ln">07</span><span class="ct">    } <span class="cm">// <span data-field="borrowref">borrowed_view</span> sale de ámbito aquí</span></span></div><div class="code-line"><span class="ln">08</span><span class="ct">    <span class="kw">let</span> moved_val = <span class="vr editable" data-key="ownerVar"><span data-field="ownervar">buffer_owner</span></span>; <span class="cm">// Transferencia de Ownership</span></span></div><div class="code-line"><span class="ln">09</span><span class="ct">}</span></div></div><div class="code-more"></div></div></div><div class="execution-bar"><div class="log-stage" style="position:relative;height:100%;flex:1;overflow:hidden"><span class="log phase log-25-0">[RUSTC] Instanciado heap buffer para &#x27;buffer_owner&#x27; con puntero único.</span><span class="log phase log-25-1">[RUSTC] Instanciado heap buffer para &#x27;buffer_owner&#x27; con puntero único.</span><span class="log phase log-25-2">[BORROW_CHECKER] Préstamo compartido emitido a &#x27;&amp;borrowed_view&#x27; bajo &#x27;&#x27;scope_a&#x27;. Mutaciones bloqueadas.</span><span class="log phase log-25-3">[BORROW_CHECKER] Ámbito &#x27;scope_a finalizado. Préstamo liberado de manera segura.</span><span class="log phase log-25-4">[RUSTC] Ownership de &#x27;buffer_owner&#x27; movido. Lecturas posteriores a &#x27;buffer_owner&#x27; dispararían E0382.</span></div><span class="execution-tag">DEMO · 4s</span></div></section></main><footer>SVG / HTML PURO · {DURATION}s</footer></body></html>

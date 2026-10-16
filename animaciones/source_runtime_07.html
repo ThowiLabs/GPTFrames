@@ -1,0 +1,1687 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Algorithmic Runtime Engine // Dev Lab</title>
+<style>
+  :root {
+    --bg-base: #0d1117;
+    --bg-surface: #161b22;
+    --bg-card: #21262d;
+    --bg-overlay: #1f242c;
+    --border-color: #30363d;
+    --border-bright: #484f58;
+    --text-main: #e6edf3;
+    --text-muted: #8b949e;
+    --text-dim: #6e7681;
+    --accent-blue: #58a6ff;
+    --accent-cyan: #39c5cf;
+    --accent-green: #3fb950;
+    --accent-yellow: #d29922;
+    --accent-red: #f85149;
+    --accent-purple: #bc8cff;
+    --accent-orange: #f0883e;
+    
+    --tok-kw: #ff7b72;
+    --tok-fn: #d2a8ff;
+    --tok-str: #a5d6ff;
+    --tok-num: #79c0ff;
+    --tok-op: #7ee787;
+    --tok-cmt: #8b949e;
+
+    --font-ui: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    --font-code: "SF Mono", Consolas, "JetBrains Mono", "Liberation Mono", Menlo, Courier, monospace;
+  }
+
+  * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  body {
+    background-color: var(--bg-base);
+    color: var(--text-main);
+    font-family: var(--font-ui);
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    user-select: none;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* Header Bar */
+  header {
+    background: var(--bg-surface);
+    border-bottom: 1px solid var(--border-color);
+    padding: 0 16px;
+    height: 48px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    flex-shrink: 0;
+  }
+
+  .brand {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-family: var(--font-code);
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    color: var(--text-main);
+  }
+
+  .brand-badge {
+    background: rgba(88, 166, 255, 0.15);
+    color: var(--accent-blue);
+    padding: 2px 6px;
+    border-radius: 4px;
+    border: 1px solid rgba(88, 166, 255, 0.3);
+    font-size: 11px;
+  }
+
+  .nav-tabs {
+    display: flex;
+    gap: 4px;
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+  .nav-tabs::-webkit-scrollbar { display: none; }
+
+  .tab-btn {
+    background: transparent;
+    border: 1px solid transparent;
+    color: var(--text-muted);
+    font-family: var(--font-code);
+    font-size: 12px;
+    padding: 6px 10px;
+    border-radius: 4px;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: all 0.15s ease;
+  }
+
+  .tab-btn:hover {
+    color: var(--text-main);
+    background: var(--bg-card);
+  }
+
+  .tab-btn.active {
+    color: var(--accent-blue);
+    background: var(--bg-overlay);
+    border-color: var(--border-color);
+    border-bottom-color: var(--accent-blue);
+  }
+
+  .header-actions {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .btn {
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    color: var(--text-main);
+    font-family: var(--font-code);
+    font-size: 11px;
+    padding: 5px 10px;
+    border-radius: 4px;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    transition: all 0.15s ease;
+  }
+
+  .btn:hover {
+    background: var(--border-color);
+    border-color: var(--border-bright);
+  }
+
+  .btn-primary {
+    background: rgba(63, 185, 80, 0.15);
+    border-color: rgba(63, 185, 80, 0.4);
+    color: var(--accent-green);
+  }
+  .btn-primary:hover {
+    background: rgba(63, 185, 80, 0.25);
+    border-color: var(--accent-green);
+  }
+
+  /* Control Timeline Bar */
+  .control-strip {
+    background: var(--bg-surface);
+    border-bottom: 1px solid var(--border-color);
+    padding: 6px 16px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    font-size: 12px;
+    font-family: var(--font-code);
+    flex-shrink: 0;
+  }
+
+  .timeline-slider-wrap {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex: 1;
+    max-width: 450px;
+  }
+
+  input[type="range"] {
+    flex: 1;
+    accent-color: var(--accent-blue);
+    cursor: pointer;
+    background: var(--bg-card);
+    height: 4px;
+  }
+
+  .step-counter {
+    color: var(--text-muted);
+    min-width: 80px;
+  }
+
+  .phase-pill {
+    padding: 2px 8px;
+    border-radius: 12px;
+    font-size: 10px;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    font-weight: 600;
+  }
+  .phase-idle { background: #30363d; color: var(--text-muted); }
+  .phase-running { background: rgba(210, 153, 34, 0.2); color: var(--accent-yellow); border: 1px solid var(--accent-yellow); }
+  .phase-done { background: rgba(63, 185, 80, 0.2); color: var(--accent-green); border: 1px solid var(--accent-green); }
+
+  /* App Views */
+  .main-viewport {
+    flex: 1;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .view-container {
+    width: 100%;
+    height: 100%;
+    display: none;
+  }
+  .view-container.active {
+    display: flex;
+  }
+
+  /* Gallery Grid View */
+  .gallery-grid {
+    width: 100%;
+    height: 100%;
+    overflow-y: auto;
+    padding: 24px;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 16px;
+    background: var(--bg-base);
+  }
+
+  .module-card {
+    background: var(--bg-surface);
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    padding: 16px;
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    transition: all 0.2s ease;
+  }
+
+  .module-card:hover {
+    border-color: var(--accent-blue);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  }
+
+  .card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+  }
+
+  .card-num {
+    font-family: var(--font-code);
+    font-size: 11px;
+    color: var(--accent-blue);
+    font-weight: 700;
+  }
+
+  .card-title {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text-main);
+    margin-bottom: 6px;
+  }
+
+  .card-desc {
+    font-size: 12px;
+    color: var(--text-muted);
+    line-height: 1.4;
+    margin-bottom: 12px;
+    flex: 1;
+  }
+
+  .card-preview {
+    background: var(--bg-base);
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    height: 80px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: var(--font-code);
+    font-size: 11px;
+    color: var(--text-dim);
+    overflow: hidden;
+  }
+
+  /* Studio Workspace View */
+  .studio-layout {
+    width: 100%;
+    height: 100%;
+    display: grid;
+    grid-template-columns: 360px 1fr;
+    grid-template-rows: 1fr 140px;
+  }
+
+  .left-pane {
+    grid-row: 1 / 3;
+    background: var(--bg-surface);
+    border-right: 1px solid var(--border-color);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
+
+  .center-stage {
+    grid-column: 2;
+    grid-row: 1;
+    background: var(--bg-base);
+    padding: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    position: relative;
+  }
+
+  .bottom-log {
+    grid-column: 2;
+    grid-row: 2;
+    background: var(--bg-surface);
+    border-top: 1px solid var(--border-color);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
+
+  .pane-title {
+    padding: 8px 12px;
+    background: var(--bg-card);
+    font-size: 11px;
+    font-family: var(--font-code);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: var(--text-muted);
+    border-bottom: 1px solid var(--border-color);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .pane-content {
+    padding: 12px;
+    overflow-y: auto;
+    flex: 1;
+  }
+
+  /* Code Editor Pane */
+  .editor-wrapper {
+    background: #0d1117;
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    font-family: var(--font-code);
+    font-size: 12px;
+    line-height: 1.6;
+    overflow: hidden;
+    margin-bottom: 12px;
+  }
+
+  .code-line {
+    display: flex;
+    padding: 0 8px;
+    white-space: pre;
+    position: relative;
+  }
+  .code-line.active-line {
+    background: rgba(210, 153, 34, 0.15);
+  }
+  .code-line.breakpoint::before {
+    content: "";
+    position: absolute;
+    left: 4px;
+    top: 6px;
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: var(--accent-red);
+  }
+
+  .line-num {
+    width: 28px;
+    color: var(--text-dim);
+    text-align: right;
+    padding-right: 12px;
+    user-select: none;
+  }
+
+  .line-text {
+    flex: 1;
+    color: var(--text-main);
+  }
+
+  /* Editable fields */
+  .config-group {
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    padding: 10px;
+    margin-bottom: 12px;
+  }
+
+  .config-title {
+    font-size: 11px;
+    font-family: var(--font-code);
+    color: var(--text-muted);
+    margin-bottom: 8px;
+    text-transform: uppercase;
+  }
+
+  .config-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 6px;
+    font-size: 12px;
+    font-family: var(--font-code);
+  }
+  .config-row:last-child { margin-bottom: 0; }
+
+  .config-input {
+    background: var(--bg-base);
+    border: 1px solid var(--border-color);
+    border-radius: 3px;
+    color: var(--accent-cyan);
+    font-family: var(--font-code);
+    font-size: 11px;
+    padding: 3px 6px;
+    width: 140px;
+  }
+  .config-input:focus {
+    outline: none;
+    border-color: var(--accent-blue);
+  }
+
+  /* SVG Graphics & Visual Elements */
+  svg.diagram-stage {
+    width: 100%;
+    height: 100%;
+    max-width: 820px;
+    max-height: 520px;
+  }
+
+  .node-box {
+    stroke: var(--border-color);
+    stroke-width: 1.5;
+    fill: var(--bg-surface);
+    transition: all 0.2s ease;
+  }
+  .node-box.highlight {
+    stroke: var(--accent-blue);
+    fill: var(--bg-card);
+  }
+  .node-box.active {
+    stroke: var(--accent-yellow);
+    fill: rgba(210, 153, 34, 0.1);
+  }
+  .node-box.success {
+    stroke: var(--accent-green);
+    fill: rgba(63, 185, 80, 0.1);
+  }
+  .node-box.error {
+    stroke: var(--accent-red);
+    fill: rgba(248, 81, 73, 0.1);
+  }
+
+  .node-text {
+    fill: var(--text-main);
+    font-family: var(--font-code);
+    font-size: 11px;
+    dominant-baseline: central;
+  }
+  .node-subtext {
+    fill: var(--text-muted);
+    font-family: var(--font-code);
+    font-size: 9.5px;
+    dominant-baseline: central;
+  }
+
+  .conn-line {
+    stroke: var(--border-bright);
+    stroke-width: 1.5;
+    fill: none;
+  }
+  .conn-line.active {
+    stroke: var(--accent-blue);
+    stroke-width: 2;
+    stroke-dasharray: 4;
+    animation: dash 1s linear infinite;
+  }
+  .conn-line.error {
+    stroke: var(--accent-red);
+  }
+
+  @keyframes dash {
+    to { stroke-dashoffset: -8; }
+  }
+
+  /* Console Output Log */
+  .log-stream {
+    padding: 8px 12px;
+    font-family: var(--font-code);
+    font-size: 11.5px;
+    line-height: 1.5;
+    overflow-y: auto;
+    flex: 1;
+  }
+  .log-line {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 2px;
+  }
+  .log-ts { color: var(--text-dim); }
+  .log-info { color: var(--text-muted); }
+  .log-eval { color: var(--accent-green); }
+  .log-warn { color: var(--accent-yellow); }
+  .log-err { color: var(--accent-red); }
+
+  /* Token syntax highlights */
+  .tok-kw { color: var(--tok-kw); font-weight: 600; }
+  .tok-fn { color: var(--tok-fn); }
+  .tok-str { color: var(--tok-str); }
+  .tok-num { color: var(--tok-num); }
+  .tok-op { color: var(--tok-op); }
+  .tok-cmt { color: var(--tok-cmt); font-style: italic; }
+</style>
+</head>
+<body>
+
+<!-- Header Navigation -->
+<header>
+  <div class="brand">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <polyline points="16 18 22 12 16 6"></polyline>
+      <polyline points="8 6 2 12 8 18"></polyline>
+    </svg>
+    <span>DEV ENGINE // RUNTIME LAB</span>
+    <span class="brand-badge">v2.6-NATIVE</span>
+  </div>
+
+  <nav class="nav-tabs" id="moduleNavTabs">
+    <!-- Populated by JS -->
+  </nav>
+
+  <div class="header-actions">
+    <button class="btn" id="btnToggleGallery">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <rect x="3" y="3" width="7" height="7"></rect>
+        <rect x="14" y="3" width="7" height="7"></rect>
+        <rect x="14" y="14" width="7" height="7"></rect>
+        <rect x="3" y="14" width="7" height="7"></rect>
+      </svg>
+      <span>Galería</span>
+    </button>
+  </div>
+</header>
+
+<!-- Timeline / Control Strip (Chromium frame-by-frame ready) -->
+<div class="control-strip">
+  <button class="btn" id="btnStepPrev" title="Paso anterior">Anterior</button>
+  <button class="btn btn-primary" id="btnPlayPause">Reproducir</button>
+  <button class="btn" id="btnStepNext" title="Siguiente paso">Siguiente</button>
+  <button class="btn" id="btnReset" title="Reiniciar animación">Reiniciar</button>
+
+  <div class="timeline-slider-wrap">
+    <input type="range" id="frameScrubber" min="0" max="10" value="0">
+    <span class="step-counter" id="stepCounterDisplay">0 / 0</span>
+  </div>
+
+  <span class="phase-pill phase-idle" id="phaseStatusBadge">IDLE</span>
+</div>
+
+<!-- Main Viewports -->
+<main class="main-viewport">
+  <!-- View 1: Gallery -->
+  <div class="view-container" id="galleryView">
+    <div class="gallery-grid" id="galleryGridContainer">
+      <!-- 10 numbered module cards built here -->
+    </div>
+  </div>
+
+  <!-- View 2: Studio / Workspace -->
+  <div class="view-container active" id="studioView">
+    <div class="studio-layout">
+      <!-- Left Config / Editor Pane -->
+      <aside class="left-pane">
+        <div class="pane-title">
+          <span>Fuente y Configuración</span>
+          <button class="btn" id="btnApplyCustom" style="padding: 2px 6px; font-size: 10px;">Aplicar</button>
+        </div>
+        <div class="pane-content">
+          <div class="editor-wrapper" id="sourceCodeViewer">
+            <!-- Source lines rendered dynamically -->
+          </div>
+
+          <div class="config-group" id="dynamicConfigGroup">
+            <!-- Dynamic parameters per module -->
+          </div>
+
+          <div class="config-group" style="margin-bottom:0;">
+            <div class="config-title">Estado del Entorno</div>
+            <div id="inspectorScopeContent" style="font-family: var(--font-code); font-size: 11px; color: var(--text-muted);">
+              Listo para inicializar.
+            </div>
+          </div>
+        </div>
+      </aside>
+
+      <!-- Center SVG Canvas -->
+      <section class="center-stage" id="stageContainer">
+        <svg class="diagram-stage" id="svgStage" viewBox="0 0 800 480">
+          <defs>
+            <marker id="arrow" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+              <path d="M 0 1 L 8 5 L 0 9 z" fill="var(--border-bright)" />
+            </marker>
+            <marker id="arrow-active" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+              <path d="M 0 1 L 8 5 L 0 9 z" fill="var(--accent-blue)" />
+            </marker>
+            <marker id="arrow-error" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+              <path d="M 0 1 L 8 5 L 0 9 z" fill="var(--accent-red)" />
+            </marker>
+          </defs>
+          <g id="svgDynamicLayer"></g>
+        </svg>
+      </section>
+
+      <!-- Bottom Execution Log -->
+      <footer class="bottom-log">
+        <div class="pane-title">
+          <span>Consola del Runtime & Traza de Ejecución</span>
+          <span id="instructionPointerBadge" style="color: var(--accent-yellow)">IP: 0x0000</span>
+        </div>
+        <div class="log-stream" id="runtimeLogOutput">
+          <!-- Logs emitted per step -->
+        </div>
+      </footer>
+    </div>
+  </div>
+</main>
+
+<script>
+/**
+ * DEV ENGINE // RUNTIME LAB
+ * 10 Educational Programming Animations in Vanilla JS / SVG
+ * Chromium Deterministic Frame-by-Frame Compatible API: window.ANIMATION_CONTROLLER
+ */
+
+const MODULES = [
+  {
+    id: "01",
+    name: "Editor y Tokens",
+    category: "Léxico",
+    desc: "Escritura progresiva del búfer de texto, detección de tokens léxicos y resaltado sintáctico en vivo.",
+    codeTemplate: (cfg) => [
+      `function ${cfg.fnName}(${cfg.p1}, ${cfg.p2}) {`,
+      `  const ${cfg.localVar} = ${cfg.p1} * ${cfg.multiplier};`,
+      `  return ${cfg.localVar} + ${cfg.p2};`,
+      `}`
+    ],
+    defaultConfig: { fnName: "calcularTotal", p1: "cantidad", p2: "tasa", localVar: "subtotal", multiplier: "1.16" },
+    configFields: [
+      { key: "fnName", label: "Función" },
+      { key: "p1", label: "Parámetro 1" },
+      { key: "p2", label: "Parámetro 2" },
+      { key: "localVar", label: "Variable" },
+      { key: "multiplier", label: "Multiplicador" }
+    ],
+    stepsCount: 6,
+    renderStep: (step, cfg, svg, log) => {
+      // 0: Init, 1: Lexing Function, 2: Params, 3: Local Var, 4: Computation, 5: Return Done
+      svg.innerHTML = `
+        <rect x="40" y="40" width="720" height="400" rx="6" fill="#161b22" stroke="#30363d" />
+        <text x="60" y="70" class="node-text" fill="#8b949e">TOKEN STREAM // LEXICAL ANALYZER</text>
+        <line x1="40" y1="90" x2="760" y2="90" stroke="#30363d" />
+      `;
+
+      const tokens = [
+        { type: "KEYWORD", val: "function", x: 60, y: 120, w: 100 },
+        { type: "IDENT", val: cfg.fnName, x: 170, y: 120, w: 140 },
+        { type: "PUNCT", val: "(", x: 320, y: 120, w: 30 },
+        { type: "PARAM", val: cfg.p1, x: 360, y: 120, w: 90 },
+        { type: "PARAM", val: cfg.p2, x: 460, y: 120, w: 80 },
+        { type: "PUNCT", val: ")", x: 550, y: 120, w: 30 },
+        { type: "KEYWORD", val: "const", x: 80, y: 180, w: 70 },
+        { type: "IDENT", val: cfg.localVar, x: 160, y: 180, w: 100 },
+        { type: "OP", val: "=", x: 270, y: 180, w: 30 },
+        { type: "IDENT", val: cfg.p1, x: 310, y: 180, w: 90 },
+        { type: "OP", val: "*", x: 410, y: 180, w: 30 },
+        { type: "NUM", val: cfg.multiplier, x: 450, y: 180, w: 70 },
+        { type: "KEYWORD", val: "return", x: 80, y: 240, w: 80 },
+        { type: "IDENT", val: cfg.localVar, x: 170, y: 240, w: 90 },
+        { type: "OP", val: "+", x: 270, y: 240, w: 30 },
+        { type: "IDENT", val: cfg.p2, x: 310, y: 240, w: 80 }
+      ];
+
+      const visibleCount = Math.min(tokens.length, step * 3);
+      for (let i = 0; i < visibleCount; i++) {
+        const t = tokens[i];
+        const isLatest = i >= visibleCount - 3;
+        svg.innerHTML += `
+          <g>
+            <rect x="${t.x}" y="${t.y}" width="${t.w}" height="32" rx="4" class="node-box ${isLatest ? 'active' : 'highlight'}" />
+            <text x="${t.x + 8}" y="${t.y + 16}" class="node-text">${t.val}</text>
+            <text x="${t.x + t.w - 8}" y="${t.y + 16}" text-anchor="end" class="node-subtext" fill="#6e7681">${t.type}</text>
+          </g>
+        `;
+      }
+
+      // Cursor indicator
+      if (visibleCount > 0 && visibleCount < tokens.length) {
+        const lastT = tokens[visibleCount - 1];
+        svg.innerHTML += `
+          <line x1="${lastT.x + lastT.w + 6}" y1="${lastT.y}" x2="${lastT.x + lastT.w + 6}" y2="${lastT.y + 32}" stroke="#58a6ff" stroke-width="2" />
+        `;
+      }
+
+      log([
+        `Paso ${step}/5: Analizador Léxico escaneando caracteres fuente.`,
+        visibleCount > 0 ? `Tokenizado: ${tokens.slice(0, visibleCount).map(t => t.type + '(' + t.val + ')').join(' ')}` : "Búfer en espera de entrada."
+      ]);
+      return { activeLine: Math.min(step, 3), ip: `0x00${step}A` };
+    }
+  },
+  {
+    id: "02",
+    name: "Pipeline de Compilación",
+    category: "Compilador",
+    desc: "Transformación estricta de Código Fuente → Tokens → AST → Código Intermedio (IR) → Binario.",
+    codeTemplate: (cfg) => [
+      `// Compilación AOT`,
+      `int ${cfg.fnName}(int ${cfg.arg}) {`,
+      `  return ${cfg.arg} * 4 + ${cfg.offset};`,
+      `}`
+    ],
+    defaultConfig: { fnName: "procesar", arg: "val", offset: "10" },
+    configFields: [
+      { key: "fnName", label: "Función" },
+      { key: "arg", label: "Argumento" },
+      { key: "offset", label: "Offset" }
+    ],
+    stepsCount: 5,
+    renderStep: (step, cfg, svg, log) => {
+      const stages = [
+        { name: "Fuente", sub: `${cfg.fnName}(${cfg.arg})`, x: 50 },
+        { name: "Lexer", sub: "Stream de Tokens", x: 190 },
+        { name: "Parser", sub: "Árbol AST", x: 330 },
+        { name: "IR / TAC", sub: "Optimización", x: 470 },
+        { name: "Binario", sub: "ELF / Machine Code", x: 610 }
+      ];
+
+      let svgContent = `<rect x="20" y="20" width="760" height="440" rx="6" fill="#161b22" stroke="#30363d" />`;
+
+      // Draw connector arrows
+      for (let i = 0; i < stages.length - 1; i++) {
+        const act = i < step;
+        svgContent += `
+          <line x1="${stages[i].x + 120}" y1="120" x2="${stages[i+1].x}" y2="120"
+                class="conn-line ${act ? 'active' : ''}" marker-end="url(#${act ? 'arrow-active' : 'arrow'})" />
+        `;
+      }
+
+      // Draw stage boxes
+      stages.forEach((s, idx) => {
+        let cls = "node-box";
+        if (idx === step) cls += " active";
+        else if (idx < step) cls += " success";
+        svgContent += `
+          <g>
+            <rect x="${s.x}" y="90" width="120" height="60" rx="4" class="${cls}" />
+            <text x="${s.x + 60}" y="112" text-anchor="middle" class="node-text" font-weight="600">${s.name}</text>
+            <text x="${s.x + 60}" y="132" text-anchor="middle" class="node-subtext">${s.sub}</text>
+          </g>
+        `;
+      });
+
+      // Bottom dynamic inspect details
+      svgContent += `<rect x="50" y="190" width="700" height="230" rx="4" fill="#0d1117" stroke="#30363d" />`;
+      if (step === 0) {
+        svgContent += `<text x="70" y="230" class="node-text" fill="#58a6ff">// CÓDIGO FUENTE LISTO PARA ANÁLISIS</text>
+                       <text x="70" y="260" class="node-text">int ${cfg.fnName}(int ${cfg.arg}) { return ${cfg.arg} * 4 + ${cfg.offset}; }</text>`;
+      } else if (step === 1) {
+        svgContent += `<text x="70" y="230" class="node-text" fill="#58a6ff">// TOKENS GENERADOS</text>
+                       <text x="70" y="260" class="node-text">[TYPE:int] [IDENT:${cfg.fnName}] [LPAREN] [TYPE:int] [IDENT:${cfg.arg}] [RPAREN] ...</text>`;
+      } else if (step === 2) {
+        svgContent += `<text x="70" y="230" class="node-text" fill="#58a6ff">// ÁRBOL DE SINTAXIS ABSTRACTA (AST)</text>
+                       <text x="70" y="260" class="node-text">FunctionDeclaration[${cfg.fnName}] ── ReturnStatement ── BinaryExpr(+) </text>
+                       <text x="70" y="285" class="node-text">                                      ├── BinaryExpr(*) ── [${cfg.arg}, 4]</text>
+                       <text x="70" y="310" class="node-text">                                      └── Literal[${cfg.offset}]</text>`;
+      } else if (step === 3) {
+        svgContent += `<text x="70" y="230" class="node-text" fill="#58a6ff">// THREE-ADDRESS CODE (IR)</text>
+                       <text x="70" y="260" class="node-text">t0 = ${cfg.arg} * 4</text>
+                       <text x="70" y="285" class="node-text">t1 = t0 + ${cfg.offset}</text>
+                       <text x="70" y="310" class="node-text">return t1</text>`;
+      } else if (step === 4) {
+        svgContent += `<text x="70" y="230" class="node-text" fill="#3fb950">// OBJETO BINARIO NATIVO / OPCODES</text>
+                       <text x="70" y="260" class="node-text">00000000: 55 48 89 e5 89 7d fc 8b 45 fc c1 e0 02 83 c0</text>
+                       <text x="70" y="285" class="node-text">00000010: ${parseInt(cfg.offset).toString(16).padStart(2,'0')} 5d c3  [ELF 64-bit LSB executable, x86-64]</text>`;
+      }
+
+      svg.innerHTML = svgContent;
+      log([
+        `Fase Compilador: ${stages[step].name} (${step + 1}/5).`,
+        `Generación y validación de artefactos de compilación formal completada.`
+      ]);
+      return { activeLine: 1, ip: `0x0F0${step}` };
+    }
+  },
+  {
+    id: "03",
+    name: "Intérprete Línea por Línea",
+    category: "Intérprete",
+    desc: "Evaluación dinámica inmediata de sentencias con actualización continua del entorno de variables.",
+    codeTemplate: (cfg) => [
+      `let ${cfg.v1} = ${cfg.val1};`,
+      `let ${cfg.v2} = ${cfg.val2};`,
+      `let ${cfg.v3} = ${cfg.v1} + ${cfg.v2};`,
+      `console.log(${cfg.v3});`
+    ],
+    defaultConfig: { v1: "precio", val1: "80", v2: "recargo", val2: "20", v3: "total" },
+    configFields: [
+      { key: "v1", label: "Variable 1" },
+      { key: "val1", label: "Valor 1" },
+      { key: "v2", label: "Variable 2" },
+      { key: "val2", label: "Valor 2" },
+      { key: "v3", label: "Variable Destino" }
+    ],
+    stepsCount: 5,
+    renderStep: (step, cfg, svg, log) => {
+      let v1Val = step >= 1 ? cfg.val1 : "-";
+      let v2Val = step >= 2 ? cfg.val2 : "-";
+      let v3Val = step >= 3 ? (Number(cfg.val1) + Number(cfg.val2)) : "-";
+      let outVal = step >= 4 ? `${v3Val}` : "";
+
+      svg.innerHTML = `
+        <rect x="30" y="30" width="740" height="420" rx="6" fill="#161b22" stroke="#30363d" />
+        <text x="50" y="60" class="node-text" fill="#8b949e">ENTORNO DE EJECUCIÓN (EVALUADOR DINÁMICO)</text>
+        
+        <!-- Environment Scope Table -->
+        <rect x="50" y="80" width="340" height="220" rx="4" fill="#0d1117" stroke="#30363d" />
+        <text x="70" y="110" class="node-text" fill="#58a6ff">TABLA DE SÍMBOLOS</text>
+        <line x1="50" y1="125" x2="390" y2="125" stroke="#30363d" />
+
+        <text x="70" y="155" class="node-text">${cfg.v1}:</text>
+        <text x="260" y="155" class="node-text" fill="${step>=1 ? '#3fb950':'#6e7681'}">${v1Val}</text>
+
+        <text x="70" y="195" class="node-text">${cfg.v2}:</text>
+        <text x="260" y="195" class="node-text" fill="${step>=2 ? '#3fb950':'#6e7681'}">${v2Val}</text>
+
+        <text x="70" y="235" class="node-text">${cfg.v3}:</text>
+        <text x="260" y="235" class="node-text" fill="${step>=3 ? '#3fb950':'#6e7681'}">${v3Val}</text>
+
+        <!-- Stdout Terminal -->
+        <rect x="420" y="80" width="320" height="220" rx="4" fill="#0d1117" stroke="#30363d" />
+        <text x="440" y="110" class="node-text" fill="#d29922">TERMINAL STDOUT</text>
+        <line x1="420" y1="125" x2="740" y2="125" stroke="#30363d" />
+        <text x="440" y="160" class="node-text" fill="#a5d6ff">&gt; ${outVal}</text>
+
+        <!-- Direct Evaluation Pipeline -->
+        <rect x="50" y="325" width="690" height="95" rx="4" fill="#0d1117" stroke="#30363d" />
+        <text x="70" y="355" class="node-text" fill="#8b949e">MODO INTÉRPRETE: Sin generación de binario previo; traducción directa AST a CPU.</text>
+        <text x="70" y="385" class="node-text" fill="#58a6ff">Sentencia actual: [Línea ${step}] → ${step < 4 ? 'EVALUANDO' : 'COMPLETADO'}</text>
+      `;
+
+      log([
+        `Paso ${step}: Intérprete procesando instrucción ${step}.`,
+        step === 4 ? `Salida enviada a consola: ${v3Val}` : `Entorno actualizado: { ${cfg.v1}: ${v1Val}, ${cfg.v2}: ${v2Val}, ${cfg.v3}: ${v3Val} }`
+      ]);
+      return { activeLine: Math.min(step, 3), ip: `0x002${step}` };
+    }
+  },
+  {
+    id: "04",
+    name: "Debugger y Breakpoints",
+    category: "Depuración",
+    desc: "Control de flujo con puntos de interrupción, puntero de ejecución (PC) e inspección de variables locales.",
+    codeTemplate: (cfg) => [
+      `let ${cfg.counter} = 0;`,
+      `// [BP] Punto de quiebre`,
+      `${cfg.counter} += ${cfg.stepVal};`,
+      `${cfg.counter} *= 2;`,
+      `return ${cfg.counter};`
+    ],
+    defaultConfig: { counter: "indice", stepVal: "5" },
+    configFields: [
+      { key: "counter", label: "Variable" },
+      { key: "stepVal", label: "Incremento" }
+    ],
+    stepsCount: 5,
+    renderStep: (step, cfg, svg, log) => {
+      const vals = [
+        { val: 0, bp: false },
+        { val: 0, bp: true },
+        { val: Number(cfg.stepVal), bp: false },
+        { val: Number(cfg.stepVal) * 2, bp: false },
+        { val: Number(cfg.stepVal) * 2, bp: false }
+      ];
+
+      const current = vals[step];
+
+      svg.innerHTML = `
+        <rect x="30" y="30" width="740" height="420" rx="6" fill="#161b22" stroke="#30363d" />
+        <text x="50" y="65" class="node-text" fill="#8b949e">PANEL DE CONTROL DEL DEPURADOR // TRACE ENGINE</text>
+
+        <!-- CPU Registers -->
+        <rect x="50" y="90" width="690" height="80" rx="4" fill="#0d1117" stroke="#30363d" />
+        <text x="70" y="115" class="node-subtext" fill="#8b949e">REGISTROS</text>
+        <text x="70" y="145" class="node-text">RIP / PC: <tspan fill="#d29922">0x004010${step}A</tspan></text>
+        <text x="260" y="145" class="node-text">RSP: <tspan fill="#58a6ff">0x7FFE20B8</tspan></text>
+        <text x="440" y="145" class="node-text">FLAGS: <tspan fill="#3fb950">IF=1 ZF=${current.val === 0 ? 1 : 0}</tspan></text>
+
+        <!-- Variable Watch -->
+        <rect x="50" y="190" width="330" height="230" rx="4" fill="#0d1117" stroke="#30363d" />
+        <text x="70" y="220" class="node-text" fill="#58a6ff">VARIABLES EN VIGILANCIA</text>
+        <line x1="50" y1="235" x2="380" y2="235" stroke="#30363d" />
+        <text x="70" y="270" class="node-text">${cfg.counter} :</text>
+        <text x="250" y="270" class="node-text" fill="#3fb950">${current.val}</text>
+        <text x="70" y="310" class="node-text">tipo :</text>
+        <text x="250" y="310" class="node-text" fill="#79c0ff">int32</text>
+
+        <!-- Breakpoint status -->
+        <rect x="400" y="190" width="340" height="230" rx="4" fill="#0d1117" stroke="#30363d" />
+        <text x="420" y="220" class="node-text" fill="${step === 1 ? '#f85149' : '#8b949e'}">
+          ${step === 1 ? 'PAUSADO POR BREAKPOINT' : 'ESTADO DE EJECUCIÓN'}
+        </text>
+        <line x1="400" y1="235" x2="740" y2="235" stroke="#30363d" />
+        <circle cx="430" cy="270" r="6" fill="#f85149" />
+        <text x="450" y="273" class="node-text">Línea 2: Breakpoint ACTIVO</text>
+        <text x="420" y="320" class="node-subtext" fill="#8b949e">Presione "Siguiente" para Step Over (F10)</text>
+      `;
+
+      log([
+        `Paso ${step}: IP = 0x004010${step}A.`,
+        step === 1 ? `Detención obligatoria alcanzada en Breakpoint [Línea 2].` : `Paso simple ejecutado. Valor ${cfg.counter} = ${current.val}.`
+      ]);
+      return { activeLine: step, ip: `0x4010${step}A`, breakpointLine: 1 };
+    }
+  },
+  {
+    id: "05",
+    name: "Call Stack (Pila de Llamadas)",
+    category: "Arquitectura",
+    desc: "Inserción (push) y extracción (pop) de marcos de función (stack frames) con direcciones de retorno.",
+    codeTemplate: (cfg) => [
+      `function ${cfg.fn3}() { return 42; }`,
+      `function ${cfg.fn2}() { return ${cfg.fn3}(); }`,
+      `function ${cfg.fn1}() { return ${cfg.fn2}(); }`,
+      `${cfg.fn1}();`
+    ],
+    defaultConfig: { fn1: "alfa", fn2: "beta", fn3: "gamma" },
+    configFields: [
+      { key: "fn1", label: "Marco 1" },
+      { key: "fn2", label: "Marco 2" },
+      { key: "fn3", label: "Marco 3" }
+    ],
+    stepsCount: 7,
+    renderStep: (step, cfg, svg, log) => {
+      // Step 0: idle
+      // 1: push alfa
+      // 2: push beta
+      // 3: push gamma
+      // 4: pop gamma
+      // 5: pop beta
+      // 6: pop alfa (done)
+      const stackStates = [
+        [],
+        [{ name: cfg.fn1, ret: "0x0010 (global)", bp: "0x7FFE80" }],
+        [{ name: cfg.fn1, ret: "0x0010 (global)", bp: "0x7FFE80" }, { name: cfg.fn2, ret: "0x0032 (alfa)", bp: "0x7FFE50" }],
+        [{ name: cfg.fn1, ret: "0x0010 (global)", bp: "0x7FFE80" }, { name: cfg.fn2, ret: "0x0032 (alfa)", bp: "0x7FFE50" }, { name: cfg.fn3, ret: "0x0048 (beta)", bp: "0x7FFE20" }],
+        [{ name: cfg.fn1, ret: "0x0010 (global)", bp: "0x7FFE80" }, { name: cfg.fn2, ret: "0x0032 (alfa)", bp: "0x7FFE50" }],
+        [{ name: cfg.fn1, ret: "0x0010 (global)", bp: "0x7FFE80" }],
+        []
+      ];
+
+      const frames = stackStates[step];
+
+      let svgContent = `
+        <rect x="30" y="30" width="740" height="420" rx="6" fill="#161b22" stroke="#30363d" />
+        <text x="50" y="65" class="node-text" fill="#8b949e">ESTRUCTURA LIFO DEL CALL STACK // SP (STACK POINTER)</text>
+
+        <!-- Stack Column Container -->
+        <rect x="220" y="90" width="360" height="320" rx="4" fill="#0d1117" stroke="#30363d" />
+        <text x="240" y="115" class="node-subtext" fill="#6e7681">LÍMITE SUPERIOR DE MEMORIA (0x7FFFFFFF)</text>
+      `;
+
+      frames.forEach((f, idx) => {
+        const y = 330 - (idx * 75);
+        svgContent += `
+          <g>
+            <rect x="240" y="${y}" width="320" height="65" rx="4" class="node-box active" />
+            <text x="260" y="${y + 24}" class="node-text" font-weight="600">${f.name}() [FRAME]</text>
+            <text x="260" y="${y + 44}" class="node-subtext">Retorno: ${f.ret} | BasePtr: ${f.bp}</text>
+          </g>
+        `;
+      });
+
+      if (frames.length > 0) {
+        const spY = 330 - ((frames.length - 1) * 75) + 30;
+        svgContent += `
+          <g>
+            <line x1="140" y1="${spY}" x2="225" y2="${spY}" stroke="#58a6ff" stroke-width="2" marker-end="url(#arrow-active)" />
+            <text x="80" y="${spY + 4}" class="node-text" fill="#58a6ff">RSP →</text>
+          </g>
+        `;
+      }
+
+      svg.innerHTML = svgContent;
+      log([
+        `Paso ${step}: ${step <= 3 ? 'PUSH marco de función' : 'POP y retorno de valor'}.`,
+        frames.length > 0 ? `Marcos en pila: ${frames.map(f => f.name).join(' → ')}` : "Pila vacía. Ejecución concluida."
+      ]);
+      const lineMap = [3, 2, 1, 0, 1, 2, 3];
+      return { activeLine: lineMap[step], ip: `0x7FFE${step * 16}` };
+    }
+  },
+  {
+    id: "06",
+    name: "Recursividad y Desbobinado",
+    category: "Algoritmos",
+    desc: "Fases claras de expansión (winding) con llamadas anidadas y resolución/retorno (unwinding).",
+    codeTemplate: (cfg) => [
+      `function ${cfg.fnName}(n) {`,
+      `  if (n <= 1) return 1;`,
+      `  return n * ${cfg.fnName}(n - 1);`,
+      `}`,
+      `${cfg.fnName}(${cfg.depth});`
+    ],
+    defaultConfig: { fnName: "factorial", depth: "4" },
+    configFields: [
+      { key: "fnName", label: "Función" },
+      { key: "depth", label: "Profundidad N (max 5)" }
+    ],
+    stepsCount: 8,
+    renderStep: (step, cfg, svg, log) => {
+      const maxN = Math.min(Math.max(parseInt(cfg.depth) || 4, 2), 5);
+      // Steps:
+      // 0: Initial call
+      // 1..maxN-1: Winding descent
+      // maxN: Base case hit
+      // maxN+1..2*maxN-1: Unwinding ascent
+      let svgContent = `
+        <rect x="30" y="30" width="740" height="420" rx="6" fill="#161b22" stroke="#30363d" />
+        <text x="50" y="65" class="node-text" fill="#8b949e">ÁRBOL DE LLAMADAS RECURSIVAS // FASES EXPANSIVA Y RESOLUTIVA</text>
+      `;
+
+      const nodes = [];
+      for (let i = 0; i < maxN; i++) {
+        nodes.push({ n: maxN - i, x: 80 + i * 140, y: 120 + i * 50 });
+      }
+
+      // Draw downward winding arrows
+      for (let i = 0; i < nodes.length - 1; i++) {
+        const isReached = step > i;
+        svgContent += `
+          <line x1="${nodes[i].x + 50}" y1="${nodes[i].y + 40}" x2="${nodes[i+1].x + 50}" y2="${nodes[i+1].y}"
+                class="conn-line ${isReached ? 'active' : ''}" marker-end="url(#${isReached ? 'arrow-active' : 'arrow'})" />
+        `;
+      }
+
+      // Draw nodes
+      nodes.forEach((nd, idx) => {
+        const isBase = idx === nodes.length - 1;
+        const isReached = step >= idx;
+        const isUnwound = step >= (nodes.length + (nodes.length - 1 - idx));
+        let cls = "node-box";
+        if (isUnwound) cls += " success";
+        else if (isReached) cls += " active";
+
+        svgContent += `
+          <g>
+            <rect x="${nd.x}" y="${nd.y}" width="110" height="50" rx="4" class="${cls}" />
+            <text x="${nd.x + 55}" y="${nd.y + 20}" text-anchor="middle" class="node-text">${cfg.fnName}(${nd.n})</text>
+            <text x="${nd.x + 55}" y="${nd.y + 36}" text-anchor="middle" class="node-subtext">${isBase ? 'Caso Base' : 'Pila anidada'}</text>
+          </g>
+        `;
+      });
+
+      // Bottom phase explanation
+      svgContent += `
+        <rect x="50" y="340" width="700" height="80" rx="4" fill="#0d1117" stroke="#30363d" />
+        <text x="70" y="370" class="node-text" fill="${step < maxN ? '#d29922' : '#3fb950'}">
+          ${step < maxN ? 'FASE 1: DESCENSO (Winding) - Los marcos esperan el resultado de la llamada hija' : 'FASE 2: RETORNO (Unwinding) - Se multiplican los valores y se liberan marcos'}
+        </text>
+        <text x="70" y="395" class="node-subtext" fill="#8b949e">
+          ${step === 0 ? 'Llamada raíz' : step === maxN ? 'Caso base alcanzado (n=1) -> retorna 1' : 'Propagando valor de retorno hacia la raíz'}
+        </text>
+      `;
+
+      svg.innerHTML = svgContent;
+      log([
+        `Paso ${step}: Recursión en nivel ${Math.min(step, maxN)}.`,
+        step >= maxN ? `Desbobinado en progreso. Multiplicando y retornando resultados.` : `Apilando llamada: ${cfg.fnName}.`
+      ]);
+      return { activeLine: step < maxN ? 2 : 1, ip: `0xREC0${step}` };
+    }
+  },
+  {
+    id: "07",
+    name: "Memoria Stack vs Heap",
+    category: "Memoria",
+    desc: "Distribución contigua LIFO en Stack frente a reserva dinámica fragmentada con punteros en Heap.",
+    codeTemplate: (cfg) => [
+      `let ${cfg.valName} = 42;           // Stack primitive`,
+      `let ${cfg.refName} = { id: 101 }; // Heap allocated`,
+      `let ${cfg.alias} = ${cfg.refName};      // Reference alias`,
+      `${cfg.refName} = null;           // Dereference`,
+      `${cfg.alias} = null;             // Garbage Collector`
+    ],
+    defaultConfig: { valName: "edad", refName: "usuario", alias: "sesion" },
+    configFields: [
+      { key: "valName", label: "Variable Stack" },
+      { key: "refName", label: "Variable Heap" },
+      { key: "alias", label: "Alias Referencia" }
+    ],
+    stepsCount: 5,
+    renderStep: (step, cfg, svg, log) => {
+      let svgContent = `
+        <rect x="30" y="30" width="740" height="420" rx="6" fill="#161b22" stroke="#30363d" />
+        
+        <!-- STACK ZONE -->
+        <rect x="60" y="70" width="300" height="340" rx="4" fill="#0d1117" stroke="#30363d" />
+        <text x="80" y="100" class="node-text" fill="#58a6ff">MEMORIA STACK (LIFO / FIJA)</text>
+        <line x1="60" y1="115" x2="360" y2="115" stroke="#30363d" />
+
+        <!-- HEAP ZONE -->
+        <rect x="420" y="70" width="320" height="340" rx="4" fill="#0d1117" stroke="#30363d" />
+        <text x="440" y="100" class="node-text" fill="#bc8cff">MEMORIA HEAP (DINÁMICA)</text>
+        <line x1="420" y1="115" x2="740" y2="115" stroke="#30363d" />
+      `;
+
+      // Stack contents
+      svgContent += `
+        <g>
+          <rect x="80" y="130" width="260" height="45" rx="3" class="node-box ${step>=0?'highlight':''}" />
+          <text x="95" y="155" class="node-text">${cfg.valName} : <tspan fill="#79c0ff">42</tspan> (int32)</text>
+          <text x="290" y="155" class="node-subtext">0x7FFE10</text>
+        </g>
+      `;
+
+      if (step >= 1) {
+        svgContent += `
+          <g>
+            <rect x="80" y="190" width="260" height="45" rx="3" class="node-box ${step<3?'active':'error'}" />
+            <text x="95" y="215" class="node-text">${cfg.refName} : <tspan fill="#d2a8ff">${step<3 ? '0x00A4FC' : 'null'}</tspan></text>
+            <text x="290" y="215" class="node-subtext">0x7FFE18</text>
+          </g>
+        `;
+      }
+
+      if (step >= 2) {
+        svgContent += `
+          <g>
+            <rect x="80" y="250" width="260" height="45" rx="3" class="node-box ${step<4?'active':'error'}" />
+            <text x="95" y="275" class="node-text">${cfg.alias} : <tspan fill="#d2a8ff">${step<4 ? '0x00A4FC' : 'null'}</tspan></text>
+            <text x="290" y="275" class="node-subtext">0x7FFE20</text>
+          </g>
+        `;
+      }
+
+      // Heap contents
+      let heapCls = "node-box";
+      if (step >= 1 && step < 4) heapCls += " success";
+      else if (step === 4) heapCls += " error";
+
+      if (step >= 1) {
+        svgContent += `
+          <g>
+            <rect x="460" y="160" width="240" height="110" rx="4" class="${heapCls}" />
+            <text x="480" y="190" class="node-text" font-weight="600">ADDR: 0x00A4FC</text>
+            <text x="480" y="220" class="node-text">Payload: { id: 101 }</text>
+            <text x="480" y="245" class="node-subtext">Ref Count: ${step === 1 ? '1' : step === 2 ? '2' : step === 3 ? '1' : '0 (GC SWEEP)'}</text>
+          </g>
+        `;
+
+        // Pointers
+        if (step >= 1 && step < 3) {
+          svgContent += `<line x1="340" y1="210" x2="455" y2="200" stroke="#d2a8ff" stroke-width="2" marker-end="url(#arrow-active)" />`;
+        }
+        if (step === 2 || step === 3) {
+          svgContent += `<line x1="340" y1="270" x2="455" y2="230" stroke="#d2a8ff" stroke-width="2" marker-end="url(#arrow-active)" />`;
+        }
+      }
+
+      svg.innerHTML = svgContent;
+      log([
+        `Paso ${step}: Ciclo de vida de memoria.`,
+        step === 4 ? "Sin referencias activas en Stack. Garbage Collector recolecta bloque Heap." : "Asignación y punteros activos."
+      ]);
+      return { activeLine: step, ip: `0xMEM0${step}` };
+    }
+  },
+  {
+    id: "08",
+    name: "Variables y Referencias",
+    category: "Punteros",
+    desc: "Contraste explícito entre copia de tipos de valor frente a direccionamiento de punteros compartidos.",
+    codeTemplate: (cfg) => [
+      `// Valor: independientes`,
+      `let ${cfg.vA} = ${cfg.valInit}; let ${cfg.vB} = ${cfg.vA}; ${cfg.vB} = 99;`,
+      `// Referencia: puntero compartido`,
+      `let ${cfg.oA} = { x: ${cfg.valInit} };`,
+      `let ${cfg.oB} = ${cfg.oA}; ${cfg.oB}.x = 99;`
+    ],
+    defaultConfig: { vA: "numA", vB: "numB", oA: "objA", oB: "objB", valInit: "10" },
+    configFields: [
+      { key: "vA", label: "Primitiva A" },
+      { key: "vB", label: "Primitiva B" },
+      { key: "oA", label: "Objeto A" },
+      { key: "oB", label: "Objeto B" },
+      { key: "valInit", label: "Valor Inicial" }
+    ],
+    stepsCount: 5,
+    renderStep: (step, cfg, svg, log) => {
+      svg.innerHTML = `
+        <rect x="30" y="30" width="740" height="420" rx="6" fill="#161b22" stroke="#30363d" />
+        
+        <!-- Value Type Side -->
+        <rect x="50" y="70" width="320" height="340" rx="4" fill="#0d1117" stroke="#30363d" />
+        <text x="70" y="100" class="node-text" fill="#58a6ff">TIPO VALOR (COPIA INDEPENDIENTE)</text>
+        <line x1="50" y1="115" x2="370" y2="115" stroke="#30363d" />
+
+        <rect x="80" y="150" width="260" height="50" rx="3" class="node-box highlight" />
+        <text x="100" y="180" class="node-text">${cfg.vA} = <tspan fill="#3fb950">${cfg.valInit}</tspan></text>
+
+        <rect x="80" y="240" width="260" height="50" rx="3" class="node-box highlight" />
+        <text x="100" y="270" class="node-text">${cfg.vB} = <tspan fill="#3fb950">${step >= 2 ? '99' : cfg.valInit}</tspan></text>
+        <text x="80" y="330" class="node-subtext" fill="#8b949e">Modificar ${cfg.vB} no afecta la celda de ${cfg.vA}.</text>
+
+        <!-- Reference Type Side -->
+        <rect x="410" y="70" width="340" height="340" rx="4" fill="#0d1117" stroke="#30363d" />
+        <text x="430" y="100" class="node-text" fill="#bc8cff">TIPO REFERENCIA (PUNTERO COMPARTIDO)</text>
+        <line x1="410" y1="115" x2="750" y2="115" stroke="#30363d" />
+
+        <rect x="440" y="150" width="120" height="45" rx="3" class="node-box active" />
+        <text x="455" y="178" class="node-text">${cfg.oA} (ptr)</text>
+
+        <rect x="440" y="240" width="120" height="45" rx="3" class="node-box active" />
+        <text x="455" y="268" class="node-text">${cfg.oB} (ptr)</text>
+
+        <!-- Shared Object in Memory -->
+        <rect x="610" y="180" width="120" height="80" rx="4" class="node-box success" />
+        <text x="625" y="210" class="node-subtext" fill="#8b949e">0x7F20B0</text>
+        <text x="625" y="235" class="node-text" font-weight="600">x: <tspan fill="#f85149">${step >= 4 ? '99' : cfg.valInit}</tspan></text>
+
+        <!-- Pointer Lines -->
+        <line x1="560" y1="172" x2="605" y2="205" stroke="#bc8cff" stroke-width="2" marker-end="url(#arrow-active)" />
+        <line x1="560" y1="262" x2="605" y2="235" stroke="#bc8cff" stroke-width="2" marker-end="url(#arrow-active)" />
+      `;
+
+      log([
+        `Paso ${step}: Evaluación de mutación de memoria.`,
+        step >= 4 ? `Mutación mediante ${cfg.oB}.x alteró el objeto compartido apuntado por ${cfg.oA}.` : "Punteros configurados hacia la misma dirección física."
+      ]);
+      return { activeLine: step < 3 ? 1 : 4, ip: `0xPTR0${step}` };
+    }
+  },
+  {
+    id: "09",
+    name: "Bucles e Iteraciones",
+    category: "Control",
+    desc: "Diagrama de flujo activo y evaluación condicional (Verdadero / Falso) en cada iteración.",
+    codeTemplate: (cfg) => [
+      `let ${cfg.acc} = 0;`,
+      `for (let ${cfg.idx} = 0; ${cfg.idx} < ${cfg.max}; ${cfg.idx}++) {`,
+      `  ${cfg.acc} += ${cfg.idx};`,
+      `}`,
+      `return ${cfg.acc};`
+    ],
+    defaultConfig: { acc: "suma", idx: "i", max: "4" },
+    configFields: [
+      { key: "acc", label: "Acumulador" },
+      { key: "idx", label: "Índice" },
+      { key: "max", label: "Límite Máximo" }
+    ],
+    stepsCount: 6,
+    renderStep: (step, cfg, svg, log) => {
+      const maxVal = parseInt(cfg.max) || 4;
+      const currentI = Math.min(step, maxVal);
+      const isExit = step >= maxVal;
+
+      svg.innerHTML = `
+        <rect x="30" y="30" width="740" height="420" rx="6" fill="#161b22" stroke="#30363d" />
+        <text x="50" y="65" class="node-text" fill="#8b949e">FLUJO DE CONTROL DE ITERACIONES // EVALUADOR CONDICIONAL</text>
+
+        <!-- Flowchart nodes -->
+        <!-- Init -->
+        <rect x="80" y="110" width="130" height="45" rx="4" class="node-box ${step===0?'active':'highlight'}" />
+        <text x="145" y="137" text-anchor="middle" class="node-text">Init: ${cfg.idx} = 0</text>
+
+        <!-- Condition Diamond -->
+        <polygon points="340,90 430,132 340,175 250,132" class="node-box ${!isExit?'active':'highlight'}" />
+        <text x="340" y="136" text-anchor="middle" class="node-text">${cfg.idx} &lt; ${maxVal}?</text>
+
+        <!-- Body -->
+        <rect x="520" y="110" width="150" height="45" rx="4" class="node-box ${!isExit && step>0?'success':'highlight'}" />
+        <text x="595" y="137" text-anchor="middle" class="node-text">${cfg.acc} += ${cfg.idx}</text>
+
+        <!-- Exit Node -->
+        <rect x="275" y="260" width="130" height="45" rx="4" class="node-box ${isExit?'success':'highlight'}" />
+        <text x="340" y="287" text-anchor="middle" class="node-text">Salida (Fin)</text>
+
+        <!-- Connecting Lines -->
+        <line x1="210" y1="132" x2="245" y2="132" class="conn-line" marker-end="url(#arrow)" />
+        <line x1="430" y1="132" x2="515" y2="132" class="conn-line ${!isExit?'active':''}" marker-end="url(#arrow-active)" />
+        <text x="465" y="122" class="node-subtext" fill="#3fb950">TRUE</text>
+
+        <line x1="340" y1="175" x2="340" y2="255" class="conn-line ${isExit?'active':''}" marker-end="url(#arrow-active)" />
+        <text x="350" y="215" class="node-subtext" fill="#f85149">FALSE</text>
+
+        <!-- Loop back connector -->
+        <path d="M 595 155 L 595 210 L 370 210" fill="none" class="conn-line" />
+
+        <!-- Dynamic State Strip -->
+        <rect x="80" y="340" width="640" height="70" rx="4" fill="#0d1117" stroke="#30363d" />
+        <text x="100" y="370" class="node-text">Estado actual: ${cfg.idx} = <tspan fill="#58a6ff">${currentI}</tspan> | ${cfg.acc} = <tspan fill="#3fb950">${(currentI*(currentI-1))/2}</tspan></text>
+        <text x="100" y="392" class="node-subtext" fill="#8b949e">Condición: ${currentI} &lt; ${maxVal} → ${!isExit ? 'VERDADERO (Continuar ciclo)' : 'FALSO (Bucle finalizado)'}</text>
+      `;
+
+      log([
+        `Iteración paso ${step}: ${cfg.idx} = ${currentI}.`,
+        isExit ? `Condición evaluada como falsa. Bucle finalizado con éxito.` : `Cuerpo ejecutado. Incrementando contador.`
+      ]);
+      return { activeLine: isExit ? 4 : 2, ip: `0xLOOP0${step}` };
+    }
+  },
+  {
+    id: "10",
+    name: "Manejo de Excepciones",
+    category: "Excepciones",
+    desc: "Lanzamiento de error (throw), desbobinado de marcos y captura en bloques try/catch/finally.",
+    codeTemplate: (cfg) => [
+      `try {`,
+      `  ${cfg.callFn}();`,
+      `} catch (${cfg.errVar}) {`,
+      `  handleError(${cfg.errVar});`,
+      `} finally { cleanup(); }`
+    ],
+    defaultConfig: { callFn: "validarPago", errVar: "err", reason: "FondosInsuficientes" },
+    configFields: [
+      { key: "callFn", label: "Función Riesgosa" },
+      { key: "errVar", label: "Variable Catch" },
+      { key: "reason", label: "Causa Excepción" }
+    ],
+    stepsCount: 6,
+    renderStep: (step, cfg, svg, log) => {
+      // Step 0: Try entered
+      // 1: Call child fn
+      // 2: Throw exception!
+      // 3: Unwind stack, lookup catch
+      // 4: Catch block captures error
+      // 5: Finally block executes unconditionally
+      let svgContent = `
+        <rect x="30" y="30" width="740" height="420" rx="6" fill="#161b22" stroke="#30363d" />
+        <text x="50" y="65" class="node-text" fill="#8b949e">PROPAGACIÓN DE EXCEPCIONES Y DESBOBINADO DE CALL STACK</text>
+      `;
+
+      // Draw frames
+      const frames = [
+        { name: "main()", hasHandler: true, y: 100 },
+        { name: "procesarOrden()", hasHandler: false, y: 175 },
+        { name: `${cfg.callFn}()`, hasHandler: false, y: 250 }
+      ];
+
+      frames.forEach((f, idx) => {
+        let isPresent = true;
+        if (step >= 3 && idx === 2) isPresent = false;
+        if (step >= 4 && idx === 1) isPresent = false;
+
+        let cls = "node-box";
+        if (step === 2 && idx === 2) cls += " error";
+        else if (step >= 4 && idx === 0) cls += " success";
+        else cls += " highlight";
+
+        if (isPresent) {
+          svgContent += `
+            <g>
+              <rect x="70" y="${f.y}" width="280" height="55" rx="4" class="${cls}" />
+              <text x="90" y="${f.y + 25}" class="node-text" font-weight="600">${f.name}</text>
+              <text x="90" y="${f.y + 44}" class="node-subtext">${f.hasHandler ? '[TIENE TRY / CATCH]' : '[SIN MANEJADOR - PROPAGA]'}</text>
+            </g>
+          `;
+        }
+      });
+
+      // Right: Exception Object bubble
+      if (step >= 2) {
+        let yPos = step === 2 ? 260 : step === 3 ? 185 : 120;
+        svgContent += `
+          <g>
+            <rect x="420" y="${yPos}" width="280" height="70" rx="6" fill="rgba(248,81,73,0.15)" stroke="#f85149" stroke-width="2" />
+            <text x="440" y="${yPos + 25}" class="node-text" fill="#f85149" font-weight="600">EXCEPTION: ${cfg.reason}</text>
+            <text x="440" y="${yPos + 48}" class="node-subtext" fill="#e6edf3">Buscando manejador en el Stack...</text>
+          </g>
+        `;
+      }
+
+      // Final status
+      if (step === 5) {
+        svgContent += `
+          <rect x="70" y="330" width="630" height="60" rx="4" fill="#0d1117" stroke="#3fb950" />
+          <text x="90" y="365" class="node-text" fill="#3fb950">BLOQUE FINALLY EJECUTADO // Liberación segura de recursos completada.</text>
+        `;
+      }
+
+      svg.innerHTML = svgContent;
+      log([
+        `Paso ${step}: Control de Excepciones.`,
+        step === 2 ? `Excepción disparada: throw new Error("${cfg.reason}")` :
+        step === 4 ? `Captura exitosa en bloque catch (${cfg.errVar}).` :
+        step === 5 ? "Bloque finally completado. Salida normal y controlada." : "Ejecución dentro de ámbito protegido try."
+      ]);
+
+      const lineMap = [0, 1, 1, 2, 3, 4];
+      return { activeLine: lineMap[step], ip: `0xERR0${step}` };
+    }
+  }
+];
+
+// Global State
+let currentModuleIndex = 0;
+let currentStep = 0;
+let isPlaying = false;
+let playTimer = null;
+let customConfigs = MODULES.map(m => ({ ...m.defaultConfig }));
+
+// DOM Elements
+const moduleNavTabs = document.getElementById("moduleNavTabs");
+const galleryGridContainer = document.getElementById("galleryGridContainer");
+const galleryView = document.getElementById("galleryView");
+const studioView = document.getElementById("studioView");
+const btnToggleGallery = document.getElementById("btnToggleGallery");
+const sourceCodeViewer = document.getElementById("sourceCodeViewer");
+const dynamicConfigGroup = document.getElementById("dynamicConfigGroup");
+const inspectorScopeContent = document.getElementById("inspectorScopeContent");
+const svgStage = document.getElementById("svgStage");
+const runtimeLogOutput = document.getElementById("runtimeLogOutput");
+const frameScrubber = document.getElementById("frameScrubber");
+const stepCounterDisplay = document.getElementById("stepCounterDisplay");
+const phaseStatusBadge = document.getElementById("phaseStatusBadge");
+const instructionPointerBadge = document.getElementById("instructionPointerBadge");
+
+const btnPlayPause = document.getElementById("btnPlayPause");
+const btnStepNext = document.getElementById("btnStepNext");
+const btnStepPrev = document.getElementById("btnStepPrev");
+const btnReset = document.getElementById("btnReset");
+const btnApplyCustom = document.getElementById("btnApplyCustom");
+
+// Initialize Navigation and Gallery Cards
+function initApp() {
+  MODULES.forEach((mod, idx) => {
+    // Nav Tab
+    const tab = document.createElement("button");
+    tab.className = `tab-btn ${idx === 0 ? 'active' : ''}`;
+    tab.textContent = `${mod.id} ${mod.name}`;
+    tab.addEventListener("click", () => switchModule(idx));
+    moduleNavTabs.appendChild(tab);
+
+    // Gallery Card
+    const card = document.createElement("div");
+    card.className = "module-card";
+    card.innerHTML = `
+      <div>
+        <div class="card-header">
+          <span class="card-num">${mod.id} // ${mod.category.toUpperCase()}</span>
+        </div>
+        <div class="card-title">${mod.name}</div>
+        <div class="card-desc">${mod.desc}</div>
+      </div>
+      <div class="card-preview">
+        <span>[ CARGAR MÓDULO ]</span>
+      </div>
+    `;
+    card.addEventListener("click", () => {
+      switchModule(idx);
+      showStudioView();
+    });
+    galleryGridContainer.appendChild(card);
+  });
+
+  loadCurrentModule();
+}
+
+function switchModule(index) {
+  pause();
+  currentModuleIndex = index;
+  currentStep = 0;
+
+  // Update tabs
+  Array.from(moduleNavTabs.children).forEach((tab, i) => {
+    tab.classList.toggle("active", i === index);
+  });
+
+  loadCurrentModule();
+}
+
+function loadCurrentModule() {
+  const mod = MODULES[currentModuleIndex];
+  const cfg = customConfigs[currentModuleIndex];
+
+  frameScrubber.max = mod.stepsCount - 1;
+  frameScrubber.value = 0;
+
+  // Render Source Code Template
+  renderSourceEditor(mod, cfg);
+
+  // Render Custom Config Inputs
+  renderConfigInputs(mod, cfg);
+
+  // Render Frame 0
+  renderStepSynchronous(0);
+}
+
+function renderSourceEditor(mod, cfg) {
+  const lines = mod.codeTemplate(cfg);
+  sourceCodeViewer.innerHTML = lines.map((ln, i) => `
+    <div class="code-line" id="editorLine_${i}">
+      <span class="line-num">${i + 1}</span>
+      <span class="line-text">${highlightTokens(ln)}</span>
+    </div>
+  `).join("");
+}
+
+function highlightTokens(code) {
+  return code
+    .replace(/\b(function|const|let|var|return|if|for|try|catch|finally|throw|new|int)\b/g, '<span class="tok-kw">$1</span>')
+    .replace(/(\/\/.+)/g, '<span class="tok-cmt">$1</span>')
+    .replace(/(["'].*?["'])/g, '<span class="tok-str">$1</span>')
+    .replace(/\b(\d+(\.\d+)?)\b/g, '<span class="tok-num">$1</span>');
+}
+
+function renderConfigInputs(mod, cfg) {
+  dynamicConfigGroup.innerHTML = `<div class="config-title">Parámetros del Módulo</div>` +
+    mod.configFields.map(f => `
+      <div class="config-row">
+        <span>${f.label}:</span>
+        <input type="text" class="config-input" data-key="${f.key}" value="${cfg[f.key]}">
+      </div>
+    `).join("");
+}
+
+// Synchronous Render (Essential for Chromium Frame Rendering)
+function renderStepSynchronous(step) {
+  const mod = MODULES[currentModuleIndex];
+  const cfg = customConfigs[currentModuleIndex];
+  currentStep = Math.max(0, Math.min(step, mod.stepsCount - 1));
+
+  frameScrubber.value = currentStep;
+  stepCounterDisplay.textContent = `${currentStep + 1} / ${mod.stepsCount}`;
+
+  // Update Phase Badge
+  if (currentStep === 0) {
+    phaseStatusBadge.textContent = "INICIO";
+    phaseStatusBadge.className = "phase-pill phase-idle";
+  } else if (currentStep === mod.stepsCount - 1) {
+    phaseStatusBadge.textContent = "FINALIZADO";
+    phaseStatusBadge.className = "phase-pill phase-done";
+  } else {
+    phaseStatusBadge.textContent = "DESARROLLO";
+    phaseStatusBadge.className = "phase-pill phase-running";
+  }
+
+  // Clear previous active line highlight
+  document.querySelectorAll(".code-line").forEach(l => l.classList.remove("active-line", "breakpoint"));
+
+  // Log collector
+  const logs = [];
+  const logFn = (msgs) => msgs.forEach(m => logs.push(m));
+
+  // Execute module step renderer
+  const execMeta = mod.renderStep(currentStep, cfg, svgStage, logFn);
+
+  // Update instruction pointer & line highlight
+  if (execMeta) {
+    if (execMeta.activeLine !== undefined) {
+      const lineElem = document.getElementById(`editorLine_${execMeta.activeLine}`);
+      if (lineElem) lineElem.classList.add("active-line");
+    }
+    if (execMeta.breakpointLine !== undefined) {
+      const bpElem = document.getElementById(`editorLine_${execMeta.breakpointLine}`);
+      if (bpElem) bpElem.classList.add("breakpoint");
+    }
+    if (execMeta.ip) {
+      instructionPointerBadge.textContent = `IP: ${execMeta.ip}`;
+    }
+  }
+
+  // Render logs
+  runtimeLogOutput.innerHTML = logs.map(l => `
+    <div class="log-line">
+      <span class="log-ts">[${new Date().toISOString().substring(11, 19)}]</span>
+      <span class="log-info">${l}</span>
+    </div>
+  `).join("");
+
+  inspectorScopeContent.innerHTML = `
+    <div>Módulo: <strong>${mod.id} - ${mod.name}</strong></div>
+    <div>Paso Activo: <strong>${currentStep + 1} de ${mod.stepsCount}</strong></div>
+    <div>Estado: <strong>${phaseStatusBadge.textContent}</strong></div>
+  `;
+}
+
+// Controls
+function play() {
+  if (isPlaying) return;
+  isPlaying = true;
+  btnPlayPause.textContent = "Pausar";
+  btnPlayPause.classList.remove("btn-primary");
+
+  playTimer = setInterval(() => {
+    const mod = MODULES[currentModuleIndex];
+    if (currentStep < mod.stepsCount - 1) {
+      renderStepSynchronous(currentStep + 1);
+    } else {
+      pause();
+    }
+  }, 1000);
+}
+
+function pause() {
+  isPlaying = false;
+  btnPlayPause.textContent = "Reproducir";
+  btnPlayPause.classList.add("btn-primary");
+  if (playTimer) clearInterval(playTimer);
+}
+
+function togglePlay() {
+  isPlaying ? pause() : play();
+}
+
+function showGalleryView() {
+  pause();
+  galleryView.classList.add("active");
+  studioView.classList.remove("active");
+}
+
+function showStudioView() {
+  galleryView.classList.remove("active");
+  studioView.classList.add("active");
+}
+
+// Event Listeners
+btnPlayPause.addEventListener("click", togglePlay);
+btnStepNext.addEventListener("click", () => { pause(); renderStepSynchronous(currentStep + 1); });
+btnStepPrev.addEventListener("click", () => { pause(); renderStepSynchronous(currentStep - 1); });
+btnReset.addEventListener("click", () => { pause(); renderStepSynchronous(0); });
+
+frameScrubber.addEventListener("input", (e) => {
+  pause();
+  renderStepSynchronous(parseInt(e.target.value));
+});
+
+btnToggleGallery.addEventListener("click", () => {
+  if (galleryView.classList.contains("active")) {
+    showStudioView();
+  } else {
+    showGalleryView();
+  }
+});
+
+btnApplyCustom.addEventListener("click", () => {
+  const inputs = dynamicConfigGroup.querySelectorAll("input");
+  inputs.forEach(inp => {
+    const k = inp.getAttribute("data-key");
+    if (k) customConfigs[currentModuleIndex][k] = inp.value;
+  });
+  renderSourceEditor(MODULES[currentModuleIndex], customConfigs[currentModuleIndex]);
+  renderStepSynchronous(0);
+});
+
+// Deterministic API for Puppeteer/Chromium Headless frame captures
+window.ANIMATION_CONTROLLER = {
+  selectModule: (index) => switchModule(index),
+  setStep: (stepIndex) => renderStepSynchronous(stepIndex),
+  nextStep: () => renderStepSynchronous(currentStep + 1),
+  prevStep: () => renderStepSynchronous(currentStep - 1),
+  getTotalSteps: () => MODULES[currentModuleIndex].stepsCount,
+  getCurrentStep: () => currentStep,
+  getModulesList: () => MODULES.map(m => ({ id: m.id, name: m.name }))
+};
+
+// Start application
+initApp();
+</script>
+</body>
+</html>

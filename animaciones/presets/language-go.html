@@ -1,0 +1,206 @@
+<!doctype html><html lang="es"><head><meta charset="utf-8"><meta http-equiv="Content-Security-Policy" content="default-src &#39;none&#39;; script-src &#39;none&#39;; connect-src &#39;none&#39;; style-src &#39;unsafe-inline&#39;; img-src data:; font-src data:;"><style>
+:root{--bg:#080e18;--card:#121d2d;--panel:#0e1827;--surface:#1b2939;--muted:#8fa9bc;--edge:#294159;--line:#344c66;--cyan:#5bdcf5;--green:#55dfae;--amber:#ffcb81;--purple:#b9a3ff;
+--border-color:#30363d;--border-bright:#484f58;--text-main:#e6edf3;--text-muted:#8b949e;
+--accent-cyan:#00e3ff;--accent-green:#42dea9;--accent-amber:#ffbd6b;--accent-violet:#a855f7;--accent-red:#f85149;
+--accent-blue:#58a6ff;--accent-yellow:#d29922;--success:#3fb950;--warning:#d29922;--danger:#f85149;
+--bg-surface:#151e2d;--bg-card:#21262d;--bg-panel:#0e1827;--bg-overlay:#1f242c}
+*{box-sizing:border-box}
+html,body{width:100%;height:100%;margin:0;overflow:hidden}
+body{background:radial-gradient(ellipse at 20% 14%,#18293f,#080e18 67%,#050a12);color:#eaf5fc;font-family:system-ui,Arial,sans-serif}
+.collection-header{position:absolute;inset:15px 26px auto;display:flex;justify-content:space-between;align-items:center;color:#8baec1;font-size:10px;letter-spacing:1px;font-weight:800}
+.collection-header strong{color:#65e8c6}
+.progress-line{position:absolute;top:42px;left:26px;right:26px;background:#294159;height:2px}
+.catalog{position:absolute;inset:0;overflow:hidden}
+.module{position:absolute;inset:0;padding:55px 26px 27px;visibility:hidden;display:flex;flex-direction:column;gap:8px}
+.module-header{display:flex;align-items:baseline;gap:12px;min-height:29px}
+.index{color:#6de6c8;font:800 12px ui-monospace,Consolas,monospace;white-space:nowrap}
+.headline{font-size:24px;letter-spacing:-.5px;color:#edf7ff;font-weight:840;margin:0;line-height:1.2}
+.kind{margin-left:auto;font:750 9px ui-monospace,Consolas,monospace;letter-spacing:.4px;color:#8facc2;border:1px solid #314d65;border-radius:13px;padding:5px 10px;white-space:nowrap}
+.description{margin:0;color:#aec4d4;font-size:12px;line-height:1.36;height:32px;max-width:785px;overflow:hidden}
+.main-layout{display:flex;gap:13px;min-height:0;flex:1}
+.visual-card{position:relative;background:#0b1524;border:1px solid #36516b;border-radius:14px;overflow:hidden;flex:1;min-width:0}
+.visual-card .pane-title,.source-card .pane-title{height:30px;border-bottom:1px solid #2d4157;display:flex;align-items:center;justify-content:space-between;padding:0 12px;color:#83abc4;font:750 10px ui-monospace,Consolas,monospace;letter-spacing:.45px;background:#111e30}
+.visual-card .pane-title span:last-child{color:#61e1ba}
+.source-card .pane-title span:last-child{max-width:124px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;text-align:right}
+.visual-stage{position:absolute;top:30px;bottom:0;left:0;right:0}
+.phase{position:absolute;inset:0;opacity:0;visibility:hidden;display:flex;align-items:center;justify-content:center}
+.diagram-svg,.diagram-svg-root{display:block;width:100%;height:100%;overflow:visible}
+.source-card{position:relative;width:260px;flex:0 0 260px;min-width:0;background:#0b1524;border:1px solid #36516b;border-radius:14px;overflow:hidden}
+.code-scroll{position:absolute;inset:30px 0 0;overflow:hidden;padding:7px 7px 5px 0;background:#080f1e}
+.code-line{display:flex;gap:4px;align-items:baseline;font:10px/1.53 ui-monospace,Consolas,monospace;min-height:15.3px;white-space:pre}
+.code-line .ln{flex:0 0 23px;text-align:right;color:#42637b}
+.code-line .ct{min-width:0;display:block;color:#e0eaf8}
+.code-line .ct span{white-space:pre}
+.kw,.tok-kw,.c-kw{color:#c3aaff;font-weight:700}
+.fn,.tok-fn,.c-fn{color:#77e3d1}.tp{color:#83c8ff}
+.st,.tok-str,.c-str{color:#b4d6ff}.num,.tok-num,.c-num{color:#ffc879}.cm,.tok-cmt,.c-cm{color:#8298a8}
+.vr,.tok-op,.c-hl{color:#e5b9fb}
+.code-scroll .code-line{padding-right:3px}
+.code-scroll .code-line:nth-child(n+17){opacity:.55}
+.code-more{position:absolute;bottom:0;left:0;right:0;background:linear-gradient(transparent,#0b1524 90%);height:22px;pointer-events:none}
+.execution-bar{height:30px;flex:0 0 30px;background:#102238;border:1px solid #274c68;border-radius:8px;padding:7px 10px;color:#a8e3e5;display:flex;justify-content:space-between;align-items:center;gap:13px}
+.log{font:10.2px ui-monospace,Consolas,monospace;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.execution-tag{font:800 9px ui-monospace,Consolas,monospace;color:#8ddbbf;white-space:nowrap}
+footer{position:absolute;bottom:9px;right:26px;color:#57768d;font:9px ui-monospace,Consolas,monospace}
+/* architecture SVG vocabulary */
+.node-box{fill:#132236;stroke:#334e67;stroke-width:1.5}
+.node-box.active,.node-box.highlight{fill:#1e344a;stroke:#58a6ff}
+.node-box.success{fill:#15372d;stroke:#44e2a9}
+.node-box.warning{fill:#3a2d1c;stroke:#eab977}
+.node-box.error{fill:#401a26;stroke:#ff6675}
+.svg-label{fill:#dceef8;font:600 12px ui-monospace,Consolas,monospace}
+.svg-sub{fill:#95acc1;font:10px ui-monospace,Consolas,monospace}
+.packet{fill:#5ce6fa;filter:drop-shadow(0 0 5px #35dafb)}
+/* runtime SVG vocabulary */
+.node-text{fill:#e2edf9;font:11px ui-monospace,Consolas,monospace}
+.node-subtext{fill:#9fb0c2;font:9px ui-monospace,Consolas,monospace}
+.conn-line{stroke:#526b84;stroke-width:1.7;fill:none}
+.conn-line.active,.svg-path.flowing{stroke:#5ad8fe;stroke-dasharray:6 4;animation:motionDash 1s linear infinite}
+.conn-line.error{stroke:#fa6868}
+@keyframes motionDash{to{stroke-dashoffset:-20}}
+/* languages SVG vocabulary */
+.svg-box{fill:#1a2739;stroke:#39516a;stroke-width:1.6}
+.svg-box.active{stroke:#58a6ff;fill:#1d354c}
+.svg-box.success{stroke:#36d6a7;fill:#14382f}
+.svg-box.warning{stroke:#facc80;fill:#3a291b}
+.svg-text{fill:#e8f3fb;font:700 11px ui-monospace,Consolas,monospace;text-anchor:middle;dominant-baseline:middle}
+.svg-subtext{fill:#a2b5c8;font:9px ui-monospace,Consolas,monospace;text-anchor:middle;dominant-baseline:middle}
+.svg-path{fill:none;stroke:#51708c;stroke-width:1.7}
+
+@keyframes phase_24_0{0%,19.9000%{opacity:1;visibility:visible}20.0000%,100%{opacity:0;visibility:hidden}}
+.phase-24-0{animation:phase_24_0 4s linear both}
+@keyframes phase_24_1{0%,19.9000%{opacity:0;visibility:hidden}20.0000%,39.9000%{opacity:1;visibility:visible}40.0000%,100%{opacity:0;visibility:hidden}}
+.phase-24-1{animation:phase_24_1 4s linear both}
+@keyframes phase_24_2{0%,39.9000%{opacity:0;visibility:hidden}40.0000%,59.9000%{opacity:1;visibility:visible}60.0000%,100%{opacity:0;visibility:hidden}}
+.phase-24-2{animation:phase_24_2 4s linear both}
+@keyframes phase_24_3{0%,59.9000%{opacity:0;visibility:hidden}60.0000%,79.9000%{opacity:1;visibility:visible}80.0000%,100%{opacity:0;visibility:hidden}}
+.phase-24-3{animation:phase_24_3 4s linear both}
+@keyframes phase_24_4{0%,79.9000%{opacity:0;visibility:hidden}80.0000%,99.9000%{opacity:1;visibility:visible}100.0000%,100%{opacity:0;visibility:hidden}}
+.phase-24-4{animation:phase_24_4 4s linear both}
+@keyframes log_24_0{0%,19.9000%{opacity:1;visibility:visible}20.0000%,100%{opacity:0;visibility:hidden}}
+.log-24-0{animation:log_24_0 4s linear both}
+@keyframes log_24_1{0%,19.9000%{opacity:0;visibility:hidden}20.0000%,39.9000%{opacity:1;visibility:visible}40.0000%,100%{opacity:0;visibility:hidden}}
+.log-24-1{animation:log_24_1 4s linear both}
+@keyframes log_24_2{0%,39.9000%{opacity:0;visibility:hidden}40.0000%,59.9000%{opacity:1;visibility:visible}60.0000%,100%{opacity:0;visibility:hidden}}
+.log-24-2{animation:log_24_2 4s linear both}
+@keyframes log_24_3{0%,59.9000%{opacity:0;visibility:hidden}60.0000%,79.9000%{opacity:1;visibility:visible}80.0000%,100%{opacity:0;visibility:hidden}}
+.log-24-3{animation:log_24_3 4s linear both}
+@keyframes log_24_4{0%,79.9000%{opacity:0;visibility:hidden}80.0000%,99.9000%{opacity:1;visibility:visible}100.0000%,100%{opacity:0;visibility:hidden}}
+.log-24-4{animation:log_24_4 4s linear both}
+.log-stage .log{position:absolute;inset:0;display:block;line-height:17px;}
+.module{visibility:visible}</style></head><body><header class="collection-header"><span>GPTFRAMES / RECURSO EDITABLE</span><strong>Lenguajes de programación</strong></header><div class="progress-line"></div><main class="catalog" data-segment-seconds="4"><section class="module" data-id="language-go"><div class="module-header"><span class="index">04/10 · 24/30</span><h1 class="headline" data-field="title">Go</h1><span class="kind">LENGUAJES DE PROGRAMACIÓN</span></div><p class="description" data-field="description">Goroutines, Canales y Concurrencia CSP</p><div class="main-layout"><div class="visual-card"><div class="pane-title"><span>VISUALIZACIÓN DE EJECUCIÓN</span><span>ETAPAS 05</span></div><div class="visual-stage"><div class="phase phase-24-0">
+            <svg class="diagram-svg-root" class="visual-svg" viewBox="0 0 540 260">
+              <!-- Goroutine 1 (Main) -->
+              <rect class="svg-box active" x="20" y="60" width="120" height="90"/>
+              <text class="svg-text" x="80" y="90">GOROUTINE (G1)</text>
+              <text class="svg-subtext" x="80" y="110">main() thread</text>
+
+              <!-- CSP Channel Tube -->
+              <rect class="svg-box " x="180" y="70" width="160" height="70" rx="20"/>
+              <text class="svg-text" x="260" y="95">chan <tspan data-field="chname">taskStream</tspan></text>
+              <circle cx="210" cy="115" r="8" fill="#58a6ff"/>
+              <text class="svg-subtext" x="260" y="130"><tspan data-field="msgpayload">JobPacket</tspan> [Slot 1/2]</text>
+
+              <!-- Goroutine 2 (Worker) -->
+              <rect class="svg-box " x="380" y="60" width="140" height="90"/>
+              <text class="svg-text" x="450" y="90">GOROUTINE (G2)</text>
+              <text class="svg-subtext" x="450" y="110"><tspan data-field="workername">consumeWorker</tspan>()</text>
+
+              <!-- Conexión Salida -->
+              <line class="svg-path " x1="450" y1="150" x2="450" y2="190"/>
+              <rect class="svg-box " x="380" y="190" width="140" height="50"/>
+              <text class="svg-text" x="450" y="215">STDOUT: ID 101</text>
+            </svg>
+          <span class="sr-only" style="display:none">[GO_RUNTIME] Iniciando goroutine principal G1...</span></div><div class="phase phase-24-1">
+            <svg class="diagram-svg-root" class="visual-svg" viewBox="0 0 540 260">
+              <!-- Goroutine 1 (Main) -->
+              <rect class="svg-box active" x="20" y="60" width="120" height="90"/>
+              <text class="svg-text" x="80" y="90">GOROUTINE (G1)</text>
+              <text class="svg-subtext" x="80" y="110">main() thread</text>
+
+              <!-- CSP Channel Tube -->
+              <rect class="svg-box " x="180" y="70" width="160" height="70" rx="20"/>
+              <text class="svg-text" x="260" y="95">chan <tspan data-field="chname">taskStream</tspan></text>
+              <circle cx="210" cy="115" r="8" fill="#58a6ff"/>
+              <text class="svg-subtext" x="260" y="130"><tspan data-field="msgpayload">JobPacket</tspan> [Slot 1/2]</text>
+
+              <!-- Goroutine 2 (Worker) -->
+              <rect class="svg-box " x="380" y="60" width="140" height="90"/>
+              <text class="svg-text" x="450" y="90">GOROUTINE (G2)</text>
+              <text class="svg-subtext" x="450" y="110"><tspan data-field="workername">consumeWorker</tspan>()</text>
+
+              <!-- Conexión Salida -->
+              <line class="svg-path " x1="450" y1="150" x2="450" y2="190"/>
+              <rect class="svg-box " x="380" y="190" width="140" height="50"/>
+              <text class="svg-text" x="450" y="215">STDOUT: ID 101</text>
+            </svg>
+          <span class="sr-only" style="display:none">[GO_RUNTIME] Iniciando goroutine principal G1...</span></div><div class="phase phase-24-2">
+            <svg class="diagram-svg-root" class="visual-svg" viewBox="0 0 540 260">
+              <!-- Goroutine 1 (Main) -->
+              <rect class="svg-box active" x="20" y="60" width="120" height="90"/>
+              <text class="svg-text" x="80" y="90">GOROUTINE (G1)</text>
+              <text class="svg-subtext" x="80" y="110">main() thread</text>
+
+              <!-- CSP Channel Tube -->
+              <rect class="svg-box active" x="180" y="70" width="160" height="70" rx="20"/>
+              <text class="svg-text" x="260" y="95">chan <tspan data-field="chname">taskStream</tspan></text>
+              <circle cx="256.27254509018036" cy="115" r="8" fill="#58a6ff"/>
+              <text class="svg-subtext" x="260" y="130"><tspan data-field="msgpayload">JobPacket</tspan> [Slot 1/2]</text>
+
+              <!-- Goroutine 2 (Worker) -->
+              <rect class="svg-box " x="380" y="60" width="140" height="90"/>
+              <text class="svg-text" x="450" y="90">GOROUTINE (G2)</text>
+              <text class="svg-subtext" x="450" y="110"><tspan data-field="workername">consumeWorker</tspan>()</text>
+
+              <!-- Conexión Salida -->
+              <line class="svg-path " x1="450" y1="150" x2="450" y2="190"/>
+              <rect class="svg-box " x="380" y="190" width="140" height="50"/>
+              <text class="svg-text" x="450" y="215">STDOUT: ID 101</text>
+            </svg>
+          <span class="sr-only" style="display:none">[GO_RUNTIME] Canal &#x27;taskStream&#x27; asignado en ringbuffer.</span></div><div class="phase phase-24-3">
+            <svg class="diagram-svg-root" class="visual-svg" viewBox="0 0 540 260">
+              <!-- Goroutine 1 (Main) -->
+              <rect class="svg-box active" x="20" y="60" width="120" height="90"/>
+              <text class="svg-text" x="80" y="90">GOROUTINE (G1)</text>
+              <text class="svg-subtext" x="80" y="110">main() thread</text>
+
+              <!-- CSP Channel Tube -->
+              <rect class="svg-box active" x="180" y="70" width="160" height="70" rx="20"/>
+              <text class="svg-text" x="260" y="95">chan <tspan data-field="chname">taskStream</tspan></text>
+              <circle cx="264.2885771543086" cy="115" r="8" fill="#58a6ff"/>
+              <text class="svg-subtext" x="260" y="130"><tspan data-field="msgpayload">JobPacket</tspan> [Slot 1/2]</text>
+
+              <!-- Goroutine 2 (Worker) -->
+              <rect class="svg-box active" x="380" y="60" width="140" height="90"/>
+              <text class="svg-text" x="450" y="90">GOROUTINE (G2)</text>
+              <text class="svg-subtext" x="450" y="110"><tspan data-field="workername">consumeWorker</tspan>()</text>
+
+              <!-- Conexión Salida -->
+              <line class="svg-path " x1="450" y1="150" x2="450" y2="190"/>
+              <rect class="svg-box " x="380" y="190" width="140" height="50"/>
+              <text class="svg-text" x="450" y="215">STDOUT: ID 101</text>
+            </svg>
+          <span class="sr-only" style="display:none">[GO_RUNTIME] Conmutando contexto a G2 (consumeWorker) vía multiplexor M:N.</span></div><div class="phase phase-24-4">
+            <svg class="diagram-svg-root" class="visual-svg" viewBox="0 0 540 260">
+              <!-- Goroutine 1 (Main) -->
+              <rect class="svg-box active" x="20" y="60" width="120" height="90"/>
+              <text class="svg-text" x="80" y="90">GOROUTINE (G1)</text>
+              <text class="svg-subtext" x="80" y="110">main() thread</text>
+
+              <!-- CSP Channel Tube -->
+              <rect class="svg-box active" x="180" y="70" width="160" height="70" rx="20"/>
+              <text class="svg-text" x="260" y="95">chan <tspan data-field="chname">taskStream</tspan></text>
+              <circle cx="272.3046092184369" cy="115" r="8" fill="#58a6ff"/>
+              <text class="svg-subtext" x="260" y="130"><tspan data-field="msgpayload">JobPacket</tspan> [Slot 1/2]</text>
+
+              <!-- Goroutine 2 (Worker) -->
+              <rect class="svg-box active" x="380" y="60" width="140" height="90"/>
+              <text class="svg-text" x="450" y="90">GOROUTINE (G2)</text>
+              <text class="svg-subtext" x="450" y="110"><tspan data-field="workername">consumeWorker</tspan>()</text>
+
+              <!-- Conexión Salida -->
+              <line class="svg-path flowing" x1="450" y1="150" x2="450" y2="190"/>
+              <rect class="svg-box success" x="380" y="190" width="140" height="50"/>
+              <text class="svg-text" x="450" y="215">STDOUT: ID 101</text>
+            </svg>
+          <span class="sr-only" style="display:none">[GO_STDOUT] Procesado: {ID: 101} sin condiciones de carrera (Race detector: limpio).</span></div></div></div><div class="source-card"><div class="pane-title"><span>CÓDIGO / INSPECTOR</span><span data-field="file">dispatcher.go</span></div><div class="code-scroll"><div class="code-line"><span class="ln">01</span><span class="ct"><span class="kw">package</span> main</span></div><div class="code-line"><span class="ln">02</span><span class="ct">&#160;</span></div><div class="code-line"><span class="ln">03</span><span class="ct"><span class="kw">func</span> <span class="fn editable" data-key="workerName"><span data-field="workername">consumeWorker</span></span>(<span class="vr editable" data-key="chName"><span data-field="chname">taskStream</span></span> <span class="kw">chan</span> <span class="tp editable" data-key="msgPayload"><span data-field="msgpayload">JobPacket</span></span>) {</span></div><div class="code-line"><span class="ln">04</span><span class="ct">    msg := &lt;-<span class="vr editable" data-key="chName"><span data-field="chname">taskStream</span></span> <span class="cm">// Recepción bloqueante</span></span></div><div class="code-line"><span class="ln">05</span><span class="ct">    println(<span class="st">"Procesado: "</span>, msg)</span></div><div class="code-line"><span class="ln">06</span><span class="ct">}</span></div><div class="code-line"><span class="ln">07</span><span class="ct">&#160;</span></div><div class="code-line"><span class="ln">08</span><span class="ct"><span class="kw">func</span> main() {</span></div><div class="code-line"><span class="ln">09</span><span class="ct">    <span class="vr editable" data-key="chName"><span data-field="chname">taskStream</span></span> := make(<span class="kw">chan</span> <span class="tp editable" data-key="msgPayload"><span data-field="msgpayload">JobPacket</span></span>, 2)</span></div><div class="code-line"><span class="ln">10</span><span class="ct">    <span class="kw">go</span> <span class="fn editable" data-key="workerName"><span data-field="workername">consumeWorker</span></span>(<span class="vr editable" data-key="chName"><span data-field="chname">taskStream</span></span>)</span></div><div class="code-line"><span class="ln">11</span><span class="ct">    <span class="vr editable" data-key="chName"><span data-field="chname">taskStream</span></span> &lt;- <span class="tp editable" data-key="msgPayload"><span data-field="msgpayload">JobPacket</span></span>{ID: 101}</span></div><div class="code-line"><span class="ln">12</span><span class="ct">}</span></div></div><div class="code-more"></div></div></div><div class="execution-bar"><div class="log-stage" style="position:relative;height:100%;flex:1;overflow:hidden"><span class="log phase log-24-0">[GO_RUNTIME] Iniciando goroutine principal G1...</span><span class="log phase log-24-1">[GO_RUNTIME] Iniciando goroutine principal G1...</span><span class="log phase log-24-2">[GO_RUNTIME] Canal &#x27;taskStream&#x27; asignado en ringbuffer.</span><span class="log phase log-24-3">[GO_RUNTIME] Conmutando contexto a G2 (consumeWorker) vía multiplexor M:N.</span><span class="log phase log-24-4">[GO_STDOUT] Procesado: {ID: 101} sin condiciones de carrera (Race detector: limpio).</span></div><span class="execution-tag">DEMO · 4s</span></div></section></main><footer>SVG / HTML PURO · {DURATION}s</footer></body></html>

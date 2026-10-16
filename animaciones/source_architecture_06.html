@@ -1,0 +1,1505 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Visualizador Profesional de Arquitecturas de Software</title>
+  <style>
+    /* =====================================================================
+       VARIABLES DE COLOR Y TEMATIZACIÓN (EDITABLES)
+       ===================================================================== */
+    :root {
+      --bg-canvas: #07090e;
+      --bg-panel: #0d121d;
+      --bg-surface: #131b2e;
+      --bg-subtle: #1c2742;
+      --border-soft: #233152;
+      --border-bright: #384d7a;
+      
+      --accent-cyan: #00f0ff;
+      --accent-cyan-glow: rgba(0, 240, 255, 0.35);
+      --accent-green: #00ff9d;
+      --accent-green-glow: rgba(0, 255, 157, 0.35);
+      --accent-violet: #a855f7;
+      --accent-violet-glow: rgba(168, 85, 247, 0.35);
+      --accent-amber: #ffb84d;
+      --accent-red: #ff4757;
+
+      --text-main: #e2e8f0;
+      --text-muted: #94a3b8;
+      --text-dim: #64748b;
+      
+      --font-mono: "SF Mono", "Fira Code", "Consolas", "Monaco", monospace;
+      --font-ui: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+      --radius: 8px;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background-color: var(--bg-canvas);
+      color: var(--text-main);
+      font-family: var(--font-ui);
+      height: 100vh;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      user-select: none;
+    }
+
+    /* =====================================================================
+       HEADER / HUD TÉCNICO
+       ===================================================================== */
+    header {
+      background: linear-gradient(180deg, #0f172a 0%, var(--bg-panel) 100%);
+      border-bottom: 1px solid var(--border-soft);
+      padding: 10px 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-shrink: 0;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .brand-logo {
+      width: 28px;
+      height: 28px;
+      fill: none;
+      stroke: var(--accent-cyan);
+      stroke-width: 2;
+    }
+
+    .brand-title {
+      font-size: 15px;
+      font-weight: 700;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: var(--text-main);
+      display: flex;
+      gap: 8px;
+      align-items: center;
+    }
+
+    .brand-title span {
+      color: var(--accent-cyan);
+    }
+
+    .brand-badge {
+      font-family: var(--font-mono);
+      font-size: 10px;
+      padding: 2px 6px;
+      border-radius: 4px;
+      background: rgba(0, 240, 255, 0.1);
+      border: 1px solid var(--accent-cyan);
+      color: var(--accent-cyan);
+    }
+
+    .system-status {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      font-family: var(--font-mono);
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+
+    .status-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--accent-green);
+      box-shadow: 0 0 10px var(--accent-green);
+      animation: pulse-dot 2s infinite ease-in-out;
+    }
+
+    @keyframes pulse-dot {
+      0%, 100% { opacity: 0.5; transform: scale(0.9); }
+      50% { opacity: 1; transform: scale(1.2); }
+    }
+
+    /* =====================================================================
+       MAIN LAYOUT (SIDEBAR + STAGE + CODE INSPECTOR)
+       ===================================================================== */
+    .app-workspace {
+      display: flex;
+      flex: 1;
+      height: calc(100vh - 51px);
+      overflow: hidden;
+    }
+
+    /* SIDEBAR: SELECTOR DE 10 ARQUITECTURAS */
+    .sidebar {
+      width: 320px;
+      background: var(--bg-panel);
+      border-right: 1px solid var(--border-soft);
+      display: flex;
+      flex-direction: column;
+      flex-shrink: 0;
+    }
+
+    .sidebar-header {
+      padding: 14px 18px;
+      font-family: var(--font-mono);
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: var(--text-dim);
+      border-bottom: 1px solid var(--border-soft);
+    }
+
+    .arch-list {
+      list-style: none;
+      overflow-y: auto;
+      flex: 1;
+    }
+
+    .arch-item {
+      padding: 12px 18px;
+      border-bottom: 1px solid rgba(35, 49, 82, 0.4);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+      position: relative;
+    }
+
+    .arch-item:hover {
+      background: rgba(28, 39, 66, 0.6);
+    }
+
+    .arch-item.active {
+      background: rgba(0, 240, 255, 0.08);
+      border-left: 3px solid var(--accent-cyan);
+    }
+
+    .arch-num {
+      font-family: var(--font-mono);
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--text-dim);
+      min-width: 22px;
+    }
+
+    .arch-item.active .arch-num {
+      color: var(--accent-cyan);
+    }
+
+    .arch-info {
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+      overflow: hidden;
+    }
+
+    .arch-name {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text-main);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .arch-item.active .arch-name {
+      color: #fff;
+    }
+
+    .arch-sub {
+      font-size: 11px;
+      color: var(--text-muted);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    /* STAGE: LIENZO ANIMADO Y TIMELINE CONTROLS */
+    .stage {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      background: radial-gradient(circle at 50% 30%, #101726 0%, var(--bg-canvas) 80%);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .stage-topbar {
+      padding: 16px 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      border-bottom: 1px solid rgba(35, 49, 82, 0.5);
+      background: rgba(13, 18, 29, 0.6);
+      backdrop-filter: blur(8px);
+    }
+
+    .current-title {
+      font-size: 18px;
+      font-weight: 700;
+      color: #fff;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .current-phase {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      color: var(--accent-cyan);
+      background: rgba(0, 240, 255, 0.1);
+      padding: 3px 8px;
+      border-radius: 4px;
+      border: 1px solid rgba(0, 240, 255, 0.3);
+    }
+
+    .current-desc {
+      font-size: 12px;
+      color: var(--text-muted);
+      margin-top: 4px;
+      max-width: 650px;
+      line-height: 1.4;
+    }
+
+    .canvas-container {
+      flex: 1;
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      overflow: hidden;
+    }
+
+    svg.diagram-viewport {
+      width: 100%;
+      height: 100%;
+      max-width: 860px;
+      max-height: 480px;
+      filter: drop-shadow(0 15px 30px rgba(0,0,0,0.6));
+    }
+
+    /* CONTROLES DE LA LÍNEA DE TIEMPO (REPRODUCIBLE & SCRUBBABLE) */
+    .timeline-dock {
+      background: var(--bg-panel);
+      border-top: 1px solid var(--border-soft);
+      padding: 12px 24px 16px 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      flex-shrink: 0;
+    }
+
+    .scrubber-track {
+      position: relative;
+      display: flex;
+      align-items: center;
+      height: 20px;
+      cursor: pointer;
+    }
+
+    .timeline-slider {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 100%;
+      height: 6px;
+      border-radius: 3px;
+      background: var(--bg-subtle);
+      outline: none;
+      position: relative;
+      cursor: pointer;
+    }
+
+    .timeline-slider::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 16px;
+      height: 16px;
+      border-radius: 50%;
+      background: var(--accent-cyan);
+      box-shadow: 0 0 10px var(--accent-cyan-glow);
+      cursor: pointer;
+      border: 2px solid #fff;
+      transition: transform 0.1s;
+    }
+
+    .timeline-slider::-webkit-slider-thumb:hover {
+      transform: scale(1.3);
+    }
+
+    .controls-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .playback-buttons {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .btn {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-soft);
+      color: var(--text-main);
+      padding: 6px 12px;
+      border-radius: var(--radius);
+      font-size: 12px;
+      font-family: var(--font-mono);
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.2s;
+    }
+
+    .btn:hover {
+      background: var(--bg-subtle);
+      border-color: var(--border-bright);
+      color: #fff;
+    }
+
+    .btn.active {
+      background: rgba(0, 240, 255, 0.15);
+      border-color: var(--accent-cyan);
+      color: var(--accent-cyan);
+    }
+
+    .btn-icon {
+      width: 14px;
+      height: 14px;
+      stroke: currentColor;
+      fill: none;
+      stroke-width: 2;
+    }
+
+    .time-counter {
+      font-family: var(--font-mono);
+      font-size: 12px;
+      color: var(--text-muted);
+      letter-spacing: 1px;
+    }
+
+    .speed-selector {
+      display: flex;
+      gap: 4px;
+      background: var(--bg-surface);
+      padding: 2px;
+      border-radius: var(--radius);
+      border: 1px solid var(--border-soft);
+    }
+
+    .btn-speed {
+      background: transparent;
+      border: none;
+      color: var(--text-dim);
+      font-family: var(--font-mono);
+      font-size: 11px;
+      padding: 4px 8px;
+      cursor: pointer;
+      border-radius: 4px;
+    }
+
+    .btn-speed.active {
+      background: var(--bg-subtle);
+      color: var(--accent-cyan);
+      font-weight: 700;
+    }
+
+    /* RIGHT DRAWER: CÓDIGO TÉCNICO E INSPECTOR */
+    .inspector-panel {
+      width: 380px;
+      background: #090d15;
+      border-left: 1px solid var(--border-soft);
+      display: flex;
+      flex-direction: column;
+      flex-shrink: 0;
+    }
+
+    .inspector-header {
+      padding: 14px 18px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid var(--border-soft);
+      font-family: var(--font-mono);
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: var(--text-dim);
+    }
+
+    .code-container {
+      flex: 1;
+      padding: 16px;
+      overflow-y: auto;
+      font-family: var(--font-mono);
+      font-size: 11.5px;
+      line-height: 1.6;
+      color: #cbd5e1;
+      white-space: pre;
+    }
+
+    /* Syntax Highlighting */
+    .c-kw { color: var(--accent-violet); font-weight: bold; }
+    .c-fn { color: var(--accent-cyan); }
+    .c-str { color: var(--accent-green); }
+    .c-cm { color: #52627e; font-style: italic; }
+    .c-num { color: var(--accent-amber); }
+    .c-hl { background: rgba(0, 240, 255, 0.12); display: block; border-left: 2px solid var(--accent-cyan); margin: 0 -16px; padding: 0 14px; }
+
+    /* SVG Estilos Globales */
+    .svg-label {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      font-weight: 600;
+      fill: var(--text-main);
+    }
+
+    .svg-sub {
+      font-family: var(--font-mono);
+      font-size: 9px;
+      fill: var(--text-dim);
+    }
+
+    .node-box {
+      fill: var(--bg-panel);
+      stroke: var(--border-soft);
+      stroke-width: 1.5;
+      rx: 6px;
+      transition: all 0.3s ease;
+    }
+
+    .packet {
+      fill: var(--accent-cyan);
+      filter: drop-shadow(0 0 6px var(--accent-cyan));
+    }
+  </style>
+</head>
+<body>
+
+  <!-- HEADER / TELEMETRÍA -->
+  <header>
+    <div class="brand">
+      <svg class="brand-logo" viewBox="0 0 24 24">
+        <polygon points="12 2 2 7 12 12 22 7 12 2"></polygon>
+        <polyline points="2 17 12 22 22 17"></polyline>
+        <polyline points="2 12 12 17 22 12"></polyline>
+      </svg>
+      <div class="brand-title">ARCH<span>VIZ</span> <div class="brand-badge">PRO v2.5</div></div>
+    </div>
+    <div class="system-status">
+      <div class="status-dot"></div>
+      <span id="telemetry-status">MOTOR: INTERACTIVO (RAF)</span>
+      <span style="color:var(--border-bright);">|</span>
+      <span id="fps-counter">60 FPS</span>
+    </div>
+  </header>
+
+  <!-- WORKSPACE -->
+  <div class="app-workspace">
+    <!-- PANEL IZQUIERDO: SELECCIÓN DE ARQUITECTURAS -->
+    <aside class="sidebar">
+      <div class="sidebar-header">Catálogo Arquitectural (10)</div>
+      <ul class="arch-list" id="arch-list">
+        <!-- Renderizado dinámico vía JS -->
+      </ul>
+    </aside>
+
+    <!-- ÁREA PRINCIPAL DE ANIMACIÓN -->
+    <main class="stage">
+      <div class="stage-topbar">
+        <div>
+          <div class="current-title">
+            <span id="stage-num" style="color:var(--accent-cyan);">01</span>
+            <span id="stage-name">Arquitectura Monolítica</span>
+            <span class="current-phase" id="stage-phase">FASE: EJECUCIÓN</span>
+          </div>
+          <div class="current-desc" id="stage-desc">
+            Cargando especificación de la arquitectura...
+          </div>
+        </div>
+      </div>
+
+      <div class="canvas-container">
+        <svg class="diagram-viewport" id="viewport" viewBox="0 0 800 440">
+          <defs>
+            <filter id="glow-cyan" x="-20%" y="-20%" width="140%" height="140%">
+              <feGaussianBlur stdDeviation="4" result="blur" />
+              <feComposite in="SourceGraphic" in2="blur" operator="over" />
+            </filter>
+            <filter id="glow-violet" x="-20%" y="-20%" width="140%" height="140%">
+              <feGaussianBlur stdDeviation="4" result="blur" />
+              <feComposite in="SourceGraphic" in2="blur" operator="over" />
+            </filter>
+            <filter id="glow-green" x="-20%" y="-20%" width="140%" height="140%">
+              <feGaussianBlur stdDeviation="4" result="blur" />
+              <feComposite in="SourceGraphic" in2="blur" operator="over" />
+            </filter>
+            <marker id="arrow" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+              <path d="M 0 1 L 8 5 L 0 9 z" fill="var(--text-dim)"/>
+            </marker>
+            <marker id="arrow-cyan" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+              <path d="M 0 1 L 8 5 L 0 9 z" fill="var(--accent-cyan)"/>
+            </marker>
+          </defs>
+          <g id="diagram-scene"><!-- El contenido SVG se genera dinámicamente según la arquitectura activa --></g>
+        </svg>
+      </div>
+
+      <!-- DOCK DE LÍNEA DE TIEMPO INTERACTIVA -->
+      <footer class="timeline-dock">
+        <div class="scrubber-track">
+          <input type="range" class="timeline-slider" id="timeline-slider" min="0" max="1000" value="0">
+        </div>
+        <div class="controls-row">
+          <div class="playback-buttons">
+            <button class="btn" id="btn-play">
+              <svg class="btn-icon" id="play-icon" viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
+              <span id="play-text">Pausar</span>
+            </button>
+            <button class="btn" id="btn-restart">
+              <svg class="btn-icon" viewBox="0 0 24 24"><path d="M1 4v6h6M23 20v-6h-6"></path><path d="M20.49 9A9 9 0 0 0 5.64 5.64L1 10m22 4l-4.64 4.36A9 9 0 0 1 3.51 15"></path></svg>
+              Reiniciar
+            </button>
+            <span class="time-counter" id="time-display">00.0s / 04.0s</span>
+          </div>
+
+          <div class="speed-selector">
+            <button class="btn-speed" data-speed="0.5">0.5x</button>
+            <button class="btn-speed active" data-speed="1.0">1.0x</button>
+            <button class="btn-speed" data-speed="2.0">2.0x</button>
+          </div>
+        </div>
+      </footer>
+    </main>
+
+    <!-- INSPECTOR DE CÓDIGO TÉCNICO -->
+    <aside class="inspector-panel">
+      <div class="inspector-header">
+        <span>Implementación Realista</span>
+        <span id="code-file" style="color:var(--accent-cyan); text-transform:none;">server.js</span>
+      </div>
+      <div class="code-container" id="code-view">
+        <!-- Código sincronizado -->
+      </div>
+    </aside>
+  </div>
+
+  <script>
+    /* =====================================================================
+       DATOS EDITABLES DE LAS 10 ARQUITECTURAS
+       ===================================================================== */
+    const ARCHITECTURES = [
+      {
+        id: "monolith",
+        num: "01",
+        name: "Arquitectura Monolítica",
+        subtitle: "Bloque único fuertemente acoplado",
+        file: "monolith-app.bundle.js",
+        desc: "Todo el sistema (autenticación, órdenes, inventario, facturación y capa UI) convive dentro de un solo proceso y base de código. Una falla o bloqueo en una rutina puede afectar todo el servicio.",
+        code: `<span class="c-cm">// Despliegue único: Proceso compartido</span>
+<span class="c-kw">class</span> <span class="c-fn">MonolithicServer</span> {
+  <span class="c-fn">handleRequest</span>(req, res) {
+    <span class="c-kw">if</span> (req.url === <span class="c-str">'/checkout'</span>) {
+      <span class="c-cm">// Rutinas acopladas en memoria local</span>
+      <span class="c-kw">const</span> user = <span class="c-fn">authModule</span>(req);
+      <span class="c-kw">const</span> stock = <span class="c-fn">inventoryModule</span>(req.body);
+      <span class="c-kw">const</span> pay = <span class="c-fn">billingModule</span>(user, stock);
+      <span class="c-fn">directDbWrite</span>(pay);
+      res.<span class="c-fn">send</span>({ ok: <span class="c-kw">true</span> });
+    }
+  }
+}`,
+        phases: [
+          { at: 0.1, label: "Petición HTTP entrante al puerto 8080" },
+          { at: 0.4, label: "Llamada interna a Auth y Billing en el mismo proceso" },
+          { at: 0.7, label: "Acceso exclusivo a BD Monolítica compartida" },
+          { at: 0.9, label: "Respuesta unificada entregada al cliente" }
+        ],
+        render: (svg, t) => {
+          // Contenedor principal gigante
+          let html = `
+            <rect class="node-box" x="220" y="50" width="360" height="340" stroke="var(--accent-amber)" stroke-dasharray="6,4" fill="#0d1424"/>
+            <text x="240" y="80" class="svg-label" fill="var(--accent-amber)">MONOLITH_RUNTIME (Port 8080)</text>
+            <text x="240" y="98" class="svg-sub">Single Process / Shared Memory Space</text>
+            
+            <!-- Módulos fuertemente acoplados adentro -->
+            <rect id="m-ui" x="250" y="120" width="140" height="60" class="node-box" />
+            <text x="270" y="150" class="svg-label">UI Layer / SSR</text>
+            <text x="270" y="165" class="svg-sub">React / Templates</text>
+
+            <rect id="m-auth" x="410" y="120" width="140" height="60" class="node-box" />
+            <text x="430" y="150" class="svg-label">Auth Context</text>
+            <text x="430" y="165" class="svg-sub">JWT & Session</text>
+
+            <rect id="m-order" x="250" y="210" width="140" height="60" class="node-box" />
+            <text x="270" y="240" class="svg-label">Orders Routine</text>
+            <text x="270" y="255" class="svg-sub">Order Engine</text>
+
+            <rect id="m-pay" x="410" y="210" width="140" height="60" class="node-box" />
+            <text x="430" y="240" class="svg-label">Billing Logic</text>
+            <text x="430" y="255" class="svg-sub">Stripe Gateway</text>
+
+            <rect id="m-db" x="250" y="300" width="300" height="65" class="node-box" stroke="var(--accent-cyan)" />
+            <text x="340" y="330" class="svg-label" fill="var(--accent-cyan)">Single Relational DB Pool</text>
+            <text x="350" y="348" class="svg-sub">Shared SQL Connection</text>
+
+            <!-- Líneas de acoplamiento espagueti -->
+            <line x1="320" y1="180" x2="320" y2="210" stroke="#ffb84d" stroke-width="1.5" stroke-dasharray="3,3"/>
+            <line x1="480" y1="180" x2="480" y2="210" stroke="#ffb84d" stroke-width="1.5" stroke-dasharray="3,3"/>
+            <line x1="390" y1="240" x2="410" y2="240" stroke="#ffb84d" stroke-width="1.5" stroke-dasharray="3,3"/>
+            <line x1="390" y1="270" x2="390" y2="300" stroke="#ffb84d" stroke-width="1.5" stroke-dasharray="3,3"/>
+
+            <!-- Cliente externo -->
+            <rect x="30" y="180" width="120" height="70" class="node-box" stroke="var(--accent-cyan)" />
+            <text x="55" y="215" class="svg-label" fill="var(--accent-cyan)">Client App</text>
+            <text x="45" y="235" class="svg-sub">Browser / Mobile</text>
+
+            <!-- Ruta de Petición -->
+            <line x1="150" y1="215" x2="220" y2="215" stroke="var(--border-bright)" stroke-width="2" marker-end="url(#arrow)"/>
+          `;
+
+          // Paquete animado según t (0 -> 1)
+          let px, py;
+          if (t < 0.25) {
+            let p = t / 0.25;
+            px = 150 + p * 100;
+            py = 215;
+          } else if (t < 0.6) {
+            let p = (t - 0.25) / 0.35;
+            px = 250 + p * 160;
+            py = 210 + Math.sin(p * Math.PI) * 30;
+          } else if (t < 0.85) {
+            let p = (t - 0.6) / 0.25;
+            px = 410 - p * 60;
+            py = 240 + p * 60;
+          } else {
+            let p = (t - 0.85) / 0.15;
+            px = 350 - p * 200;
+            py = 300 - p * 85;
+          }
+
+          html += `<circle cx="${px}" cy="${py}" r="6" class="packet" />`;
+          svg.innerHTML = html;
+        }
+      },
+      {
+        id: "modular",
+        num: "02",
+        name: "Arquitectura Modular",
+        subtitle: "Archivos autónomos con interfaces explícitas",
+        file: "src/modules/index.ts",
+        desc: "El sistema se subdivide en ficheros o librerías independientes. La comunicación ocurre estrictamente mediante interfaces tipadas (exports/imports), garantizando encapsulación sin llamadas directas a memoria privada.",
+        code: `<span class="c-cm">// Contratos modulares estrictos</span>
+<span class="c-kw">import</span> { <span class="c-fn">AuthModule</span> } <span class="c-kw">from</span> <span class="c-str">'./auth.module'</span>;
+<span class="c-kw">import</span> { <span class="c-fn">BillingModule</span> } <span class="c-kw">from</span> <span class="c-str">'./billing.module'</span>;
+
+<span class="c-kw">export class</span> <span class="c-fn">CheckoutOrchestrator</span> {
+  <span class="c-kw">constructor</span>(
+    <span class="c-kw">private</span> auth: <span class="c-fn">AuthModule</span>,
+    <span class="c-kw">private</span> billing: <span class="c-fn">BillingModule</span>
+  ) {}
+
+  <span class="c-kw">async</span> <span class="c-fn">execute</span>(ctx: <span class="c-fn">RequestContext</span>) {
+    <span class="c-kw">const</span> token = <span class="c-kw">await</span> <span class="c-kw">this</span>.auth.<span class="c-fn">verify</span>(ctx.bearer);
+    <span class="c-kw">return this</span>.billing.<span class="c-fn">charge</span>(token.uid, ctx.amount);
+  }
+}`,
+        phases: [
+          { at: 0.1, label: "Llamada al módulo Auth (auth.module.ts)" },
+          { at: 0.45, label: "Retorno de Token tipado por interfaz pública" },
+          { at: 0.75, label: "Invocación a Billing (billing.module.ts)" },
+          { at: 0.95, label: "Resolución de Promesa tipada" }
+        ],
+        render: (svg, t) => {
+          let html = `
+            <!-- Modulo 1: Auth -->
+            <rect x="80" y="80" width="190" height="130" class="node-box" stroke="var(--accent-cyan)"/>
+            <text x="100" y="110" class="svg-label" fill="var(--accent-cyan)">auth.module.ts</text>
+            <rect x="100" y="125" width="150" height="24" rx="4" fill="var(--bg-subtle)"/>
+            <text x="110" y="141" class="svg-sub">+ verify(token): User</text>
+            <rect x="100" y="155" width="150" height="24" rx="4" fill="var(--bg-subtle)"/>
+            <text x="110" y="171" class="svg-sub">- privateCryptoKey</text>
+
+            <!-- Modulo 2: Billing -->
+            <rect x="520" y="80" width="200" height="130" class="node-box" stroke="var(--accent-violet)"/>
+            <text x="540" y="110" class="svg-label" fill="var(--accent-violet)">billing.module.ts</text>
+            <rect x="540" y="125" width="160" height="24" rx="4" fill="var(--bg-subtle)"/>
+            <text x="550" y="141" class="svg-sub">+ charge(uid, sum): Tx</text>
+            <rect x="540" y="155" width="160" height="24" rx="4" fill="var(--bg-subtle)"/>
+            <text x="550" y="171" class="svg-sub">- gatewaySecret</text>
+
+            <!-- Modulo 3: Core Orchestrator -->
+            <rect x="290" y="270" width="220" height="120" class="node-box" stroke="var(--accent-green)"/>
+            <text x="320" y="300" class="svg-label" fill="var(--accent-green)">app.orchestrator.ts</text>
+            <text x="330" y="325" class="svg-sub">Importa interfaces públicas</text>
+            <text x="310" y="350" class="svg-sub" fill="var(--accent-cyan)">import { AuthModule }</text>
+            <text x="310" y="368" class="svg-sub" fill="var(--accent-violet)">import { BillingModule }</text>
+
+            <!-- Canales de comunicación tipados -->
+            <path d="M 270 145 L 350 270" stroke="var(--accent-cyan)" stroke-width="1.5" stroke-dasharray="4,4"/>
+            <path d="M 520 145 L 450 270" stroke="var(--accent-violet)" stroke-width="1.5" stroke-dasharray="4,4"/>
+          `;
+
+          // Paquete animado interactuando entre módulos
+          let px, py, pColor;
+          if (t < 0.5) {
+            let p = t / 0.5;
+            px = 350 - p * 80;
+            py = 270 - p * 125;
+            pColor = "var(--accent-cyan)";
+          } else {
+            let p = (t - 0.5) / 0.5;
+            px = 450 + p * 70;
+            py = 270 - p * 125;
+            pColor = "var(--accent-violet)";
+          }
+
+          html += `<circle cx="${px}" cy="${py}" r="7" fill="${pColor}" filter="drop-shadow(0 0 6px ${pColor})" />`;
+          svg.innerHTML = html;
+        }
+      },
+      {
+        id: "modular-monolith",
+        num: "03",
+        name: "Monolito Modular",
+        subtitle: "Límites estrictos en un único despliegue",
+        file: "src/bounded-contexts/orders/domain.ts",
+        desc: "Combina la simplicidad operativa de desplegar un solo artefacto con el aislamiento arquitectónico de microservicios: cada módulo tiene su propio esquema de datos y facade pública inquebrantable.",
+        code: `<span class="c-cm">// Bounded Context con límite estricto</span>
+<span class="c-kw">export class</span> <span class="c-fn">OrdersBoundedContext</span> {
+  <span class="c-cm">// Sólo se expone la API pública del módulo</span>
+  <span class="c-kw">public static</span> <span class="c-fn">createOrderFacade</span>() {
+    <span class="c-kw">return new</span> <span class="c-fn">OrderPublicService</span>(
+      <span class="c-kw">new</span> <span class="c-fn">OrderInternalRepository</span>() <span class="c-cm">// DB privada</span>
+    );
+  }
+}`,
+        phases: [
+          { at: 0.1, label: "Petición a API Gateway interna en memoria" },
+          { at: 0.45, label: "Tránsito a través de la interfaz Bounded Context" },
+          { at: 0.8, label: "Acceso exclusivo a Schema 'orders' en la misma BD" }
+        ],
+        render: (svg, t) => {
+          let html = `
+            <!-- Marco del Despliegue Único -->
+            <rect x="80" y="40" width="640" height="360" rx="12" fill="#090e1a" stroke="var(--accent-cyan)" stroke-width="1.5"/>
+            <text x="100" y="70" class="svg-label" fill="var(--accent-cyan)">MODULAR MONOLITH RUNTIME (Single Deployment Node)</text>
+
+            <!-- Contexto 1: Users -->
+            <rect x="110" y="100" width="170" height="220" rx="8" fill="var(--bg-panel)" stroke="var(--border-soft)"/>
+            <text x="130" y="130" class="svg-label">Users Context</text>
+            <rect x="125" y="150" width="140" height="28" rx="4" fill="var(--bg-subtle)" stroke="var(--accent-green)"/>
+            <text x="135" y="168" class="svg-sub" fill="var(--accent-green)">Facade: IUserApi</text>
+            <rect x="125" y="240" width="140" height="50" rx="4" fill="#0c1626" stroke="#253554"/>
+            <text x="140" y="265" class="svg-sub">Private Schema</text>
+            <text x="140" y="280" class="svg-sub" fill="var(--text-dim)">db.users_*</text>
+
+            <!-- Contexto 2: Orders -->
+            <rect x="315" y="100" width="170" height="220" rx="8" fill="var(--bg-panel)" stroke="var(--border-soft)"/>
+            <text x="335" y="130" class="svg-label">Orders Context</text>
+            <rect x="330" y="150" width="140" height="28" rx="4" fill="var(--bg-subtle)" stroke="var(--accent-cyan)"/>
+            <text x="340" y="168" class="svg-sub" fill="var(--accent-cyan)">Facade: IOrderApi</text>
+            <rect x="330" y="240" width="140" height="50" rx="4" fill="#0c1626" stroke="#253554"/>
+            <text x="345" y="265" class="svg-sub">Private Schema</text>
+            <text x="345" y="280" class="svg-sub" fill="var(--text-dim)">db.orders_*</text>
+
+            <!-- Contexto 3: Inventory -->
+            <rect x="520" y="100" width="170" height="220" rx="8" fill="var(--bg-panel)" stroke="var(--border-soft)"/>
+            <text x="540" y="130" class="svg-label">Stock Context</text>
+            <rect x="535" y="150" width="140" height="28" rx="4" fill="var(--bg-subtle)" stroke="var(--accent-violet)"/>
+            <text x="545" y="168" class="svg-sub" fill="var(--accent-violet)">Facade: IStockApi</text>
+            <rect x="535" y="240" width="140" height="50" rx="4" fill="#0c1626" stroke="#253554"/>
+            <text x="550" y="265" class="svg-sub">Private Schema</text>
+            <text x="550" y="280" class="svg-sub" fill="var(--text-dim)">db.stock_*</text>
+
+            <!-- Event Bus en memoria -->
+            <rect x="110" y="340" width="580" height="30" rx="4" fill="#162238" stroke="var(--accent-cyan)" stroke-dasharray="3,3"/>
+            <text x="320" y="360" class="svg-sub" fill="var(--accent-cyan)">In-Memory Event Bus (Zero Network Latency)</text>
+          `;
+
+          // Pulso animado por el bus en memoria
+          let bx = 120 + t * 540;
+          html += `<circle cx="${bx}" cy="355" r="5" fill="var(--accent-cyan)" filter="drop-shadow(0 0 5px var(--accent-cyan))" />`;
+          svg.innerHTML = html;
+        }
+      },
+      {
+        id: "microservices",
+        num: "04",
+        name: "Microservicios",
+        subtitle: "Servicios distribuidos conectados vía API",
+        file: "gateway/envoy.yaml",
+        desc: "Cada dominio de negocio se ejecuta de forma autónoma en contenedores/pods aislados, con bases de datos descentralizadas y orquestación mediante API Gateway y llamadas gRPC/REST.",
+        code: `<span class="c-cm"># API Gateway HTTP Routing</span>
+<span class="c-kw">routes</span>:
+  - <span class="c-kw">match</span>: { <span class="c-str">prefix</span>: <span class="c-str">"/api/v1/users"</span> }
+    <span class="c-kw">route</span>: { <span class="c-str">cluster</span>: <span class="c-str">"users_microservice"</span> }
+  - <span class="c-kw">match</span>: { <span class="c-str">prefix</span>: <span class="c-str">"/api/v1/orders"</span> }
+    <span class="c-kw">route</span>: { <span class="c-str">cluster</span>: <span class="c-str">"orders_microservice"</span> }
+  - <span class="c-kw">match</span>: { <span class="c-str">prefix</span>: <span class="c-str">"/api/v1/payments"</span> }
+    <span class="c-kw">route</span>: { <span class="c-str">cluster</span>: <span class="c-str">"payments_microservice"</span> }`,
+        phases: [
+          { at: 0.1, label: "Tráfico TLS recibido en el API Gateway" },
+          { at: 0.45, label: "Enrutamiento gRPC/REST hacia Order Service" },
+          { at: 0.75, label: "Transacción atómica en Database exclusiva" },
+          { at: 0.95, label: "Consolidación de respuesta al Gateway" }
+        ],
+        render: (svg, t) => {
+          let html = `
+            <!-- Cliente -->
+            <rect x="30" y="180" width="90" height="60" rx="6" class="node-box" stroke="var(--text-muted)"/>
+            <text x="50" y="215" class="svg-label">Client</text>
+
+            <!-- API Gateway -->
+            <rect x="180" y="110" width="90" height="200" rx="8" class="node-box" stroke="var(--accent-cyan)"/>
+            <text x="195" y="195" class="svg-label" fill="var(--accent-cyan)" transform="rotate(-90 195 195)">API GATEWAY</text>
+
+            <!-- Microservicio 1: Auth -->
+            <rect x="370" y="40" width="170" height="90" rx="6" class="node-box" stroke="var(--accent-green)"/>
+            <text x="390" y="70" class="svg-label">Auth Service :3001</text>
+            <rect x="560" y="55" width="60" height="60" rx="4" fill="#091422" stroke="var(--accent-green)"/>
+            <text x="575" y="90" class="svg-sub" fill="var(--accent-green)">DB-1</text>
+
+            <!-- Microservicio 2: Orders -->
+            <rect x="370" y="165" width="170" height="90" rx="6" class="node-box" stroke="var(--accent-cyan)"/>
+            <text x="385" y="195" class="svg-label">Orders Service :3002</text>
+            <rect x="560" y="180" width="60" height="60" rx="4" fill="#091422" stroke="var(--accent-cyan)"/>
+            <text x="575" y="215" class="svg-sub" fill="var(--accent-cyan)">DB-2</text>
+
+            <!-- Microservicio 3: Payments -->
+            <rect x="370" y="290" width="170" height="90" rx="6" class="node-box" stroke="var(--accent-violet)"/>
+            <text x="380" y="320" class="svg-label">Payments Service :3003</text>
+            <rect x="560" y="305" width="60" height="60" rx="4" fill="#091422" stroke="var(--accent-violet)"/>
+            <text x="575" y="340" class="svg-sub" fill="var(--accent-violet)">DB-3</text>
+
+            <!-- Rutas de red -->
+            <line x1="120" y1="210" x2="180" y2="210" stroke="var(--border-bright)" stroke-width="1.5" marker-end="url(#arrow)"/>
+            <line x1="270" y1="170" x2="370" y2="85" stroke="var(--border-bright)" stroke-width="1.5" marker-end="url(#arrow)"/>
+            <line x1="270" y1="210" x2="370" y2="210" stroke="var(--border-bright)" stroke-width="1.5" marker-end="url(#arrow)"/>
+            <line x1="270" y1="250" x2="370" y2="335" stroke="var(--border-bright)" stroke-width="1.5" marker-end="url(#arrow)"/>
+          `;
+
+          // Paquete cruzando hacia el microservicio de órdenes
+          let px, py;
+          if (t < 0.3) {
+            let p = t / 0.3;
+            px = 120 + p * 100;
+            py = 210;
+          } else if (t < 0.7) {
+            let p = (t - 0.3) / 0.4;
+            px = 270 + p * 100;
+            py = 210;
+          } else {
+            let p = (t - 0.7) / 0.3;
+            px = 450 + p * 120;
+            py = 210;
+          }
+
+          html += `<circle cx="${px}" cy="${py}" r="6" fill="var(--accent-cyan)" filter="drop-shadow(0 0 8px var(--accent-cyan))" />`;
+          svg.innerHTML = html;
+        }
+      },
+      {
+        id: "client-server",
+        num: "05",
+        name: "Arquitectura Cliente-Servidor",
+        subtitle: "Ciclo de Petición, Procesamiento y Respuesta",
+        file: "network/http_transaction.har",
+        desc: "Separación canónica de responsabilidades: el Cliente gestiona el estado de vista y presentación mientras que el Servidor centraliza reglas de negocio, persistencia y computación segura.",
+        code: `<span class="c-cm">// HTTP Request/Response Exchange</span>
+<span class="c-kw">const</span> rawRequest = \`
+GET /api/v2/users/me HTTP/1.1
+Host: api.enterprise.com
+Authorization: Bearer \${jwtToken}
+Accept: application/json\`;
+
+<span class="c-cm">// Servidor procesa y devuelve el payload</span>
+<span class="c-kw">const</span> rawResponse = \`
+HTTP/1.1 200 OK
+Content-Type: application/json
+Cache-Control: private, max-age=60
+
+{"status":"active","role":"staff"}\`;`,
+        phases: [
+          { at: 0.2, label: "Cliente serializa y despacha HTTP Request" },
+          { at: 0.55, label: "Servidor procesa middleware y consulta base de datos" },
+          { at: 0.9, label: "HTTP 200 OK con payload JSON recibido en el cliente" }
+        ],
+        render: (svg, t) => {
+          let html = `
+            <!-- Cliente -->
+            <rect x="80" y="110" width="180" height="220" rx="8" class="node-box" stroke="var(--accent-cyan)"/>
+            <text x="120" y="145" class="svg-label" fill="var(--accent-cyan)">CLIENTE (Front)</text>
+            <rect x="100" y="170" width="140" height="70" rx="4" fill="var(--bg-subtle)"/>
+            <text x="120" y="200" class="svg-sub">User Interaction</text>
+            <text x="120" y="220" class="svg-sub">State / DOM Render</text>
+            <rect x="100" y="260" width="140" height="40" rx="4" fill="#0b172a" stroke="var(--border-soft)"/>
+            <text x="125" y="285" class="svg-sub" fill="var(--accent-cyan)">fetch('/api/v2')</text>
+
+            <!-- Servidor -->
+            <rect x="540" y="110" width="180" height="220" rx="8" class="node-box" stroke="var(--accent-green)"/>
+            <text x="580" y="145" class="svg-label" fill="var(--accent-green)">SERVIDOR (API)</text>
+            <rect x="560" y="170" width="140" height="70" rx="4" fill="var(--bg-subtle)"/>
+            <text x="580" y="200" class="svg-sub">Business Logic</text>
+            <text x="580" y="220" class="svg-sub">Auth Middleware</text>
+            <rect x="560" y="260" width="140" height="40" rx="4" fill="#0b172a" stroke="var(--border-soft)"/>
+            <text x="590" y="285" class="svg-sub" fill="var(--accent-green)">Database Pool</text>
+
+            <!-- Conexión de red de ida y vuelta -->
+            <path d="M 260 190 L 540 190" stroke="var(--border-bright)" stroke-width="2" stroke-dasharray="4,4"/>
+            <text x="360" y="180" class="svg-sub" fill="var(--accent-cyan)">Petición: POST /orders</text>
+
+            <path d="M 540 250 L 260 250" stroke="var(--border-bright)" stroke-width="2" stroke-dasharray="4,4"/>
+            <text x="360" y="270" class="svg-sub" fill="var(--accent-green)">Respuesta: HTTP 201 Created</text>
+          `;
+
+          // Paquete que viaja ida y vuelta
+          let px, py, pcol;
+          if (t < 0.5) {
+            let p = t / 0.5;
+            px = 260 + p * 280;
+            py = 190;
+            pcol = "var(--accent-cyan)";
+          } else {
+            let p = (t - 0.5) / 0.5;
+            px = 540 - p * 280;
+            py = 250;
+            pcol = "var(--accent-green)";
+          }
+
+          html += `<circle cx="${px}" cy="${py}" r="7" fill="${pcol}" filter="drop-shadow(0 0 7px ${pcol})" />`;
+          svg.innerHTML = html;
+        }
+      },
+      {
+        id: "mvc",
+        num: "06",
+        name: "Arquitectura MVC",
+        subtitle: "Modelo - Vista - Controlador",
+        file: "controllers/user_controller.py",
+        desc: "Desacopla la lógica de visualización (View) del almacenamiento de estado (Model) a través de un intermediario (Controller) que gestiona eventos y actualiza la interfaz reactivamente.",
+        code: `<span class="c-cm"># MVC Controller Intermediary</span>
+<span class="c-kw">class</span> <span class="c-fn">OrderController</span>:
+    <span class="c-kw">def</span> <span class="c-fn">__init__</span>(self, model, view):
+        self.model = model
+        self.view = view
+
+    <span class="c-kw">def</span> <span class="c-fn">on_submit_action</span>(self, form_payload):
+        <span class="c-cm"># 1. Controlador muta el Modelo</span>
+        record = self.model.<span class="c-fn">persist</span>(form_payload)
+        <span class="c-cm"># 2. Modelo actualiza la Vista</span>
+        self.view.<span class="c-fn">render_success</span>(record.id)`,
+        phases: [
+          { at: 0.15, label: "1. Usuario dispara acción en la Vista" },
+          { at: 0.45, label: "2. Controlador recibe el evento y manipula el Modelo" },
+          { at: 0.75, label: "3. El Modelo notifica la mutación de estado a la Vista" },
+          { at: 0.95, label: "4. La Vista renderiza el estado actualizado" }
+        ],
+        render: (svg, t) => {
+          let html = `
+            <!-- Controlador (Vértice Superior) -->
+            <rect x="310" y="40" width="180" height="90" rx="8" class="node-box" stroke="var(--accent-cyan)"/>
+            <text x="350" y="80" class="svg-label" fill="var(--accent-cyan)">CONTROLLER</text>
+            <text x="345" y="100" class="svg-sub">Orquesta flujo y datos</text>
+
+            <!-- Vista (Inferior Izquierda) -->
+            <rect x="110" y="260" width="180" height="90" rx="8" class="node-box" stroke="var(--accent-violet)"/>
+            <text x="175" y="300" class="svg-label" fill="var(--accent-violet)">VIEW</text>
+            <text x="145" y="320" class="svg-sub">Renderizado de Interfaz</text>
+
+            <!-- Modelo (Inferior Derecha) -->
+            <rect x="510" y="260" width="180" height="90" rx="8" class="node-box" stroke="var(--accent-green)"/>
+            <text x="570" y="300" class="svg-label" fill="var(--accent-green)">MODEL</text>
+            <text x="545" y="320" class="svg-sub">Estado & Reglas de Negocio</text>
+
+            <!-- Flechas direccionales triangulares -->
+            <!-- 1. View -> Controller -->
+            <line x1="220" y1="260" x2="330" y2="130" stroke="var(--border-bright)" stroke-width="1.5" marker-end="url(#arrow)"/>
+            <text x="230" y="180" class="svg-sub" fill="var(--accent-violet)">1. User Input</text>
+
+            <!-- 2. Controller -> Model -->
+            <line x1="470" y1="130" x2="580" y2="260" stroke="var(--border-bright)" stroke-width="1.5" marker-end="url(#arrow)"/>
+            <text x="540" y="180" class="svg-sub" fill="var(--accent-cyan)">2. Updates</text>
+
+            <!-- 3. Model -> View -->
+            <line x1="510" y1="310" x2="290" y2="310" stroke="var(--border-bright)" stroke-width="1.5" marker-end="url(#arrow)"/>
+            <text x="365" y="330" class="svg-sub" fill="var(--accent-green)">3. Notifies Update</text>
+          `;
+
+          // Partícula siguiendo el triángulo
+          let px, py, pcol;
+          if (t < 0.33) {
+            let p = t / 0.33;
+            px = 220 + p * 110;
+            py = 260 - p * 130;
+            pcol = "var(--accent-violet)";
+          } else if (t < 0.66) {
+            let p = (t - 0.33) / 0.33;
+            px = 470 + p * 110;
+            py = 130 + p * 130;
+            pcol = "var(--accent-cyan)";
+          } else {
+            let p = (t - 0.66) / 0.34;
+            px = 510 - p * 220;
+            py = 310;
+            pcol = "var(--accent-green)";
+          }
+
+          html += `<circle cx="${px}" cy="${py}" r="7" fill="${pcol}" filter="drop-shadow(0 0 7px ${pcol})" />`;
+          svg.innerHTML = html;
+        }
+      },
+      {
+        id: "layered",
+        num: "07",
+        name: "Arquitectura en Capas (N-Tier)",
+        subtitle: "Separación estricta jerárquica unidireccional",
+        file: "domain/services/payment_service.java",
+        desc: "Las capas se apilan jerárquicamente: cada capa solo puede invocar a la inmediatamente inferior, impidiendo que detalles de infraestructura o base de datos contaminen la lógica de dominio.",
+        code: `<span class="c-cm">// Descenso estricto de capas (Layered)</span>
+<span class="c-kw">package</span> com.enterprise.domain;
+
+<span class="c-kw">public class</span> <span class="c-fn">PaymentProcessor</span> {
+  <span class="c-cm">// Capa de Dominio invoca sólo a la de Infraestructura</span>
+  <span class="c-kw">private final</span> <span class="c-fn">AccountRepository</span> repo;
+
+  <span class="c-kw">public boolean</span> <span class="c-fn">executeTransfer</span>(<span class="c-fn">Money</span> amount) {
+    <span class="c-kw">var</span> acc = repo.<span class="c-fn">findAndLock</span>();
+    acc.<span class="c-fn">debit</span>(amount);
+    <span class="c-kw">return</span> repo.<span class="c-fn">save</span>(acc);
+  }
+}`,
+        phases: [
+          { at: 0.1, label: "Capa Presentación recibe REST DTO" },
+          { at: 0.4, label: "Capa Aplicación coordina el caso de uso" },
+          { at: 0.7, label: "Capa Dominio ejecuta invariantes y reglas de negocio" },
+          { at: 0.95, label: "Capa Infraestructura persiste en disco/SQL" }
+        ],
+        render: (svg, t) => {
+          let html = `
+            <!-- 1. Capa de Presentación -->
+            <rect x="140" y="40" width="520" height="65" rx="6" class="node-box" stroke="var(--accent-cyan)"/>
+            <text x="160" y="70" class="svg-label" fill="var(--accent-cyan)">1. PRESENTATION LAYER (Web / Rest API / Controllers)</text>
+            <text x="160" y="88" class="svg-sub">Validación sintáctica, DTOs y serialización JSON</text>
+
+            <!-- 2. Capa de Aplicación -->
+            <rect x="140" y="130" width="520" height="65" rx="6" class="node-box" stroke="var(--accent-violet)"/>
+            <text x="160" y="160" class="svg-label" fill="var(--accent-violet)">2. APPLICATION LAYER (Use Cases / Orchestration)</text>
+            <text x="160" y="178" class="svg-sub">Transaccionalidad y despacho de comandos de negocio</text>
+
+            <!-- 3. Capa de Dominio -->
+            <rect x="140" y="220" width="520" height="65" rx="6" class="node-box" stroke="var(--accent-green)"/>
+            <text x="160" y="250" class="svg-label" fill="var(--accent-green)">3. DOMAIN LAYER (Entities / Rules / Value Objects)</text>
+            <text x="160" y="268" class="svg-sub">Reglas de negocio puras agnósticas de infraestructura</text>
+
+            <!-- 4. Capa de Infraestructura -->
+            <rect x="140" y="310" width="520" height="65" rx="6" class="node-box" stroke="var(--accent-amber)"/>
+            <text x="160" y="340" class="svg-label" fill="var(--accent-amber)">4. INFRASTRUCTURE LAYER (SQL / Cache / External APIs)</text>
+            <text x="160" y="358" class="svg-sub">PostgreSQL Driver, Redis Client, AWS S3</text>
+
+            <!-- Guías de descenso -->
+            <line x1="400" y1="105" x2="400" y2="130" stroke="var(--border-bright)" stroke-width="2" marker-end="url(#arrow)"/>
+            <line x1="400" y1="195" x2="400" y2="220" stroke="var(--border-bright)" stroke-width="2" marker-end="url(#arrow)"/>
+            <line x1="400" y1="285" x2="400" y2="310" stroke="var(--border-bright)" stroke-width="2" marker-end="url(#arrow)"/>
+          `;
+
+          // Partícula descendiendo nivel por nivel
+          let py = 40 + t * 310;
+          html += `<circle cx="400" cy="${py}" r="7" fill="var(--accent-cyan)" filter="drop-shadow(0 0 8px var(--accent-cyan))" />`;
+          svg.innerHTML = html;
+        }
+      },
+      {
+        id: "hexagonal",
+        num: "08",
+        name: "Arquitectura Hexagonal",
+        subtitle: "Puertos y Adaptadores (Agnóstica de Frameworks)",
+        file: "core/ports/payment_repository.go",
+        desc: "El núcleo de dominio reside en el centro absoluto rodeado de Puertos (interfaces). Adaptadores externos (controladores HTTP, drivers SQL, colas) se acoplan hacia adentro sin que el núcleo dependa de librerías externas.",
+        code: `<span class="c-cm">// Hexagonal Domain Port (Inversión pura)</span>
+<span class="c-kw">package</span> core
+
+<span class="c-kw">type</span> <span class="c-fn">UserPort</span> <span class="c-kw">interface</span> {
+    <span class="c-fn">GetUserById</span>(id <span class="c-kw">string</span>) (*<span class="c-fn">User</span>, <span class="c-kw">error</span>)
+}
+
+<span class="c-cm">// Adaptador Externo implementa el puerto</span>
+<span class="c-kw">type</span> <span class="c-fn">PostgresAdapter</span> <span class="c-kw">struct</span> { DB *sql.DB }
+
+<span class="c-kw">func</span> (p *<span class="c-fn">PostgresAdapter</span>) <span class="c-fn">GetUserById</span>(id <span class="c-kw">string</span>) (*<span class="c-fn">User</span>, <span class="c-kw">error</span>) {
+    <span class="c-cm">// Implementación tecnológica fuera del Core</span>
+    <span class="c-kw">return</span> dbQuery(id)
+}`,
+        phases: [
+          { at: 0.2, label: "Adaptador Primario (HTTP REST) traduce JSON entrante" },
+          { at: 0.5, label: "Invocación a través del Inbound Port al Core de Dominio" },
+          { at: 0.85, label: "Core invoca Outbound Port implementado por PostgresAdapter" }
+        ],
+        render: (svg, t) => {
+          let html = `
+            <!-- Hexágono Exterior: Adaptadores -->
+            <polygon points="400,30 680,110 680,330 400,410 120,330 120,110" 
+                     fill="#0a101f" stroke="var(--border-soft)" stroke-width="2"/>
+            <text x="400" y="55" text-anchor="middle" class="svg-sub" fill="var(--text-dim)">OUTER LAYER: ADAPTERS & DRIVERS</text>
+
+            <!-- Hexágono Interior: Núcleo de Dominio (Hexágono) -->
+            <polygon points="400,120 540,165 540,275 400,320 260,275 260,165" 
+                     fill="#101b33" stroke="var(--accent-green)" stroke-width="2" filter="url(#glow-green)"/>
+            <text x="400" y="210" text-anchor="middle" class="svg-label" fill="var(--accent-green)">DOMAIN CORE</text>
+            <text x="400" y="230" text-anchor="middle" class="svg-sub">Pure Business Logic</text>
+
+            <!-- Adaptadores del Mundo Exterior -->
+            <!-- 1. REST Adapter -->
+            <rect x="50" y="180" width="120" height="60" rx="6" class="node-box" stroke="var(--accent-cyan)"/>
+            <text x="70" y="205" class="svg-label" fill="var(--accent-cyan)">REST API</text>
+            <text x="65" y="225" class="svg-sub">Primary Adapter</text>
+
+            <!-- 2. Database Adapter -->
+            <rect x="630" y="180" width="120" height="60" rx="6" class="node-box" stroke="var(--accent-violet)"/>
+            <text x="650" y="205" class="svg-label" fill="var(--accent-violet)">PostgreSQL</text>
+            <text x="645" y="225" class="svg-sub">Secondary Adapter</text>
+
+            <!-- Puertos (Puertas de enlace en el borde del hexágono) -->
+            <circle cx="260" cy="220" r="10" fill="var(--bg-canvas)" stroke="var(--accent-cyan)" stroke-width="2"/>
+            <text x="210" y="210" class="svg-sub" fill="var(--accent-cyan)">In-Port</text>
+
+            <circle cx="540" cy="220" r="10" fill="var(--bg-canvas)" stroke="var(--accent-violet)" stroke-width="2"/>
+            <text x="555" y="210" class="svg-sub" fill="var(--accent-violet)">Out-Port</text>
+
+            <line x1="170" y1="210" x2="250" y2="220" stroke="var(--accent-cyan)" stroke-width="1.5" stroke-dasharray="3,3"/>
+            <line x1="550" y1="220" x2="630" y2="210" stroke="var(--accent-violet)" stroke-width="1.5" stroke-dasharray="3,3"/>
+          `;
+
+          // Paquete cruzando de afuera -> adentro -> afuera
+          let px = 110 + t * 580;
+          let py = 210 + Math.sin(t * Math.PI) * 15;
+          html += `<circle cx="${px}" cy="${py}" r="6" fill="var(--accent-cyan)" filter="drop-shadow(0 0 6px var(--accent-cyan))" />`;
+          svg.innerHTML = html;
+        }
+      },
+      {
+        id: "event-driven",
+        num: "09",
+        name: "Arquitectura Orientada a Eventos",
+        subtitle: "Productores, Broker Distribuido y Consumidores",
+        file: "events/kafka_consumer.rs",
+        desc: "Desacoplamiento temporal y espacial total: los componentes productores emiten sucesos inmutables (events) hacia un broker de streaming (Kafka/RabbitMQ), y múltiples consumidores los procesan asíncronamente.",
+        code: `<span class="c-cm">// Rust Event-Driven Consumer</span>
+<span class="c-kw">async fn</span> <span class="c-fn">consume_order_events</span>() {
+    <span class="c-kw">let</span> consumer = <span class="c-fn">KafkaConsumer</span>::<span class="c-fn">connect</span>(<span class="c-str">"broker:9092"</span>).<span class="c-kw">await</span>;
+    consumer.<span class="c-fn">subscribe</span>(<span class="c-str">"order.completed"</span>).<span class="c-kw">await</span>;
+
+    <span class="c-kw">while let</span> <span class="c-fn">Some</span>(event) = consumer.<span class="c-fn">recv</span>().<span class="c-kw">await</span> {
+        <span class="c-cm">// Procesamiento asíncrono no bloqueante</span>
+        <span class="c-fn">dispatch_email_async</span>(&event.user_id).<span class="c-kw">await</span>;
+    }
+}`,
+        phases: [
+          { at: 0.2, label: "Productor emite 'OrderPlacedEvent' (No bloqueante)" },
+          { at: 0.5, label: "Event Broker / Topic registra y particiona mensaje" },
+          { at: 0.85, label: "Fan-out hacia Consumidor de Email y de Inventario" }
+        ],
+        render: (svg, t) => {
+          let html = `
+            <!-- Productor -->
+            <rect x="50" y="170" width="150" height="90" rx="8" class="node-box" stroke="var(--accent-cyan)"/>
+            <text x="75" y="205" class="svg-label" fill="var(--accent-cyan)">PRODUCER</text>
+            <text x="70" y="225" class="svg-sub">Order Web Service</text>
+            <text x="70" y="240" class="svg-sub" fill="var(--accent-cyan)">emit("order.paid")</text>
+
+            <!-- Event Broker Central (Cola / Stream) -->
+            <rect x="290" y="80" width="180" height="270" rx="12" fill="#0c1626" stroke="var(--accent-violet)" stroke-width="2"/>
+            <text x="310" y="115" class="svg-label" fill="var(--accent-violet)">EVENT BROKER</text>
+            <text x="325" y="135" class="svg-sub">Kafka / RabbitMQ</text>
+
+            <!-- Particiones de Mensajes -->
+            <rect x="310" y="160" width="140" height="30" rx="4" fill="var(--bg-subtle)"/>
+            <text x="325" y="180" class="svg-sub" fill="var(--text-muted)">Partition 0 [Msg]</text>
+
+            <rect x="310" y="205" width="140" height="30" rx="4" fill="var(--bg-subtle)"/>
+            <text x="325" y="225" class="svg-sub" fill="var(--text-muted)">Partition 1 [Msg]</text>
+
+            <rect x="310" y="250" width="140" height="30" rx="4" fill="var(--bg-subtle)"/>
+            <text x="325" y="270" class="svg-sub" fill="var(--text-muted)">Partition 2 [Msg]</text>
+
+            <!-- Consumidor A: Email Service -->
+            <rect x="580" y="100" width="160" height="80" rx="8" class="node-box" stroke="var(--accent-green)"/>
+            <text x="600" y="135" class="svg-label" fill="var(--accent-green)">CONSUMER 1</text>
+            <text x="600" y="155" class="svg-sub">Notification Service</text>
+
+            <!-- Consumidor B: Warehouse -->
+            <rect x="580" y="250" width="160" height="80" rx="8" class="node-box" stroke="var(--accent-amber)"/>
+            <text x="600" y="285" class="svg-label" fill="var(--accent-amber)">CONSUMER 2</text>
+            <text x="600" y="305" class="svg-sub">Analytics & ERP</text>
+
+            <line x1="200" y1="215" x2="290" y2="215" stroke="var(--border-bright)" stroke-width="2" marker-end="url(#arrow)"/>
+            <line x1="470" y1="180" x2="580" y2="140" stroke="var(--border-bright)" stroke-width="2" marker-end="url(#arrow)"/>
+            <line x1="470" y1="240" x2="580" y2="280" stroke="var(--border-bright)" stroke-width="2" marker-end="url(#arrow)"/>
+          `;
+
+          // Animación de paquetes: uno del productor al broker, dos del broker a los consumidores
+          if (t < 0.45) {
+            let p = t / 0.45;
+            let px = 200 + p * 100;
+            html += `<circle cx="${px}" cy="215" r="6" fill="var(--accent-cyan)" filter="drop-shadow(0 0 6px var(--accent-cyan))" />`;
+          } else {
+            let p = (t - 0.45) / 0.55;
+            let px = 470 + p * 110;
+            let py1 = 180 - p * 40;
+            let py2 = 240 + p * 40;
+            html += `
+              <circle cx="${px}" cy="${py1}" r="6" fill="var(--accent-green)" filter="drop-shadow(0 0 6px var(--accent-green))" />
+              <circle cx="${px}" cy="${py2}" r="6" fill="var(--accent-amber)" filter="drop-shadow(0 0 6px var(--accent-amber))" />
+            `;
+          }
+
+          svg.innerHTML = html;
+        }
+      },
+      {
+        id: "refactoring",
+        num: "10",
+        name: "Refactorización Limpia",
+        subtitle: "De Función Monstruosa a Composición SRP",
+        file: "clean_refactoring.ts",
+        desc: "Transformación interactiva de una función legacy gigante (anti-patrón espagueti con responsabilidades mezcladas) en funciones puras, cohesivas y testeables respetando el Single Responsibility Principle.",
+        code: `<span class="c-cm">// REFACTORIZACIÓN APLICADA:</span>
+<span class="c-cm">// Antes: 1 función de 200 líneas sin pruebas</span>
+<span class="c-cm">// Después: Composición funcional limpia</span>
+
+<span class="c-kw">export const</span> <span class="c-fn">checkoutPipeline</span> = <span class="c-kw">async</span> (order) => {
+  <span class="c-fn">validateSchema</span>(order);
+  <span class="c-kw">await</span> <span class="c-fn">reserveInventory</span>(order.items);
+  <span class="c-kw">const</span> receipt = <span class="c-kw">await</span> <span class="c-fn">processCard</span>(order.payment);
+  <span class="c-kw">return</span> <span class="c-fn">emitNotification</span>(receipt.id);
+};`,
+        phases: [
+          { at: 0.15, label: "Función monolítica detectada: Alta complejidad ciclomática" },
+          { at: 0.5, label: "Extrayendo sub-rutinas puras (Extract Function Pattern)" },
+          { at: 0.9, label: "Pipeline modular resultante: Alta cohesión y testeabilidad" }
+        ],
+        render: (svg, t) => {
+          let html = "";
+          // Transición visual según el avance del slider (t)
+          if (t < 0.45) {
+            // Estado 1: Bloque monolítico feo
+            html = `
+              <rect x="250" y="60" width="300" height="310" rx="10" fill="#180d12" stroke="var(--accent-red)" stroke-width="2"/>
+              <text x="270" y="95" class="svg-label" fill="var(--accent-red)">function processOrderLegacy(data) {</text>
+              <text x="285" y="125" class="svg-sub" fill="#f87171">// 1. Parsing manual de cabeceras...</text>
+              <text x="285" y="150" class="svg-sub" fill="#f87171">// 2. Validación manual de SQL con ifs...</text>
+              <text x="285" y="175" class="svg-sub" fill="#f87171">// 3. Invocación a Stripe sin timeout...</text>
+              <text x="285" y="200" class="svg-sub" fill="#f87171">// 4. Escritura directa a tabla transacciones...</text>
+              <text x="285" y="225" class="svg-sub" fill="#f87171">// 5. Conexión SMTP socket a mano...</text>
+              <text x="270" y="340" class="svg-label" fill="var(--accent-red)">} // 350 Líneas acopladas</text>
+
+              <rect x="270" y="250" width="260" height="50" rx="4" fill="rgba(255, 71, 87, 0.15)" stroke="var(--accent-red)"/>
+              <text x="285" y="280" class="svg-sub" fill="var(--accent-red)">ALERTA: Código frágil y no testeable</text>
+            `;
+          } else {
+            // Estado 2: Descompuesto en 4 funciones limpias conectadas
+            html = `
+              <text x="250" y="50" class="svg-label" fill="var(--accent-green)">REFACTORED PIPELINE: COMPOSICIÓN LIMPIA</text>
+              
+              <!-- Sub-función 1 -->
+              <rect x="80" y="100" width="180" height="70" rx="6" class="node-box" stroke="var(--accent-cyan)"/>
+              <text x="95" y="130" class="svg-label" fill="var(--accent-cyan)">validateInput()</text>
+              <text x="95" y="150" class="svg-sub">Validación sintáctica pura</text>
+
+              <!-- Sub-función 2 -->
+              <rect x="310" y="100" width="180" height="70" rx="6" class="node-box" stroke="var(--accent-violet)"/>
+              <text x="325" y="130" class="svg-label" fill="var(--accent-violet)">reserveStock()</text>
+              <text x="325" y="150" class="svg-sub">Aislamiento de inventario</text>
+
+              <!-- Sub-función 3 -->
+              <rect x="540" y="100" width="180" height="70" rx="6" class="node-box" stroke="var(--accent-green)"/>
+              <text x="555" y="130" class="svg-label" fill="var(--accent-green)">chargeCard()</text>
+              <text x="555" y="150" class="svg-sub">Gateway de cobros</text>
+
+              <!-- Pipeline Integrador -->
+              <rect x="180" y="240" width="440" height="110" rx="8" class="node-box" stroke="var(--accent-green)" stroke-dasharray="4,4"/>
+              <text x="200" y="270" class="svg-label" fill="var(--accent-green)">pipeline.compose(validate, reserve, charge)</text>
+              <text x="200" y="295" class="svg-sub">Cobertura de tests: 100% | Principio SRP respetado</text>
+              <text x="200" y="320" class="svg-sub" fill="var(--accent-cyan)">Sin efectos secundarios colaterales</text>
+
+              <!-- Líneas conectoras -->
+              <line x1="170" y1="170" x2="250" y2="240" stroke="var(--accent-cyan)" stroke-width="1.5" marker-end="url(#arrow)"/>
+              <line x1="400" y1="170" x2="400" y2="240" stroke="var(--accent-violet)" stroke-width="1.5" marker-end="url(#arrow)"/>
+              <line x1="630" y1="170" x2="550" y2="240" stroke="var(--accent-green)" stroke-width="1.5" marker-end="url(#arrow)"/>
+            `;
+
+            let px = 80 + (t - 0.45) / 0.55 * 500;
+            html += `<circle cx="${px}" cy="135" r="6" fill="var(--accent-green)" filter="drop-shadow(0 0 6px var(--accent-green))" />`;
+          }
+
+          svg.innerHTML = html;
+        }
+      }
+    ];
+
+    /* =====================================================================
+       MOTOR DE ANIMACIÓN Y CONTROL DE LÍNEA DE TIEMPO (VANILLA JS)
+       ===================================================================== */
+    let currentArchIndex = 0;
+    let isPlaying = true;
+    let playbackSpeed = 1.0;
+    const LOOP_DURATION = 4000; // 4 segundos por ciclo completo
+    let progress = 0; // 0.0 a 1.0
+    let lastTimestamp = performance.now();
+
+    // Elementos DOM
+    const archListEl = document.getElementById("arch-list");
+    const stageNumEl = document.getElementById("stage-num");
+    const stageNameEl = document.getElementById("stage-name");
+    const stageDescEl = document.getElementById("stage-desc");
+    const stagePhaseEl = document.getElementById("stage-phase");
+    const codeFileEl = document.getElementById("code-file");
+    const codeViewEl = document.getElementById("code-view");
+    const diagramScene = document.getElementById("diagram-scene");
+    const slider = document.getElementById("timeline-slider");
+    const btnPlay = document.getElementById("btn-play");
+    const playText = document.getElementById("play-text");
+    const playIcon = document.getElementById("play-icon");
+    const btnRestart = document.getElementById("btn-restart");
+    const timeDisplay = document.getElementById("time-display");
+    const speedButtons = document.querySelectorAll(".btn-speed");
+    const fpsCounter = document.getElementById("fps-counter");
+
+    // Construir la lista lateral de arquitecturas
+    function buildSidebar() {
+      archListEl.innerHTML = "";
+      ARCHITECTURES.forEach((arch, idx) => {
+        const li = document.createElement("li");
+        li.className = `arch-item ${idx === currentArchIndex ? "active" : ""}`;
+        li.innerHTML = `
+          <div class="arch-num">${arch.num}</div>
+          <div class="arch-info">
+            <div class="arch-name">${arch.name}</div>
+            <div class="arch-sub">${arch.subtitle}</div>
+          </div>
+        `;
+        li.addEventListener("click", () => switchArchitecture(idx));
+        archListEl.appendChild(li);
+      });
+    }
+
+    function switchArchitecture(index) {
+      currentArchIndex = index;
+      progress = 0;
+      slider.value = 0;
+      
+      // Actualizar vista activa en sidebar
+      document.querySelectorAll(".arch-item").forEach((el, idx) => {
+        el.classList.toggle("active", idx === index);
+      });
+
+      const current = ARCHITECTURES[currentArchIndex];
+      stageNumEl.textContent = current.num;
+      stageNameEl.textContent = current.name;
+      stageDescEl.textContent = current.desc;
+      codeFileEl.textContent = current.file;
+      codeViewEl.innerHTML = current.code;
+
+      updatePhaseLabel();
+      current.render(diagramScene, progress);
+    }
+
+    function updatePhaseLabel() {
+      const current = ARCHITECTURES[currentArchIndex];
+      let currentPhase = current.phases[0].label;
+      for (let p of current.phases) {
+        if (progress >= p.at) {
+          currentPhase = p.label;
+        }
+      }
+      stagePhaseEl.textContent = currentPhase;
+    }
+
+    // Controles de Playback
+    function togglePlay() {
+      isPlaying = !isPlaying;
+      playText.textContent = isPlaying ? "Pausar" : "Reanudar";
+      playIcon.innerHTML = isPlaying 
+        ? '<polygon points="5 3 19 12 5 21 5 3"></polygon>'
+        : '<rect x="6" y="4" width="4" height="16"></rect><rect x="14" y="4" width="4" height="16"></rect>';
+    }
+
+    btnPlay.addEventListener("click", togglePlay);
+
+    btnRestart.addEventListener("click", () => {
+      progress = 0;
+      slider.value = 0;
+      if (!isPlaying) togglePlay();
+    });
+
+    // Control deslizante manual (Scrubber de línea de tiempo)
+    slider.addEventListener("input", (e) => {
+      progress = parseFloat(e.target.value) / 1000;
+      ARCHITECTURES[currentArchIndex].render(diagramScene, progress);
+      updatePhaseLabel();
+      updateTimeDisplay();
+    });
+
+    // Selector de velocidad
+    speedButtons.forEach(btn => {
+      btn.addEventListener("click", () => {
+        speedButtons.forEach(b => b.classList.remove("active"));
+        btn.classList.add("active");
+        playbackSpeed = parseFloat(btn.dataset.speed);
+      });
+    });
+
+    function updateTimeDisplay() {
+      const currentSeconds = (progress * (LOOP_DURATION / 1000)).toFixed(1);
+      const totalSeconds = (LOOP_DURATION / 1000).toFixed(1);
+      timeDisplay.textContent = `${currentSeconds.padStart(4, "0")}s / ${totalSeconds}s`;
+    }
+
+    // Bucle de Animación RAF a 60 FPS
+    let frameCount = 0;
+    let fpsTimer = performance.now();
+
+    function animationLoop(timestamp) {
+      const delta = timestamp - lastTimestamp;
+      lastTimestamp = timestamp;
+
+      // Cálculo de FPS en tiempo real
+      frameCount++;
+      if (timestamp - fpsTimer >= 1000) {
+        fpsCounter.textContent = `${frameCount} FPS`;
+        frameCount = 0;
+        fpsTimer = timestamp;
+      }
+
+      if (isPlaying) {
+        progress += (delta * playbackSpeed) / LOOP_DURATION;
+        if (progress >= 1.0) {
+          progress = 0.0;
+        }
+        slider.value = Math.floor(progress * 1000);
+        ARCHITECTURES[currentArchIndex].render(diagramScene, progress);
+        updatePhaseLabel();
+        updateTimeDisplay();
+      }
+
+      requestAnimationFrame(animationLoop);
+    }
+
+    // Inicialización del sistema
+    buildSidebar();
+    switchArchitecture(0);
+    requestAnimationFrame(animationLoop);
+  </script>
+</body>
+</html>

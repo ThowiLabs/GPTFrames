@@ -100,7 +100,7 @@ int main(int argc, char** argv) {
         require(std::find(list["models"].begin(),list["models"].end(),"hot_reload_fixture.neo")==list["models"].end(),
                 "Removed voice must disappear without restarting Service");
         auto refreshed=service.run_tool("rescan_resources",Json::object());
-        require(refreshed["counts"]["animation_files"]>=65,"Assets scan missing");
+        require(refreshed["counts"]["animation_files"]>=95,"Assets scan missing");
     });
     test("unregistered HTML discovered without MCP restart", [&] {
         auto local=temp.path/"dynamic_animation_fixture";
@@ -128,7 +128,7 @@ int main(int argc, char** argv) {
     });
     test("deduplicated animation library", [&] {
         const auto all=service.run_tool("list_animations",Json::object());
-        require(all["total"]==65,"Expected 65 unique animations");
+        require(all["total"]==95,"Expected 95 unique animations");
         require(all["presets"][0]["number"]==1,"Expected numbered animation");
         require(all["presets"][5]["id"]=="biometric-scanner","Six original modules were displaced");
         require(all["presets"][22]["id"]=="shimmer-progress","Last imported animation mismatch");
@@ -149,10 +149,20 @@ int main(int argc, char** argv) {
                 "Terminal must support an editable command");
         const auto boot=service.run_tool("search_animations",{{"query","systemd arranque"}});
         require(boot["total"]>=1,"Boot assets should be searchable");
+        for(const auto& cat:{"Arquitectura de software","Programación y ejecución","Lenguajes de programación"}){
+            auto set=service.run_tool("list_animations",{{"category",cat}});
+            require(set["total"]==10,"New collection must include ten independent animations");
+        }
+        auto py=service.run_tool("describe_animation",{{"id","language-python"}});
+        require(py["editable"].contains("classname") && py["states"]==5,
+                "Python module must expose editable code identifiers and stages");
+        auto arch=service.run_tool("describe_animation",{{"id","architecture-microservicios"}});
+        require(arch["source_module_id"]=="microservices",
+                "Architecture asset must preserve source provenance");
         const auto types=service.run_tool("list_animations",{{"type","servidor"}});
         require(types["total"]>=2,"Asset type filter failed");
         const auto facets=service.run_tool("list_animation_facets",Json::object());
-        require(facets["total"]==65 && facets["category"].is_array() && facets["tags"].is_array(),"Facet index invalid");
+        require(facets["total"]==95 && facets["category"].is_array() && facets["tags"].is_array(),"Facet index invalid");
         rejects([&]{service.run_tool("search_animations",{{"query"," "}});});
         const auto item=service.run_tool("describe_animation",{{"id","smartphone-vibrate"}});
         require(item["name"]=="Teléfono vibrando","Wrong animation");
