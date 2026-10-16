@@ -83,3 +83,21 @@ Los clips de vídeo MP4/WebM como capas y el croma aplicado a vídeo no
 están disponibles todavía; jamás ofrecerlos como funcionalidades reales
 hasta incorporar y verificar el decodificador C++ de medios.
 Ver guía de uso, configuración y límites en docs/MOTION_STUDIO.md.
+
+## Política de imágenes y entrega verificable
+
+- Las imágenes nativas usan `fit: contain` por defecto. Para logotipos, terminales,
+  pantallas y fotografías con sujetos importantes no uses `cover`, pues recorta
+  contenido, ni `stretch`, que distorsiona proporciones.
+- Una tarjeta opaca encima de una fotografía puede ocultar el recurso entero.
+  Coloca la tarjeta junto o debajo, en una región espacial diferente.
+- Antes de renderizar, usa `review_layout` o `--project lint` y ejecuta:
+  `python3 tools/qa_video_project.py proyecto.json --engine build/native-full/hyperframes-cpp-native --out /tmp/gptframes-qa --strict`.
+  Revisa tres capturas de cada escena y una mosaico, incluyendo las transiciones
+  y los momentos en que aparecen textos narrados.
+- Los indicadores de calidad no verifican automáticamente la estética, la
+  exactitud de cada código o el contenido real de una imagen. Hace falta una
+  inspección editorial del MP4 final.
+- La skill canónica es `.claude/skills/hyperframes-cpp/SKILL.md`;
+  contiene el inventario actual de 23 herramientas MCP, selección de presets,
+  recursos CSS/HTML, modelos Neo Lite, límites y checklist de calidad.

@@ -162,7 +162,7 @@ inline const Json& tool_definitions() {
  },
  {
   "name": "create_project",
-  "description": "Create an editable native video project. Supports voice-timed cards, native motion symbols (phone/check/lock/angry-person), image chromaKey and optional ThorVG Lottie layers. Group labels, accents, icons and animation in atomic voice cues; preview and lint before render. See docs/VIDEO_AUTHORING_PROMPT.md and docs/MOTION_STUDIO.md.",
+  "description": "Create an editable native video project. Plan narration, visual cues, existing verified presets and source assets first. For images default to fit=contain, use cover only for intentional background crops; never obscure photos behind opaque cards. Supports reactive cards, symbols, still chromaKey and optional ThorVG Lottie. Run review_layout and inspect multiple frame previews before any final render. See the installed hyperframes-cpp skill and docs/VIDEO_AUTHORING_PROMPT.md.",
   "inputSchema": {
    "type": "object",
    "properties": {
@@ -196,7 +196,7 @@ inline const Json& tool_definitions() {
  },
  {
   "name": "preview_frame",
-  "description": "Render a PNG preview at the requested second.",
+  "description": "Render actual PNG pixels at the requested second. Inspect early, middle and late moments of EVERY scene and around speech cue changes; verify uncropped images, readable labels and no overlay obstruction.",
   "inputSchema": {
    "type": "object",
    "properties": {
@@ -218,7 +218,7 @@ inline const Json& tool_definitions() {
  },
  {
   "name": "render_video",
-  "description": "Render C++ H.264/AAC MP4, including animated symbols, image chromaKey and ThorVG Lottie layers when enabled. Validate cueIndex timing, atomic groups, readable labels and proper anchored accents. Word timing is estimated.",
+  "description": "Render native H.264/AAC MP4. Before calling, run review_layout and inspect real frame previews for ALL scenes. Fix image_cropped/image_occluded/image_distorted, text_collision and outside_canvas warnings. Use fit=contain for logos/photos with key content. Preserve atomic voice cues and narration alignment. A successful render does not mean professional visual quality.",
   "inputSchema": {
    "type": "object",
    "properties": {
@@ -337,7 +337,7 @@ inline const Json& tool_definitions() {
  },
  {
   "name": "review_layout",
-  "description": "Audit text readability, contrast, collisions and bounds; additionally inspect reactive states before and after cueIndex so no decorative bars cross text, cards appear empty or captions precede narration.",
+  "description": "Audit layout before rendering, including cropped/warped/obscured images (image_cropped, image_distorted, image_occluded), text legibility, contrast, collisions and bounds. Warning-free lint alone is not visual approval: preview early/middle/late moments of every scene, including reactive cues.",
   "inputSchema": {
    "type": "object",
    "properties": {

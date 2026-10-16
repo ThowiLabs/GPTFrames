@@ -27,6 +27,30 @@ inline json report(const project::Config& cfg){
    auto warn=[&](const std::string&code,const std::string&detail){
     issues.push_back({{"scene",si+1},{"layer",li+1},{"code",code},{"detail",detail}});
    };
+   if(l.type=="image" && l.image){
+    const double bw=p.w*p.scale,bh=p.h*p.scale;
+    const auto& img=*l.image;
+    const double sourceFraction=gptframes_image_fit::visible_fraction_cover(bw,bh,img.width,img.height);
+    if(l.imageFit=="cover" && sourceFraction<.80)
+     warn("image_cropped","El modo cover oculta más del 20% del recurso: usar fit=contain o revisar el encuadre.");
+    if(l.imageFit=="stretch" && sourceFraction<.88)
+     warn("image_distorted","Stretch deforma la proporción original de la imagen: usar contain salvo intención explícita.");
+    // An opaque card drawn later can cover almost all of a photograph.
+    // This is different from deliberate, minimal accent-line overlays.
+    const double imageArea=std::max(0.,bw*bh);
+    if(imageArea>0)for(size_t later=li+1;later<scene.layers.size();++later){
+     const auto& occluder=scene.layers[later];
+     if(occluder.type!="rect")continue;
+     const auto q=project::sample(occluder,std::max(0.,std::min(scene.duration/2.,occluder.duration)-occluder.from));
+     if(q.opacity<.97)continue;
+     const double ow=std::max(0.,std::min(p.x+bw,q.x+q.w*q.scale)-std::max(p.x,q.x));
+     const double oh=std::max(0.,std::min(p.y+bh,q.y+q.h*q.scale)-std::max(p.y,q.y));
+     if(ow*oh/imageArea>.55){
+      warn("image_occluded","Un rectángulo posterior tapa más del 55% de la imagen; separar fotografía y tarjeta.");
+      break;
+     }
+    }
+   }
    if(l.type=="text"){
     const int px=std::max(8,int(std::round(l.fontSize*p.scale)));
     if(px<cfg.height/48) warn("small_text","Texto pequeño para la altura del video.");

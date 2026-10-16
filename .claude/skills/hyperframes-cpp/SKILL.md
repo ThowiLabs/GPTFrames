@@ -1,162 +1,69 @@
 ---
 name: hyperframes-cpp
-description: Build, narrate and render 9:16 HTML/CSS/GSAP videos using HyperFrames C++, browser discovery and native H.264/AAC MP4. Use for vertical videos, animations, narration, TTS pronunciation, media projects, and renderer troubleshooting.
+description: "Produce high-quality narrated GPTFrames videos with native C++ compositor, Chromium CSS/SVG, 95+ searchable presets, Neo voice and mandatory visual QA; avoid clipped images and text."
 ---
 
-# HyperFrames C++ — video production skill
+# GPTFrames — professional video production agent skill
 
-HyperFrames C++ is a C++17 command-line video renderer with a native compositor and a browser-assisted HTML/CSS/JavaScript compositor. It can encode MP4/H.264/AAC and AVI without running FFmpeg during export. It supports version-1 native JSON projects and optional speech synthesis through native Neo Lite. Native audio input remains PCM WAV; arbitrary compressed audio is not decoded by this CLI. The `browser` theme requires an installed Chromium, Chrome or Edge.
+**Mission:** Create technically accurate, attractive, clear educational videos about programming, Linux, software architecture, networking and other computing topics. Success is a visually reviewed video, not a successful MP4 export.
 
-**Never put a user's video project, photographs, narration, generated video or third-party GSAP inside the engine's `main` branch.** Use a separate project directory.
+## Discover your actual tools BEFORE designing
 
-## Find the real executable first
+1. Locate compiled engine (for this repo: `build/native-full/hyperframes-cpp-native`). Verify options with `--browser-check` and project documentation; older builds may not support newer features.
+2. With GPTFrames MCP call `resource_status`, `list_animation_facets`, `search_animations`, `list_voice_models` and `describe_animation` to discover current animations, categories, code/CSS motion tags and editable properties. Resource discovery refreshes automatically, or use `rescan_resources`; do not assume an asset is available without verifying it.
+3. Prefer verified existing presets over reinventing visuals. The catalog in `animaciones/catalogo.json` and original resources in `assets/preset-catalog.json` are the truth. A detected-but-unreviewed HTML is not executable.
+4. Pick format: **848x480/24fps** for landscape review, **720x1280/24fps** for shorts, or 1920x1080 full-HD source. Keep source and output aspect ratio equal.
 
-Do not hardcode the engine's repository path. Check the terminal command before searching installation folders.
+**MCP tools (23 in current code; always discover schema):** resources: `resource_status`, `rescan_resources`, `search_animations`, `list_animation_facets`, `list_animations`, `describe_animation`, `list_asset_presets`, `describe_asset_preset`, `list_voice_models`; projects: `list_projects`, `create_project`, `read_project`, `save_project`, `validate_project`, `review_layout`; media: `synthesize_voice`, `search_images`, `download_commons_image`; render: `preview_frame`, `render_video`, `start_render`, `render_status`, `cancel_render`.
 
-**Linux shell:**
+**Engine capabilities:** native JSON scenes with rectangles, groups/auto-layout, animations/keyframes, lines, code/text, grids, gradients, cameras, images with borders/masks, still chroma key, primitive symbols and optionally ThorVG Lottie. Browser-first registered `html_widget` presets use self-contained HTML/CSS/SVG and frame-seekable animations via Chromium/CDP; editable fields only where the preset catalog declares them. No arbitrary MP4/WebM video layer in native JSON, no direct MP3/M4A import for native mixer, no guarantee of arbitrary HTML/JS compatibility. The Neo Lite executable generates speech from installed `.neo`/`.onnx` voices to WAV. Use the actual live `list_voice_models` inventory rather than hardcoding model names.
+
+Read **references/WORKFLOWS.md** for implementation, **references/QUALITY_GATE.md** for visual acceptance, **references/ASSET_INVENTORY.md** for tool and catalog specifics. Project documentation: `docs/JSON_COMPOSITOR.md`, `docs/VIDEO_AUTHORING_PROMPT.md`, `docs/VOICE_SYNC_V5.md`, `docs/MOTION_STUDIO.md`.
+
+## Required production workflow
+
+**1. Editorial storyboard.** Write truthful narration FIRST. Each scene expresses one specific concept; include a meaningful diagram, code snippet, photograph, visualization or real example rather than repetitive empty cards. A professional short has a hook, working explanation, concrete example, comparison and takeaway. Keep visible code technically correct. Specify what viewers must see and hear at each second.
+
+**2. Voice and timing.** Generate speech **per scene** using `synthesize_voice` or native Neo Lite. Measure real WAV durations, verify technical pronunciation and accents by listening, allow ~0.4–0.8 seconds breathing room. Keep on-screen code strings exact, spoken phonetics separate (e.g. C++ spoken "ce más más"). Use `speechTiming` and `cueIndex` when available, remembering automatic alignments are approximate. Never show empty cards before their captions or reveal concepts before they're spoken. Enter caption/icon/card as **one atomic group**.
+
+**3. Choose assets deliberately.** Search the catalog (motion tags + category + description) before drawing primitive symbols. Use licensed photos with source/provenance; prefer self-contained SVG/HTML diagrams. Avoid primitive emojis in a technical documentary.
+
+**4. Strict image framing.** Native `image.fit` accepts:
+- `contain`: **default**, preserves the whole image and aspect ratio. Use for logos, code screenshots, technology icons, UI screenshots, charts, diagrams and photo subjects that must remain complete.
+- `cover`: intentionally crops to fill a box; use for true photographic backgrounds only, after checking the actual crop. Never crop faces, text, logos, devices or a significant section of a machine.
+- `stretch`: distorts the image; almost never acceptable.
+- Split photos and text into their own spatial regions. Never draw an opaque rectangle over most of an earlier photo. Use clear margins: roughly 6–8% in vertical content. A Docker logo 682x163 inside a 260x112 box loses substantial visual area with `cover`.
+- Frame image at its true source aspect ratio, verify legibility and dimensions with actual rendered pixels, not just intended JSON geometry.
+
+**5. Composition rules.** Maintain consistent spacing and typography, readable text on phone screens, meaningful use of cyan/green/violet highlights and semantic motion. Avoid walls of text, 7pt labels, random borders, idle 2-second pauses, excessive shaking and badly sized art. Aim for a focal point per scene. If image and text cannot fit, simplify or split the scene; do not shrink until the linter is silent. Keep visual information within safe bounds.
+
+**6. Validate and preview EVERY scene.**
 ```bash
-command -v hyperframes-cpp-native || command -v hyperframes-cpp || command -v hyperframes-linux
+ENGINE=build/native-full/hyperframes-cpp-native
+"$ENGINE" --project validate /path/to/project.json
+"$ENGINE" --project lint /path/to/project.json
+python3 tools/qa_video_project.py /path/to/project.json --engine "$ENGINE" --out /tmp/gptframes-qa
 ```
+QA makes scene screenshots and a contact sheet and saves the raw lint report. **Fix** `image_cropped`, `image_occluded`, `image_distorted`, `text_overflow`, `text_collision` and `outside_canvas` before publishing; investigate `small_text` even if there are no hard failures. Check early/mid/late frames and the instant before/after each narrated cue. Automatic lint cannot detect all bad compositions—human vision is mandatory.
 
-If none: inspect `~/.local/bin/`, `~/bin/`, an explicit user-supplied path, `./build/native-linux/hyperframes-cpp-native` and `./hyperframes-linux`. For binaries obtained from [GitHub Releases](https://github.com/ThowiLabs/hyperframes-cpp/releases/latest), validate checksums and obtain approval before installing. A binary named `hyperframes-linux` may be an older **AVI-only** build.
-
-**Windows PowerShell:**
-```powershell
-Get-Command hyperframes-cpp-native.exe -ErrorAction SilentlyContinue
-Get-Command hyperframes-cpp.exe -ErrorAction SilentlyContinue
-```
-
-If not found: look for `build\native-windows\hyperframes-cpp-native.exe`, `%LOCALAPPDATA%\HyperFramesCPP`, other explicitly supplied locations or the release. Properly quote executable paths with spaces. **Windows x64 has been cross-compiled, not verified at runtime on Windows.** A macOS build is not published.
-
-Use the *verified* path in all subsequent commands:
+**7. Preview first, render only after visual approval.**
 ```bash
-HFC="$(command -v hyperframes-cpp-native)"
-"$HFC" --browser-check
+"$ENGINE" --project frame /path/to/project.json /tmp/check.png 3.5
+"$ENGINE" --project render /path/to/project.json /tmp/preview.mp4 --size 848x480
 ```
-If `command -v` fails, stop and locate the installed binary; do not execute the above blindly.
+The 848x480 preview applies to matching **landscape aspect ratio** projects; portrait projects need an appropriately proportioned size (or native 720x1280). Preserve codec dimensions constraints (width multiple of 16, height even). `--browser-widget-render` is for SHORT CSS demos, presently <=10 seconds; don't use it for long documentaries. For full multi-scene projects use native JSON and registered browser widgets, or the engine's supported full HTML route.
 
-## Browser auto-detection
+**8. Finish and verify.** Wait for renderer exit zero. Probe streams with FFprobe and full-decode via FFmpeg for QA (not production runtime). Listen to actual speech, check every frame cluster, inspect the final MP4—not only scene PNGs. Provide verified link, dimensions, FPS, duration, audio status and editability. Never call a bad video "professional" merely because tests passed. Ask the user which numbered examples to approve, change or discard.
 
-The renderer locates Chromium-family executables in this priority:
-1. `HFC_BROWSER` override, a full path or executable name on `PATH`.
-2. Standard commands from `PATH`.
-3. Known Chrome, Chromium, Brave or Edge installations on Linux/Windows.
-4. A **running browser process**, using `/proc/<pid>/exe` on Linux or Windows process-enumeration APIs.
+## Problems demonstrated by Alpine Linux example
 
-This **discovers the executable path only**, and does not attach to or hijack browser tabs or profiles. The renderer launches its own headless browser profile.
+- Default `cover` cut informative photos/logos; now `contain` by default in the engine.
+- Scene 3 drew an opaque rectangle **after** its rack photograph, obscuring >55% of the image. The new linter flags `image_occluded`.
+- Scene 6 compressed a datacenter photo into 385x145 on a 720x1280 canvas: visually insignificant despite being technically within bounds.
+- Tiny text, low visual density and visual timing inconsistencies need editorial fixes, not only code fixes.
 
-```bash
-"$HFC" --browser-check
-HFC_BROWSER=/usr/bin/chromium "$HFC" --browser-check
-# Inspeccionar exclusivamente las rutas de navegadores ya abiertos:
-"$HFC" --browser-process-check
-```
+Use `references/QUALITY_GATE.md` and `tools/qa_video_project.py` on every video.
 
-On Windows: `$env:HFC_BROWSER = 'C:\Program Files\Google\Chrome\Application\chrome.exe'`. Do not assume Firefox/Safari are supported. Browser mode runs local HTML JavaScript: only render trusted projects, preferably without elevated privileges.
+## Security and delivery limits
 
-## Recommended project structure
-
-```text
-my-video/
-  index.html                  # HTML, CSS, local JS, scenes and animation timeline
-  timeline.json               # optional metadata used by scripts; NOT parsed by CLI
-  storyboard.md               # optional voice + scene plan
-  assets/
-    img/                      # licensed photos or graphics
-    audio/
-      segment-01.wav
-      segment-02.wav
-    vendor/
-      gsap.min.js             # user-provided under separate license
-  CREDITS.md                  # author, image source URL, license
-  output.mp4                  # generated result
-```
-
-**Choose the input route explicitly.** Native JSON uses `hyperframes-cpp-native --project validate|frame|render project.json ...`. HTML/browser uses the positional CLI below. A freeform `timeline.json` is production metadata, not the native JSON schema. The compiled `gptframes-mcp` service preserves its eight tools; its render tool currently selects the native JSON route.
-
-Use HTML sections with `class="scene"`, `data-start`, `data-duration` (seconds), sequential start times, and optional text hooks `.kicker`, `.wordline`, `.sub`, `.barlabel` for the native themes. Browser compositions should define a paused GSAP timeline at `window.__timelines.main` with `pause()` and `seek(seconds)`. Keep all scripts/photos local. Prefer 720×1280 portrait for mobile videos. **The GSAP library is not part of the engine**, has a separate license and must be supplied correctly by the video project.
-
-Read [production workflows](references/WORKFLOWS.md) when making a new composition.
-
-## TTS and phonetic narration — critical
-
-A TTS model may pronounce technical strings, numbers, acronyms, units and dates badly. **Maintain two versions** of every scene's important words:
-- *On screen*: correct code and exact spellings (`ssh -p 2222`, `C++`, `sshd -t`, `H.264`).
-- *Spoken text*: write **how it should sound**, not necessarily how it is spelled (`puerto dos mil doscientos veintidós`, `ce más más`, `ese ese hache de, guion te`).
-
-Examples to verify by **listening to actual samples**:
-
-| Display | Narration suggestion in Spanish |
-|---|---|
-| SSH | «ese ese hache» (or tested alternative) |
-| C++ | «ce más más» |
-| Python | «páiton», only if voice mispronounces Python |
-| 22 | «veintidós» |
-| 2222 | «dos mil doscientos veintidós» |
-| 2026 | «dos mil veintiséis» |
-| 720 × 1280 | «setecientos veinte por mil doscientos ochenta» |
-| sshd -t | «ese ese hache de, guion te» |
-| 127.0.0.1 | say each number group and dot clearly |
-| 2.5 GB | «dos punto cinco gigabytes» |
-| 01/06/2026 | say full day/month/year to avoid ambiguity |
-
-Pronunciation varies by voice/provider. Test acronyms/English product names, write phonetically only where necessary, and do **not** alter on-screen terminal commands to imitate speech. For accents, choose deliberate phrasing, spelling and punctuation. Write numbers **as words** when needed to control TTS; distinguish decimals, versions, ports, prices and dates.
-
-For each scene, synthesize the voice, measure its **actual** length, add a modest pause (~0.6–1s), then fill `data-start` and `data-duration`. Never invent durations. Check first, middle and final sections. Use the native `--voice synth` command or C++ MCP `synthesize_voice` tool with a local licensed Neo Lite model. The bridge produces **mono PCM signed 16-bit, 24 kHz** WAV. Native JSON projects support up to 12 WAV tracks with `start` and `gain`; the HTML scene workflow uses `segment-01.wav` etc. Compressed MP3/M4A import, automatic ducking and word alignment are not implemented. Keep project logic in C++; installed-browser compositions remain HTML/CSS/JavaScript.
-
-## CLI reference
-
-Check available features (full MP4 build versus older AVI-only build):
-
-```bash
-"$HFC" --inspect "/absolute/project/index.html"
-"$HFC" --browser-check
-"$HFC" --browser-frame "/absolute/project/index.html" 4 "/absolute/project/preview.png"
-```
-
-Render HTML/GSAP + WAV voice to 720×1280 MP4 24fps:
-
-```bash
-"$HFC" "/absolute/project/index.html" "/absolute/project/assets/audio" \
-  "/absolute/project/output.mp4" 24 h264 browser 720x1280
-```
-
-Quick 5-second preview:
-
-```bash
-"$HFC" "/absolute/project/index.html" "/absolute/project/assets/audio" \
-  "/absolute/project/preview.mp4" 24 h264 browser 720x1280 5
-```
-
-Native AVI without a browser:
-
-```bash
-"$HFC" "/absolute/project/index.html" - \
-  "/absolute/project/output.avi" 24 mjpeg classic 360x640
-```
-
-Positional syntax:
-```text
-hyperframes-cpp-native COMPOSITION.html AUDIO_DIRECTORY|- OUTPUT.avi|mp4
-  [fps:1..60] [mjpeg|rgb24|rle8|h264] [classic|news|html|browser]
-  [WIDTHxHEIGHT] [clip-seconds]
-```
-
-Do not confuse `html` (limited litehtml compositor) with `browser` (real CSS/JS). Browser screenshots run at the video's local time, not wall clock time. High-fps outputs may encode slowly.
-
-## Quality controls and delivery
-
-1. Validate `--inspect` timing and supported scene count.
-2. Capture screenshots at an early, middle and late timestamp; check image licenses, layout, contrast and clipped text.
-3. Listen to every narrated WAV; verify pronunciation, codec, length, clipping and quiet gaps.
-4. Export a short preview before doing a full video.
-5. Wait for renderer process exit **zero**; do not call a partially written MP4 complete.
-6. Inspect real output codecs/frame count/duration and try decoding/playback. External tools (`ffprobe`/player) may be used for QA; they are not invoked by the C++ encoder.
-7. Include `CREDITS.md` and licensed media provenance (Wikimedia, Unsplash, Pexels etc.). Respect restrictions for third-party images, GSAP, music and TTS providers.
-8. Return a working link to the rendered video and optionally an editable ZIP. Keep media out of the core engine repo.
-
-## Further reading and limitations
-
-[Releases](https://github.com/ThowiLabs/hyperframes-cpp/releases/latest) · [Browser guide](https://github.com/ThowiLabs/hyperframes-cpp/blob/main/docs/BROWSER_MODE.md) · [Third-party notices](https://github.com/ThowiLabs/hyperframes-cpp/blob/main/THIRD_PARTY_NOTICES.md).
-
-The native MP4 encoder is experimental. The browser is required for browser mode, and generic sites without supported timed scenes are not accepted. The native project route mixes up to 12 PCM WAV tracks and supports Neo Lite voice synthesis and version-1 JSON manifests. MP3/M4A decoding, advanced mixing, arbitrary JSON schemas and renderer parity with the original frameworks remain outside the current scope. H.264/AAC patent obligations and GSAP licensing require independent review.
+Do not execute untrusted JS in Chromium running as root. Do not import arbitrary URLs or CDN scripts; browser presets must be reviewed, CSP-constrained, locally hosted and deterministic. Keep source licenses and media permissions. User project/media/voice weights stay outside Git source commits; never expose auth secrets. Don't restart the connected MCP for asset changes or change the main branch without an explicit request.

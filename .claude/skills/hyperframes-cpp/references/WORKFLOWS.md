@@ -90,3 +90,30 @@ JSON projects can attach up to 12 WAV audio tracks with individual `start` and `
 - Codec option fails: the executable may be an older AVI-only build; download the full native H.264/AAC release.
 - Windows: executable is cross-compiled but not yet runtime-tested on a real Windows host.
 - Rendering hostile HTML is unsafe: do not run third-party JS as root.
+
+## GPTFrames 2026 — browser-first presets and editorial QA
+
+The older HTML/GSAP examples above describe a separate rendering route. For new
+**native JSON projects**, use `--project validate|lint|frame|render` and the
+registered `html_widget` assets. Do not send JSON-project arguments to the
+positional HTML/GSAP command. Browser CSS timelines and their local preset
+registrations are described in `docs/BROWSER_FIRST_EXPERIMENT.md`.
+
+Get actual categories via `list_animation_facets`, search conceptually with
+`search_animations`, and inspect usable IDs/properties with `describe_animation`.
+Do not invent a preset or an editable field. Voice assets should be queried
+using `list_voice_models`; avoid claiming a model is installed without checking.
+
+For photos, logos and technical diagrams **use image.fit=contain** to retain
+everything; `cover` only for deliberate background crops. Text panels must not
+obscure their photos.
+
+New mandatory step: run `--project lint`, then
+`python3 tools/qa_video_project.py <project.json> --engine <engine> --out <qa-dir> --strict`.
+The QA script captures three actual frames per scene and builds a contact sheet
+for visual inspection. It also checks image cropping/deformation/occlusion,
+text collisions and out-of-bounds layers. Fix critical warnings BEFORE final
+render. Review source image proportions and listening to audio separately.
+
+See `references/QUALITY_GATE.md` and `references/ASSET_INVENTORY.md` for
+editorial acceptance and the up-to-date MCP workflow.

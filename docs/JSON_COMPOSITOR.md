@@ -14,6 +14,39 @@ $APP --project render examples/json-compositor/showcase.json clip.mp4 2
 
 `frame` toma un segundo preciso (puede contener decimales). El argumento opcional al final de `render` recorta la duración de salida. Windows utiliza las mismas opciones con `hyperframes-cpp-native.exe`.
 
+## Encuadre de imágenes y control de calidad (actualizado)
+
+Las capas de imagen admiten `fit: "contain" | "cover" | "stretch"`.
+El valor predeterminado es **`contain`**, que conserva la imagen completa
+sin estirar ni cortar logotipos, fotografías informativas o capturas de pantalla.
+`cover` llena la caja pero **recorta** el original (solo para fondos con recorte
+consciente); `stretch` altera la proporción y debe evitarse en iconos y fotos.
+
+```json
+{
+  "type": "image", "src": "assets/logo.png",
+  "x": 100, "y": 560, "width": 520, "height": 230,
+  "fit": "contain", "shape": "rounded", "borderWidth": 2,
+  "borderColor": "#52D9CF"
+}
+```
+
+Validación editorial automática:
+
+```bash
+build/native-full/hyperframes-cpp-native --project lint proyecto.json
+python3 tools/qa_video_project.py proyecto.json \
+  --engine build/native-full/hyperframes-cpp-native \
+  --out /tmp/gptframes-qa --strict
+```
+
+El motor avisa si `cover` recorta más del 20% de la fuente,
+si `stretch` deforma la proporción original, o si un rectángulo opaco
+posterior tapa más del 55% de una imagen. Esas advertencias son **errores
+de calidad de autoría**, no excepciones técnicas: el usuario debe corregir
+el proyecto y revisar fotogramas reales. La herramienta auxiliar produce
+un mosaico de tres capturas por escena y no modifica el JSON original.
+
 ## Esquema v1
 
 ```json

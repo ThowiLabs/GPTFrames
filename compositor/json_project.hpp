@@ -11,6 +11,7 @@
 #include "../vendor/browser/json.hpp"
 #include "auto_layout.hpp"
 #include "geometry_transform.hpp"
+#include "image_fit.hpp"
 #include "reactive_layout.hpp"
 #include "chroma_key.hpp"
 #include "motion_symbols.hpp"
@@ -38,7 +39,7 @@ struct Layer {
  Pose base;
  int fontSize=62;bool bold=true,underline=false,wrap=false;
  std::string textAlign="left",verticalAlign="top";
- std::string imageShape="rect",imageFit="cover";
+ std::string imageShape="rect",imageFit="contain";
  std::string symbol;double symbolSeconds=1.2;
  double lottieRate=1;bool lottieLoop=true;
  gptframes_chroma::Key chroma;
@@ -334,9 +335,9 @@ inline Config load(const std::string&filename){
     layer.imageShape=str(l,"shape","rect");
     if(layer.imageShape!="rect"&&layer.imageShape!="rounded"&&layer.imageShape!="circle"&&layer.imageShape!="ellipse")
      throw std::runtime_error("Imagen shape debe ser rect, rounded, circle o ellipse");
-    layer.imageFit=str(l,"fit","cover");
-    if(layer.imageFit!="cover"&&layer.imageFit!="stretch")
-     throw std::runtime_error("Imagen fit debe ser cover o stretch");
+    layer.imageFit=str(l,"fit","contain");
+    if(layer.imageFit!="contain"&&layer.imageFit!="cover"&&layer.imageFit!="stretch")
+     throw std::runtime_error("Imagen fit debe ser contain, cover o stretch");
     layer.borderWidth=num(l,"borderWidth",0,0,70);
     layer.borderColor=colorField(l,"borderColor",{255,255,255});
    }
@@ -530,13 +531,9 @@ inline void drawPixels(const Layer& l,const Pose& p,double local=0) {
 #endif
   if(l.type=="image"){
    const auto& img=*l.image;
-   double sx=(u/w)*img.width-.5,sy=(v/h)*img.height-.5;
-   if(l.imageFit=="cover"){
-    const double factor=std::max(w/img.width,h/img.height);
-    const double shownWidth=w/factor,shownHeight=h/factor;
-    sx=(img.width-shownWidth)*.5+u/factor-.5;
-    sy=(img.height-shownHeight)*.5+v/factor-.5;
-   }
+   const auto source=gptframes_image_fit::map(l.imageFit,u,v,w,h,img.width,img.height);
+   if(!source.visible)continue;
+   const double sx=source.x,sy=source.y;
    int bx=std::clamp(int(std::floor(sx)),0,img.width-1),by=std::clamp(int(std::floor(sy)),0,img.height-1);
    int nx=std::min(bx+1,img.width-1),ny=std::min(by+1,img.height-1);
    double fx=std::clamp(sx-bx,0.,1.),fy=std::clamp(sy-by,0.,1.);
