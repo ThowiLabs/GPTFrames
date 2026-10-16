@@ -5518,7 +5518,7 @@
         },
         "image_caption": {
           "type": "text",
-          "default": "Ilustración de apoyo"
+          "default": ""
         },
         "comparison": {
           "type": "text",

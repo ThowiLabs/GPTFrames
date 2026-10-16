@@ -4,7 +4,7 @@
   "tag": "DATOS ILUSTRATIVOS",
   "unit": "Unidades por segundo",
   "source": "Ejemplo didáctico · Sin mediciones de hardware real",
-  "image_caption": "Ilustración de apoyo",
+  "image_caption": "",
   "axis_max": 200,
   "tick_step": 50,
   "categories": [

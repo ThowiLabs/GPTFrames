@@ -16,6 +16,8 @@ The live native/MCP properties are only declared text fields (`title`, `subtitle
 
 ## Optional image
 
+Keep charts full-width by default. Insert an image only when the user supplies or explicitly requests a relevant image. Do not add generic device illustrations, placeholder panels or automatic captions such as “Ilustración del proyecto”. The default image caption is empty; add one only when it provides real information about an intentionally selected image.
+
 Use `"properties":{"image":"assets/illustration.png"}` on a fresh widget instance. The image must be a regular PNG/JPEG/WebP file directly under the project's `assets/` directory, no subdirectory, symlink or traversal, at most 3 MiB. SVG is not accepted by this native file resolver; convert an authorized illustration to PNG first. The compositor embeds it as a data URL. CSS then switches to the narrower precomputed plot and shows a contain-fitted image panel. Without an image property, the chart takes the full plot width and the panel/caption are absent. Do not pass an empty path to clear an image; use a fresh instance without that property.
 
 ## Narrated motion is mandatory

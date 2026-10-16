@@ -19,7 +19,7 @@ Block delivery for premature results, static completed diagrams during enumerati
 
 ## Animated data charts
 
-Read **references/ANIMATED_CHARTS.md** when using graphs. The reviewed `chart-bars-vertical` supports colored vertical bars, editable labels and an optional contain-fitted image. Generate numerical SVG geometry from data with `tools/generate_bar_chart.py`; changing a text number does not recalculate bars. Register variants, synchronize categories, bar growth, values and computed conclusion to measured voice, and verify both image layouts. Illustrative data must stay labeled. Only declared text/image fields are live MCP properties.
+Read **references/ANIMATED_CHARTS.md** when using graphs. The reviewed `chart-bars-vertical` supports colored vertical bars, editable labels and an optional contain-fitted image. Generate numerical SVG geometry from data with `tools/generate_bar_chart.py`; changing a text number does not recalculate bars. Register variants, synchronize categories, bar growth, values and computed conclusion to measured voice, and verify both image layouts. Use the full-width chart by default; do not insert generic illustration placeholders or automatic image captions. Illustrative data must stay labeled. Only declared text/image fields are live MCP properties.
 
 ## Discover your actual tools BEFORE designing
 

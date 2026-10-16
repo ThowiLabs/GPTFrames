@@ -13,7 +13,7 @@ DEFAULT = {
  "subtitle":"La altura de cada barra corresponde al valor de su categoría.",
  "tag":"DATOS ILUSTRATIVOS","unit":"Unidades por segundo",
  "source":"Ejemplo didáctico · Sin mediciones de hardware real",
- "image_caption":"Ilustración de apoyo",
+ "image_caption":"",
  "axis_max":200,"tick_step":50,
  "categories":[{"label":"Método A","value":38,"color":"#94A3B8"},{"label":"Método B","value":65,"color":"#22D3EE"},{"label":"Método C","value":124,"color":"#C084FC"},{"label":"Método D","value":182,"color":"#34D399"}],
  "summary_mode":"ratio","value_suffix":"","duration":12
@@ -106,7 +106,7 @@ def generate(data):
   parts.append('</g>');return "".join(parts)
  gradients="".join(f'<linearGradient id="gradient-{i}" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="{c["color"]}"/><stop offset="100%" stop-color="{c["color"]}" stop-opacity=".52"/></linearGradient>' for i,c in enumerate(cats))
  header=f'<g data-cue="header" style="{fade(t["header"],.45)}"><rect x="70" y="28" width="286" height="30" rx="15" fill="#152639"/><circle cx="86" cy="43" r="4" fill="#34D399"/>'+text(100,49,d["tag"],17,"tag",color="#AFC7D9")+text(70,109,d["title"],41,"title",weight=800)+text(70,143,d["subtitle"],22,"subtitle",color="#A5BBD0")+'</g>'
- image=f'<g class="image-only" data-cue="image" style="{fade(t["image"],.6)}"><foreignObject x="935" y="184" width="275" height="320"><div xmlns="http://www.w3.org/1999/xhtml" class="media-container"><img data-field="image" alt="Ilustración de apoyo"/></div></foreignObject>'+text(1072.5,548,d["image_caption"],21,"image_caption","middle",color="#A5BBD0")+'</g>'
+ image=f'<g class="image-only" data-cue="image" style="{fade(t["image"],.6)}"><foreignObject x="935" y="184" width="275" height="320"><div xmlns="http://www.w3.org/1999/xhtml" class="media-container"><img data-field="image" alt=""/></div></foreignObject>'+text(1072.5,548,d["image_caption"],21,"image_caption","middle",color="#A5BBD0")+'</g>'
  # Use fixed SVG translations on outer groups; animate inner groups so CSS never replaces positioning transforms.
  summary=f'<g transform="translate(70 608)"><g data-cue="summary" style="{fade(t["summary"],.55)}"><rect width="1140" height="55" rx="13" fill="#112739" stroke="#28526B"/><circle cx="27" cy="27.5" r="6" fill="{cats[highlight]["color"]}"/>'+text(48,36,conclusion,24,"conclusion")+'</g></g>'
  badge=f'<g transform="translate(925 594)"><g data-cue="comparison" style="{fade(t["summary"],.45)}">'+text(285,0,comparison,21,"comparison","end",color=cats[highlight]["color"],weight=800)+'</g></g>'
