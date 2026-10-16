@@ -89,7 +89,7 @@ class Service {
         atomic_write(staged / "project.json", read_file(fixture / "showcase-v2.json"), false);
         fs::rename(staged, target);
         return {{"project", name}, {"project_json", (target / "project.json").u8string()},
-                {"tip", "BROWSER-FIRST: primero resource_status, list_animation_facets y search_animations por escena; comprueba IDs/campos con describe_animation y añade capas html_widget (collection=animaciones). Luego validate_project, review_layout y preview_frame antes del render. El proyecto inicial es solo un ejemplo nativo, NO el estilo final."}};
+                {"tip", "BROWSER-FIRST: primero resource_status, list_animation_facets y search_animations por escena; comprueba IDs/campos con describe_animation y añade capas html_widget (collection=animaciones). Luego validate_project, review_layout y preview_frame antes del render. El proyecto inicial es solo un ejemplo nativo, NO el estilo final. MOTION SINCRONIZADO obligatorio: preparar beats por frase en motion_events.json, construir la explicacion por elementos y revisar el MP4 con audio; el loop de un preset no sustituye el montaje."}};
     }
 public:
     explicit Service(Config config, MediaClient media = MediaClient{})

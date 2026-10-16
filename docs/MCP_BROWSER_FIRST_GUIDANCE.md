@@ -26,6 +26,10 @@ correcto afirmar que la plantilla de ejemplo tenga automáticamente
 animaciones HTML. El agente debe añadir las capas válidas al
 `project.json` con `save_project` y verificar fotogramas reales.
 
+## Edición narrada obligatoria
+
+El prompt, las descripciones de creación/guardado/preview/render y la skill canónica exigen **MOTION SINCRONIZADO**: un mapa de beats por concepto, eventos por elemento en `motion_events.json`, adaptación de presets que no permitan los tiempos narrados y revisión audiovisual del MP4. No se acepta mostrar todo el diagrama desde el principio ni depender de loops decorativos. El procedimiento detallado y sus ejemplos están en `.claude/skills/hyperframes-cpp/references/NARRATED_MOTION.md`.
+
 ## Limitación de las instrucciones
 
 Esto es una **guía de trabajo para agentes**, no una condición técnica

@@ -162,7 +162,7 @@ inline const Json& tool_definitions() {
  },
  {
   "name": "create_project",
-  "description": "BROWSER-FIRST OBLIGATORIO: crea el proyecto EDITABLE, pero la plantilla inicial C++ solo es un punto de partida. ANTES de diseñar sus escenas llama resource_status, list_animation_facets, search_animations y describe_animation; sustituye visuales basicos por capas html_widget con presets registrados de animaciones. Para videos narrados sincroniza TTS y animaciones. Imagenes importantes fit=contain. Tras componer llama validate_project, review_layout, preview_frame para cada escena y SOLO entonces render. Consulta instrucciones MCP en initialize.",
+  "description": "BROWSER-FIRST OBLIGATORIO: crea el proyecto EDITABLE, pero la plantilla inicial C++ solo es un punto de partida. ANTES de diseñar sus escenas llama resource_status, list_animation_facets, search_animations y describe_animation; sustituye visuales basicos por capas html_widget con presets registrados de animaciones. Para videos narrados sincroniza TTS y animaciones. Imagenes importantes fit=contain. Tras componer llama validate_project, review_layout, preview_frame para cada escena y SOLO entonces render. Consulta instrucciones MCP en initialize. MOTION SINCRONIZADO OBLIGATORIO: mapa de beats y motion_events.json por elemento/frase; no aceptar diagrama completo anticipado ni loops decorativos. Adaptar variantes registradas si los tiempos del preset no encajan. Verificar cues y MP4 final con audio antes de entregar.",
   "inputSchema": {
    "type": "object",
    "properties": {
@@ -196,7 +196,7 @@ inline const Json& tool_definitions() {
  },
  {
   "name": "preview_frame",
-  "description": "VISUAL QA OBLIGATORIO PARA html_widget: previsualizar el preset HTML/SVG realmente insertado y su secuencia a inicio/medio/final de cada escena, incluyendo cambios de voz; verificar imagen completa, tipografia, animacion y ausencias de capas que tapen contenido. No aceptar solo el JSON.",
+  "description": "VISUAL QA OBLIGATORIO PARA html_widget: previsualizar el preset HTML/SVG realmente insertado y su secuencia a inicio/medio/final de cada escena, incluyendo cambios de voz; verificar imagen completa, tipografia, animacion y ausencias de capas que tapen contenido. No aceptar solo el JSON. MOTION SINCRONIZADO OBLIGATORIO: mapa de beats y motion_events.json por elemento/frase; no aceptar diagrama completo anticipado ni loops decorativos. Adaptar variantes registradas si los tiempos del preset no encajan. Verificar cues y MP4 final con audio antes de entregar.",
   "inputSchema": {
    "type": "object",
    "properties": {
@@ -218,7 +218,7 @@ inline const Json& tool_definitions() {
  },
  {
   "name": "render_video",
-  "description": "RENDER SOLO TRAS BROWSER-FIRST: busca y selecciona las animaciones existentes por escena (search_animations, describe_animation), inserta html_widget registrados para el contenido pertinente y utiliza capas nativas solo como complemento. Antes del render ejecuta validate_project, review_layout y preview_frame en todas las escenas, verifica tiempos de narracion y evita recortes, oclusiones, deformaciones y textos truncados. Salida H.264/AAC sin garantia automatica de calidad visual.",
+  "description": "RENDER SOLO TRAS BROWSER-FIRST: busca y selecciona las animaciones existentes por escena (search_animations, describe_animation), inserta html_widget registrados para el contenido pertinente y utiliza capas nativas solo como complemento. Antes del render ejecuta validate_project, review_layout y preview_frame en todas las escenas, verifica tiempos de narracion y evita recortes, oclusiones, deformaciones y textos truncados. Salida H.264/AAC sin garantia automatica de calidad visual. MOTION SINCRONIZADO OBLIGATORIO: mapa de beats y motion_events.json por elemento/frase; no aceptar diagrama completo anticipado ni loops decorativos. Adaptar variantes registradas si los tiempos del preset no encajan. Verificar cues y MP4 final con audio antes de entregar.",
   "inputSchema": {
    "type": "object",
    "properties": {
@@ -337,7 +337,7 @@ inline const Json& tool_definitions() {
  },
  {
   "name": "review_layout",
-  "description": "GATE BROWSER-FIRST: audita composicion antes de renderizar y comprueba que las escenas didacticas usen html_widget registrados cuando haya presets relevantes; revisar image_cropped/image_distorted/image_occluded, texto legible, contraste, colisiones y limites. Lint no sustituye preview_frame en principio/mitad/final de todas las escenas.",
+  "description": "GATE BROWSER-FIRST: audita composicion antes de renderizar y comprueba que las escenas didacticas usen html_widget registrados cuando haya presets relevantes; revisar image_cropped/image_distorted/image_occluded, texto legible, contraste, colisiones y limites. Lint no sustituye preview_frame en principio/mitad/final de todas las escenas. MOTION SINCRONIZADO OBLIGATORIO: mapa de beats y motion_events.json por elemento/frase; no aceptar diagrama completo anticipado ni loops decorativos. Adaptar variantes registradas si los tiempos del preset no encajan. Verificar cues y MP4 final con audio antes de entregar.",
   "inputSchema": {
    "type": "object",
    "properties": {
@@ -353,7 +353,7 @@ inline const Json& tool_definitions() {
  },
  {
   "name": "start_render",
-  "description": "RENDER SOLO DESPUES DEL GATE BROWSER-FIRST: documentar los presets HTML/CSS/SVG que se han seleccionado y estan efectivamente insertados como capas html_widget; validar el JSON y revisar fotogramas de cada escena con review_layout/preview_frame; sincronizar con narracion y no tapar fotos o textos. Trabajos largos se revisan con render_status. No afirmar calidad automatica solo por exportar.",
+  "description": "RENDER SOLO DESPUES DEL GATE BROWSER-FIRST: documentar los presets HTML/CSS/SVG que se han seleccionado y estan efectivamente insertados como capas html_widget; validar el JSON y revisar fotogramas de cada escena con review_layout/preview_frame; sincronizar con narracion y no tapar fotos o textos. Trabajos largos se revisan con render_status. No afirmar calidad automatica solo por exportar. MOTION SINCRONIZADO OBLIGATORIO: mapa de beats y motion_events.json por elemento/frase; no aceptar diagrama completo anticipado ni loops decorativos. Adaptar variantes registradas si los tiempos del preset no encajan. Verificar cues y MP4 final con audio antes de entregar.",
   "inputSchema": {
    "type": "object",
    "properties": {
@@ -422,7 +422,7 @@ inline const Json& tool_definitions() {
  },
  {
   "name": "save_project",
-  "description": "Guardar JSON editable por ETag. BROWSER-FIRST: insertar capas html_widget reales con collection=animaciones (o originales), preset=ID verificado por describe_animation y properties SOLO de editable; priorizar la biblioteca existente sobre tarjetas C++ vacias. Mantener grupos/cueIndex sincronizados con la narracion; no se admite HTML remoto o no registrado.",
+  "description": "Guardar JSON editable por ETag. BROWSER-FIRST: insertar capas html_widget reales con collection=animaciones (o originales), preset=ID verificado por describe_animation y properties SOLO de editable; priorizar la biblioteca existente sobre tarjetas C++ vacias. Mantener grupos/cueIndex sincronizados con la narracion; no se admite HTML remoto o no registrado. MOTION SINCRONIZADO OBLIGATORIO: mapa de beats y motion_events.json por elemento/frase; no aceptar diagrama completo anticipado ni loops decorativos. Adaptar variantes registradas si los tiempos del preset no encajan. Verificar cues y MP4 final con audio antes de entregar.",
   "inputSchema": {
    "type": "object",
    "properties": {

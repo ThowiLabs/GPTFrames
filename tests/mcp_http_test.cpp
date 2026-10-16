@@ -189,8 +189,15 @@ int main(int argc, char** argv) {
         check(initialized && Json::parse(initialized->body)["result"]["serverInfo"]["name"] == "gptframes", "HTTP initialize");
         auto tools = client.Post("/mcp", authorization, R"({"jsonrpc":"2.0","id":3,"method":"tools/list"})", "application/json");
         const auto tool_list = Json::parse(tools->body)["result"]["tools"];
-        check(tools && tools->status == 200 && tool_list.size() == 15 &&
-              tool_list[0]["securitySchemes"][0]["type"] == "oauth2", "all tools declare OAuth");
+        check(tools && tools->status == 200 && tool_list.size() == 23, "current tool inventory");
+        for(const auto& tool:tool_list)
+            check(tool["securitySchemes"][0]["type"] == "oauth2" &&
+                  tool["securitySchemes"] == tool["_meta"]["securitySchemes"],
+                  (std::string("tool OAuth metadata: ") + tool["name"].get<std::string>()).c_str());
+        const auto editing_instructions=Json::parse(initialized->body)["result"]["instructions"].get<std::string>();
+        check(editing_instructions.find("MOTION SINCRONIZADO")!=std::string::npos &&
+              editing_instructions.find("motion_events.json")!=std::string::npos,
+              "HTTP initialization publishes narrated motion workflow");
         Json modern_call{{"jsonrpc", "2.0"}, {"id", 4}, {"method", "server/discover"},
             {"params", {{"_meta", {{"io.modelcontextprotocol/protocolVersion", "2026-07-28"},
                 {"io.modelcontextprotocol/clientCapabilities", Json::object()}}}}}};
@@ -203,13 +210,15 @@ int main(int argc, char** argv) {
               Json::parse(discovery->body)["result"]["resultType"] == "complete" &&
               Json::parse(discovery->body)["result"]["_meta"]["io.modelcontextprotocol/serverInfo"]["name"] == "gptframes",
               "ChatGPT modern action discovery after PIN");
+        check(Json::parse(discovery->body)["result"]["instructions"] == editing_instructions,
+              "modern HTTP discovery preserves narrated motion workflow");
         modern_call["method"] = "tools/list";
         auto mismatch = client.Post("/mcp", modern_headers, modern_call.dump(), "application/json");
         check(mismatch && mismatch->status == 400, "modern method header enforced");
         modern_headers.erase("Mcp-Method"); modern_headers.emplace("Mcp-Method", "tools/list");
         auto modern_tools = client.Post("/mcp", modern_headers, modern_call.dump(), "application/json");
         check(modern_tools && modern_tools->status == 200 &&
-              Json::parse(modern_tools->body)["result"]["tools"].size() == 15 &&
+              Json::parse(modern_tools->body)["result"]["tools"].size() == tool_list.size() &&
               Json::parse(modern_tools->body)["result"]["resultType"] == "complete", "modern tool discovery");
         modern_call["method"] = "tools/call"; modern_call["params"]["name"] = "list_projects";
         modern_call["params"]["arguments"] = Json::object();

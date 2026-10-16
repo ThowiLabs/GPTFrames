@@ -1,11 +1,21 @@
 ---
 name: hyperframes-cpp
-description: "Produce high-quality narrated GPTFrames videos with native C++ compositor, Chromium CSS/SVG, 95+ searchable presets, Neo voice and mandatory visual QA; avoid clipped images and text."
+description: "Produce high-quality narrated GPTFrames videos with native C++ compositor, Chromium CSS/SVG, searchable presets, voice-synchronized explanatory motion, Neo voice and mandatory audiovisual QA; avoid clipped images and text."
 ---
 
 # GPTFrames — professional video production agent skill
 
 **Mission:** Create technically accurate, attractive, clear educational videos about programming, Linux, software architecture, networking and other computing topics. Success is a visually reviewed video, not a successful MP4 export.
+
+## Mandatory editing standard: build the explanation with the voice
+
+Read **references/NARRATED_MOTION.md** before storyboarding any narrated video. Apply it to every new video and revision unless the user explicitly requests static treatment. Reveal and transform individual semantic elements at the words/phrases that explain them. A complete diagram shown from the start, decorative loops, title fades or a single animation per slide do **not** meet this standard.
+
+Write a beat map and an editable `motion_events.json` with element IDs, spoken anchors, scene-local times and timing provenance. Build meaningful sequences: tasks travel to units, a geometry becomes an image, operands enter in order, the result appears when spoken. Estimate word times from the real audio, then review audiovisual sync; do not claim phoneme accuracy from an energy aligner.
+
+Search and reuse relevant assets, but adapt/register a reviewed variant or author a compatible deterministic HTML/CSS/SVG sequence when existing timing cannot match the narration. Preserve originals. Use CLI/source control when needed; arbitrary HTML is not accepted by MCP `save_project`. Ask for a missing essential animation only after checking viable existing/code alternatives.
+
+Block delivery for premature results, static completed diagrams during enumeration, filler loops, cue failures, overlapping captions or unexplained dead segments. Inspect actual frames around beats, watch/listen to encoded output and full-decode the finished MP4. The agent performs this review under the user's production request; do not invent a separate user-approval requirement.
 
 ## Discover your actual tools BEFORE designing
 
@@ -26,7 +36,7 @@ Read **references/WORKFLOWS.md** for implementation, **references/QUALITY_GATE.m
 
 **2. Voice and timing.** Generate speech **per scene** using `synthesize_voice` or native Neo Lite. Measure real WAV durations, verify technical pronunciation and accents by listening, allow ~0.4–0.8 seconds breathing room. Keep on-screen code strings exact, spoken phonetics separate (e.g. C++ spoken "ce más más"). Use `speechTiming` and `cueIndex` when available, remembering automatic alignments are approximate. Never show empty cards before their captions or reveal concepts before they're spoken. Enter caption/icon/card as **one atomic group**.
 
-**3. Choose assets deliberately.** Search the catalog (motion tags + category + description) before drawing primitive symbols. Use licensed photos with source/provenance; prefer self-contained SVG/HTML diagrams. Avoid primitive emojis in a technical documentary.
+**3. Choose assets deliberately and fit them to the beat map.** Search the catalog (motion tags + category + description) before drawing primitive symbols. Use licensed photos with source/provenance; prefer self-contained SVG/HTML diagrams. Avoid primitive emojis in a technical documentary.
 
 **4. Strict image framing.** Native `image.fit` accepts:
 - `contain`: **default**, preserves the whole image and aspect ratio. Use for logos, code screenshots, technology icons, UI screenshots, charts, diagrams and photo subjects that must remain complete.
@@ -46,14 +56,14 @@ python3 tools/qa_video_project.py /path/to/project.json --engine "$ENGINE" --out
 ```
 QA makes scene screenshots and a contact sheet and saves the raw lint report. **Fix** `image_cropped`, `image_occluded`, `image_distorted`, `text_overflow`, `text_collision` and `outside_canvas` before publishing; investigate `small_text` even if there are no hard failures. Check early/mid/late frames and the instant before/after each narrated cue. Automatic lint cannot detect all bad compositions—human vision is mandatory.
 
-**7. Preview first, render only after visual approval.**
+**7. Preview first, render only after visual review.**
 ```bash
 "$ENGINE" --project frame /path/to/project.json /tmp/check.png 3.5
 "$ENGINE" --project render /path/to/project.json /tmp/preview.mp4 --size 848x480
 ```
 The 848x480 preview applies to matching **landscape aspect ratio** projects; portrait projects need an appropriately proportioned size (or native 720x1280). Preserve codec dimensions constraints (width multiple of 16, height even). `--browser-widget-render` is for SHORT CSS demos, presently <=10 seconds; don't use it for long documentaries. For full multi-scene projects use native JSON and registered browser widgets, or the engine's supported full HTML route.
 
-**8. Finish and verify.** Wait for renderer exit zero. Probe streams with FFprobe and full-decode via FFmpeg for QA (not production runtime). Listen to actual speech, check every frame cluster, inspect the final MP4—not only scene PNGs. Provide verified link, dimensions, FPS, duration, audio status and editability. Never call a bad video "professional" merely because tests passed. Ask the user which numbered examples to approve, change or discard.
+**8. Finish and verify.** Wait for renderer exit zero. Probe streams with FFprobe and full-decode via FFmpeg for QA (not production runtime). Listen to actual speech, check every frame cluster, inspect the final MP4—not only scene PNGs. Provide verified link, dimensions, FPS, duration, audio status and editability. Never call a bad video "professional" merely because tests passed. Deliver the authorized finished revision. Ask for feedback only after delivery; do not add a routine permission stop.
 
 ## Problems demonstrated by Alpine Linux example
 

@@ -2,6 +2,12 @@
 
 No rendering success, correct codec, or unit-test pass proves good composition. The video must be visually inspected before delivery, especially on a phone.
 
+## Narrated motion is a delivery gate
+
+Apply [NARRATED_MOTION.md](NARRATED_MOTION.md). Require a beat map and `motion_events.json` linking visible actions to spoken anchors. Reject complete diagrams shown before their explanation, premature results, decorative loops used as the explanation, and sequences whose only changes are title fades. Inspect cue boundaries and effective visibility inside browser widgets as well as native layers. Check actual movement and state changes, not merely different pixels.
+
+Review the final encoded video with speech. Contact sheets and automatic alignment cannot certify audiovisual synchronization. If voice or cuts change, regenerate all dependent marks and subtitles. A blocker here requires fixing the montage, even when schema/lint/codec checks pass.
+
 ## Acceptance checklist
 
 **Images**
