@@ -1,0 +1,682 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Linux Master Terminal Animations (Zero-CDN)</title>
+  <style>
+    /* ==========================================================
+       VARIABLES GLOBALES & RESET
+       ========================================================== */
+    :root {
+      --bg: #06090e;
+      --card-bg: #0b0f19;
+      --term-header: #121824;
+      --border: #1a2333;
+      --text: #e2e8f0;
+      --text-dim: #64748b;
+      --text-muted: #475569;
+
+      /* Paleta Linux ANSI */
+      --c-green:  #22c55e;
+      --c-cyan:   #06b6d4;
+      --c-blue:   #38bdf8;
+      --c-yellow: #facc15;
+      --c-orange: #f97316;
+      --c-red:    #ef4444;
+      --c-purple: #c084fc;
+      --c-magenta:#e879f9;
+      --c-white:  #f8fafc;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background-color: var(--bg);
+      color: var(--text);
+      font-family: ui-monospace, "Cascadia Code", "Fira Code", SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+      padding: 30px 20px 80px 20px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-height: 100vh;
+    }
+
+    /* BARRA DE CONTROL SUPERIOR */
+    .master-toolbar {
+      position: sticky;
+      top: 15px;
+      z-index: 1000;
+      background: rgba(11, 15, 25, 0.92);
+      backdrop-filter: blur(12px);
+      border: 1px solid var(--border);
+      padding: 10px 24px;
+      border-radius: 99px;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      margin-bottom: 35px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.7);
+    }
+
+    .btn-replay {
+      background: var(--c-green);
+      color: #021a0a;
+      font-weight: 800;
+      border: none;
+      padding: 9px 22px;
+      border-radius: 99px;
+      cursor: pointer;
+      font-size: 12px;
+      font-family: inherit;
+      letter-spacing: 0.5px;
+      transition: transform 0.15s ease, filter 0.15s ease;
+    }
+    .btn-replay:hover { transform: scale(1.04); filter: brightness(1.15); }
+    .btn-replay:active { transform: scale(0.97); }
+
+    .status-badge {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 11px;
+      color: var(--text-dim);
+    }
+    .status-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--c-green);
+      box-shadow: 0 0 8px var(--c-green);
+      animation: pulseDot 2s infinite;
+    }
+    @keyframes pulseDot {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.4; transform: scale(0.85); }
+    }
+
+    /* CONTENEDOR PRINCIPAL EN REJILLA */
+    .main-grid {
+      width: 100%;
+      max-width: 1240px;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(540px, 1fr));
+      gap: 24px;
+    }
+
+    @media (max-width: 600px) {
+      .main-grid { grid-template-columns: 1fr; }
+    }
+
+    /* ESTILO DE VENTANA DE TERMINAL */
+    .terminal-card {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      height: 380px;
+      box-shadow: 0 15px 35px rgba(0,0,0,0.5);
+      position: relative;
+    }
+
+    .terminal-header {
+      background: var(--term-header);
+      padding: 10px 14px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid var(--border);
+      user-select: none;
+    }
+
+    .window-dots {
+      display: flex;
+      gap: 7px;
+    }
+    .dot {
+      width: 11px;
+      height: 11px;
+      border-radius: 50%;
+    }
+    .dot-close { background: #ef4444; }
+    .dot-min   { background: #eab308; }
+    .dot-max   { background: #22c55e; }
+
+    .window-title {
+      font-size: 11px;
+      color: var(--text-dim);
+      font-weight: 600;
+      letter-spacing: 0.5px;
+    }
+
+    .terminal-body {
+      padding: 16px;
+      flex: 1;
+      overflow-y: auto;
+      font-size: 12px;
+      line-height: 1.55;
+      color: var(--text);
+      white-space: pre-wrap;
+      word-break: break-all;
+    }
+
+    .terminal-body::-webkit-scrollbar { width: 6px; }
+    .terminal-body::-webkit-scrollbar-track { background: transparent; }
+    .terminal-body::-webkit-scrollbar-thumb { background: #1e293b; border-radius: 3px; }
+
+    /* CURSOR PARPADEANTE */
+    .cursor {
+      display: inline-block;
+      width: 8px;
+      height: 14px;
+      background: var(--text);
+      vertical-align: -2px;
+      margin-left: 2px;
+      animation: blink 0.9s steps(2, start) infinite;
+    }
+    @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
+
+    /* COLORES Y ELEMENTOS DE SHELL */
+    .prompt-user   { color: var(--c-green); font-weight: bold; }
+    .prompt-at     { color: var(--text-muted); }
+    .prompt-host   { color: var(--c-cyan); font-weight: bold; }
+    .prompt-path   { color: var(--c-yellow); }
+    .prompt-symbol { color: var(--text); font-weight: bold; }
+
+    .boot-ok       { color: var(--c-green); font-weight: bold; }
+    .boot-time     { color: var(--c-cyan); }
+    .boot-warn     { color: var(--c-yellow); }
+    .boot-info     { color: var(--c-blue); }
+
+    /* ESTILOS ESPECÍFICOS: VIM */
+    .vim-container {
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+      background: #070a12;
+      font-size: 12px;
+    }
+    .vim-viewport {
+      flex: 1;
+      display: flex;
+      overflow: hidden;
+    }
+    .vim-lines {
+      width: 34px;
+      color: #334155;
+      padding: 10px 8px 10px 4px;
+      text-align: right;
+      user-select: none;
+      border-right: 1px solid #141d2f;
+      background: #090e1a;
+      font-size: 11px;
+    }
+    .vim-content {
+      flex: 1;
+      padding: 10px 12px;
+      color: #cbd5e1;
+      white-space: pre-wrap;
+      overflow-y: auto;
+    }
+    .vim-statusline {
+      background: #1e293b;
+      color: #0f172a;
+      display: flex;
+      justify-content: space-between;
+      font-size: 11px;
+      font-weight: 700;
+      padding: 2px 8px;
+    }
+    .vim-status-mode {
+      background: var(--c-blue);
+      color: #000;
+      padding: 1px 8px;
+      border-radius: 2px;
+      text-transform: uppercase;
+      font-weight: 800;
+      transition: background 0.2s ease;
+    }
+    .vim-status-mode.insert { background: var(--c-green); color: #021a0a; }
+    .vim-commandline {
+      background: #070a12;
+      color: var(--text);
+      padding: 4px 10px;
+      font-size: 11px;
+      min-height: 24px;
+      border-top: 1px solid #141d2f;
+    }
+
+    /* ESTILOS NEOFETCH */
+    .neofetch-layout {
+      display: flex;
+      gap: 18px;
+      align-items: flex-start;
+      margin-top: 10px;
+    }
+    .neofetch-logo {
+      color: var(--c-cyan);
+      font-weight: bold;
+      line-height: 1.15;
+      font-size: 11px;
+      flex-shrink: 0;
+    }
+    .neofetch-data {
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+      font-size: 11.5px;
+    }
+    .nf-key { color: var(--c-yellow); font-weight: 600; }
+    .palette-row {
+      display: flex;
+      gap: 4px;
+      margin-top: 8px;
+    }
+    .palette-box {
+      width: 14px;
+      height: 10px;
+      border-radius: 2px;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- BARRA DE REPRODUCCIÓN / REINICIO -->
+  <aside class="master-toolbar">
+    <button class="btn-replay" onclick="restartAllAnimations()">↺ REINICIAR LAS 4 ANIMACIONES</button>
+    <div class="status-badge">
+      <div class="status-dot"></div>
+      <span>SIMULACIÓN LINUX EN VIVO</span>
+    </div>
+  </aside>
+
+  <!-- CONTENEDOR DE LAS 4 ANIMACIONES -->
+  <main class="main-grid">
+
+    <!-- =========================================================
+         01: TERMINAL BASH (TYPE & OUTPUT SIMULATION)
+         ========================================================= -->
+    <section class="terminal-card">
+      <div class="terminal-header">
+        <div class="window-dots">
+          <div class="dot dot-close"></div>
+          <div class="dot dot-min"></div>
+          <div class="dot dot-max"></div>
+        </div>
+        <div class="window-title">bash — arch@blade: ~ (80x24)</div>
+        <div style="width: 40px;"></div>
+      </div>
+      <div class="terminal-body" id="term1-body">
+        <!-- Generado dinámicamente -->
+      </div>
+    </section>
+
+    <!-- =========================================================
+         02: LINUX KERNEL & SYSTEMD BOOT LOG (AUTOSCROLL)
+         ========================================================= -->
+    <section class="terminal-card">
+      <div class="terminal-header">
+        <div class="window-dots">
+          <div class="dot dot-close"></div>
+          <div class="dot dot-min"></div>
+          <div class="dot dot-max"></div>
+        </div>
+        <div class="window-title">systemd-boot — v256.4-1-arch — tty1</div>
+        <div style="width: 40px;"></div>
+      </div>
+      <div class="terminal-body" id="term2-body" style="font-size: 11px;">
+        <!-- Generado dinámicamente -->
+      </div>
+    </section>
+
+    <!-- =========================================================
+         03: NEOFETCH SYSTEM INFO REVEAL
+         ========================================================= -->
+    <section class="terminal-card">
+      <div class="terminal-header">
+        <div class="window-dots">
+          <div class="dot dot-close"></div>
+          <div class="dot dot-min"></div>
+          <div class="dot dot-max"></div>
+        </div>
+        <div class="window-title">fastfetch — zsh (100x30)</div>
+        <div style="width: 40px;"></div>
+      </div>
+      <div class="terminal-body" id="term3-body">
+        <!-- Generado dinámicamente -->
+      </div>
+    </section>
+
+    <!-- =========================================================
+         04: VIM FILE EDITOR (:wq WRITE & QUIT)
+         ========================================================= -->
+    <section class="terminal-card">
+      <div class="terminal-header">
+        <div class="window-dots">
+          <div class="dot dot-close"></div>
+          <div class="dot dot-min"></div>
+          <div class="dot dot-max"></div>
+        </div>
+        <div class="window-title">nvim ~/daemon.py</div>
+        <div style="width: 40px;"></div>
+      </div>
+      <div class="vim-container" id="vim-engine">
+        <div class="vim-viewport">
+          <div class="vim-lines" id="vim-gutter">1<br>2<br>3<br>4<br>~<br>~<br>~<br>~</div>
+          <div class="vim-content" id="vim-text"></div>
+        </div>
+        <div class="vim-statusline">
+          <div class="vim-status-mode" id="vim-mode-badge">NORMAL</div>
+          <div style="color:#94a3b8; font-weight: normal;">daemon.py [utf-8]</div>
+          <div id="vim-coords" style="color:#94a3b8;">1,1 100%</div>
+        </div>
+        <div class="vim-commandline" id="vim-cmd"></div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ==========================================================
+       MOTOR JAVASCRIPT NATIVO: TIMELINES & EFECTOS
+       ========================================================== -->
+  <script>
+    // Token global para abortar y reiniciar timeouts/intervals limpiamente
+    let activeToken = { aborted: false };
+
+    function sleep(ms, token) {
+      return new Promise(resolve => {
+        const id = setTimeout(() => {
+          if (!token.aborted) resolve();
+        }, ms);
+      });
+    }
+
+    /* ----------------------------------------------------------
+       01: TERMINAL BASH (TYPE & OUTPUT SIMULATION)
+       ---------------------------------------------------------- */
+    async function runTerminalBash(token) {
+      const container = document.getElementById('term1-body');
+      container.innerHTML = `
+        <div><span class="prompt-user">tux</span><span class="prompt-at">@</span><span class="prompt-host">linux-srv</span>:<span class="prompt-path">~</span><span class="prompt-symbol">$</span> <span id="t1-cmd"></span><span class="cursor" id="t1-cur"></span></div>
+        <div id="t1-output" style="margin-top: 10px; display: none;"></div>
+      `;
+
+      const cmdElement = document.getElementById('t1-cmd');
+      const curElement = document.getElementById('t1-cur');
+      const outElement = document.getElementById('t1-output');
+
+      await sleep(600, token);
+      if (token.aborted) return;
+
+      const fullCommand = "systemctl status nginx.service";
+      for (let i = 0; i < fullCommand.length; i++) {
+        cmdElement.textContent += fullCommand[i];
+        await sleep(40 + Math.random() * 55, token);
+        if (token.aborted) return;
+      }
+
+      await sleep(400, token);
+      if (token.aborted) return;
+      curElement.style.display = 'none';
+
+      // Salida con colores de systemd
+      outElement.style.display = 'block';
+      const outputLines = [
+        `<span style="color:var(--c-green);">●</span> <strong>nginx.service</strong> - High Performance Web Server & Reverse Proxy`,
+        `     Loaded: loaded (/usr/lib/systemd/system/nginx.service; <span style="color:var(--c-cyan);">enabled</span>; preset: disabled)`,
+        `     Active: <span style="color:var(--c-green);font-weight:bold;">active (running)</span> since Thu 2026-10-15 17:30:12 CST; 42s ago`,
+        `       Docs: man:nginx(8)`,
+        `    Process: 2041 ExecStart=/usr/bin/nginx -g daemon on; (code=exited, status=0/SUCCESS)`,
+        `   Main PID: 2042 (nginx)`,
+        `      Tasks: 4 (limit: 18972)`,
+        `     Memory: 18.2M (peak: 21.4M)`,
+        `        CPU: 48ms`,
+        `     CGroup: /system.slice/nginx.service`,
+        `             ├─2042 "nginx: master process /usr/bin/nginx"`,
+        `             ├─2043 "nginx: worker process"`,
+        `             └─2044 "nginx: worker process"`,
+        `<br><span style="color:var(--text-dim);">Oct 15 17:30:12 linux-srv systemd[1]: Starting nginx.service...</span>`,
+        `<span style="color:var(--text-dim);">Oct 15 17:30:12 linux-srv systemd[1]: Started nginx.service.</span>`,
+        `<br><span class="prompt-user">tux</span><span class="prompt-at">@</span><span class="prompt-host">linux-srv</span>:<span class="prompt-path">~</span><span class="prompt-symbol">$</span> <span class="cursor"></span>`
+      ];
+
+      for (let line of outputLines) {
+        outElement.innerHTML += line + "<br>";
+        container.scrollTop = container.scrollHeight;
+        await sleep(90, token);
+        if (token.aborted) return;
+      }
+    }
+
+    /* ----------------------------------------------------------
+       02: SYSTEMD & DMESG BOOT LOG SEQUENCE
+       ---------------------------------------------------------- */
+    async function runBootLog(token) {
+      const container = document.getElementById('term2-body');
+      container.innerHTML = "";
+
+      const bootSteps = [
+        { time: "0.000000", type: "kernel", text: "Linux version 6.12.8-arch1-1 (SMP PREEMPT_DYNAMIC)" },
+        { time: "0.000001", type: "kernel", text: "Command line: BOOT_IMAGE=/vmlinuz-linux root=UUID=8b4f rw quiet" },
+        { time: "0.012401", type: "kernel", text: "x86/fpu: Supporting XSAVE feature 0x002: 'AVX registers'" },
+        { time: "0.145802", type: "kernel", text: "Memory: 32714208K/33554432K available (14336K kernel code)" },
+        { time: "0.389104", type: "kernel", text: "ACPI: Core revision 20240927" },
+        { time: "0.620119", type: "kernel", text: "PCI-DMA: Using software bounce buffering for IO (SWIOTLB)" },
+        { time: "0.950123", type: "kernel", text: "nvme nvme0: 8/0/0 default/read/poll queues" },
+        { time: "1.104230", type: "kernel", text: "EXT4-fs (nvme0n1p2): mounted filesystem with ordered data mode" },
+        { time: "1.231994", type: "sysd",   text: "systemd[1]: Inserted module 'autofs4'" },
+        { time: "1.300000", type: "ok",     text: "Created slice Slice /system/modprobe." },
+        { time: "1.341200", type: "ok",     text: "Mounted /sys/kernel/tracing." },
+        { time: "1.412800", type: "ok",     text: "Started Dispatch Password Requests to Console Directory Watch." },
+        { time: "1.520000", type: "ok",     text: "Reached target Local File Systems (Pre)." },
+        { time: "1.610400", type: "ok",     text: "Mounted /boot/efi (UUID=3E2A-18F9)." },
+        { time: "1.720100", type: "ok",     text: "Started Network Time Synchronization." },
+        { time: "1.890300", type: "ok",     text: "Reached target System Initialization." },
+        { time: "2.050400", type: "ok",     text: "Started D-Bus System Message Bus." },
+        { time: "2.180200", type: "ok",     text: "Started NetworkManager Network Interface Services." },
+        { time: "2.320000", type: "ok",     text: "Reached target Network (Online)." },
+        { time: "2.440100", type: "ok",     text: "Started OpenSSH Daemon Server." },
+        { time: "2.560000", type: "ok",     text: "Reached target Multi-User System." },
+        { time: "2.710000", type: "ok",     text: "Reached target Graphical Interface." },
+        { time: "2.800000", type: "login",  text: "Arch Linux 6.12.8-arch1-1 (tty1) — Host login:" }
+      ];
+
+      for (let s of bootSteps) {
+        let line = "";
+        if (s.type === "kernel") {
+          line = `[ <span class="boot-time">${s.time}</span> ] ${s.text}`;
+        } else if (s.type === "sysd") {
+          line = `[ <span class="boot-info">${s.time}</span> ] <span style="color:var(--c-purple);">${s.text}</span>`;
+        } else if (s.type === "ok") {
+          line = `[ <span class="boot-ok">  OK  </span> ] ${s.text}`;
+        } else if (s.type === "login") {
+          line = `<br><span style="color:var(--c-cyan);font-weight:bold;">${s.text}</span> <span class="cursor"></span>`;
+        }
+
+        container.innerHTML += line + "<br>";
+        container.scrollTop = container.scrollHeight;
+        await sleep(95, token);
+        if (token.aborted) return;
+      }
+    }
+
+    /* ----------------------------------------------------------
+       03: NEOFETCH HARDWARE & OS SPEC REVEAL
+       ---------------------------------------------------------- */
+    async function runNeofetch(token) {
+      const container = document.getElementById('term3-body');
+      container.innerHTML = `
+        <div><span class="prompt-user">arch</span><span class="prompt-at">@</span><span class="prompt-host">thinkpad</span>:<span class="prompt-path">~</span><span class="prompt-symbol">$</span> <span id="t3-cmd"></span><span class="cursor" id="t3-cur"></span></div>
+        <div id="t3-layout" class="neofetch-layout" style="display:none;"></div>
+      `;
+
+      const cmd = document.getElementById('t3-cmd');
+      const cur = document.getElementById('t3-cur');
+      const layout = document.getElementById('t3-layout');
+
+      await sleep(300, token);
+      if (token.aborted) return;
+
+      const input = "fastfetch";
+      for (let char of input) {
+        cmd.textContent += char;
+        await sleep(60, token);
+        if (token.aborted) return;
+      }
+
+      await sleep(350, token);
+      if (token.aborted) return;
+      cur.style.display = 'none';
+      layout.style.display = 'flex';
+
+      const archAscii = `
+   <span style="color:var(--c-cyan);">/\`</span>
+  <span style="color:var(--c-cyan);">/  \`</span>
+ <span style="color:var(--c-cyan);">/\\   \`</span>
+<span style="color:var(--c-cyan);">/      \`</span>
+<span style="color:var(--c-cyan);">/   ,,   \`</span>
+<span style="color:var(--c-cyan);">/   |  |  \`</span>
+<span style="color:var(--c-cyan);">/_-''    ''-_\`</span>`;
+
+      layout.innerHTML = `
+        <pre class="neofetch-logo">${archAscii}</pre>
+        <div class="neofetch-data" id="t3-specs"></div>
+      `;
+
+      const specsBox = document.getElementById('t3-specs');
+      const specs = [
+        `<strong style="color:var(--c-cyan);">arch</strong>@<strong style="color:var(--c-blue);">thinkpad</strong>`,
+        `<span style="color:var(--text-muted);">-------------------------</span>`,
+        `<div><span class="nf-key">OS:</span> Arch Linux x86_64</div>`,
+        `<div><span class="nf-key">Host:</span> ThinkPad X1 Carbon Gen 11</div>`,
+        `<div><span class="nf-key">Kernel:</span> 6.12.8-arch1-1</div>`,
+        `<div><span class="nf-key">Uptime:</span> 14 days, 3 hours, 22 mins</div>`,
+        `<div><span class="nf-key">Packages:</span> 1042 (pacman), 18 (flatpak)</div>`,
+        `<div><span class="nf-key">Shell:</span> zsh 5.9</div>`,
+        `<div><span class="nf-key">WM:</span> Hyprland (Wayland)</div>`,
+        `<div><span class="nf-key">Terminal:</span> alacritty</div>`,
+        `<div><span class="nf-key">CPU:</span> 13th Gen Intel i7-1370P (20) @ 5.20GHz</div>`,
+        `<div><span class="nf-key">Memory:</span> 9420MiB / 32180MiB (29%)</div>`,
+        `<div class="palette-row">
+          <div class="palette-box" style="background:#000;"></div>
+          <div class="palette-box" style="background:var(--c-red);"></div>
+          <div class="palette-box" style="background:var(--c-green);"></div>
+          <div class="palette-box" style="background:var(--c-yellow);"></div>
+          <div class="palette-box" style="background:var(--c-blue);"></div>
+          <div class="palette-box" style="background:var(--c-purple);"></div>
+          <div class="palette-box" style="background:var(--c-cyan);"></div>
+          <div class="palette-box" style="background:#fff;"></div>
+        </div>`
+      ];
+
+      for (let s of specs) {
+        specsBox.innerHTML += s;
+        await sleep(70, token);
+        if (token.aborted) return;
+      }
+    }
+
+    /* ----------------------------------------------------------
+       04: CONSOLA VIM: EDICIÓN, INSERT, :wq GUARDAR Y SALIR
+       ---------------------------------------------------------- */
+    async function runVimEditor(token) {
+      const modeBadge = document.getElementById('vim-mode-badge');
+      const textPane  = document.getElementById('vim-text');
+      const cmdPane   = document.getElementById('vim-cmd');
+      const coords    = document.getElementById('vim-coords');
+
+      // Reset inicial
+      modeBadge.textContent = "NORMAL";
+      modeBadge.classList.remove('insert');
+      textPane.innerHTML = "";
+      cmdPane.textContent = "";
+      coords.textContent = "1,1 Top";
+
+      await sleep(500, token);
+      if (token.aborted) return;
+
+      // Paso 1: Pulsar 'i' para entrar en INSERT MODE
+      cmdPane.textContent = "-- INSERT --";
+      modeBadge.textContent = "INSERT";
+      modeBadge.classList.add('insert');
+      await sleep(400, token);
+      if (token.aborted) return;
+
+      // Paso 2: Tipeo progresivo del script Python con resaltado básico
+      const codeLines = [
+        `<span style="color:var(--c-purple);">import</span> os, time, sys`,
+        `<br><span style="color:var(--c-purple);">def</span> <span style="color:var(--c-blue);">kernel_listener</span>():`,
+        `    print(<span style="color:var(--c-green);">"[+] Initializing Linux Daemon..."</span>)`,
+        `    time.sleep(<span style="color:var(--c-orange);">0.5</span>)`,
+        `    <span style="color:var(--c-purple);">return</span> <span style="color:var(--c-cyan);">True</span>`,
+        `<br><span style="color:var(--c-purple);">if</span> __name__ == <span style="color:var(--c-green);">"__main__"</span>:`,
+        `    kernel_listener()`
+      ];
+
+      for (let i = 0; i < codeLines.length; i++) {
+        textPane.innerHTML += codeLines[i] + "<br>";
+        coords.textContent = `${i + 1},${(i + 1) * 3} 100%`;
+        await sleep(180, token);
+        if (token.aborted) return;
+      }
+
+      await sleep(500, token);
+      if (token.aborted) return;
+
+      // Paso 3: Presionar ESC -> Vuelve a modo NORMAL
+      modeBadge.textContent = "NORMAL";
+      modeBadge.classList.remove('insert');
+      cmdPane.textContent = "";
+      await sleep(450, token);
+      if (token.aborted) return;
+
+      // Paso 4: Escribir :wq en la línea de comando inferior
+      const saveCmd = ":wq";
+      for (let char of saveCmd) {
+        cmdPane.textContent += char;
+        await sleep(140, token);
+        if (token.aborted) return;
+      }
+
+      await sleep(350, token);
+      if (token.aborted) return;
+
+      // Paso 5: Mensaje de buffer escrito en disco
+      cmdPane.innerHTML = `<span style="color:var(--c-cyan);">"daemon.py" 7L, 168B written</span>`;
+      await sleep(800, token);
+      if (token.aborted) return;
+
+      // Paso 6: Cierre de Vim y retorno a la shell del usuario
+      textPane.innerHTML = `
+        <span style="color:var(--text-dim);">[nvim: exit 0]</span><br>
+        <span class="prompt-user">tux</span><span class="prompt-at">@</span><span class="prompt-host">linux-srv</span>:<span class="prompt-path">~</span><span class="prompt-symbol">$</span> python3 daemon.py<br>
+        <span style="color:var(--c-green); font-weight:bold;">[+] Initializing Linux Daemon...</span><br>
+        <span class="prompt-user">tux</span><span class="prompt-at">@</span><span class="prompt-host">linux-srv</span>:<span class="prompt-path">~</span><span class="prompt-symbol">$</span> <span class="cursor"></span>
+      `;
+      cmdPane.textContent = "";
+    }
+
+    /* ----------------------------------------------------------
+       ORQUESTADOR PRINCIPAL & REINICIO
+       ---------------------------------------------------------- */
+    function restartAllAnimations() {
+      // Abortar cualquier ciclo asíncrono previo
+      activeToken.aborted = true;
+      activeToken = { aborted: false };
+
+      // Lanzar simultáneamente las 4 animaciones
+      runTerminalBash(activeToken);
+      runBootLog(activeToken);
+      runNeofetch(activeToken);
+      runVimEditor(activeToken);
+    }
+
+    // Inicializar al cargar el documento
+    window.addEventListener('DOMContentLoaded', () => {
+      restartAllAnimations();
+    });
+  </script>
+</body>
+</html>

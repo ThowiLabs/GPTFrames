@@ -1,0 +1,34 @@
+<!doctype html><html lang="es"><head><meta charset="utf-8"><meta http-equiv="Content-Security-Policy" content="default-src &#39;none&#39;; script-src &#39;none&#39;; connect-src &#39;none&#39;; style-src &#39;unsafe-inline&#39;; img-src data:; font-src data:"><style>
+*{box-sizing:border-box}html,body{margin:0;width:100%;height:100%;overflow:hidden}
+:root{--bg:#070b13;--surface:#0b101c;--head:#121a2a;--edge:#293c54;--text:#dce9f4;--dim:#9aaec4;--c-green:#22c55e;--c-cyan:#06b6d4;--c-blue:#38bdf8;--c-yellow:#facc15;--c-orange:#f97316;--c-red:#ef4444;--c-purple:#c084fc;--text-muted:#64748b}
+body{background:transparent;color:var(--text);font-family:ui-monospace,"Cascadia Code",Consolas,monospace}
+.anim-engine{width:100%;height:100%;display:grid;place-items:center}
+.card{width:100%;height:100%;background:var(--surface);border:1px solid var(--edge);border-radius:14px;overflow:hidden;display:flex;flex-direction:column;box-shadow:0 15px 42px #0008}
+.head{height:42px;background:var(--head);border-bottom:1px solid var(--edge);display:flex;align-items:center;justify-content:space-between;padding:0 16px;flex:none}
+.dots{display:flex;gap:7px}.dots b{width:11px;height:11px;border-radius:50%;background:#ef4444}.dots b:nth-child(2){background:#eab308}.dots b:nth-child(3){background:#22c55e}
+.title{font-size:11px;color:#a7bcd0;font-weight:700}.tag{font-size:10px;border:1px solid #245849;color:#69f0a6;background:#0b2721;padding:5px 9px;border-radius:20px}
+.body{flex:1;min-height:0;padding:16px 18px;overflow:hidden;font-size:11.5px;line-height:1.55;position:relative}
+.cursor{display:inline-block;width:7px;height:13px;background:#eaf4ff;vertical-align:-2px;animation:blink .85s steps(2,start) infinite}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:0}}
+.prompt-user{color:var(--c-green);font-weight:700}.prompt-at{color:#72849b}.prompt-host{color:var(--c-cyan);font-weight:700}.prompt-path{color:var(--c-yellow)}
+.boot-time{color:var(--c-cyan)}.boot-ok{color:var(--c-green);font-weight:700}.boot-info{color:var(--c-purple)}
+.line{opacity:0;transform:translateY(6px);animation:appear .22s ease-out var(--at,0s) forwards}
+@keyframes appear{to{opacity:1;transform:translateY(0)}}
+.typed{display:inline-block;vertical-align:bottom;max-width:100%;white-space:nowrap;overflow:hidden;clip-path:inset(0 100% 0 0);animation:type .95s steps(26,end) var(--start,.3s) forwards}
+@keyframes type{to{clip-path:inset(0 0 0 0)}}
+.fetch-columns{display:flex;gap:27px;align-items:flex-start;margin-top:15px}.logo{color:var(--c-cyan);margin:0;font-size:15px;line-height:1.32}.specs{min-width:0;font-size:10.6px;line-height:1.25}.specs .line{margin-bottom:4px}.nf-key{color:var(--c-yellow);font-weight:700}.palette-row{display:flex;gap:4px}.palette-box{width:12px;height:9px;border-radius:2px}</style></head><body><main class="anim-engine"><div class="card"><header class="head"><div class="dots"><b></b><b></b><b></b></div><span class="title">fastfetch — zsh (100×30)</span><span class="tag">HARDWARE</span></header><div class="body"><div><span class="prompt-user" data-field="user">tux</span><span class="prompt-at">@</span><span class="prompt-host" data-field="host">linux-srv</span>:<span class="prompt-path">~</span>$ <span class="typed" data-field="command" style="--start:.3s;animation-duration:.9s">fastfetch</span><span class="cursor"></span></div><div class="fetch-columns"><pre class="logo">   /\
+  /  \
+ /\   \
+/      \
+/  ,,  \
+/  | |  \
+/_-&#x27;&#x27;  &#x27;&#x27;-_\</pre><div class="specs"><div class="line" style="--at:1.50s"><strong style="color:var(--c-cyan);">arch</strong>@<strong style="color:var(--c-blue);">thinkpad</strong></div><div class="line" style="--at:1.70s"><span style="color:var(--text-muted);">-------------------------</span></div><div class="line" style="--at:1.90s"><div><span class="nf-key">OS:</span> Arch Linux x86_64</div></div><div class="line" style="--at:2.10s"><div><span class="nf-key">Host:</span> ThinkPad X1 Carbon Gen 11</div></div><div class="line" style="--at:2.30s"><div><span class="nf-key">Kernel:</span> 6.12.8-arch1-1</div></div><div class="line" style="--at:2.50s"><div><span class="nf-key">Uptime:</span> 14 days, 3 hours, 22 mins</div></div><div class="line" style="--at:2.70s"><div><span class="nf-key">Packages:</span> 1042 (pacman), 18 (flatpak)</div></div><div class="line" style="--at:2.90s"><div><span class="nf-key">Shell:</span> zsh 5.9</div></div><div class="line" style="--at:3.10s"><div><span class="nf-key">WM:</span> Hyprland (Wayland)</div></div><div class="line" style="--at:3.30s"><div><span class="nf-key">Terminal:</span> alacritty</div></div><div class="line" style="--at:3.50s"><div><span class="nf-key">CPU:</span> 13th Gen Intel i7-1370P (20) @ 5.20GHz</div></div><div class="line" style="--at:3.70s"><div><span class="nf-key">Memory:</span> 9420MiB / 32180MiB (29%)</div></div><div class="line" style="--at:3.90s"><div class="palette-row">
+          <div class="palette-box" style="background:#000;"></div>
+          <div class="palette-box" style="background:var(--c-red);"></div>
+          <div class="palette-box" style="background:var(--c-green);"></div>
+          <div class="palette-box" style="background:var(--c-yellow);"></div>
+          <div class="palette-box" style="background:var(--c-blue);"></div>
+          <div class="palette-box" style="background:var(--c-purple);"></div>
+          <div class="palette-box" style="background:var(--c-cyan);"></div>
+          <div class="palette-box" style="background:#fff;"></div>
+        </div></div></div></div></div></div></main></body></html>

@@ -2,8 +2,8 @@
   "version": 1,
   "name": "Animaciones",
   "description": "Colección de recursos visuales editables, categorizados y buscables.",
-  "total": 61,
-  "duration": 161.5,
+  "total": 65,
+  "duration": 188.9,
   "presets": [
     {
       "number": 1,
@@ -3029,6 +3029,284 @@
       "editable": {},
       "css_keyframes": [
         "gpioPulse"
+      ],
+      "searchable": true
+    },
+    {
+      "number": 62,
+      "id": "terminal-bash-nginx",
+      "name": "Bash — diagnóstico nginx",
+      "category": "Terminales Linux",
+      "type": "terminal",
+      "description": "Tecleo progresivo de systemctl status nginx.service y salida del servicio.",
+      "style": "Linux / ANSI / terminal",
+      "backend": "browser",
+      "collection": "animaciones",
+      "preset_file": "animaciones/presets/terminal-bash-nginx.html",
+      "status": "candidate",
+      "batch": "linux-terminal-05",
+      "duration": 7.2,
+      "tags": [
+        "bash",
+        "nginx",
+        "systemctl",
+        "terminal",
+        "shell",
+        "estado",
+        "diagnostico",
+        "terminales",
+        "linux",
+        "ansi",
+        "tecleo",
+        "progresivo",
+        "status",
+        "service",
+        "salida",
+        "servicio",
+        "terminales linux"
+      ],
+      "motion": [
+        "escritura",
+        "revelado",
+        "secuencia",
+        "scroll",
+        "deslizamiento",
+        "opacidad",
+        "parpadeo",
+        "cambio de color"
+      ],
+      "editable": {
+        "user": {
+          "type": "text",
+          "label": "Usuario"
+        },
+        "host": {
+          "type": "text",
+          "label": "Host"
+        },
+        "command": {
+          "type": "text",
+          "label": "Comando"
+        }
+      },
+      "usage": [
+        "tutorial Linux",
+        "documental técnico",
+        "demostración"
+      ],
+      "css_keyframes": [
+        "blink",
+        "appear",
+        "type",
+        "scrollBash"
+      ],
+      "searchable": true
+    },
+    {
+      "number": 63,
+      "id": "terminal-systemd-liveboot",
+      "name": "Arranque kernel y systemd",
+      "category": "Terminales Linux",
+      "type": "terminal",
+      "description": "Mensajes del kernel y servicios con entrada progresiva y desplazamiento.",
+      "style": "Linux / ANSI / terminal",
+      "backend": "browser",
+      "collection": "animaciones",
+      "preset_file": "animaciones/presets/terminal-systemd-liveboot.html",
+      "status": "candidate",
+      "batch": "linux-terminal-05",
+      "duration": 7.2,
+      "tags": [
+        "linux",
+        "systemd",
+        "boot",
+        "arranque",
+        "dmesg",
+        "kernel",
+        "terminales",
+        "ansi",
+        "terminal",
+        "mensajes",
+        "servicios",
+        "entrada",
+        "progresiva",
+        "desplazamiento",
+        "terminales linux"
+      ],
+      "motion": [
+        "escritura",
+        "revelado",
+        "secuencia",
+        "scroll",
+        "deslizamiento",
+        "opacidad",
+        "parpadeo",
+        "cambio de color"
+      ],
+      "editable": {
+        "login": {
+          "type": "text",
+          "label": "Texto de inicio"
+        }
+      },
+      "usage": [
+        "tutorial Linux",
+        "documental técnico",
+        "demostración"
+      ],
+      "css_keyframes": [
+        "blink",
+        "appear",
+        "type",
+        "scrollBoot"
+      ],
+      "searchable": true
+    },
+    {
+      "number": 64,
+      "id": "terminal-fastfetch-reveal",
+      "name": "Fastfetch — información Linux",
+      "category": "Terminales Linux",
+      "type": "terminal",
+      "description": "Comando fastfetch, logo Arch y especificaciones del equipo en cascada.",
+      "style": "Linux / ANSI / terminal",
+      "backend": "browser",
+      "collection": "animaciones",
+      "preset_file": "animaciones/presets/terminal-fastfetch-reveal.html",
+      "status": "candidate",
+      "batch": "linux-terminal-05",
+      "duration": 5.5,
+      "tags": [
+        "fastfetch",
+        "neofetch",
+        "terminal",
+        "arch",
+        "hardware",
+        "informacion",
+        "linux",
+        "terminales",
+        "ansi",
+        "comando",
+        "logo",
+        "especificaciones",
+        "equipo",
+        "cascada",
+        "terminales linux"
+      ],
+      "motion": [
+        "escritura",
+        "revelado",
+        "secuencia",
+        "scroll",
+        "deslizamiento",
+        "opacidad",
+        "parpadeo",
+        "cambio de color"
+      ],
+      "editable": {
+        "user": {
+          "type": "text",
+          "label": "Usuario"
+        },
+        "host": {
+          "type": "text",
+          "label": "Host"
+        },
+        "command": {
+          "type": "text",
+          "label": "Comando"
+        }
+      },
+      "usage": [
+        "tutorial Linux",
+        "documental técnico",
+        "demostración"
+      ],
+      "css_keyframes": [
+        "blink",
+        "appear",
+        "type"
+      ],
+      "searchable": true
+    },
+    {
+      "number": 65,
+      "id": "terminal-vim-edit-save",
+      "name": "Editor Vim — guardar archivo",
+      "category": "Terminales Linux",
+      "type": "terminal",
+      "description": "Simula INSERT, edición, :wq, mensaje de guardado y salida a Bash.",
+      "style": "Linux / ANSI / terminal",
+      "backend": "browser",
+      "collection": "animaciones",
+      "preset_file": "animaciones/presets/terminal-vim-edit-save.html",
+      "status": "candidate",
+      "batch": "linux-terminal-05",
+      "duration": 7.5,
+      "tags": [
+        "vim",
+        "neovim",
+        "codigo",
+        "guardar",
+        "editor",
+        "python",
+        "archivo",
+        "terminales",
+        "linux",
+        "ansi",
+        "terminal",
+        "simula",
+        "insert",
+        "edicion",
+        "mensaje",
+        "guardado",
+        "salida",
+        "bash",
+        "terminales linux"
+      ],
+      "motion": [
+        "escritura",
+        "revelado",
+        "secuencia",
+        "scroll",
+        "deslizamiento",
+        "opacidad",
+        "parpadeo",
+        "cambio de color"
+      ],
+      "editable": {
+        "user": {
+          "type": "text",
+          "label": "Usuario"
+        },
+        "host": {
+          "type": "text",
+          "label": "Host"
+        },
+        "filename": {
+          "type": "text",
+          "label": "Archivo"
+        },
+        "write_message": {
+          "type": "text",
+          "label": "Mensaje guardado"
+        }
+      },
+      "usage": [
+        "tutorial Linux",
+        "documental técnico",
+        "demostración"
+      ],
+      "css_keyframes": [
+        "blink",
+        "appear",
+        "type",
+        "normalMode",
+        "insertMode",
+        "saveMode",
+        "writtenMode",
+        "sourceLeave",
+        "exitEnter"
       ],
       "searchable": true
     }
